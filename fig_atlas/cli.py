@@ -309,7 +309,11 @@ def _lint_hardcoded(args, root: Path) -> int:
         files = [root / find_project(root, n).analysis_script for n in args.projects]
     else:
         from .renderer_registry import directories
-        files = sorted(f for d in directories() for f in d.glob("*.py")) + sorted((root / "analysis").rglob("*.py"))
+        # This repository's own code: its analysis scripts, and the renderer packages that live in
+        # it (the fig-atlas source tree, a pack under development). An installed package's
+        # renderers are checked in its own repository.
+        mine = [d for d in directories() if d.resolve().is_relative_to(root.resolve())]
+        files = sorted(f for d in mine for f in d.glob("*.py")) + sorted((root / "analysis").rglob("*.py"))
         files = [f for f in files if "archive" not in f.parts]
     hits = hardcoded([f for f in files if f.is_file()])
     by_file: dict[str, list] = {}

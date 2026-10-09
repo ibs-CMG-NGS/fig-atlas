@@ -83,3 +83,13 @@ def test_storyline_draft_comes_from_paper_project_names(tmp_path, monkeypatch):
     slots = [(s["role"], s["project"]) for s in mod.paper_slots(text)]
     assert slots == [("Main Figure 1", "lab-paper-main-fig1-a"), ("Main Figure 2", "lab-paper-main-fig2-b"),
                      ("Supplementary Figure S1", "lab-paper-supp-fig1-s")]
+
+
+def test_repo_root_finds_an_init_repository(tmp_path):
+    """Scripts in a project repository (no fig_atlas/ folder) find it by the marker."""
+    from fig_atlas.config import repo_root
+    plan_init(tmp_path).apply()
+    script = tmp_path / "analysis" / "lab" / "exploratory" / "x_analysis.py"
+    script.parent.mkdir(parents=True)
+    script.write_text("")
+    assert repo_root(script) == tmp_path.resolve()

@@ -227,8 +227,9 @@ def find_config_file(project_root: Path | str, filename: str) -> Path:
 
 
 def repo_root(start: Path | None = None) -> Path:
-    """Locate the repository root by walking up from ``start`` (default: this
-    file) until an ancestor containing a ``fig_atlas/`` directory is found.
+    """Locate the project repository by walking up from ``start`` (default: this
+    file) to the first ancestor with a ``.fig-atlas`` marker (`fa init`) -- or,
+    in the fig-atlas source tree and older repositories, a ``fig_atlas/`` directory.
 
     Depth-independent alternative to hardcoding ``Path(__file__).resolve().parents[N]``,
     which silently breaks if a script's own directory nesting ever changes (e.g. a
@@ -236,9 +237,9 @@ def repo_root(start: Path | None = None) -> Path:
     """
     here = (start or Path(__file__)).resolve()
     for p in [here.parent, *here.parents]:
-        if (p / "fig_atlas").is_dir():
+        if (p / ".fig-atlas").is_file() or (p / "fig_atlas").is_dir():
             return p
-    raise RuntimeError(f"Could not locate repo root (fig_atlas/) from {here}")
+    raise RuntimeError(f"Could not locate the project repository (.fig-atlas) from {here}")
 
 
 def get_config(config_path: Path | None = None) -> ProjectConfig:
