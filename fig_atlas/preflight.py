@@ -211,11 +211,14 @@ def panel_of(ax, fig) -> object:
     for parent in fig.get_axes():
         if ax in getattr(parent, "child_axes", []):
             return panel_of(parent, fig)
-    pos = tuple(round(v, 6) for v in ax.get_position().bounds)
+    # Where the axes sits on the whole canvas (display units): get_position()
+    # is relative to the axes' own subfigure, so panels in different
+    # subfigures (bundle_figure.draw_plots) would all look like twins.
+    pos = tuple(round(v, 2) for v in ax.bbox.bounds)
     for other in fig.get_axes():
         if other is ax:
             break
-        if tuple(round(v, 6) for v in other.get_position().bounds) == pos and not hasattr(other, "_colorbar"):
+        if tuple(round(v, 2) for v in other.bbox.bounds) == pos and not hasattr(other, "_colorbar"):
             return other
     return ax
 

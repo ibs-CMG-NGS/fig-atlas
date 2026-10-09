@@ -53,6 +53,21 @@ def cross_panel_overlap(defect: bool):
     return fig, "tight"
 
 
+def cross_subfigure_overlap(defect: bool):
+    # The same overlap with each panel in its own subfigure (as
+    # bundle_figure.draw_plots lays panels out): both axes sit at the same
+    # position *within their subfigure*, which once made them one "panel".
+    fig = plt.figure(figsize=(3.0, 3.2))
+    upper, lower = fig.subfigures(2, 1, hspace=0.0)
+    rect = [0.18, 0.04, 0.75, 0.9] if defect else [0.18, 0.3, 0.75, 0.5]
+    top, bottom = upper.add_axes(rect), lower.add_axes(rect)
+    top.plot([0, 1], [0, 1])
+    top.set_xlabel("Time after treatment (h)")
+    bottom.plot([0, 1], [1, 0])
+    bottom.set_title("Recovery of the response")
+    return fig, "tight"
+
+
 def legend_over_panel(defect: bool):
     fig = plt.figure(figsize=(4.4, 2.0))
     a = fig.add_axes([0.1, 0.18, 0.36, 0.72])
@@ -100,6 +115,7 @@ CASES = {
     "tick_collision": ("tick_label_collision", tick_collision),
     "rotated_tick_collision": ("tick_label_collision", rotated_tick_collision),
     "cross_panel_overlap": ("cross_panel_text_overlap", cross_panel_overlap),
+    "cross_subfigure_overlap": ("panel_intrusion", cross_subfigure_overlap),
     "legend_over_panel": ("legend_overlaps_panel", legend_over_panel),
     "clipped_title": ("clipped_by_saved_area", clipped_title),
     "panel_overlap": ("panel_overlap", panel_overlap),
