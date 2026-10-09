@@ -92,3 +92,20 @@ def test_packs_are_wrapped_only_when_a_script_imports_them():
     )
     out = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, check=True).stdout
     assert "loaded_before False" in out and "wrapped_after True" in out
+
+
+def test_core_renderers_are_wrapped_only_when_a_script_imports_them():
+    """The core renderer package loads seaborn and scipy; a build whose script
+    never imports it must not pay for that (paper evidence E11)."""
+    import subprocess
+    import sys
+    code = (
+        "import sys\n"
+        "from fig_atlas import config_usage as cu\n"
+        "cu.instrument_renderers()\n"
+        "print('loaded_before', 'fig_atlas.renderers' in sys.modules)\n"
+        "from fig_atlas.renderers import render_stacked_share_hbar\n"
+        "print('wrapped_after', getattr(render_stacked_share_hbar, '_fa_tracked', False))\n"
+    )
+    out = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, check=True).stdout
+    assert "loaded_before False" in out and "wrapped_after True" in out

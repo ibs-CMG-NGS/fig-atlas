@@ -147,6 +147,21 @@ class Recorder:
         self.stat_tables: dict[Path, list[dict]] = {}  # stem -> test tables (fig_atlas.stats)
         self.images: dict[Path, list[dict]] = {}       # stem -> image adjustments (fig_atlas.images)
         self._busy = False
+        # A string test on the unresolved path first: resolve() costs a system
+        # call, and a run opens over a thousand files (every module it imports),
+        # nearly all outside the input folders (paper evidence E11).
+        self._prefixes = {os.path.normcase(os.path.abspath(r)) + os.sep for r in (str(self.root), str(root))}
+        self._input_roots = {os.path.normcase(r) for r in INPUT_ROOTS}
+        self._skip_roots = {os.path.normcase(r) for r in SKIP_PARTS}
+
+    def _top(self, path: str) -> str | None:
+        """The first folder under the repository root of ``path`` (as spelled,
+        not resolved; normcased), or None when it is not under the root."""
+        s = os.path.normcase(os.path.abspath(path))
+        for pre in self._prefixes:
+            if s.startswith(pre):
+                return s[len(pre):].split(os.sep, 1)[0]
+        return None
 
     # Audit hooks can't be removed; ``_busy`` silences the recorder's own I/O.
     def hook(self, event: str, args) -> None:
@@ -156,6 +171,8 @@ class Recorder:
         if isinstance(path, int) or path is None:
             return
         try:
+            if self._top(os.fsdecode(path)) not in self._input_roots:
+                return
             p = Path(os.fsdecode(path))
             p = (p if p.is_absolute() else Path.cwd() / p).resolve()
             rel = p.relative_to(self.root)
@@ -239,8 +256,9 @@ class Recorder:
                 if b:
                     item["bundle"] = b
                 inputs.append(item)
-            mods = {Path(m.__file__).resolve() for m in list(sys.modules.values())
-                    if getattr(m, "__file__", None)}
+            files = {m.__file__ for m in list(sys.modules.values()) if getattr(m, "__file__", None)}
+            mods = {Path(f).resolve() for f in files
+                    if f.endswith(".py") and self._top(f) not in (None, *self._skip_roots)}
             code_files = sorted({p for p in mods | {script.resolve()}
                                  if self._is_repo_code(p)})
             dirty = set(self._git("status", "--porcelain", "--", *[self._rel(p) for p in code_files]).splitlines())

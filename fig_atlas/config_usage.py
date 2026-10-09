@@ -64,18 +64,16 @@ def instrument_renderers() -> None:
     receives is a TrackingDict (owner ``renderer:<name>``): the build then
     knows which renderer defaults each figure actually fell back on.
     Call before the analysis script imports the renderers."""
-    import importlib
     import sys
 
     from .renderer_registry import CORE, packages
-    _instrument_package(importlib.import_module(CORE))
-    # Packs are wrapped when the analysis script imports them, not before: a
-    # figure that never uses a pack must not load it (its files would become
-    # the figure's "code" in the provenance record and make it go stale).
+    # Packages -- the core one too -- are wrapped when the analysis script
+    # imports them, not before: a figure that never uses a package must not
+    # load it. Its files would become the figure's "code" in the provenance
+    # record (and make it go stale), and importing every renderer up front
+    # (seaborn, scipy) cost about 2 s per build (paper evidence E11).
     lazy = []
-    for name in packages():
-        if name == CORE:
-            continue
+    for name in dict.fromkeys([CORE, *packages()]):
         if name in sys.modules:
             _instrument_package(sys.modules[name])
         else:
