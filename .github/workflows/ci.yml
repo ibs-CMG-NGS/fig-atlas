@@ -37,7 +37,7 @@ jobs:
           fa --help
           fa list
 
-      - name: Reference pages are up to date (docs/reference: commands, config keys, gallery)
+      - name: "Reference pages are up to date (docs/reference: commands, config keys, gallery)"
         run: fa reference --check
 
       - name: Renderer inventory is up to date
