@@ -13,6 +13,7 @@ authors:
     given-names: Yong Gyu
 repository-code: "https://github.com/ibs-cmg-ngs/fig-atlas"
 license: MIT
+url: "https://ibs-cmg-ngs.github.io/fig-atlas/"
 keywords:
   - scientific figures
   - reproducibility

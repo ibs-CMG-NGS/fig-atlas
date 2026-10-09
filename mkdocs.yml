@@ -3,8 +3,9 @@
 # tutorials (learn), how-to guides (do a task), reference (look up), explanation (why).
 site_name: fig-atlas
 site_description: Config-driven, reproducible publication figures -- with checks, provenance and a paper lifecycle
+site_url: https://ibs-cmg-ngs.github.io/fig-atlas/
 repo_url: https://github.com/ibs-cmg-ngs/fig-atlas
-edit_uri: edit/master/docs/
+edit_uri: edit/main/docs/
 docs_dir: docs
 strict: true
 

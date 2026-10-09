@@ -62,7 +62,8 @@ bundles (`examples/`) and an imaging figure from public microscope images (`pilo
 
 ## Documentation
 
-`pip install -e .[docs]`, then `mkdocs serve` and open http://127.0.0.1:8000.
+Online: **https://ibs-cmg-ngs.github.io/fig-atlas/** — or locally: `pip install -e .[docs]`, then `mkdocs serve`
+and open http://127.0.0.1:8000.
 
 - **Researcher guide** (`docs/guide/`, Korean): what the tool does and how a figure flows from data
   to paper, for scientists with no programming background.
@@ -89,4 +90,4 @@ the package export). Renderers are shapes, not fields: see design decision 0003.
 
 ## Licence and citation
 
-Code: MIT ([LICENSE](LICENSE)). Please cite as in [CITATION.cff](CITATION.cff).
+Code: MIT, © 2026 ibs-CMG-NGS ([LICENSE](LICENSE)). Please cite as in [CITATION.cff](CITATION.cff).

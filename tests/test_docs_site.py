@@ -47,11 +47,11 @@ def test_hook_sends_repository_files_to_github():
     url = "https://github.com/o/r"
     md = "[a](../AGENTS.md) [b](contracts/README.md) [c](../examples/) [d](https://x.org) [e](#top) [f](storylines/p.md)"
     out = rewrite(md, "docs", url, on_site=lambda p: not p.startswith("storylines/"))
-    assert "[a](https://github.com/o/r/blob/master/AGENTS.md)" in out
+    assert "[a](https://github.com/o/r/blob/main/AGENTS.md)" in out
     assert "[b](contracts/README.md)" in out                            # a page of the site
-    assert "[c](https://github.com/o/r/tree/master/examples)" in out
+    assert "[c](https://github.com/o/r/tree/main/examples)" in out
     assert "[d](https://x.org)" in out and "[e](#top)" in out
-    assert "[f](https://github.com/o/r/blob/master/docs/storylines/p.md)" in out   # kept off the site
+    assert "[f](https://github.com/o/r/blob/main/docs/storylines/p.md)" in out   # kept off the site
 
 
 @pytest.mark.skipif(shutil.which("mkdocs") is None and importlib.util.find_spec("mkdocs") is None,

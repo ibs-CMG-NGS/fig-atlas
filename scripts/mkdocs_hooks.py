@@ -12,7 +12,7 @@ import re
 LINK = re.compile(r"(\]\()([^)\s#]+)(#[^)\s]*)?(\))")
 
 
-def rewrite(markdown: str, page_dir: str, repo_url: str, branch: str = "master", on_site=lambda path: True) -> str:
+def rewrite(markdown: str, page_dir: str, repo_url: str, branch: str = "main", on_site=lambda path: True) -> str:
     """``page_dir``: the page's folder relative to the repository root (e.g.
     docs/howto). ``on_site(path)`` says whether a docs/ path is a page of the
     site; one that is not (a research record kept off the site) goes to GitHub too."""
