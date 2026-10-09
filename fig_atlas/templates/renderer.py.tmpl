@@ -1,0 +1,71 @@
+"""${name}: ${doc}
+
+Created by `fa new renderer` on ${date}. The drawing below is a placeholder
+(points of y over x, coloured by group); replace it with the plot's own.
+Keep every visual value -- sizes, colours, widths, gaps, label text -- as a
+Param in SCHEMA and read it with params.get(key, <the same default>), never as
+a number in the code: `fa param scaffold` writes the config block from SCHEMA,
+`fa lint --hardcoded` flags literals, and tests/test_renderer_schemas.py checks
+that SCHEMA and the code agree (AGENTS.md 1.2, 1.6).
+
+A renderer is a shape, not a field (AGENTS.md section 3): name columns by
+role (x_col, y_col, group_col), not by what one field calls them.
+
+Data: a table with the columns named by x_col and y_col (and group_col).
+Returns the rows it drew, ready for fig_atlas.source_data.add.
+"""
+from __future__ import annotations
+
+from fig_atlas.params import text_param
+from fig_atlas.schema import CODE_DEFAULT, Param, Schema, uses_schema
+
+SCHEMA = Schema("${name}", params=[
+    # [Data]
+    Param("x_col", str, "x", role="Column with the x values"),
+    Param("y_col", str, "y", role="Column with the y values"),
+    Param("group_col", str, None, role="Column that splits the points into coloured groups (default: one colour)"),
+    # [Marks]
+    Param("color", "color", "#4b5563", unit="hex color", role="Point colour without a group_col"),
+    Param("group_colors", dict, {}, open_keys=True, unit="hex color",
+          role="Colour per group (default: matplotlib colour cycle)"),
+    Param("point_size", float, 12.0, unit="pt^2 (marker area)", range=(0, None), role="Point size",
+          tune="lower for dense data"),
+    Param("point_alpha", float, 0.8, unit="[0-1] opacity", range=(0, 1), role="Point opacity"),
+    # [Text and legend]
+    Param("labels_title", str, None, role="Panel title (none: no title)"),
+    Param("labels_xlabel", str, CODE_DEFAULT, role="x-axis title (default: x_col)"),
+    Param("labels_ylabel", str, CODE_DEFAULT, role="y-axis title (default: y_col)"),
+    Param("title_size", float, 8.0, unit="pt", range=(0, None), role="Panel title size"),
+    Param("axes_label_size", float, None, unit="pt", range=(0, None), role="Axis title size (default: rcParams)"),
+    Param("tick_label_size", float, None, unit="pt", range=(0, None), role="Tick label size (default: rcParams)"),
+    Param("show_legend", bool, True, role="Show the group legend (only with a group_col)"),
+    Param("legend_loc", str, "best", role="Legend location (matplotlib loc)"),
+    Param("legend_frameon", bool, False, role="Draw a frame around the legend"),
+])
+
+
+@uses_schema(SCHEMA)
+def render_${name}(ax, df, params):
+    """Draw the plot onto ``ax``; returns the rows drawn."""
+    x_col, y_col, g_col = params.get("x_col", "x"), params.get("y_col", "y"), params.get("group_col")
+    size, alpha = params.get("point_size", 12.0), params.get("point_alpha", 0.8)
+    data = df[[c for c in (x_col, y_col, g_col) if c]].dropna()
+
+    if g_col:
+        colors = params.get("group_colors", {})
+        for group, rows in data.groupby(g_col, sort=False):
+            ax.scatter(rows[x_col], rows[y_col], s=size, alpha=alpha, color=colors.get(group), label=str(group))
+        if params.get("show_legend", True):
+            ax.legend(loc=params.get("legend_loc", "best"), frameon=params.get("legend_frameon", False),
+                      fontsize=params.get("tick_label_size"))
+    else:
+        ax.scatter(data[x_col], data[y_col], s=size, alpha=alpha, color=params.get("color", "#4b5563"))
+
+    title = params.get("labels_title")
+    if title:
+        ax.set_title(title, fontsize=params.get("title_size", 8.0))
+    ax.set_xlabel(text_param(params, "labels_xlabel", x_col), fontsize=params.get("axes_label_size"))
+    ax.set_ylabel(text_param(params, "labels_ylabel", y_col), fontsize=params.get("axes_label_size"))
+    if params.get("tick_label_size") is not None:
+        ax.tick_params(labelsize=params.get("tick_label_size"))
+    return data

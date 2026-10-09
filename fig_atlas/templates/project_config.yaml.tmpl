@@ -1,0 +1,30 @@
+project:
+  name: "$name"
+  figure_count: 1
+  # Final-size rendering: print typography + the A4 portrait page (figures drawn 1:1 on the content width).
+  style: ["default", "print", "page_a4_portrait_narrow"]
+  spec_pattern: "figure_*_$name.py"
+  analysis_script: "$analysis_script"
+
+# Created by `fa new project` on $date. Describe the question this project
+# answers here, and where its data come from.
+paths:
+  raw_root: "$raw_root"               # Read-only input bundles (AGENTS.md 1.1); check them with `fa bundle check`
+  output_root: "outputs"
+
+figures:
+  font_family: "DejaVu Sans"
+  height_mm: 80                       # Figure height in mm (width = the page content width); raise if panels feel cramped
+  columns: 0                          # Panels per row (0: one per panel, up to 3); the plots below fill the grid in order (a, b, c, ...)
+  wspace: 0.1                         # Gap between panel cells (fraction of a cell width); each panel, labels included, is fitted inside its cell
+  hspace: 0.15                        # Gap between panel rows (fraction of a cell height)
+  panel_pad_mm: 1.0                   # Margin in mm between a panel's outer edge (tick labels, titles, legend) and its cell; raise for more air
+  tags:                               # Panel tags on the panels' outer bounding boxes (AGENTS.md 1.5)
+    size: 9.0                         # Tag font size in pt
+    pad_pt: 2.0                       # Gap between a tag and its panel's outer edge, in pt
+
+# One block per panel, drawn in this order. `fa ingest bundle <bundle> --project $name`
+# adds a block for a data bundle with every renderer parameter and its description, so
+# this file -- not the code -- is where the figure is tuned (AGENTS.md 1.2, 1.6). A block
+# without `bundle` gets its data from load() in the analysis script.
+plots: {}

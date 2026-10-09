@@ -1,0 +1,33 @@
+"""render_${name} draws (created by `fa new renderer` on ${date}).
+
+Extend these checks as the drawing takes shape. Once it is final, add a case to
+tests/renderers/cases.py so a snapshot test catches unintended changes
+(FA_UPDATE_SNAPSHOTS=1 python -m pytest tests/renderers records it).
+"""
+from __future__ import annotations
+
+import matplotlib
+
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt  # noqa: E402
+import pandas as pd  # noqa: E402
+
+from ${package} import render_${name}  # noqa: E402
+
+DATA = pd.DataFrame({"x": [0.0, 1.0, 2.0, 3.0], "y": [1.0, 3.0, 2.0, 4.0], "g": ["a", "a", "b", "b"]})
+
+
+def test_${name}_draws_with_defaults():
+    fig, ax = plt.subplots()
+    drawn = render_${name}(ax, DATA, {})
+    assert len(drawn) == len(DATA)
+    assert ax.collections, "nothing was drawn"
+    plt.close(fig)
+
+
+def test_${name}_reads_its_params():
+    fig, ax = plt.subplots()
+    render_${name}(ax, DATA, {"group_col": "g", "labels_title": "T", "labels_xlabel": "X"})
+    assert ax.get_title() == "T" and ax.get_xlabel() == "X"
+    assert ax.get_legend() is not None
+    plt.close(fig)

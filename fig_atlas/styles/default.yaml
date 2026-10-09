@@ -1,0 +1,28 @@
+# Base publication style — the shared, harmonized styling asset.
+#
+# Reference it from a project config so the common look is not copy-pasted:
+#
+#   project:
+#     style: "default"          # or a list: ["default", "compact"]
+#
+# Only the config's own figures/plots keys override these; everything else is
+# inherited. Layout-specific values (fig_width, width_ratios, mosaic, ...) belong
+# in the per-figure config, not here.
+figures:
+  dpi: 300
+  formats:
+    - png
+    - pdf
+    - svg
+  font_family: "DejaVu Sans"
+  font_size: 8
+  subpanel_label_size: 14
+  subpanel_label_weight: "bold"
+
+  # Global unified styling overrides (wildcards applied across all subpanels).
+  axis_width: 0.8          # spine thickness
+  tick_size: 3.0           # tick length
+  tick_width: 0.8          # tick thickness
+  tick_label_size: 6.5     # x/y tick label font size
+  axes_label_size: 8.0     # x/y axis label font size
+  title_size: 10.0         # subpanel title font size

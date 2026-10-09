@@ -1,0 +1,36 @@
+# Project rules
+
+This repository holds figure projects built with **fig-atlas**
+(https://github.com/ibs-cmg-ngs/fig-atlas). These rules are for people and AI agents
+alike; agents read this file (`CLAUDE.md` imports it). The full rules and their
+reasons are in the fig-atlas documentation.
+
+## Rules
+
+1. **Raw data are read-only.** Data enter as bundles under `raw_data/<study>/<project>/<bundle>/`
+   (`inputs/data.csv` + `metadata/metadata.yaml`) and are never edited. Renaming, filtering and
+   axis limits are done at render time through the config.
+2. **Every visual value lives in the project config** (`configs/**/config_<project>.yaml`), with a
+   comment giving its role, unit and how to tune it; no style numbers in analysis code. The config
+   holds the full parameter block of each panel (`fa ingest bundle` and `fa param scaffold` write it).
+   Edit configs without stripping comments.
+3. **Never edit `outputs/` by hand**: change the config or the figure spec and rebuild.
+4. **Figures are drawn at final print size**; a figure is done when `fa build <project> --preflight`
+   reports no errors. Report warnings to the user; do not change colours or design without asking.
+5. **Numbers in legends come from the data** (`fig_atlas.claims.record` + `{name}` placeholders);
+   significance marks come from `fig_atlas.stats`, with the test table published beside the figure.
+6. **Images are adjusted in the panel** (`render_image_panel`), never as edited copies.
+7. **Paper figures**: `<domain>-paper-main-fig<N>-<slug>` matches Main Figure N of the storyline
+   (`docs/storylines/`); promote with `fa promote`, retire with `fa retire` (never delete), and log
+   every storyline change as a numbered revision.
+
+## Commands
+
+Procedures are `fa` commands (`fa --help`); commands that change files take `--dry-run`.
+Agents connected over MCP (`fa mcp`) call the same commands as tools and apply changes only
+after the user has seen the dry-run diff.
+
+- New project: `fa new project <name> --domain <d> --category exploratory`
+- Add a data bundle: `fa bundle check <bundle>`, then `fa ingest bundle <bundle> --project <name>`
+- Build and check: `fa build <name> --preflight`
+- Paper lifecycle: `fa promote`, `fa retire`, `fa storyline ...`

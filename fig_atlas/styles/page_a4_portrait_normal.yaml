@@ -1,0 +1,14 @@
+# Page preset: A4 portrait, normal margins (25.4 mm each side).
+#
+# Declares the final printed canvas a figure is drawn at (1:1, no later
+# scaling), so every font/line size set in points is what actually prints.
+# Layer it with the print typography preset:
+#
+#   project:
+#     style: ["default", "print", "page_a4_portrait_normal"]
+#
+# Content box = paper minus margins; see fig_atlas/page.py (PageSpec).
+page:
+  name: "a4_portrait_normal"
+  paper_mm: [210, 297]
+  margin_mm: 25.4

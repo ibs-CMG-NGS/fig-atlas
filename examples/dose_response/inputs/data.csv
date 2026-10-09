@@ -1,0 +1,85 @@
+compound,dose_uM,replicate,viability
+compound A,0.01,1,98.3
+compound A,0.01,2,92.95
+compound A,0.01,3,107.44
+compound A,0.01,4,97.8
+compound A,0.0316,1,93.58
+compound A,0.0316,2,98.88
+compound A,0.0316,3,100.89
+compound A,0.0316,4,96.13
+compound A,0.1,1,84.09
+compound A,0.1,2,80.52
+compound A,0.1,3,82.2
+compound A,0.1,4,79.7
+compound A,0.3162,1,48.23
+compound A,0.3162,2,43.78
+compound A,0.3162,3,49.69
+compound A,0.3162,4,45.93
+compound A,1.0,1,15.81
+compound A,1.0,2,21.75
+compound A,1.0,3,20.41
+compound A,1.0,4,20.23
+compound A,3.1623,1,11.59
+compound A,3.1623,2,-0.56
+compound A,3.1623,3,10.29
+compound A,3.1623,4,1.41
+compound A,10.0,1,-1.21
+compound A,10.0,2,4.97
+compound A,10.0,3,7.61
+compound A,10.0,4,2.66
+compound B,0.01,1,103.05
+compound B,0.01,2,106.2
+compound B,0.01,3,98.41
+compound B,0.01,4,101.87
+compound B,0.0316,1,90.39
+compound B,0.0316,2,98.75
+compound B,0.0316,3,98.69
+compound B,0.0316,4,100.88
+compound B,0.1,1,97.56
+compound B,0.1,2,96.43
+compound B,0.1,3,89.33
+compound B,0.1,4,95.85
+compound B,0.3162,1,85.83
+compound B,0.3162,2,89.32
+compound B,0.3162,3,82.12
+compound B,0.3162,4,90.0
+compound B,1.0,1,72.15
+compound B,1.0,2,69.32
+compound B,1.0,3,66.75
+compound B,1.0,4,70.27
+compound B,3.1623,1,40.31
+compound B,3.1623,2,36.52
+compound B,3.1623,3,45.68
+compound B,3.1623,4,37.32
+compound B,10.0,1,15.08
+compound B,10.0,2,9.88
+compound B,10.0,3,19.8
+compound B,10.0,4,15.0
+vehicle,0.01,1,96.3
+vehicle,0.01,2,105.17
+vehicle,0.01,3,97.7
+vehicle,0.01,4,98.62
+vehicle,0.0316,1,102.1
+vehicle,0.0316,2,113.78
+vehicle,0.0316,3,103.66
+vehicle,0.0316,4,108.1
+vehicle,0.1,1,105.08
+vehicle,0.1,2,99.97
+vehicle,0.1,3,95.92
+vehicle,0.1,4,106.38
+vehicle,0.3162,1,99.67
+vehicle,0.3162,2,94.26
+vehicle,0.3162,3,97.75
+vehicle,0.3162,4,100.87
+vehicle,1.0,1,98.6
+vehicle,1.0,2,98.73
+vehicle,1.0,3,101.09
+vehicle,1.0,4,106.04
+vehicle,3.1623,1,98.27
+vehicle,3.1623,2,104.53
+vehicle,3.1623,3,104.48
+vehicle,3.1623,4,98.74
+vehicle,10.0,1,104.19
+vehicle,10.0,2,96.14
+vehicle,10.0,3,98.03
+vehicle,10.0,4,98.29

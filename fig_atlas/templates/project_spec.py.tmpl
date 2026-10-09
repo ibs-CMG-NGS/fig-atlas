@@ -1,0 +1,21 @@
+"""Figure 1 of $name (created by `fa new project` on $date)."""
+
+from fig_atlas import FigureSpec, get_config, publish
+
+SPEC = FigureSpec(
+    number=1,
+    slug="$slug",
+    title="Title of figure 1 (one sentence: what it shows)",
+    source_stem="$source_stem",
+    primary_code="$analysis_script",
+    panel_notes=[
+        "Panel a: what is plotted, n, error bars, test -- write result numbers as placeholders in braces, "
+        "filled by claims.record() in the analysis script.",
+    ],
+    claim_boundary="What this figure does and does not support.",
+)
+
+
+if __name__ == "__main__":
+    config = get_config()
+    publish(SPEC, config)

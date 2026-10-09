@@ -1,0 +1,16 @@
+# Synthetic example (examples/make_examples.py): 400 screened features, effect size and BH-adjusted P.
+plot_type: threshold_scatter
+plot_params:
+  x_col: effect
+  y_col: p_adj
+  effect_col: effect
+  sig_col: p_adj
+  y_transform: neg_log10
+  effect_threshold: 0.5
+  sig_threshold: 0.05
+  label_mode: top_n
+  label_cols: ["feature"]
+  label_top_n: 6
+  labels_title: "Screen hits"
+  labels_xlabel: "Effect size"
+  labels_ylabel: "-log10 adjusted P"

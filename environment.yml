@@ -1,0 +1,34 @@
+# Create the in-repo environment (prefix env) with:
+#   conda env create -f environment.yml -p ./fig-atlas
+#   conda activate ./fig-atlas
+# (No `name:` on purpose so -p works without conflict. Named-env users can add
+#  -n fig-atlas instead of -p.)
+#
+# IMPORTANT: conda-forge ONLY. Mixing conda-forge with the `defaults` channel
+# produces an ABI-incompatible BLAS build of numpy/scipy that crashes natively
+# on Windows (e.g. in np.polyfit / matplotlib rendering).
+#
+# Python is pinned to 3.12 and the scientific stack to stable majors so every
+# pip dependency (snakemake -> immutables, ...) has a prebuilt wheel (no MSVC
+# Build Tools needed) and the binaries are mutually compatible.
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - pip
+  - numpy>=2.0,<3
+  - pandas>=2.2,<3
+  - scipy>=1.13,<2
+  - matplotlib>=3.10,<3.11
+  - seaborn>=0.13.2,<0.14
+  - pyyaml>=6.0
+  - ruamel.yaml>=0.18,<0.20
+  - pytest>=7.0
+  - pip:
+      - snakemake>=7.32
+      - adjustText>=1.0
+      - matplotlib-venn>=1.1.1
+      - squarify>=0.4.3
+      - pypdf>=4.0
+      # This repo's fig_atlas package, editable: provides the `fa` command.
+      - -e .

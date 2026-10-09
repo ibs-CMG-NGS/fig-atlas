@@ -1,0 +1,20 @@
+# Upper bounds pin the scientific stack to versions the renderers are validated
+# against (matches environment.yml). matplotlib 3.10 was validated on 2026-10-06
+# with the renderer snapshot tests and the compendium baseline
+# (scripts/figure_baseline.py); pandas 3.0 (copy-on-write, string dtype) is not yet.
+# matplotlib stays below 3.11 until that release is validated the same way.
+matplotlib>=3.10,<3.11
+numpy>=2.0,<3
+pandas>=2.2,<3
+scipy>=1.13,<2
+seaborn>=0.13.2,<0.14
+pyyaml>=6.0
+ruamel.yaml>=0.18,<0.20   # comment-preserving YAML edits (fa param tools; never PyYAML dump on configs)
+snakemake>=7.32
+adjustText>=1.0
+matplotlib-venn>=1.1.1
+squarify>=0.4.3
+pypdf>=4.0          # storyline compendium assembly (scripts/compile_storyline_pdf.py)
+
+# Test/dev
+pytest>=7.0

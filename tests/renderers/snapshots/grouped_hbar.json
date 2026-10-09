@@ -1,0 +1,675 @@
+{
+ "freetype": "2.14.3",
+ "figsize_in": [
+  3.0,
+  2.0
+ ],
+ "artists": [
+  {
+   "kind": "Rectangle",
+   "fc": "#ffffffff",
+   "ec": "#ffffffff",
+   "lw": 0.0,
+   "bbox_pt": [
+    0.0,
+    0.0,
+    216.0,
+    144.0
+   ]
+  },
+  {
+   "kind": "Rectangle",
+   "fc": "#ffffffff",
+   "ec": "#00000000",
+   "lw": 0.0,
+   "bbox_pt": [
+    27.0,
+    15.84,
+    194.4,
+    126.72
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 2,
+   "data": "ae2cc60d29de85c7",
+   "color": "#e8e8e8ff",
+   "lw": 0.8,
+   "ls": "-",
+   "marker": "",
+   "ms": 6.0,
+   "mec": null,
+   "mfc": null
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "374708fff7719dd5",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "3",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "0",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "center",
+   "va": "top",
+   "bbox_pt": [
+    25.09,
+    3.03,
+    28.91,
+    8.84
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 2,
+   "data": "6441391010d645b9",
+   "color": "#e8e8e8ff",
+   "lw": 0.8,
+   "ls": "-",
+   "marker": "",
+   "ms": 6.0,
+   "mec": null,
+   "mfc": null
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "6dffccd4ceccbeda",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "3",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "10",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "center",
+   "va": "top",
+   "bbox_pt": [
+    51.18,
+    3.03,
+    58.81,
+    8.84
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 2,
+   "data": "c7a3459ff944177b",
+   "color": "#e8e8e8ff",
+   "lw": 0.8,
+   "ls": "-",
+   "marker": "",
+   "ms": 6.0,
+   "mec": null,
+   "mfc": null
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "6439ba4cf74a0293",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "3",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "20",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "center",
+   "va": "top",
+   "bbox_pt": [
+    79.17,
+    3.03,
+    86.8,
+    8.84
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 2,
+   "data": "7f195d21aa1df916",
+   "color": "#e8e8e8ff",
+   "lw": 0.8,
+   "ls": "-",
+   "marker": "",
+   "ms": 6.0,
+   "mec": null,
+   "mfc": null
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "9d03c0aae0763982",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "3",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "30",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "center",
+   "va": "top",
+   "bbox_pt": [
+    107.17,
+    3.03,
+    114.79,
+    8.84
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 2,
+   "data": "e64756a6c1e136b9",
+   "color": "#e8e8e8ff",
+   "lw": 0.8,
+   "ls": "-",
+   "marker": "",
+   "ms": 6.0,
+   "mec": null,
+   "mfc": null
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "751e48a10534fcec",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "3",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "40",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "center",
+   "va": "top",
+   "bbox_pt": [
+    135.16,
+    3.03,
+    142.79,
+    8.84
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 2,
+   "data": "4469d7e3bcddbf27",
+   "color": "#e8e8e8ff",
+   "lw": 0.8,
+   "ls": "-",
+   "marker": "",
+   "ms": 6.0,
+   "mec": null,
+   "mfc": null
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "f01e2b82f9ea1195",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "3",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "50",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "center",
+   "va": "top",
+   "bbox_pt": [
+    163.15,
+    3.03,
+    170.78,
+    8.84
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "Share of peaks (%)",
+   "size": 7.0,
+   "weight": "bold",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "center",
+   "va": "top",
+   "bbox_pt": [
+    73.28,
+    -7.74,
+    148.12,
+    -0.97
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "374708fff7719dd5",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "0",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "promoter",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "right",
+   "va": "center_baseline",
+   "bbox_pt": [
+    -7.88,
+    105.21,
+    20.0,
+    111.01
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "fc62429c3e69001d",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "0",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "intron",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "right",
+   "va": "center_baseline",
+   "bbox_pt": [
+    2.34,
+    67.75,
+    20.0,
+    73.56
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "0827fd05442d5279",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "0",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "distal",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "right",
+   "va": "center_baseline",
+   "bbox_pt": [
+    3.7,
+    30.3,
+    20.0,
+    36.1
+   ]
+  },
+  {
+   "kind": "Rectangle",
+   "fc": "#2563ebff",
+   "ec": "#00000000",
+   "lw": 1.0,
+   "bbox_pt": [
+    27.0,
+    109.27,
+    172.57,
+    121.68
+   ]
+  },
+  {
+   "kind": "Rectangle",
+   "fc": "#2563ebff",
+   "ec": "#00000000",
+   "lw": 1.0,
+   "bbox_pt": [
+    27.0,
+    71.82,
+    112.38,
+    84.22
+   ]
+  },
+  {
+   "kind": "Rectangle",
+   "fc": "#2563ebff",
+   "ec": "#00000000",
+   "lw": 1.0,
+   "bbox_pt": [
+    27.0,
+    34.36,
+    75.99,
+    46.77
+   ]
+  },
+  {
+   "kind": "Rectangle",
+   "fc": "#dc2626ff",
+   "ec": "#00000000",
+   "lw": 1.0,
+   "bbox_pt": [
+    27.0,
+    95.79,
+    85.79,
+    108.2
+   ]
+  },
+  {
+   "kind": "Rectangle",
+   "fc": "#dc2626ff",
+   "ec": "#00000000",
+   "lw": 1.0,
+   "bbox_pt": [
+    27.0,
+    58.34,
+    150.17,
+    70.74
+   ]
+  },
+  {
+   "kind": "Rectangle",
+   "fc": "#dc2626ff",
+   "ec": "#00000000",
+   "lw": 1.0,
+   "bbox_pt": [
+    27.0,
+    20.88,
+    124.98,
+    33.29
+   ]
+  },
+  {
+   "kind": "Spine",
+   "fc": "#00000000",
+   "ec": "#000000ff",
+   "lw": 0.8,
+   "bbox_pt": [
+    23.5,
+    15.84,
+    27.0,
+    126.72
+   ]
+  },
+  {
+   "kind": "Spine",
+   "fc": "#00000000",
+   "ec": "#000000ff",
+   "lw": 0.8,
+   "bbox_pt": [
+    194.4,
+    15.84,
+    194.4,
+    126.72
+   ]
+  },
+  {
+   "kind": "Spine",
+   "fc": "#00000000",
+   "ec": "#000000ff",
+   "lw": 0.8,
+   "bbox_pt": [
+    27.0,
+    12.34,
+    194.4,
+    15.84
+   ]
+  },
+  {
+   "kind": "Spine",
+   "fc": "#00000000",
+   "ec": "#000000ff",
+   "lw": 0.8,
+   "bbox_pt": [
+    27.0,
+    126.72,
+    194.4,
+    126.72
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "52",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "left",
+   "va": "center",
+   "bbox_pt": [
+    174.57,
+    112.57,
+    182.2,
+    118.38
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "30",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "left",
+   "va": "center",
+   "bbox_pt": [
+    114.39,
+    75.12,
+    122.02,
+    80.92
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "17",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "left",
+   "va": "center",
+   "bbox_pt": [
+    78.0,
+    37.66,
+    85.62,
+    43.47
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "21",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "left",
+   "va": "center",
+   "bbox_pt": [
+    87.79,
+    99.09,
+    95.42,
+    104.9
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "44",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "left",
+   "va": "center",
+   "bbox_pt": [
+    152.18,
+    61.64,
+    159.81,
+    67.44
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "35",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "left",
+   "va": "center",
+   "bbox_pt": [
+    126.99,
+    24.18,
+    134.61,
+    29.99
+   ]
+  },
+  {
+   "kind": "FancyBboxPatch",
+   "fc": "#ffffffcc",
+   "ec": "#cccccccc",
+   "lw": 1.0,
+   "bbox_pt": [
+    148.86,
+    18.84,
+    191.4,
+    38.25
+   ]
+  },
+  {
+   "kind": "Rectangle",
+   "fc": "#2563ebff",
+   "ec": "#00000000",
+   "lw": 1.0,
+   "bbox_pt": [
+    151.26,
+    31.29,
+    163.26,
+    35.49
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "human",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "left",
+   "va": "baseline",
+   "bbox_pt": [
+    168.06,
+    30.04,
+    189.0,
+    35.85
+   ]
+  },
+  {
+   "kind": "Rectangle",
+   "fc": "#dc2626ff",
+   "ec": "#00000000",
+   "lw": 1.0,
+   "bbox_pt": [
+    151.26,
+    22.49,
+    163.26,
+    26.69
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "mouse",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "left",
+   "va": "baseline",
+   "bbox_pt": [
+    168.06,
+    21.24,
+    188.2,
+    27.04
+   ]
+  }
+ ]
+}

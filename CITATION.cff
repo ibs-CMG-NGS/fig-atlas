@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "fig-atlas: config-driven, verifiable and provenance-tracked publication figures"
+abstract: >-
+  A framework for generating manuscript figures reproducibly: FigureSpec
+  declarations drive publishing, README generation and verification;
+  YAML configs control every visual parameter; figures are drawn 1:1 at
+  final print size and audited for printed font and line sizes; storyline
+  compendia are compiled and archived per revision.
+type: software
+authors:
+  - family-names: Kim
+    given-names: Yong Gyu
+repository-code: "https://github.com/ibs-cmg-ngs/fig-atlas"
+license: MIT
+keywords:
+  - scientific figures
+  - reproducibility
+  - matplotlib
+  - publication

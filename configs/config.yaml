@@ -1,0 +1,101 @@
+project:
+  name: "my-paper-figures"
+  # Total number of manuscript figures (used by verify to check completeness).
+  figure_count: 1
+  # Pattern to scan figure spec files. The default project builds only the
+  # example spec; a real project widens this (e.g. "figure_*_myproject.py").
+  spec_pattern: "figure_01_example.py"
+  # Analysis script Snakemake runs to generate this project's figure sources.
+  analysis_script: "analysis/example_analysis.py"
+
+paths:
+  # Set these via environment variables to avoid machine-specific paths in Git:
+  #   RAW_ROOT=...    (overrides raw_root below)
+  #   OUTPUT_ROOT=... (overrides output_root below)
+  raw_root: "${RAW_ROOT}"
+  output_root: "${OUTPUT_ROOT}"
+
+figures:
+  dpi: 300
+  formats:
+    - png
+    - pdf
+    - svg
+  font_family: "DejaVu Sans"
+  font_size: 8
+  
+  # -------------------------------------------------------------------------
+  # Subpanel Layout & Styling Settings (Multi-panel figures)
+  # -------------------------------------------------------------------------
+  # Font size of subpanel label headers (e.g. a, b, c)
+  subpanel_label_size: 14
+  # Font weight of subpanel labels (e.g. "bold", "normal")
+  subpanel_label_weight: "bold"
+  # Subpanel arrangement option:
+  #   - "horizontal", "vertical", "grid", "split_grid", "mosaic"
+  layout: "horizontal"
+  
+  # Dimensions and margins of the combined figure canvas
+  fig_width: 18.0
+  fig_height: 5.5
+  # Spacing between subpanels
+  wspace: 0.15
+  hspace: 0.25
+  # Relative width ratios for layout columns
+  width_ratios:
+    - 1.2
+    - 1.0
+
+  # -------------------------------------------------------------------------
+  # Global Unified Styling Overrides (Wildcard Overrides)
+  # -------------------------------------------------------------------------
+  # These parameters will unify all axis lines, ticks, and font sizes across subpanels.
+  axis_width: 0.8          # Thickness of axis line borders (spines)
+  tick_size: 3.0           # Length of tick marks
+  tick_width: 0.8          # Thickness of tick marks
+  tick_label_size: 6.5     # Font size of x/y tick labels
+  axes_label_size: 8.0     # Font size of x/y axis labels
+  title_size: 10.0         # Font size of subpanel plot titles
+  
+  # Optional: Define unstructured layout matrix if using layout: "mosaic"
+  # mosaic:
+  #   - ["A", "A", "B"]
+  #   - ["A", "A", "C"]
+
+analysis:
+  fdr_threshold: 0.05
+
+# ---------------------------------------------------------------------------
+# Individual Plot Parameters (Optional)
+# ---------------------------------------------------------------------------
+plots:
+  volcano:
+    padj_threshold: 0.05
+    log2fc_threshold: 1.0
+    up_color: "#ff0000"
+    down_color: "#0000ff"
+    ns_color: "#808080"
+    dot_size: 20
+    annotation_mode: "custom"
+    annotation_top_n: 10
+    annotation_label_size: 7
+    annotation_custom_genes: []
+  
+  heatmap:
+    n_genes: 50
+    normalization: "z-score"
+    transpose: false
+    sorting: "clustering"
+    colormap: "RdBu_r"
+    colorbar_min: -3.0
+    colorbar_max: 3.0
+    show_colorbar: true
+
+  pca:
+    n_genes: 500
+    transform: "log2"
+    scaling: "standard"
+    x_pc: 1
+    y_pc: 2
+    point_size: 80
+    show_labels: true

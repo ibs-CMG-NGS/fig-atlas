@@ -1,0 +1,212 @@
+{
+ "freetype": "2.14.3",
+ "figsize_in": [
+  2.4,
+  2.0
+ ],
+ "artists": [
+  {
+   "kind": "Rectangle",
+   "fc": "#ffffffff",
+   "ec": "#ffffffff",
+   "lw": 0.0,
+   "bbox_pt": [
+    0.0,
+    0.0,
+    172.8,
+    144.0
+   ]
+  },
+  {
+   "kind": "Rectangle",
+   "fc": "#1f77b400",
+   "ec": "#94a3b8ff",
+   "lw": 0.6,
+   "bbox_pt": [
+    35.64,
+    15.84,
+    141.48,
+    126.72
+   ]
+  },
+  {
+   "kind": "Circle",
+   "fc": "#93c5fd8c",
+   "ec": "#00000000",
+   "lw": 1.0,
+   "bbox_pt": [
+    40.12,
+    46.59,
+    84.64,
+    91.11
+   ]
+  },
+  {
+   "kind": "Circle",
+   "fc": "#fcd34d8c",
+   "ec": "#00000000",
+   "lw": 1.0,
+   "bbox_pt": [
+    62.33,
+    31.52,
+    137.0,
+    106.19
+   ]
+  },
+  {
+   "kind": "Circle",
+   "fc": "#2563ebff",
+   "ec": "#00000000",
+   "lw": 1.0,
+   "bbox_pt": [
+    62.33,
+    31.52,
+    137.0,
+    106.19
+   ]
+  },
+  {
+   "kind": "Circle",
+   "fc": "#1f77b400",
+   "ec": "#334155ff",
+   "lw": 0.6,
+   "bbox_pt": [
+    40.12,
+    46.59,
+    84.64,
+    91.11
+   ]
+  },
+  {
+   "kind": "Circle",
+   "fc": "#1f77b400",
+   "ec": "#334155ff",
+   "lw": 0.6,
+   "bbox_pt": [
+    62.33,
+    31.52,
+    137.0,
+    106.19
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "180",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#111827ff",
+   "ha": "center",
+   "va": "center",
+   "bbox_pt": [
+    45.51,
+    65.95,
+    56.95,
+    71.76
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "760",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#111827ff",
+   "ha": "center",
+   "va": "center",
+   "bbox_pt": [
+    105.1,
+    65.95,
+    116.54,
+    71.76
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "linked\n140\ncore 68",
+   "size": 6.0,
+   "weight": "bold",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#ffffffff",
+   "ha": "center",
+   "va": "center",
+   "bbox_pt": [
+    60.92,
+    59.46,
+    86.06,
+    78.24
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "In pathway\n(n = 320)",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#334155ff",
+   "ha": "left",
+   "va": "bottom",
+   "bbox_pt": [
+    40.12,
+    110.67,
+    73.39,
+    122.73
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "Driver motif\n(n = 900)",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#334155ff",
+   "ha": "right",
+   "va": "bottom",
+   "bbox_pt": [
+    100.98,
+    110.67,
+    137.0,
+    122.73
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "neither: 120",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#334155ff",
+   "ha": "left",
+   "va": "bottom",
+   "bbox_pt": [
+    37.13,
+    18.08,
+    73.89,
+    23.88
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "all genes: 1,200",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#334155ff",
+   "ha": "right",
+   "va": "bottom",
+   "bbox_pt": [
+    91.84,
+    18.08,
+    139.99,
+    23.88
+   ]
+  }
+ ]
+}

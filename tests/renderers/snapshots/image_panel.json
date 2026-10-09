@@ -1,0 +1,116 @@
+{
+ "freetype": "2.14.3",
+ "figsize_in": [
+  2.4,
+  1.9
+ ],
+ "artists": [
+  {
+   "kind": "Rectangle",
+   "fc": "#ffffffff",
+   "ec": "#ffffffff",
+   "lw": 0.0,
+   "bbox_pt": [
+    0.0,
+    0.0,
+    172.8,
+    136.8
+   ]
+  },
+  {
+   "kind": "Rectangle",
+   "fc": "#ffffffff",
+   "ec": "#00000000",
+   "lw": 0.0,
+   "bbox_pt": [
+    21.6,
+    17.5,
+    155.52,
+    117.94
+   ]
+  },
+  {
+   "kind": "AxesImage",
+   "shape": [
+    120,
+    160,
+    3
+   ],
+   "data": "8a3223e957733c39",
+   "cmap": "viridis",
+   "clim": [
+    0.0,
+    1.0
+   ],
+   "bbox_pt": [
+    21.6,
+    17.5,
+    155.52,
+    117.94
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 2,
+   "data": "d63195c702dc1c1d",
+   "color": "#ffffffff",
+   "lw": 2.0,
+   "ls": "-",
+   "marker": "None",
+   "ms": 6.0,
+   "mec": null,
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "10 µm",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#ffffffff",
+   "ha": "center",
+   "va": "bottom",
+   "bbox_pt": [
+    122.9,
+    24.61,
+    142.1,
+    30.42
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "DAPI",
+   "size": 6.0,
+   "weight": "bold",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#3b82f6ff",
+   "ha": "left",
+   "va": "top",
+   "bbox_pt": [
+    25.62,
+    109.12,
+    41.89,
+    114.92
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "tubulin",
+   "size": 6.0,
+   "weight": "bold",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#22c55eff",
+   "ha": "left",
+   "va": "top",
+   "bbox_pt": [
+    25.62,
+    100.08,
+    49.73,
+    105.88
+   ]
+  }
+ ]
+}

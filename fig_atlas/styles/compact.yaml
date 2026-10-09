@@ -1,0 +1,13 @@
+# Compact overrides — denser panels for multi-panel figure sheets.
+#
+# Layer it on top of the base style (later presets win over earlier ones):
+#
+#   project:
+#     style: ["default", "compact"]
+figures:
+  font_size: 7
+  tick_label_size: 6.0
+  axes_label_size: 7.0
+  title_size: 9.0
+  wspace: 0.30
+  hspace: 0.35

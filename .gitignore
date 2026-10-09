@@ -1,0 +1,39 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+# In-repo virtual environment used as the pinned build interpreter
+# (the fig_atlas/ package, with an underscore, is source and stays tracked)
+/fig-atlas/
+# Candidate env for dependency upgrades (built and compared side by side), and
+# the previous env kept as a rollback after an upgrade
+/fig-atlas-next/
+/fig-atlas-prev/
+# `pip install -e .` metadata / build artifacts
+*.egg-info/
+/build/
+*.tmp
+*.log
+
+# Snakemake working files
+.snakemake/
+.done/
+
+# Raw data — never commit new raw uploads by default
+raw_data/*
+
+local_output/
+
+# Generated outputs that can be rebuilt
+outputs/*
+# Keep the outputs directory structure (.gitkeep)
+!outputs/.gitkeep
+
+# Temporary scratch files — ignore except mock test files
+scratch/*
+!scratch/test_data.csv
+!scratch/test_plot.py
+
+# MkDocs build output (mkdocs build)
+site/

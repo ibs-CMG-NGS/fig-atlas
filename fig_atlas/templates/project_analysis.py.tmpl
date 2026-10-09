@@ -1,0 +1,51 @@
+"""$name: analysis and figure 1.
+
+Created by `fa new project` on $date. Load the input bundles (read only),
+compute what the panels show, and draw them with fig_atlas renderers; every
+visual setting comes from the project config ($config). Record any number a
+legend quotes with claims.record() and register the plotted tables with
+source_data.add() (AGENTS.md 4.5).
+"""
+from __future__ import annotations
+
+import matplotlib  # noqa: E402
+
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt  # noqa: E402
+
+from fig_atlas import claims, get_config, save_page_figure, source_data  # noqa: E402
+from fig_atlas.bundle_figure import draw_plots  # noqa: E402
+from fig_atlas.renderers import place_panel_tags  # noqa: E402
+
+CONFIG = get_config()
+CFG = CONFIG._raw
+RAW = CONFIG.raw_root
+OUT = CONFIG.figures_root
+
+
+def load(name: str, block: dict):
+    """Data for a plots.<name> block that has no `bundle` (read RAW, never modify it).
+    Blocks with a bundle are loaded from it automatically."""
+    raise NotImplementedError(f"load the data for plots.{name}")
+
+
+def main() -> None:
+    fcfg = CFG.get("figures", {})
+    plt.rcParams.update({"font.family": fcfg.get("font_family", "DejaVu Sans")})   # AGENTS.md 1.4
+    fig_w, fig_h = CONFIG.page.figure_size_in(height_mm=float(fcfg.get("height_mm", 80)))
+    fig = plt.figure(figsize=(fig_w, fig_h), dpi=CONFIG.dpi)
+    # Every plots.<name> block in the config is one panel (fig_atlas.bundle_figure).
+    columns = draw_plots(fig, CFG.get("plots", {}), CONFIG.project_root, fcfg, load=load)
+    # claims.record("n_samples", n, source="...")               # numbers quoted in the legend
+    # source_data.add(table, panel="a", title="...")             # values a panel plots
+
+    tcfg = fcfg.get("tags", {})
+    place_panel_tags(fig, columns, float(tcfg.get("size", 9.0)), pad_pt=float(tcfg.get("pad_pt", 2.0)))
+    OUT.mkdir(parents=True, exist_ok=True)
+    for fmt in CONFIG.formats:
+        save_page_figure(fig, OUT / f"figure1_$slug.{fmt}")
+    plt.close(fig)
+
+
+if __name__ == "__main__":
+    main()

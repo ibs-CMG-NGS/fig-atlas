@@ -1,0 +1,2 @@
+# Marks this folder as a fig-atlas project repository (configs/, analysis/, figure_specs/, ...).
+# `fa` finds the repository by this file; `fa init` writes it in a new one.

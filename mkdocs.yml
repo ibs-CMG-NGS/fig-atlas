@@ -1,0 +1,101 @@
+# Documentation site (roadmap 8.2): `mkdocs serve` to read it locally, `mkdocs build --strict`
+# in CI. Install with `pip install -e .[docs]`. Pages are organised the Diataxis way:
+# tutorials (learn), how-to guides (do a task), reference (look up), explanation (why).
+site_name: fig-atlas
+site_description: Config-driven, reproducible publication figures -- with checks, provenance and a paper lifecycle
+repo_url: https://github.com/ibs-cmg-ngs/fig-atlas
+edit_uri: edit/master/docs/
+docs_dir: docs
+strict: true
+
+theme:
+  name: material
+  language: ko
+  features:
+    - navigation.sections
+    - navigation.top
+    - navigation.footer          # previous / next page links
+    - search.highlight
+    - content.code.copy
+
+markdown_extensions:
+  - admonition
+  - tables
+  - toc:
+      permalink: true
+      # GitHub-style anchors that keep Korean letters, so #7-파라미터-... links work on the site too
+      slugify: !!python/object/apply:pymdownx.slugs.slugify {kwds: {case: lower}}
+  - pymdownx.superfences:
+      # ```mermaid blocks are drawn as diagrams (GitHub draws them too)
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.highlight
+
+# Links to repository files outside docs/ (AGENTS.md, examples/, configs/, ...) become links
+# to the file on GitHub; tests/test_docs_site.py checks that every such link resolves.
+hooks:
+  - scripts/mkdocs_hooks.py
+
+# Research records of one study: kept in the repository, not on the site.
+exclude_docs: |
+  guide/_template.md
+  usability/
+  paper/
+  storylines/
+  storyline/
+  data_contracts/
+  baselines/
+
+validation:
+  omitted_files: info          # pages kept out of the nav on purpose (migration notes)
+  links:
+    not_found: warn            # a broken link inside docs/ fails the strict build
+    anchors: info
+
+nav:
+  - 홈: index.md
+  - 연구자 안내서:
+      - guide/00-how-to-read.md
+      - guide/01-why.md
+      - guide/02-overview.md
+      - guide/03-data-bundles.md
+      - guide/04-first-figure.md
+      - guide/05-entry-paths.md
+      - guide/06-config.md
+      - guide/07-results.md
+      - guide/08-checks.md
+      - guide/09-integrity.md
+      - guide/10-freshness.md
+      - guide/11-lifecycle.md
+      - guide/12-ai.md
+      - guide/13-rules.md
+      - 부록:
+          - guide/91-glossary.md
+          - guide/92-faq.md
+          - guide/93-commands.md
+          - guide/94-reading.md
+  - 튜토리얼:
+      - 첫 그림 (15분): tutorials/first_figure.md
+      - 현미경 이미지 그림: tutorials/imaging_figure.md
+  - How-to:
+      - AI 에이전트 연결 (fa mcp): howto/ai_agents.md
+      - 새 분야 팩 만들기: howto/new_domain_pack.md
+  - 레퍼런스:
+      - 데이터 번들 계약서: contracts/README.md
+      - 표 번들 (선·산점도): contracts/table_bundle_contract.md
+      - 이미지 번들: contracts/image_bundle_contract.md
+      - 새 그림 유형 요청: contracts/new_plot_type_contract.md
+      - 명령 (자동 생성): reference/cli.md
+      - 설정 키 (자동 생성): reference/config.md
+      - 렌더러 갤러리 (자동 생성): reference/gallery.md
+      - 렌더러 사용처: reference/renderer_inventory.md
+  - 설명:
+      - 설계 결정 (ADR):
+          - decisions/README.md
+          - 0001 최종 크기 렌더링: decisions/0001-final-size-rendering.md
+          - 0002 config가 정본: decisions/0002-config-holds-the-full-block.md
+          - 0003 렌더러는 모양: decisions/0003-renderers-are-shapes.md
+          - 0004 절차는 명령 + MCP: decisions/0004-procedures-are-commands.md
+          - 0005 규칙의 단일 정본: decisions/0005-agents-md-single-source.md

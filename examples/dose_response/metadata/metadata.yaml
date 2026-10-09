@@ -1,0 +1,12 @@
+# Synthetic example (examples/make_examples.py): viability over dose, 3 compounds x 7 doses x 4 replicates.
+plot_type: line_band
+plot_params:
+  x_col: dose_uM
+  y_col: viability
+  group_col: compound
+  x_log: true
+  error: sem
+  show_points: true
+  labels_title: "Viability after 48 h"
+  labels_xlabel: "Dose (uM)"
+  labels_ylabel: "Viability (% of control)"

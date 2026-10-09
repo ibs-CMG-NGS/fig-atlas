@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      # Reproducible PDF/SVG timestamps (same convention as .vscode/build_task.ps1).
+      SOURCE_DATE_EPOCH: "0"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -e . --no-deps
+          pip install "mkdocs>=1.6,<2" "mkdocs-material>=9.5,<10"
+
+      - name: Unit + renderer snapshot tests
+        run: pytest
+
+      - name: Documentation site builds with no broken links (mkdocs.yml)
+        run: mkdocs build --strict
+
+      - name: fa CLI is installed and finds the projects
+        run: |
+          fa --help
+          fa list
+
+      - name: Reference pages are up to date (docs/reference: commands, config keys, gallery)
+        run: fa reference --check
+
+      - name: Renderer inventory is up to date
+        run: fa inventory --check
+
+      - name: No new hand-typed numbers in figure legends (docs/baselines/hand_typed_numbers.csv)
+        run: fa claims --check
+
+      - name: No new literal style values in renderers / analysis scripts (docs/baselines/hardcoded_literals.csv)
+        run: fa lint --hardcoded --check
+
+      - name: Example project builds (no raw data needed)
+        env:
+          CONFIG_PATH: configs/config.yaml
+        run: |
+          python analysis/example_analysis.py
+          python -m fig_atlas.tools.build_atlas
+          python -m fig_atlas.tools.verify_atlas

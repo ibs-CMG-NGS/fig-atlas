@@ -1,0 +1,62 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fig-atlas"
+version = "0.1.0.dev0"
+description = "Config-driven, verifiable and provenance-tracked publication figures"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Yong Gyu Kim" }]
+requires-python = ">=3.10"
+# Same pins as requirements.txt / environment.yml (validated versions).
+dependencies = [
+    "matplotlib>=3.10,<3.11",
+    "numpy>=2.0,<3",
+    "pandas>=2.2,<3",
+    "scipy>=1.13,<2",
+    "seaborn>=0.13.2,<0.14",
+    "pyyaml>=6.0",
+    "ruamel.yaml>=0.18,<0.20",
+    "adjustText>=1.0",
+    "matplotlib-venn>=1.1.1",
+    "squarify>=0.4.3",
+    "pypdf>=4.0",
+]
+
+[project.optional-dependencies]
+workflow = ["snakemake>=7.32"]
+test = ["pytest>=7.0"]
+# Documentation site (mkdocs.yml). MkDocs 2.0 drops plugins and themes, so stay on 1.x.
+docs = ["mkdocs>=1.6,<2", "mkdocs-material>=9.5,<10"]
+
+[project.scripts]
+fa = "fig_atlas.cli:main"
+
+# Plugin points (fig_atlas.plugins): what the omics pack adds to the core.
+[project.entry-points."fig_atlas.renderers"]
+omics = "fig_atlas_omics.renderers"
+
+[project.entry-points."fig_atlas.contracts"]
+omics = "fig_atlas_omics.contracts:CONTRACTS"
+
+[project.entry-points."fig_atlas.ingest"]
+omics = "fig_atlas_omics.contracts:INGEST"
+
+[project.entry-points."fig_atlas.recipes"]
+omics = "fig_atlas_omics.recipes:RECIPES"
+
+[project.entry-points."fig_atlas.commands"]
+omics = "fig_atlas_omics.cli:register"
+
+[project.urls]
+Repository = "https://github.com/ibs-cmg-ngs/fig-atlas"
+
+[tool.setuptools.packages.find]
+include = ["fig_atlas", "fig_atlas.*", "fig_atlas_omics", "fig_atlas_omics.*"]
+
+[tool.setuptools.package-data]
+fig_atlas = ["templates/*.md", "templates/*.tmpl", "styles/*.yaml", "matplotlibrc"]
+fig_atlas_omics = ["contracts/*.md"]

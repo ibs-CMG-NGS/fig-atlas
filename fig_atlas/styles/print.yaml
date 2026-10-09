@@ -1,0 +1,109 @@
+# Print typography: one unified type/line scale for figures drawn at their
+# FINAL printed size (pair with a page_* preset). Because nothing is scaled
+# after rendering, a 7 pt label here prints as 7 pt in every figure -- the
+# point of this preset is that the same setting looks the same everywhere.
+#
+#   project:
+#     style: ["default", "print", "page_a4_portrait_narrow"]
+#
+# Values sit inside the common journal envelope (sans-serif, 5-8 pt text,
+# >= 0.25 pt lines); journal-specific presets (styles/journal_*.yaml, added
+# when a target journal is chosen) layer on top and override as needed.
+figures:
+  font_family: "DejaVu Sans"
+  font_size: 7
+  tick_label_size: 6.0
+  axes_label_size: 7.0
+  title_size: 8.0
+  subpanel_label_size: 10
+  subpanel_label_weight: "bold"
+  axis_width: 0.6
+  tick_size: 2.5
+  tick_width: 0.6
+
+# [Renderer typography defaults] Text sizes a renderer uses when the project's
+# config does not set them (fig_atlas.schema typography(); roadmap Phase 2.2).
+# Only final-size presets define this block: projects without it keep each
+# renderer's historical default. Values match the figures block above so a
+# renderer that falls back draws at the same scale as everything else.
+typography:
+  title_size: 8.0             # pt; panel titles drawn by a renderer -- lower if titles wrap
+  axes_label_size: 7.0        # pt; x/y axis titles -- lower if they clip or crowd
+  tick_label_size: 6.0        # pt; tick labels -- lower if neighbouring labels touch
+  legend_fontsize: 6.0        # pt; legend text -- lower if a legend covers data
+
+# Thresholds used by fig_atlas.print_check / scripts/audit_print_size.py.
+# Measured at the size the figure actually prints on the page preset.
+print_check:
+  min_font_pt: 5.0
+  min_line_pt: 0.25
+
+# [Preflight] Thresholds for fig_atlas.preflight / `fa preflight` (roadmap
+# Phase 3): overlapping text, clipping and panel intrusion, measured in mm
+# on the final printed canvas.
+preflight:
+  # How `fa verify` treats preflight errors: "report" lists them as WARN
+  # (the build still passes); "enforce" makes them FAIL -- set it in a
+  # project's config before submission.
+  mode: "report"
+  # Smallest text-text overlap reported, in mm^2. Raise if hairline touches
+  # between labels are flagged; lower to catch slighter collisions.
+  min_overlap_mm2: 0.10
+  # Overlap must also cover at least this fraction [0-1] of the smaller text,
+  # so a big title grazing a small label isn't flagged.
+  min_overlap_frac: 0.05
+  # Fraction [0-0.5] of a text box's height trimmed off top and bottom before
+  # comparing: a text extent spans the full line height, not just the ink.
+  # Increase if stacked labels that look fine are reported as overlapping.
+  text_ink_shrink: 0.12
+  # How far (mm) a text or plot area may extend past the saved area before
+  # it counts as clipped.
+  canvas_tol_mm: 0.2
+  # Share [0-1] of a legend's area allowed inside another panel's plot area.
+  legend_overlap_frac: 0.02
+  # Overlap (mm^2) allowed between two panels' plot areas before it is
+  # reported (texts running into a neighbour use min_overlap_mm2 instead).
+  panel_overlap_mm2: 0.5
+  # Smallest PNG resolution, in pixels per printed inch (at the size the
+  # figure prints on the page preset). Journals typically ask 300 for
+  # halftones/colour, 600-1200 for line art.
+  min_dpi: 300
+  # Smallest dpi for rasterized content inside PDF/SVG (images, heatmaps
+  # drawn with imshow, rasterized=True scatter layers): it is embedded at
+  # the savefig dpi, so a low value blurs it even in a vector file.
+  min_raster_dpi: 300
+  # Font names a target journal accepts in PDFs (e.g. ["Arial", "Helvetica"]).
+  # Empty = any embedded font is fine; journal presets set this.
+  allowed_fonts: []
+  # [Colour] Smallest CIELAB delta-E between colours a reader must tell apart
+  # (legend entries, scatter groups) under simulated colour-vision deficiency.
+  # Okabe-Ito stays above 16; matplotlib's default red/green pair drops to ~5.
+  min_cvd_delta_e: 10.0
+  # Deficiencies simulated (Machado et al. 2009, full severity).
+  cvd_types: ["deuteranomaly", "protanomaly", "tritanomaly"]
+  # WCAG contrast ratio of a text against what is drawn behind it (cell,
+  # bar, background). Below this is reported; raise towards 4.5 for stricter
+  # print legibility.
+  min_text_contrast: 3.0
+  # Grey text on white at or above this ratio is treated as deliberate
+  # de-emphasis (e.g. "not significant" placeholders) and reported as info.
+  muted_text_min_contrast: 2.0
+  # Largest CIELAB chroma a text colour may have to count as "grey" for the
+  # rule above (slate/gray greys are 7-15; pastel colours start around 30).
+  muted_max_chroma: 16.0
+  # [Layout rules] Neighbouring tick labels closer than this (mm) read as one
+  # label (e.g. "24h48h"). Raise to demand more breathing room.
+  min_tick_gap_mm: 0.3
+  # Panel tags stacked in one column must share their left edge within this
+  # (mm) -- CLAUDE.md rule 5's common plumb line.
+  panel_tag_align_tol_mm: 0.3
+  # Tags whose left edges are within this distance (mm) count as one column.
+  panel_tag_column_mm: 6.0
+  # Journal tag style; null = not enforced (journal presets set these).
+  panel_tag_case: null          # "lower" | "upper"
+  panel_tag_size_pt: null
+  # Within one figure, a role's texts (tick labels, axis titles, tags, legend)
+  # in a size different from the rest are reported when they are at most
+  # this share [0-1] of that role -- a minority size usually means a
+  # hardcoded fontsize.
+  font_size_outlier_frac: 0.25

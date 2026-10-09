@@ -1,0 +1,104 @@
+project:
+  name: "pilot-imaging"
+  figure_count: 1
+  # Final-size rendering: print typography + the A4 portrait page (figure drawn 1:1 on the content width).
+  style: ["default", "print", "page_a4_portrait_narrow"]
+  spec_pattern: "figure_*_pilot-imaging.py"
+  analysis_script: "analysis/pilot-imaging_analysis.py"
+
+# Roadmap 6a.4 non-NGS pilot: an imaging figure built with the domain-neutral
+# core only (no fig_atlas_omics). Data: BBBC013v1, public (CC BY 3.0, Ilya Ravkin,
+# Broad Bioimage Benchmark Collection); fetch with `python scripts/fetch_bbbc013.py`.
+data:                                 # Source of the images, quoted in the figure legend (live claims)
+  license: "CC BY 3.0"                # Licence of BBBC013v1 (Creative Commons Attribution 3.0 Unported)
+
+paths:
+  raw_root: "raw_data/pilot-imaging/bbbc013"
+  output_root: "outputs"
+
+figures:
+  font_family: "DejaVu Sans"
+  height_mm: 62                       # Figure height in mm (width = the page content width); raise if panels feel cramped
+  width_ratios: [2.1, 0.9, 1.25]      # Relative widths: the image pair (a), bars (b), dose curve (c)
+  wspace: 0.45                        # Gap between panels a, b, c (fraction of the mean panel width); raise if labels touch
+  images_wspace: 0.06                 # Gap between the two images of panel a (fraction of one image width)
+  margins: [0.03, 0.99, 0.86, 0.20]   # [left, right, top, bottom] figure fraction for the panel row; lower bottom if x titles clip
+  tags:                               # Panel tags a-c on the panels' outer bounding boxes (CLAUDE.md 1.5)
+    size: 9.0                         # Tag font size in pt
+    pad_pt: 2.0                       # Gap between a tag and its panel's outer edge, in pt
+
+# [Plate] BBBC013 plate map: rows A-D hold the Wortmannin series (4 replicates).
+plate:
+  rows: ["A", "B", "C", "D"]          # Replicate rows used (rows E-H, the LY294002 series, are not used: their controls are not documented)
+  negative_cols: [1, 2]               # No-drug wells (dose 0)
+  positive_cols: [12]                 # 150 nM Wortmannin wells (the documented positive control)
+  dose_cols: [3, 4, 5, 6, 7, 8, 9, 10, 11]   # Dose-curve wells, 0.98-250 nM
+  dose_unit: "nM"                     # Unit of the plate map doses (Wortmannin)
+
+# [Segmentation] Nuclei from the DNA channel; a ring around each nucleus stands for its cytoplasm.
+segmentation:
+  threshold: "otsu"                   # Nucleus mask threshold on the DNA image: "otsu", or a number in image units (0-255)
+  opening_iter: 2                     # Binary opening passes that remove specks (pixels); raise if debris counts as nuclei
+  min_nucleus_px: 30                  # Smallest nucleus kept, in pixels; raise to drop fragments
+  ring_gap_px: 1                      # Gap between nucleus edge and the cytoplasm ring, in pixels
+  ring_width_px: 5                    # Width of the cytoplasm ring, in pixels; raise to sample more cytoplasm
+  background_percentile: 1            # GFP background = this percentile of the whole image, subtracted before the ratio
+
+plots:
+  # [Panel a] Representative images: the same linear display range in both conditions.
+  images:
+    control_well: "A-01"              # Well shown as the no-drug example (row-column)
+    treated_well: "A-12"              # Well shown as the 150 nM Wortmannin example
+    crop: [160, 160, 480, 480]        # Region shown, pixels [x0, y0, x1, y1] of the 640 x 640 image
+    channel_colors: ["#22c55e", "#d946ef"]          # GFP (FKHR-EGFP) green, DNA (DRAQ5) magenta
+    channel_labels: ["FKHR-GFP", "DNA"]             # Names printed in the image corner
+    display_ranges: [[0, 160], [0, 140]]            # Linear display range per channel, image units (8-bit); same in both panels
+    gamma: 1.0                        # 1 = linear only (anything else is reported as a nonlinear adjustment)
+    show_channel_labels: true
+    channel_label_fontsize: 5.5       # Channel name size in pt
+    channel_label_box: true           # Dark box behind the channel names, so magenta stays readable on green cells
+    channel_label_box_alpha: 0.85     # Opacity of that box [0-1]; raise if the names are still hard to read
+    title_size: 6.5                   # Image title size in pt
+    titles: ["No drug", "Wortmannin 150 nM"]       # Titles over the two images
+    frame: true                       # Thin frame around each image
+    frame_width: 0.4                  # Frame line width in pt
+    # No scale bar: BBBC013 does not publish the pixel size (pixel_size stays unset).
+
+  # [Panel b] Nuclear / cytoplasmic GFP per well, controls vs 150 nM Wortmannin.
+  ratio_bars:
+    stat_test: "welch"                # Test of treated vs no-drug wells (fig_atlas.stats): welch, student or mannwhitney
+    star_thresholds: [[0.001, "***"], [0.01, "**"], [0.05, "*"]]   # [P threshold, symbol], ascending
+    colors: ["#9ca3af", "#16a34a"]    # Bar colour: no drug, Wortmannin
+    bar_width: 0.7                    # Total bar width per category (x units)
+    point_size: 10                    # Per-well point size, pt^2
+    point_jitter: 0.08                # Horizontal jitter of the points (x units)
+    errorbar: "sem"                   # Error bar: sem or sd
+    capsize: 2.0                      # Error bar cap length, pt
+    errorbar_width: 0.6               # Error bar line width, pt
+    y_headroom: 1.25                  # Space above the bars for the star bracket (x the tallest bar)
+    sig_line_width: 0.6               # Bracket line width, pt
+    sig_gap: 0.04                     # Gap between bars and bracket (fraction of the data top)
+    ylabel: "Nuclear / cytoplasmic GFP"
+    xtick_mode: "group"               # One x label per bar, named by its group (no legend needed)
+    group_labels: ["No drug", "Wortmannin"]          # Names under the two bars
+    show_legend: false                # The x labels name the bars
+    axes_label_weight: "normal"       # Axis title weight, matching panel c
+    title_size: 6.5                   # Panel title size in pt
+    axes_label_size: 6.0              # Axis title size in pt
+    tick_label_size: 5.5              # Tick label size in pt
+
+  # [Panel c] Dose response: mean +/- SEM of the 4 replicate wells per dose (log dose axis).
+  dose_curve:
+    color: "#16a34a"                  # Line and band colour
+    line_width: 1.0                   # Centre line width, pt
+    marker_size: 2.5                  # Marker size at each dose, pt
+    band_alpha: 0.25                  # Band opacity [0-1]
+    show_points: true                 # Show the individual wells
+    point_size: 6                     # Well point size, pt^2
+    control_line_color: "#6b7280"     # Dashed line at the no-drug mean
+    control_line_width: 0.6           # Its width in pt
+    control_line_style: "--"
+    xlabel: "Wortmannin (nM)"
+    ylabel: "Nuclear / cytoplasmic GFP"
+    axes_label_size: 6.0              # Axis title size in pt
+    tick_label_size: 5.5              # Tick label size in pt

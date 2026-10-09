@@ -1,0 +1,23 @@
+# Repository-wide matplotlib defaults for figure OUTPUT FILES (not styling).
+#
+# matplotlib reads ./matplotlibrc from the current working directory before
+# any other rc file, and every build entry point (.vscode/build_task.ps1,
+# .vscode/compile_storylines_task.ps1, Snakefile, CI, scripts/audit_print_size.py)
+# runs from the repository root -- so this applies to every figure the
+# pipeline writes without touching the analysis scripts. Running a script
+# from another directory bypasses it.
+#
+# Visual styling (fonts sizes, colors, line widths) does NOT belong here: it
+# stays in configs/ and styles/ per the config-driven rule.
+
+# Embed fonts as TrueType (Type 42) instead of matplotlib's default Type 3.
+# Journals and Adobe Illustrator expect Type 42/TrueType: Type 3 glyphs are
+# often rejected at submission and can't be edited as text.
+pdf.fonttype: 42
+ps.fonttype: 42
+
+# Fixed salt for the element IDs matplotlib writes into SVG files, so the same
+# figure produces a byte-identical SVG on every build (reproducible output
+# hashes). The PDF/SVG creation date is fixed separately by the build entry
+# points through the SOURCE_DATE_EPOCH environment variable.
+svg.hashsalt: fig-atlas
