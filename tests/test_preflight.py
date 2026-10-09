@@ -193,3 +193,22 @@ def test_composite_panel_with_wide_title_is_not_flagged():
     assert hb.x1 > sb.x0 and hb.y1 > sb.y1            # outer boxes do overlap...
     errors = [f for f in preflight(fig, saved_bbox_in="tight") if f.severity == "error"]
     assert not errors, [(f.check, f.message) for f in errors]   # ...but that's no defect
+
+
+def test_overlay_box_is_drawn_where_the_finding_is(tmp_path):
+    """The overlay is saved at its own dpi (150); a box placed in pixels at the
+    figure's dpi (300 here) once landed at twice the distance from the corner."""
+    from PIL import Image
+
+    from fig_atlas.preflight import Finding, draw_overlay
+    fig = plt.figure(figsize=(4.0, 3.0), dpi=300)
+    box = [40.0, 30.0, 60.0, 45.0]                       # mm from the bottom-left corner
+    draw_overlay(fig, [Finding("text_overlap", "error", "x", box)], tmp_path / "o.png", dpi=150)
+    im = np.asarray(Image.open(tmp_path / "o.png").convert("RGB")).astype(int)
+    red = (im[..., 0] > 180) & (im[..., 1] < 90) & (im[..., 2] < 90)
+    k = 150 / 25.4
+    red[:, int(box[2] * k) + 4:] = False                 # leave out the number written past the box
+    ys, xs = np.nonzero(red)
+    h = im.shape[0]
+    assert abs(xs.min() - box[0] * k) < 6 and abs(xs.max() - box[2] * k) < 6
+    assert abs(ys.min() - (h - box[3] * k)) < 6 and abs(ys.max() - (h - box[1] * k)) < 6

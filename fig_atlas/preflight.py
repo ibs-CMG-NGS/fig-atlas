@@ -875,16 +875,19 @@ def draw_overlay(fig, findings: list[Finding], path, dpi: int = 150) -> None:
     orange = warn), for a person or an agent to see where the problem is."""
     from matplotlib.patches import Rectangle
 
-    k = fig.dpi / MM_PER_INCH
+    # Boxes are placed in inches on the canvas, not in pixels: savefig(dpi=...)
+    # redraws at the overlay's dpi, and pixel positions taken at the figure's
+    # own dpi put every box in the wrong place when the two differ.
+    k = 1 / MM_PER_INCH
+    w_in, h_in = fig.get_size_inches()
     added = []
     for n, f in enumerate(findings, 1):
         x0, y0, x1, y1 = f.bbox_mm
         color = "#dc2626" if f.severity == "error" else "#f59e0b"
         pad = 0.4
         r = Rectangle(((x0 - pad) * k, (y0 - pad) * k), (x1 - x0 + 2 * pad) * k, (y1 - y0 + 2 * pad) * k,
-                      transform=None, fill=False, edgecolor=color, linewidth=1.0, zorder=1e6)
-        t = fig.text((x1 + pad) * k / (fig.get_size_inches()[0] * fig.dpi),
-                     (y1 + pad) * k / (fig.get_size_inches()[1] * fig.dpi),
+                      transform=fig.dpi_scale_trans, fill=False, edgecolor=color, linewidth=1.0, zorder=1e6)
+        t = fig.text((x1 + pad) * k / w_in, (y1 + pad) * k / h_in,
                      str(n), color=color, fontsize=6, fontweight="bold", zorder=1e6)
         fig.add_artist(r)
         added += [r, t]
