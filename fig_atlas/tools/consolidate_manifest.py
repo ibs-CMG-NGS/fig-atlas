@@ -25,7 +25,7 @@ def _write_csv(path: Path, rows: list[dict[str, str]], fieldnames: set[str]) -> 
 
 def active_projects() -> set[str]:
     """Projects that still have a live config: configs/**/config_<name>.yaml,
-    excluding anything under an archive/ folder (retired per CLAUDE.md §5.3)."""
+    excluding anything under an archive/ folder (retired per AGENTS.md §5.3)."""
     return {
         p.stem[len("config_"):]
         for p in (ROOT / "configs").rglob("config_*.yaml")

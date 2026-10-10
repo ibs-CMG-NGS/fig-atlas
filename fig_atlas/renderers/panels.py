@@ -23,7 +23,7 @@ def place_panel_tags(fig, columns, label_size, pad_pt=2.0, fontweight="bold", al
     edge sits on the column's shared plumb line -- the leftmost outer edge
     (tick labels, axis titles, legends included) of any panel in that
     column -- and its baseline sits ``pad_pt`` above its own panel's outer
-    top edge (CLAUDE.md rule 5: tags follow the outer bounding box, not the
+    top edge (AGENTS.md rule 1.5: tags follow the outer bounding box, not the
     plot spine, and stacked panels share one vertical line).
 
     ``align_rows`` (optional) lists groups of letters that sit in one

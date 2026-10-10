@@ -95,7 +95,7 @@ preflight:
   # label (e.g. "24h48h"). Raise to demand more breathing room.
   min_tick_gap_mm: 0.3
   # Panel tags stacked in one column must share their left edge within this
-  # (mm) -- CLAUDE.md rule 5's common plumb line.
+  # (mm) -- AGENTS.md rule 1.5's common plumb line.
   panel_tag_align_tol_mm: 0.3
   # Tags whose left edges are within this distance (mm) count as one column.
   panel_tag_column_mm: 6.0

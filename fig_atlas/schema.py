@@ -1,7 +1,7 @@
 """Renderer parameter schemas (roadmap Phase 2, step 2.0).
 
 A renderer declares, next to its code, every parameter it reads: type,
-default, unit, what it does and how to tune it -- the three things CLAUDE.md
+default, unit, what it does and how to tune it -- the three things AGENTS.md
 1.6 asks every config comment to say. From that single definition the tools
 can validate a config, write its commented YAML block, explain where a value
 came from, and keep code defaults from drifting apart.

@@ -40,7 +40,7 @@ C7/C8 layout rules and consistency
     tick_labels_touching      neighbouring tick labels < ``min_tick_gap_mm``
                               apart (they read as one label)                   warn
     panel_tag_misaligned      tags stacked in one column don't share a plumb
-                              line (CLAUDE.md rule 5)                          warn
+                              line (AGENTS.md rule 1.5)                          warn
     panel_tag_inconsistent    tags differ in size / weight / case              warn
     panel_tag_style           tag case or size differs from the journal preset warn
     font_size_outlier         a few texts of one role (tick labels, axis
@@ -729,7 +729,7 @@ def _check_tick_gaps(fig, texts: list[_Text], p: dict) -> list[Finding]:
 
 
 def _check_panel_tags(texts: list[_Text], p: dict) -> list[Finding]:
-    """CLAUDE.md rule 5 and journal tag style: tags stacked in one column
+    """AGENTS.md rule 1.5 and journal tag style: tags stacked in one column
     share one plumb line; all tags share size, weight and case."""
     tags = [t for t in texts if t.role == "panel_tag"]
     out = []
@@ -785,7 +785,7 @@ def font_size_profile(texts: list[_Text]) -> dict[str, dict[float, int]]:
 
 def _check_font_sizes(fig, texts: list[_Text], p: dict) -> list[Finding]:
     """Within one role, a few texts in a size different from all the others
-    usually means a hardcoded size somewhere (CLAUDE.md rule 2)."""
+    usually means a hardcoded size somewhere (AGENTS.md rule 1.2)."""
     out = []
     for role, sizes in font_size_profile(texts).items():
         total = sum(sizes.values())

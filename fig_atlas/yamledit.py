@@ -1,7 +1,7 @@
 """Comment-preserving YAML edits (roadmap Phase 2, step 2.0).
 
 Configs are the researchers' UI: their comments, order and layout must
-survive any automated edit (CLAUDE.md 1.6, "Zero Comment Stripping"), so tools
+survive any automated edit (AGENTS.md 1.6, "Zero Comment Stripping"), so tools
 never write them with PyYAML. This module edits through ruamel.yaml and only
 when that is lossless: a file is edited only if loading and dumping it
 unchanged reproduces it byte for byte (under one of the indentation styles the

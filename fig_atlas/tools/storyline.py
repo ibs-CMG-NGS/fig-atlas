@@ -89,7 +89,7 @@ def cmd_init(args) -> int:
     for t in story["tables"]:
         lines += [f"  - slot: {_q(t['role'])}", f"    file: {_q(t['file'])}",
                   f"    generator: {_q(t['generator'])}", f"    description: {_q(t['description'])}"]
-    lines += ["", "# [Retired] Former figures moved to <domain>/archive/ (CLAUDE.md section 5.3);",
+    lines += ["", "# [Retired] Former figures moved to <domain>/archive/ (AGENTS.md section 5.3);",
               "# listed in the registry table, never compiled.", "retired:"]
     lines += [f"  - {_q(r)}" for r in retired] or ["  []"]
     out.parent.mkdir(parents=True, exist_ok=True)

@@ -3,7 +3,7 @@
 Scripts and renderers read config values with ``cfg.get("key", default)``; a
 key the code never asks for is silently ignored, and a key the code asks for
 but the config lacks silently falls back to a default typed in Python. Both
-defeat "the config is the source of truth" (CLAUDE.md 1.2) without a sound.
+defeat "the config is the source of truth" (AGENTS.md 1.2) without a sound.
 
 While ``fa build`` runs an analysis script (fig_atlas.provenance), every
 ProjectConfig wraps its values in ``TrackingDict``, which notes each key path
