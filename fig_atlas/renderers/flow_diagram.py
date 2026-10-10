@@ -28,6 +28,7 @@ from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
 from fig_atlas.schema import Param, Schema, uses_schema
 
 MM_PER_PT = 25.4 / 72
+VERTICAL_SLOPE = 0.05     # an arrow this close to vertical (dx / dy) counts as vertical for its label
 
 SCHEMA = Schema("flow_diagram", params=[
     # [Data]
@@ -174,8 +175,17 @@ def render_flow_diagram(ax, df, params):
                 ax.text(mx, my - sign * off, e["label"], ha="center", va="bottom" if y_down else "top",
                         fontsize=params.get("edge_label_size", 6.0), color=params.get("edge_label_color", "#374151"),
                         zorder=5)
-            else:                                              # vertical: label to its right
+            elif abs(p1[0] - p0[0]) < abs(p1[1] - p0[1]) * VERTICAL_SLOPE:   # vertical: label to its right
                 ax.text(mx + off, my, e["label"], ha="left", va="center",
+                        fontsize=params.get("edge_label_size", 6.0), color=params.get("edge_label_color", "#374151"),
+                        zorder=5)
+            else:                                              # slanted: label off the line, on the outer side
+                dx, dy = p1[0] - p0[0], p1[1] - p0[1]
+                norm = (dx * dx + dy * dy) ** 0.5
+                nx, ny = dy / norm, -dx / norm                 # perpendicular to the arrow
+                if nx < 0:
+                    nx, ny = -nx, -ny
+                ax.text(mx + nx * off, my + ny * off, e["label"], ha="left", va="center",
                         fontsize=params.get("edge_label_size", 6.0), color=params.get("edge_label_color", "#374151"),
                         zorder=5)
 

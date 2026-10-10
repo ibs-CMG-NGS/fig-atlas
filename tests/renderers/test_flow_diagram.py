@@ -71,3 +71,18 @@ def test_edge_point_along_a_side():
     (x0, y0), (x1, y1) = _arrows(ax)[0]._posA_posB
     assert (x0, y0) == (40, 23) and (x1, y1) == (40, 40)      # a quarter along b's bottom and c's top
     plt.close(fig)
+
+
+def test_label_of_a_slanted_arrow_sits_off_the_line():
+    nodes = pd.DataFrame([{"id": "p", "x": 40, "y": 0, "w": 20, "h": 10},
+                          {"id": "q", "x": 0, "y": 30, "w": 20, "h": 10}])
+    fig, ax = plt.subplots()
+    render_flow_diagram(ax, nodes, {"edges": [{"from": "p", "to": "q", "from_side": "b", "to_side": "r",
+                                               "label": "L"}], "edge_label_offset": 2.0})
+    (x0, y0), (x1, y1) = _arrows(ax)[0]._posA_posB
+    label = next(t for t in ax.texts if t.get_text() == "L")
+    lx, ly = label.get_position()
+    # distance from the label anchor to the arrow's line equals the offset
+    dist = abs((y1 - y0) * lx - (x1 - x0) * ly + x1 * y0 - y1 * x0) / ((y1 - y0) ** 2 + (x1 - x0) ** 2) ** 0.5
+    assert abs(dist - 2.0) < 1e-6
+    plt.close(fig)
