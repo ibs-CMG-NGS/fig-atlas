@@ -15,7 +15,8 @@ Data: one row per node, with columns named by the *_col params:
     color  text colour for this node (optional; default text_color / body_color)
 Edges come from the ``edges`` param: a list of {"from", "to"} with optional
 "label", "from_side"/"to_side" ("l", "r", "t", "b"; default: across the gap
-between the two nodes), "rad" (curvature) and "style" ("solid"/"dashed").
+between the two nodes), "from_at"/"to_at" (where on that side, 0-1 from the
+left or top; default 0.5), "rad" (curvature) and "style" ("solid"/"dashed").
 
 Returns the node rows drawn, ready for fig_atlas.source_data.add.
 """
@@ -85,11 +86,13 @@ SCHEMA = Schema("flow_diagram", params=[
 ])
 
 
-def _anchor(n, side, y_down):
-    """Midpoint of a node's side, in data coordinates."""
+def _anchor(n, side, y_down, at=0.5):
+    """A point on a node's side, ``at`` of the way along it (from the left or
+    the top), in data coordinates."""
     x, y, w, h = n["x"], n["y"], n["w"], n["h"]
     top, bottom = (y, y + h) if y_down else (y + h, y)
-    return {"l": (x, y + h / 2), "r": (x + w, y + h / 2), "t": (x + w / 2, top), "b": (x + w / 2, bottom)}[side]
+    along = y + h * at if y_down else y + h * (1 - at)
+    return {"l": (x, along), "r": (x + w, along), "t": (x + w * at, top), "b": (x + w * at, bottom)}[side]
 
 
 def _auto_sides(a, b, y_down):
@@ -157,7 +160,7 @@ def render_flow_diagram(ax, df, params):
         a, b = nodes[str(e["from"])], nodes[str(e["to"])]
         sa, sb = _auto_sides(a, b, y_down)
         sa, sb = e.get("from_side", sa), e.get("to_side", sb)
-        p0, p1 = _anchor(a, sa, y_down), _anchor(b, sb, y_down)
+        p0, p1 = _anchor(a, sa, y_down, e.get("from_at", 0.5)), _anchor(b, sb, y_down, e.get("to_at", 0.5))
         style = tuple(params.get("dashed_style", [0, [3, 2]])) if e.get("style") == "dashed" else "solid"
         ax.add_patch(FancyArrowPatch(p0, p1, arrowstyle="-|>", mutation_scale=params.get("arrow_head", 6.0),
                                      connectionstyle=f"arc3,rad={e.get('rad', 0.0)}",

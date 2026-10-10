@@ -63,3 +63,11 @@ def test_node_text_colour():
     render_flow_diagram(ax, nodes, {})
     assert {t.get_color() for t in ax.texts} == {"#DC2626"}
     plt.close(fig)
+
+
+def test_edge_point_along_a_side():
+    fig, ax = plt.subplots()
+    render_flow_diagram(ax, NODES, {"edges": [{"from": "b", "to": "c", "from_at": 0.25, "to_at": 0.25}]})
+    (x0, y0), (x1, y1) = _arrows(ax)[0]._posA_posB
+    assert (x0, y0) == (40, 23) and (x1, y1) == (40, 40)      # a quarter along b's bottom and c's top
+    plt.close(fig)
