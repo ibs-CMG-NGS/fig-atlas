@@ -517,9 +517,10 @@ def _legend_colors(leg) -> list:
     return out
 
 
-def _categorical_sets(fig) -> list[tuple[str, list]]:
+def _categorical_sets(fig) -> list[tuple[str, list, object]]:
     """Colour sets a reader has to tell apart: each legend's entries, and the
-    distinct single colours of scatter groups drawn in one axes."""
+    distinct single colours of scatter groups drawn in one axes -- each with
+    the artist that shows them (the legend, or the axes), for its location."""
     from matplotlib.collections import PathCollection
     from matplotlib.legend import Legend
     sets = []
@@ -527,7 +528,7 @@ def _categorical_sets(fig) -> list[tuple[str, list]]:
         if leg.get_visible():
             cols = _legend_colors(leg)
             if len(cols) >= 2:
-                sets.append((f"legend of {_panel_label(leg.axes, fig) if leg.axes else 'figure'}", cols))
+                sets.append((f"legend of {_panel_label(leg.axes, fig) if leg.axes else 'figure'}", cols, leg))
     for ax in fig.get_axes():
         cols = []
         for c in ax.collections:
@@ -537,14 +538,21 @@ def _categorical_sets(fig) -> list[tuple[str, list]]:
                     cols.append(next(iter(fc)))
         cols = list(dict.fromkeys(cols))
         if len(cols) >= 2 and not ax.get_legend():
-            sets.append((f"scatter groups in {_panel_label(ax, fig)}", cols))
+            sets.append((f"scatter groups in {_panel_label(ax, fig)}", cols, ax))
     return sets
 
 
 def _check_cvd(fig, p: dict) -> list[Finding]:
     out = []
     thr = p["min_cvd_delta_e"]
-    for where, cols in _categorical_sets(fig):
+    renderer = fig.canvas.get_renderer()
+    k = MM_PER_INCH / fig.dpi
+    for where, cols, artist in _categorical_sets(fig):
+        try:
+            b = artist.get_window_extent(renderer)
+            box = [b.x0 * k, b.y0 * k, b.x1 * k, b.y1 * k]
+        except Exception:       # an artist that cannot report its extent: no location
+            box = _no_box()
         lin = _linear(np.array(cols))
         normal = _lab(lin)
         for kind in p["cvd_types"]:
@@ -560,7 +568,7 @@ def _check_cvd(fig, p: dict) -> list[Finding]:
                 de, i, j = worst
                 out.append(Finding("cvd_indistinct", "warn",
                                    f"{where}: {to_hex(cols[i])} and {to_hex(cols[j])} look alike with {kind} "
-                                   f"(delta-E {de:.1f})", _no_box(), measured=round(de, 1), threshold=thr,
+                                   f"(delta-E {de:.1f})", box, measured=round(de, 1), threshold=thr,
                                    hint="use a colour-blind-safe palette (e.g. Okabe-Ito) or add marker/line-style differences"))
     return out
 

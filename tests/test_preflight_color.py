@@ -117,3 +117,22 @@ def test_text_is_read_against_its_own_box():
     """A label on its own dark box is judged against the box, not the image under it."""
     assert "low_text_contrast" in checks(_label_on_green(box=False))
     assert "low_text_contrast" not in checks(_label_on_green(box=True))
+
+
+def test_cvd_finding_points_at_the_legend():
+    """A colour-vision finding carries the legend's box, so overlays and
+    allow-lists can place it (it once had no location)."""
+    import matplotlib.pyplot as plt
+    from fig_atlas.preflight import MM_PER_INCH, preflight
+    fig, ax = plt.subplots(figsize=(3, 2))
+    ax.plot([0, 1], [0, 1], color="#D62728", label="up")
+    ax.plot([0, 1], [1, 0], color="#2CA02C", label="down")
+    leg = ax.legend()
+    found = [f for f in preflight(fig) if f.check == "cvd_indistinct"]
+    assert found
+    fig.canvas.draw()
+    b = leg.get_window_extent(fig.canvas.get_renderer())
+    k = MM_PER_INCH / fig.dpi
+    x0, y0, x1, y1 = found[0].bbox_mm
+    assert abs(x0 - b.x0 * k) < 0.5 and abs(y1 - b.y1 * k) < 0.5 and x1 > x0
+    plt.close(fig)
