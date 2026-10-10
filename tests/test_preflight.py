@@ -232,3 +232,23 @@ def test_defect_shown_on_purpose_is_allowed_only_with_a_reason():
     found = preflight(fig, saved_bbox_in=saved)
     assert any(f.check == "tick_label_collision" and f.severity == "error" for f in found)
     assert any(f.check == "allow_without_reason" for f in found)
+
+
+def test_small_text_shown_on_purpose_is_allowed_in_the_print_size_check():
+    from fig_atlas.page import PageSpec
+    from fig_atlas.preflight import check_print_size
+    page = PageSpec("test", 180.0, 240.0)
+
+    def make():
+        fig = plt.figure(figsize=(4.0, 2.0))
+        demo, normal = fig.add_axes([0.08, 0.2, 0.38, 0.7]), fig.add_axes([0.58, 0.2, 0.38, 0.7])
+        demo.text(0.5, 0.5, "tiny", fontsize=3.0)
+        demo.set_gid("fa-allow:demo")
+        normal.plot([0, 1], [0, 1])
+        return fig
+
+    found = check_print_size(make(), page, min_font_pt=5.0, allow={"demo": "small label shown in Fig. 5b"})
+    small = [f for f in found if f.check == "print_font_too_small"]
+    assert small and all(f.severity == "info" and "Fig. 5b" in f.message for f in small)
+    found = check_print_size(make(), page, min_font_pt=5.0)
+    assert any(f.check == "print_font_too_small" and f.severity == "error" for f in found)

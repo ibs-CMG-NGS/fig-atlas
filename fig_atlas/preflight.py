@@ -1069,18 +1069,52 @@ def capture_font_issues():
 
 
 # ---------------------------------------------------------- print size (C1) --
-def check_print_size(fig, page, min_font_pt: float = 5.0, min_line_pt: float = 0.25) -> list[Finding]:
+def check_print_size(fig, page, min_font_pt: float = 5.0, min_line_pt: float = 0.25,
+                     allow: dict | None = None) -> list[Finding]:
     """C1 as findings: how ``fig`` prints on ``page`` (a ``fig_atlas.page.PageSpec``),
     measured by ``fig_atlas.print_check.audit_figure``.
 
     print_font_too_small   texts print below ``min_font_pt``         error
     print_line_too_thin    lines print thinner than ``min_line_pt``  warn
     print_exceeds_page     the figure needs more than one page       warn
+
+    ``allow`` (name -> reason, the config's ``preflight.allow``): text and lines
+    in axes marked ``fa-allow:<name>`` are measured apart and reported as info
+    with the reason (module docstring, "Allowed defects"); the page size is
+    measured on the whole figure.
     """
     from .print_check import audit_figure
 
-    a = audit_figure(fig, page, min_font_pt, min_line_pt)
-    out = []
+    reasons = allow or {}
+    marked = [(ax, (ax.get_gid() or "")[len(ALLOW_GID):]) for ax in fig.get_axes()
+              if (ax.get_gid() or "").startswith(ALLOW_GID)]
+    marked = [(ax, name) for ax, name in marked if reasons.get(name)]
+    whole = audit_figure(fig, page, min_font_pt, min_line_pt)
+    a, allowed = whole, []
+    if marked:
+        shown = [ax.get_visible() for ax, _ in marked]
+        try:
+            for ax, _ in marked:
+                ax.set_visible(False)
+            a = audit_figure(fig, page, min_font_pt, min_line_pt)
+        finally:
+            for (ax, _), v in zip(marked, shown):
+                ax.set_visible(v)
+        a = {**a, "fits_one_page": whole["fits_one_page"], "printed_height_mm": whole["printed_height_mm"],
+             "pages_needed": whole["pages_needed"]}
+        names = sorted({name for _, name in marked})
+        why = "; ".join(f"{nm}: {reasons[nm]}" for nm in names)
+        if whole["n_texts_below_min"] > a["n_texts_below_min"]:
+            allowed.append(Finding("print_font_too_small", "info",
+                                   f"allowed ({why}) -- {whole['n_texts_below_min'] - a['n_texts_below_min']} text(s) "
+                                   f"below {min_font_pt:g} pt in marked axes", _no_box(),
+                                   measured=whole["min_font_printed_pt"], threshold=min_font_pt))
+        if whole["n_lines_below_min"] > a["n_lines_below_min"]:
+            allowed.append(Finding("print_line_too_thin", "info",
+                                   f"allowed ({why}) -- {whole['n_lines_below_min'] - a['n_lines_below_min']} line(s) "
+                                   f"thinner than {min_line_pt:g} pt in marked axes", _no_box(),
+                                   measured=whole["min_line_printed_pt"], threshold=min_line_pt))
+    out = allowed
     scale = a["scale_to_page_width"]
     scaled = f" (scaled to {scale:.0%} to fit the page width)" if scale < 0.999 else ""
     if not a["font_ok"]:

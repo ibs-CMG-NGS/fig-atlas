@@ -87,7 +87,8 @@ def run_worker(project: str, out_json: Path) -> int:
         findings = preflight(self, saved_bbox_in=saved, params=params, save_dpi=save_dpi, profile=prof)
         if config.page is not None:   # C1: only figures drawn for a page preset have a print size
             pc = config.print_check
-            findings += check_print_size(self, config.page, pc["min_font_pt"], pc["min_line_pt"])
+            findings += check_print_size(self, config.page, pc["min_font_pt"], pc["min_line_pt"],
+                                         allow=params.get("allow"))
         results[stem] = [f.to_dict() for f in findings]
         profiles[stem] = {role: {str(k): v for k, v in sizes.items()} for role, sizes in prof.items()}
         if findings:
