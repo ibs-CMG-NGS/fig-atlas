@@ -12,6 +12,7 @@ Data: one row per node, with columns named by the *_col params:
     kind   "box" (default), "group" (dashed container drawn underneath, title
            at its top-left) or "text" (no frame)
     fill   fill colour for this node (optional; default box_fill)
+    color  text colour for this node (optional; default text_color / body_color)
 Edges come from the ``edges`` param: a list of {"from", "to"} with optional
 "label", "from_side"/"to_side" ("l", "r", "t", "b"; default: across the gap
 between the two nodes), "rad" (curvature) and "style" ("solid"/"dashed").
@@ -38,6 +39,7 @@ SCHEMA = Schema("flow_diagram", params=[
     Param("body_col", str, "body", role="Column with further lines, separated by newlines"),
     Param("kind_col", str, "kind", role="Column with the node kind: box, group or text"),
     Param("fill_col", str, "fill", role="Column with a node's own fill colour (empty: box_fill)"),
+    Param("color_col", str, "color", role="Column with a node's own text colour (empty: text_color, body_color)"),
     Param("edges", list, [], role="Arrows: list of {from, to, label?, from_side?, to_side?, rad?, style?}"),
     # [Canvas]
     Param("xlim", list, None, unit="diagram units [min, max]", role="Horizontal extent (default: the nodes)"),
@@ -110,12 +112,13 @@ def _text(r, col):
 @uses_schema(SCHEMA)
 def render_flow_diagram(ax, df, params):
     """Draw the diagram onto ``ax``; returns the node rows drawn."""
-    c = {k: params.get(f"{k}_col", k) for k in ("id", "x", "y", "w", "h", "title", "body", "kind", "fill")}
+    c = {k: params.get(f"{k}_col", k) for k in ("id", "x", "y", "w", "h", "title", "body", "kind", "fill", "color")}
     nodes = {}
     for _, r in df.iterrows():
         nodes[str(r[c["id"]])] = {"x": float(r[c["x"]]), "y": float(r[c["y"]]), "w": float(r[c["w"]]),
                                   "h": float(r[c["h"]]), "title": _text(r, c["title"]), "body": _text(r, c["body"]),
-                                  "kind": _text(r, c["kind"]) or "box", "fill": _text(r, c["fill"])}
+                                  "kind": _text(r, c["kind"]) or "box", "fill": _text(r, c["fill"]),
+                                  "color": _text(r, c["color"])}
     y_down = params.get("y_down", True)
     pad, align = params.get("text_pad", 1.5), params.get("text_align", "center")
     t_size, b_size = params.get("title_size", 7.0), params.get("body_size", 6.0)
@@ -142,11 +145,11 @@ def render_flow_diagram(ax, df, params):
         ty = (y + pad) if y_down else (y + h - pad)
         if n["title"]:
             ax.text(tx, ty, n["title"], ha=ha, va="top", fontsize=t_size, fontweight=params.get("title_weight", "bold"),
-                    color=params.get("text_color", "#111827"), zorder=3)
+                    color=n["color"] or params.get("text_color", "#111827"), zorder=3)
             ty += sign * (t_size * MM_PER_PT * params.get("units_per_mm", 1.0) * spacing + gap)
         if n["body"] and n["kind"] != "group":
             ax.text(tx, ty, n["body"], ha=ha, va="top", fontsize=b_size, linespacing=spacing,
-                    color=params.get("body_color", "#374151"), zorder=3)
+                    color=n["color"] or params.get("body_color", "#374151"), zorder=3)
 
     # Each edge is copied to a plain dict: its optional fields (label, sides, rad,
     # style) are per-arrow choices, not config keys a build should report as missing.

@@ -54,3 +54,12 @@ def test_explicit_sides_and_page_extent():
     assert (x0, y0) == (15, 23) and (x1, y1) == (35, 45)
     assert ax.get_xlim() == (0, 100) and ax.get_ylim() == (60, 0)   # y downward by default
     plt.close(fig)
+
+
+def test_node_text_colour():
+    nodes = pd.DataFrame([{"id": "n", "x": 0, "y": 0, "w": 20, "h": 10, "title": "Risk", "body": "stale",
+                           "kind": "text", "color": "#DC2626"}])
+    fig, ax = plt.subplots()
+    render_flow_diagram(ax, nodes, {})
+    assert {t.get_color() for t in ax.texts} == {"#DC2626"}
+    plt.close(fig)

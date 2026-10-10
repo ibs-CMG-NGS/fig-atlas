@@ -15,7 +15,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | [`cross_condition_dotplot`](#cross_condition_dotplot) | fig_atlas_omics.renderers | 62 |
 | [`cross_condition_heatmap`](#cross_condition_heatmap) | fig_atlas_omics.renderers | 42 |
 | [`effect_dots`](#effect_dots) | core | 24 |
-| [`flow_diagram`](#flow_diagram) | core | 39 |
+| [`flow_diagram`](#flow_diagram) | core | 40 |
 | [`funnel`](#funnel) | core | 16 |
 | [`go_bar`](#go_bar) | fig_atlas_omics.renderers | 25 |
 | [`go_cluster_dot`](#go_cluster_dot) | fig_atlas_omics.renderers | 37 |
@@ -437,6 +437,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `body_col` | text | `body` |  | Column with further lines, separated by newlines |
 | `kind_col` | text | `kind` |  | Column with the node kind: box, group or text |
 | `fill_col` | text | `fill` |  | Column with a node's own fill colour (empty: box_fill) |
+| `color_col` | text | `color` |  | Column with a node's own text colour (empty: text_color, body_color) |
 | `edges` | list | `[]` |  | Arrows: list of {from, to, label?, from_side?, to_side?, rad?, style?} |
 | `xlim` | list | auto | diagram units [min, max] | Horizontal extent (default: the nodes) |
 | `ylim` | list | auto | diagram units [min, max] | Vertical extent (default: the nodes) |
