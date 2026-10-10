@@ -212,3 +212,23 @@ def test_overlay_box_is_drawn_where_the_finding_is(tmp_path):
     h = im.shape[0]
     assert abs(xs.min() - box[0] * k) < 6 and abs(xs.max() - box[2] * k) < 6
     assert abs(ys.min() - (h - box[3] * k)) < 6 and abs(ys.max() - (h - box[1] * k)) < 6
+
+
+def test_defect_shown_on_purpose_is_allowed_only_with_a_reason():
+    """A teaching figure marks the axes that show a defect with gid
+    "fa-allow:<name>"; the config's reason turns those findings into info.
+    Without a reason nothing is allowed and the mark itself is reported."""
+    def make():
+        fig, saved = tick_collision(defect=True)
+        fig.axes[0].set_gid("fa-allow:demo")
+        return fig, saved
+
+    fig, saved = make()
+    found = preflight(fig, saved_bbox_in=saved, params={"allow": {"demo": "defect shown in Fig. 5a"}})
+    hits = [f for f in found if f.check == "tick_label_collision"]
+    assert hits and all(f.severity == "info" and "Fig. 5a" in f.message for f in hits)
+
+    fig, saved = make()
+    found = preflight(fig, saved_bbox_in=saved)
+    assert any(f.check == "tick_label_collision" and f.severity == "error" for f in found)
+    assert any(f.check == "allow_without_reason" for f in found)

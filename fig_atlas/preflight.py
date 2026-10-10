@@ -63,6 +63,15 @@ C4 colour
 A "panel" groups an axes with its colorbars, insets and twin axes, so
 overlaps between those are never reported. All geometry is reported in mm
 on the figure canvas (origin bottom-left).
+
+Allowed defects
+    A figure that shows a defect on purpose (a teaching figure, a "before"
+    panel) marks the axes with ``ax.set_gid("fa-allow:<name>")`` and the
+    config gives the reason: ``preflight: {allow: {<name>: "<reason>"}}``.
+    Findings whose box centre lies in such an axes' outer box are reported
+    as info, with the reason. A gid with no reason in the config allows
+    nothing and is itself reported:
+    allow_without_reason      ``fa-allow:<name>`` with no reason in config     warn
 """
 from __future__ import annotations
 
@@ -98,7 +107,9 @@ DEFAULTS = {
     "panel_tag_size_pt": None,   # required tag size (journal presets set it)
     "font_size_outlier_frac": 0.25,  # a role's sizes differing from its mode in at most this share
     "muted_max_chroma": 16.0,    # CIELAB chroma up to which a text colour counts as grey (slate greys 7-15, pastels 30+)
+    "allow": {},                 # name -> reason: defects shown on purpose in axes with gid "fa-allow:<name>"
 }
+ALLOW_GID = "fa-allow:"
 
 
 @dataclass
@@ -858,7 +869,7 @@ def preflight(fig, saved_bbox_in=None, params: dict | None = None,
                 + _check_tick_gaps(fig, rec.texts, p)
                 + _check_panel_tags(rec.texts, p)
                 + _check_font_sizes(fig, rec.texts, p))
-    findings = _merge_repeats(findings)
+    findings = _apply_allow(fig, _merge_repeats(findings), renderer, p)
     if profile is not None:
         profile.update(font_size_profile(rec.texts))
     if rec.errors:
@@ -868,6 +879,37 @@ def preflight(fig, saved_bbox_in=None, params: dict | None = None,
                                 hint="report this as a fig_atlas.preflight bug"))
     order = {"error": 0, "warn": 1, "info": 2}
     return sorted(findings, key=lambda f: (order[f.severity], f.check))
+
+
+def _apply_allow(fig, findings: list[Finding], renderer, p: dict) -> list[Finding]:
+    """Turn findings inside axes marked ``fa-allow:<name>`` into info, with the
+    reason the config gives for <name> (module docstring, "Allowed defects")."""
+    reasons = p.get("allow") or {}
+    regions, out = [], []
+    k = MM_PER_INCH / fig.dpi
+    for ax in fig.get_axes():
+        gid = ax.get_gid() or ""
+        if not gid.startswith(ALLOW_GID):
+            continue
+        name = gid[len(ALLOW_GID):]
+        if not reasons.get(name):
+            out.append(Finding("allow_without_reason", "warn",
+                               f"axes marked {gid!r} but the config gives no reason for {name!r}, so nothing is allowed",
+                               _no_box(), panel=_panel_label(ax, fig),
+                               hint=f"add preflight.allow.{name}: \"<why this defect is shown on purpose>\" to the config"))
+            continue
+        b = ax.get_tightbbox(renderer)
+        regions.append((name, reasons[name], [b.x0 * k, b.y0 * k, b.x1 * k, b.y1 * k]))
+    for f in findings:
+        x0, y0, x1, y1 = f.bbox_mm
+        cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
+        hit = next((r for r in regions if f.bbox_mm != _no_box()
+                    and r[2][0] <= cx <= r[2][2] and r[2][1] <= cy <= r[2][3]), None)
+        if hit:
+            f = Finding(f.check, "info", f"allowed ({hit[0]}: {hit[1]}) -- {f.message}", f.bbox_mm,
+                        panel=f.panel, measured=f.measured, threshold=f.threshold, hint=f.hint)
+        out.append(f)
+    return out
 
 
 def draw_overlay(fig, findings: list[Finding], path, dpi: int = 150) -> None:

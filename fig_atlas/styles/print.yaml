@@ -107,3 +107,9 @@ preflight:
   # this share [0-1] of that role -- a minority size usually means a
   # hardcoded fontsize.
   font_size_outlier_frac: 0.25
+  # [Allowed defects] A figure that shows a defect on purpose (a teaching
+  # figure, a "before" panel) marks those axes with gid "fa-allow:<name>";
+  # list <name> here with the reason, e.g. {demo: "overlap shown in panel a"}.
+  # Findings inside such axes are reported as info with the reason; a mark
+  # with no reason here allows nothing and is reported.
+  allow: {}
