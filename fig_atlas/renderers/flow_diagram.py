@@ -148,7 +148,9 @@ def render_flow_diagram(ax, df, params):
             ax.text(tx, ty, n["body"], ha=ha, va="top", fontsize=b_size, linespacing=spacing,
                     color=params.get("body_color", "#374151"), zorder=3)
 
-    for e in params.get("edges", []) or []:
+    # Each edge is copied to a plain dict: its optional fields (label, sides, rad,
+    # style) are per-arrow choices, not config keys a build should report as missing.
+    for e in [dict(x) for x in params.get("edges", []) or []]:
         a, b = nodes[str(e["from"])], nodes[str(e["to"])]
         sa, sb = _auto_sides(a, b, y_down)
         sa, sb = e.get("from_side", sa), e.get("to_side", sb)
