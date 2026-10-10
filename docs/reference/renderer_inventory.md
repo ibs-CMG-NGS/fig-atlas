@@ -28,6 +28,7 @@ Compendium projects: none.
 | 4 | `render_cross_condition_dotplot` | `fig_atlas_omics/renderers/cross_condition_dotplot.py` | 0 | — | — |
 | 4 | `render_cross_condition_heatmap` | `fig_atlas_omics/renderers/cross_condition_heatmap.py` | 0 | — | — |
 | 4 | `render_effect_dots` | `fig_atlas/renderers/effect_dots.py` | 0 | — | — |
+| 4 | `render_flow_diagram` | `fig_atlas/renderers/flow_diagram.py` | 0 | — | — |
 | 4 | `render_funnel` | `fig_atlas/renderers/funnel.py` | 0 | — | — |
 | 4 | `render_go_bar` | `fig_atlas_omics/renderers/go_bar.py` | 0 | — | — |
 | 4 | `render_go_cluster_dot` | `fig_atlas_omics/renderers/go_cluster_dot.py` | 0 | — | — |
@@ -61,4 +62,4 @@ Compendium projects: none.
 | 4 | `render_venn` | `fig_atlas/renderers/venn.py` | 0 | — | — |
 | 4 | `render_volcano` | `fig_atlas_omics/renderers/volcano.py` | 0 | — | — |
 
-Summary: tier 2 active — 4, tier 4 unused — 43.
+Summary: tier 2 active — 4, tier 4 unused — 44.

@@ -15,6 +15,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | [`cross_condition_dotplot`](#cross_condition_dotplot) | fig_atlas_omics.renderers | 62 |
 | [`cross_condition_heatmap`](#cross_condition_heatmap) | fig_atlas_omics.renderers | 42 |
 | [`effect_dots`](#effect_dots) | core | 24 |
+| [`flow_diagram`](#flow_diagram) | core | 39 |
 | [`funnel`](#funnel) | core | 16 |
 | [`go_bar`](#go_bar) | fig_atlas_omics.renderers | 25 |
 | [`go_cluster_dot`](#go_cluster_dot) | fig_atlas_omics.renderers | 37 |
@@ -420,6 +421,52 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `title_size` | number | `6.5` | pt | Panel title font size |
 | `axes_label_size` | number | `6.0` | pt | Axis title font size |
 | `tick_label_size` | number | `5.5` | pt | Tick and row label font size |
+
+## flow_diagram
+
+`fig_atlas.renderers:render_flow_diagram`
+
+| Key | Type | Default | Unit | What it does |
+|---|---|---|---|---|
+| `id_col` | text | `id` |  | Column with each node's unique name (edges refer to it) |
+| `x_col` | text | `x` |  | Column with the node's left edge (diagram units) |
+| `y_col` | text | `y` |  | Column with the node's top edge (diagram units) |
+| `w_col` | text | `w` |  | Column with the node's width |
+| `h_col` | text | `h` |  | Column with the node's height |
+| `title_col` | text | `title` |  | Column with the node's bold first line |
+| `body_col` | text | `body` |  | Column with further lines, separated by newlines |
+| `kind_col` | text | `kind` |  | Column with the node kind: box, group or text |
+| `fill_col` | text | `fill` |  | Column with a node's own fill colour (empty: box_fill) |
+| `edges` | list | `[]` |  | Arrows: list of {from, to, label?, from_side?, to_side?, rad?, style?} |
+| `xlim` | list | auto | diagram units [min, max] | Horizontal extent (default: the nodes) |
+| `ylim` | list | auto | diagram units [min, max] | Vertical extent (default: the nodes) |
+| `y_down` | true / false | `True` |  | y grows downward, like a page (false: upward, like a plot) |
+| `units_per_mm` | number | `1.0` | diagram units per mm | Scale of the diagram units, used to place body text below a title — 1 when the diagram is laid out in mm |
+| `box_fill` | colour | `#F3F4F6` | hex color | Box fill |
+| `box_edge` | colour | `#4B5563` | hex color | Box outline |
+| `box_linewidth` | number | `0.6` | pt | Box outline width |
+| `box_radius` | number | `1.0` | diagram units | Corner radius of boxes and groups — 0 for square corners |
+| `group_edge` | colour | `#9CA3AF` | hex color | Group outline |
+| `group_fill` | colour | `none` | hex color or none | Group fill |
+| `group_linestyle` | text | `--` |  | Group outline style (matplotlib linestyle) |
+| `group_linewidth` | number | `0.6` | pt | Group outline width |
+| `title_size` | number | `7.0` | pt | Node title size |
+| `body_size` | number | `6.0` | pt | Node body size |
+| `title_weight` | text | `bold` |  | Node title weight |
+| `text_color` | colour | `#111827` | hex color | Title colour |
+| `body_color` | colour | `#374151` | hex color | Body colour |
+| `text_align` | text | `center` |  | Text alignment in boxes: center or left |
+| `text_pad` | number | `1.5` | diagram units | Gap between a box's edge and its text — raise if text touches the outline |
+| `line_spacing` | number | `1.25` | multiple of the font size | Line spacing of the body text |
+| `title_gap` | number | `0.8` | diagram units | Gap between a node's title and its body |
+| `arrow_color` | colour | `#374151` | hex color | Arrow colour |
+| `arrow_width` | number | `0.8` | pt | Arrow line width |
+| `arrow_head` | number | `6.0` | pt | Arrow head size |
+| `arrow_gap` | number | `0.6` | pt | Gap between an arrow's ends and the boxes |
+| `dashed_style` | list | `[0, [3, 2]]` | matplotlib dash pattern (offset, [on, off] in pt) | Line style of edges marked style: dashed |
+| `edge_label_size` | number | `6.0` | pt | Edge label size |
+| `edge_label_color` | colour | `#374151` | hex color | Edge label colour |
+| `edge_label_offset` | number | `1.2` | diagram units | Edge label distance from the arrow's middle (above a horizontal arrow, right of others) |
 
 ## funnel
 

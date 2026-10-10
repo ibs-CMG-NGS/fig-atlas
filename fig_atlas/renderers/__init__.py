@@ -20,6 +20,7 @@ from .bar_scatter import render_bar_scatter
 from .boxplot import render_boxplot
 from .dumbbell import render_paired_dumbbell
 from .effect_dots import render_effect_dots
+from .flow_diagram import render_flow_diagram
 from .funnel import render_funnel
 from .group_scatter import render_group_scatter
 from .grouped_hbar import render_grouped_hbar
@@ -46,6 +47,7 @@ __all__ = [
     "render_bar_scatter",
     "render_boxplot",
     "render_effect_dots",
+    "render_flow_diagram",
     "render_funnel",
     "render_group_scatter",
     "render_grouped_hbar",
