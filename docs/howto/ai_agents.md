@@ -68,13 +68,20 @@ claude mcp add fig-atlas -- <python> -m fig_atlas mcp
 
 **Cursor** — `.cursor/mcp.json`: Gemini CLI와 같은 `mcpServers` 형식입니다.
 
-**Codex CLI** — `~/.codex/config.toml`:
+**Codex CLI** — `~/.codex/config.toml` (Windows: `C:\Users\<사용자>\.codex\config.toml`, 없으면 새로 만듭니다):
 
 ```toml
+# fig-atlas 도구를 Codex에 연결합니다.
 [mcp_servers.fig-atlas]
-command = "<python>"
+# fig-atlas가 설치된 Python. Windows 경로는 슬래시(/)로 쓰거나 작은따옴표로 감쌉니다
+# (큰따옴표 안의 \ 는 TOML에서 특수 문자입니다).
+command = 'C:\Users\<사용자>\github\<저장소>\fig-atlas\python.exe'
 args = ["-m", "fig_atlas", "mcp"]
+# 빌드(fa_build)는 그림에 따라 1분을 넘길 수 있습니다. 도구 하나가 기다리는 최대 시간(초)을 늘려 둡니다.
+tool_timeout_sec = 600
 ```
+
+Codex는 저장소의 `AGENTS.md`를 스스로 읽으므로 규칙 파일은 따로 연결하지 않습니다. 저장소 폴더에서 `codex`를 시작한 뒤 `/mcp`로 `fig-atlas`가 보이는지 확인하고, "fig-atlas 도구로 프로젝트 목록을 보여 줘"라고 해 봅니다(4절). 이 설정은 Codex 문서의 형식을 따른 것으로, 이 저장소에서는 아직 실행해 보지 않았습니다(사용성 시험에서 확인 예정).
 
 "검증함"이 없는 항목은 각 에이전트 문서의 형식을 따른 것이고, 이 저장소에서 직접 실행해 보지는 않았습니다.
 
