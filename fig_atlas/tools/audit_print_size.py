@@ -37,15 +37,16 @@ from fig_atlas.page import PageSpec  # noqa: E402
 
 
 
-def compendium_pages(storyline: Path) -> list[tuple[str, str, int]]:
+def compendium_pages(storyline: Path | None) -> list[tuple[str, str, int]]:
     """(role, project, figure_no) per compendium page, taken from the same
     parser scripts/compile_storyline_pdf.py uses -- so the audit always
     targets exactly the projects the compendium actually pages (a separate
-    hardcoded copy here once went stale when Main Figure 2 moved projects)."""
+    hardcoded copy here once went stale when Main Figure 2 moved projects).
+    ``storyline`` None: the repository's only storyline."""
     spec = importlib.util.spec_from_file_location("compile_storyline_pdf", Path(__file__).with_name("compile_storyline_pdf.py"))
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
-    story = module.parse_storyline_md(storyline)
+    story = module.parse_storyline_md(storyline or module.default_storyline())
     return [(f["role"], f["project"], int(f["figure_number"] or 1)) for f in story["figures"]]
 
 
@@ -118,12 +119,11 @@ def main() -> int:
         return run_worker(Path(args.worker), args.page, Path(args.worker_out))
 
     targets = ([(p, p, None) for p in args.projects] if args.projects
-               else compendium_pages(Path(args.plan)))
+               else compendium_pages(Path(args.plan) if args.plan else None))
     projects = list(dict.fromkeys(proj for _, proj, _ in targets))
 
-    env = dict(os.environ)
-    env["PATH"] = str(ROOT / "fig-atlas" / "Library" / "bin") + os.pathsep + env.get("PATH", "")
-    env["PYTHONIOENCODING"] = "utf-8"
+    from fig_atlas.projects import build_env
+    env = build_env()           # the running interpreter's DLL path, not a conda env inside the project
 
     per_project: dict[str, dict] = {}
     for proj in projects:
