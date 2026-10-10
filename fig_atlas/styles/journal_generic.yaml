@@ -1,0 +1,33 @@
+# Journal preset: a common envelope that most life-science journals accept,
+# for drafting before a target journal is chosen. Layer it last:
+#
+#   project:
+#     style: ["default", "print", "journal_generic"]
+#
+# Double-column width 180 mm (single column: 85 mm, i.e. width_frac 0.47),
+# at most 240 mm tall; sans-serif text 6-8 pt; lines >= 0.25 pt; 300 dpi.
+# Most journals publish within these limits (e.g. 85-89 mm single, 170-183 mm
+# double, >= 5-7 pt text), so a figure that passes preflight here usually needs
+# only small changes once the real journal preset replaces this one.
+page:
+  name: "journal_generic_double"
+  content_width_mm: 180      # mm; double-column figure width (single column = 85 mm)
+  content_height_mm: 240     # mm; tallest figure allowed (legend printed separately)
+
+figures:
+  font_family: "Arial"       # Arial/Helvetica are accepted everywhere; falls back with a preflight warning if absent
+
+typography:
+  title_size: 7.0            # pt; panel titles -- lower if titles wrap
+  axes_label_size: 7.0       # pt; axis titles
+  tick_label_size: 6.0       # pt; tick labels -- the smallest text most journals allow
+  legend_fontsize: 6.0       # pt; legend text
+
+print_check:
+  min_font_pt: 6.0           # pt; smallest printed text accepted (stricter than the 5 pt of print.yaml)
+  min_line_pt: 0.25          # pt; thinnest printed line
+
+preflight:
+  allowed_fonts: ["Arial", "ArialMT", "Helvetica"]   # fonts accepted in the PDF; others are reported
+  min_dpi: 300               # px per printed inch for PNG output
+  panel_tag_case: "lower"    # panel tags a, b, c (most journals); "upper" for A, B, C
