@@ -252,3 +252,28 @@ def test_small_text_shown_on_purpose_is_allowed_in_the_print_size_check():
     assert small and all(f.severity == "info" and "Fig. 5b" in f.message for f in small)
     found = check_print_size(make(), page, min_font_pt=5.0)
     assert any(f.check == "print_font_too_small" and f.severity == "error" for f in found)
+
+
+def test_legend_lying_on_its_own_data_is_reported():
+    """A legend placed over the panel's own bars, points or lines (it once went
+    unnoticed: only legends over *other* panels were checked)."""
+    def make(loc, anchor):
+        fig, ax = plt.subplots(figsize=(3.0, 2.2))
+        ax.bar(range(5), [5, 6, 7, 6, 5], label="counts")
+        ax.plot(range(5), [1, 2, 3, 2, 1], color="k", label="trend")
+        ax.axhline(0.5, color="grey")              # a reference line under the legend is no defect
+        ax.legend(loc=loc, bbox_to_anchor=anchor)
+        return fig
+
+    found = [f for f in preflight(make("center", (0.5, 0.5)), saved_bbox_in="tight") if f.check == "legend_covers_data"]
+    assert found and found[0].severity == "warn"
+    clean = [f for f in preflight(make("upper left", (1.02, 1.0)), saved_bbox_in="tight") if f.check == "legend_covers_data"]
+    assert not clean
+
+
+def test_legend_check_tolerates_missing_points():
+    """Scatter offsets with masked or NaN values (missing data) once crashed it."""
+    fig, ax = plt.subplots(figsize=(3.0, 2.2))
+    ax.scatter(np.ma.masked_invalid([0.0, np.nan, 2.0]), [1.0, 2.0, np.nan], label="pts")
+    ax.legend(loc="center")
+    preflight(fig, saved_bbox_in="tight")

@@ -61,6 +61,13 @@ preflight:
   canvas_tol_mm: 0.2
   # Share [0-1] of a legend's area allowed inside another panel's plot area.
   legend_overlap_frac: 0.02
+  # A legend on its own panel's data: reported when it covers at least this
+  # share [0-1] of its area with bars or filled areas, or when at least
+  # legend_data_points scatter points or line samples (1 mm apart) lie under it.
+  # Raise them to tolerate a legend over sparse data; reference lines across
+  # the axes (axhline/axvline) are never counted.
+  legend_data_frac: 0.03
+  legend_data_points: 1
   # Overlap (mm^2) allowed between two panels' plot areas before it is
   # reported (texts running into a neighbour use min_overlap_mm2 instead).
   panel_overlap_mm2: 0.5

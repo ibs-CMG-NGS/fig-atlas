@@ -16,6 +16,8 @@ C2 text overlap
 C3 clipping and intrusion
     clipped_by_saved_area     a drawn text/axes extends past the saved area    error
     legend_overlaps_panel     a legend covers another panel's plot area        error
+    legend_covers_data        a legend lies on its own panel's data (bars,
+                              points or lines under it)                        warn
     panel_overlap             two panels' plot areas overlap                   error
     panel_intrusion           a text of one panel lies on another panel's
                               plot area (e.g. tick labels or an axis title
@@ -92,6 +94,8 @@ DEFAULTS = {
     "text_ink_shrink": 0.12,     # trim this fraction of a text box's height off top and bottom
     "canvas_tol_mm": 0.2,        # how far past the saved area counts as clipped
     "legend_overlap_frac": 0.02, # legend area share overlapping another panel's plot area
+    "legend_data_frac": 0.03,    # legend area share covering its own panel's bars or filled areas
+    "legend_data_points": 1,     # scatter points (or line samples, 1 mm apart) under a legend before it is reported
     "panel_overlap_mm2": 0.5,    # plot-area overlap between two panels
     "min_dpi": 300,              # PNG pixels per printed inch
     "min_raster_dpi": 300,       # dpi of rasterized content inside PDF/SVG
@@ -415,7 +419,57 @@ def _check_legends(fig, legends, renderer, p: dict) -> list[Finding]:
                                    panel=_panel_label(own, fig), measured=round(_box_area(ov) / la, 3),
                                    threshold=p["legend_overlap_frac"],
                                    hint="move the legend (loc / bbox_to_anchor) into free space"))
+        if own is not None:
+            f = _legend_on_data(fig, own, lb, la, renderer, p)
+            if f:
+                out.append(f)
     return out
+
+
+def _legend_on_data(fig, own, lb, la, renderer, p) -> Finding | None:
+    """A legend lying on the data of its own panel: the bars or filled areas
+    under it (area share), and the scatter points or line samples (1 mm apart)
+    inside it."""
+    from matplotlib.collections import PathCollection
+    from matplotlib.lines import Line2D
+    from matplotlib.patches import Rectangle
+
+    k = MM_PER_INCH / renderer.dpi
+    x0, y0, x1, y1 = lb
+    inside = lambda x, y: x0 <= x <= x1 and y0 <= y <= y1          # noqa: E731
+    covered, hits = 0.0, 0
+    for ax in fig.get_axes():
+        if panel_of(ax, fig) is not own or not ax.get_visible():
+            continue
+        for a in ax.patches:
+            if isinstance(a, Rectangle) and a.get_visible() and a.get_fill():
+                ov = _box_overlap(lb, _bbox_mm(a.get_window_extent(renderer), renderer.dpi))
+                covered += _box_area(ov) if ov else 0.0
+        for c in ax.collections:
+            if isinstance(c, PathCollection) and c.get_visible() and len(c.get_offsets()):
+                offs = np.ma.filled(np.ma.asarray(c.get_offsets(), dtype=float), np.nan)
+                pts = c.get_offset_transform().transform(offs) * k      # missing points stay NaN
+                ok = np.isfinite(pts).all(axis=1)
+                hits += int(np.sum(ok & (pts[:, 0] >= x0) & (pts[:, 0] <= x1) & (pts[:, 1] >= y0) & (pts[:, 1] <= y1)))
+        for line in ax.lines:
+            if not line.get_visible() or line.get_linestyle() in ("None", "none", "", " "):
+                continue
+            if not all(line.get_transform().contains_branch_seperately(ax.transData)):
+                continue                         # a reference line across the axes (axhline, axvline)
+            xy = line.get_transform().transform(line.get_xydata()) * k
+            for (ax_, ay), (bx, by) in zip(xy[:-1], xy[1:]):
+                n = max(1, int(math.hypot(bx - ax_, by - ay)))          # about one sample per mm
+                hits += sum(inside(ax_ + (bx - ax_) * i / n, ay + (by - ay) * i / n) for i in range(n + 1))
+    if covered / la < p["legend_data_frac"] and hits < p["legend_data_points"]:
+        return None
+    what = []
+    if covered / la >= p["legend_data_frac"]:
+        what.append(f"{covered / la:.0%} of it over bars or areas")
+    if hits >= p["legend_data_points"]:
+        what.append(f"{hits} point(s) or line sample(s) under it")
+    return Finding("legend_covers_data", "warn", f"legend of {_panel_label(own, fig)} lies on its data: " + ", ".join(what),
+                   lb, panel=_panel_label(own, fig), measured=round(covered / la, 3), threshold=p["legend_data_frac"],
+                   hint="move the legend to free space (loc, bbox_to_anchor), outside the axes, or widen the axis range")
 
 
 def _plot_areas(fig, renderer) -> list[tuple[object, object, list[float]]]:
