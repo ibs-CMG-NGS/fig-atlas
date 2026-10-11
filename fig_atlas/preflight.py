@@ -45,6 +45,11 @@ C7/C8 layout rules and consistency
                               line (AGENTS.md rule 1.5)                          warn
     panel_tag_inconsistent    tags differ in size / weight / case              warn
     panel_tag_style           tag case or size differs from the journal preset warn
+    panel_regions_overlap     a text of one panel (title, label, legend) stands
+                              above or below the plot area of the panel beside
+                              it, by more than ``panel_region_overlap_mm``:
+                              where one panel ends and the next begins is
+                              unclear                                          warn
     text_crowded              two texts closer than ``min_text_gap_mm`` without
                               overlapping (a title on its column heads, ...)   info
     title_misaligned          titles of panels side by side sit at different
@@ -109,6 +114,7 @@ DEFAULTS = {
     "min_text_contrast": 3.0,    # WCAG contrast ratio of text against what is behind it
     "muted_text_min_contrast": 2.0,  # grey-on-white text at or above this is deliberate de-emphasis (info)
     "min_tick_gap_mm": 0.3,      # neighbouring tick labels closer than this read as one word
+    "panel_region_overlap_mm": 1.0,  # a panel's text may reach into the plot column beside it by this much
     "min_text_gap_mm": 0.4,      # other texts closer than this (without overlapping) look crowded
     "title_align_tol_mm": 0.5,   # titles of panels side by side may differ in height by this much
     "panel_tag_align_tol_mm": 0.3,   # tags in one column must share x within this
@@ -524,6 +530,79 @@ def _check_panel_overlap(fig, texts: list[_Text], renderer, p: dict) -> list[Fin
                                    panel=_panel_label(pt, fig), measured=round(area, 3),
                                    threshold=p["min_overlap_mm2"],
                                    hint="increase the spacing between these panels (wspace/hspace or positions)"))
+    return out
+
+
+def _check_panel_regions(fig, texts: list[_Text], renderer, p: dict) -> list[Finding]:
+    """Text of one panel standing in the plot column of the panel beside it.
+
+    panel_intrusion fires when a text lies *on* another panel's plot area. A
+    title, tag or label placed above or below the neighbour's plot area, in
+    its column, passes that check, yet the reader can no longer tell where
+    one panel ends and the next begins (a title starting over the
+    neighbour's last column). Panels count as side by side when their outer
+    boxes share at least half the height of the shorter one and less than
+    half the width of the narrower one (more is a layered composite)."""
+    outer: dict[int, list] = {}
+    for ax in fig.get_axes():
+        if not ax.get_visible():
+            continue
+        bb = ax.get_tightbbox(renderer)
+        if bb is None or bb.width <= 0 or bb.height <= 0:
+            continue
+        pan = panel_of(ax, fig)
+        b = _bbox_mm(bb, renderer.dpi)
+        if id(pan) in outer:
+            o = outer[id(pan)][1]
+            outer[id(pan)][1] = [min(o[0], b[0]), min(o[1], b[1]), max(o[2], b[2]), max(o[3], b[3])]
+        else:
+            outer[id(pan)] = [pan, b]
+    plots: dict[int, list[float]] = {}           # each panel's plot column: its axes' boxes, axis on or off
+    for ax in fig.get_axes():
+        if not ax.get_visible() or hasattr(ax, "_colorbar"):
+            continue
+        pan, box = panel_of(ax, fig), _bbox_mm(ax.get_window_extent(renderer), renderer.dpi)
+        o = plots.get(id(pan))
+        plots[id(pan)] = box if o is None else [min(o[0], box[0]), min(o[1], box[1]), max(o[2], box[2]),
+                                                max(o[3], box[3])]
+    by_panel: dict[int, list[_Text]] = {}
+    for tx in texts:
+        if tx.axes is not None and tx.text.strip():
+            by_panel.setdefault(id(panel_of(tx.axes, fig)), []).append(tx)
+    lim = p["panel_region_overlap_mm"]
+    items = list(outer.values())
+    out = []
+    for i, (pa, a) in enumerate(items):
+        for pb, b in items[i + 1:]:
+            shared_h = min(a[3], b[3]) - max(a[1], b[1])
+            if shared_h < 0.5 * min(a[3] - a[1], b[3] - b[1]):
+                continue
+            shared_w = min(a[2], b[2]) - max(a[0], b[0])
+            if shared_w >= 0.5 * min(a[2] - a[0], b[2] - b[0]):
+                continue                              # mostly on top of each other: layered, not side by side
+            for src, dst, dst_outer in ((pa, pb, b), (pb, pa, a)):
+                col = plots.get(id(dst))
+                if col is None:
+                    continue
+                hits = []
+                for tx in by_panel.get(id(src), []):
+                    x0, y0, x1, y1 = tx.bbox_mm
+                    reach = min(x1, col[2]) - max(x0, col[0])
+                    yc = (y0 + y1) / 2
+                    if reach > lim and dst_outer[1] <= yc <= dst_outer[3] and not col[1] < yc < col[3]:
+                        hits.append((tx, reach))
+                if hits:
+                    boxes = [tx.bbox_mm for tx, _ in hits]
+                    box = [min(x[0] for x in boxes), min(x[1] for x in boxes), max(x[2] for x in boxes),
+                           max(x[3] for x in boxes)]
+                    reach = max(r for _, r in hits)
+                    out.append(Finding("panel_regions_overlap", "warn",
+                                       f"{len(hits)} text(s) of {_panel_label(src, fig)} stand in the plot column of "
+                                       f"{_panel_label(dst, fig)} beside it, up to {reach:.1f} mm "
+                                       f"(e.g. {hits[0][0].text[:30]!r})", box, panel=_panel_label(src, fig),
+                                       measured=round(reach, 2), threshold=lim,
+                                       hint="start the text at its own panel (title over its labels), "
+                                            "or move the panels apart"))
     return out
 
 
@@ -1008,6 +1087,7 @@ def preflight(fig, saved_bbox_in=None, params: dict | None = None,
                 + _check_clipping(fig, rec.texts, saved_mm, renderer, p)
                 + _check_legends(fig, rec.legends, renderer, p)
                 + _check_panel_overlap(fig, rec.texts, renderer, p)
+                + _check_panel_regions(fig, rec.texts, renderer, p)
                 + _check_raster_content(fig, save_dpi, p)
                 + _check_cvd(fig, p)
                 + _check_colormaps(fig, p)

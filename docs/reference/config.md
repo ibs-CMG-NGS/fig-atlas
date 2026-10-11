@@ -15,7 +15,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | [`cross_condition_dotplot`](#cross_condition_dotplot) | fig_atlas_omics.renderers | 62 |
 | [`cross_condition_heatmap`](#cross_condition_heatmap) | fig_atlas_omics.renderers | 42 |
 | [`effect_dots`](#effect_dots) | core | 24 |
-| [`flow_diagram`](#flow_diagram) | core | 41 |
+| [`flow_diagram`](#flow_diagram) | core | 42 |
 | [`funnel`](#funnel) | core | 16 |
 | [`go_bar`](#go_bar) | fig_atlas_omics.renderers | 25 |
 | [`go_cluster_dot`](#go_cluster_dot) | fig_atlas_omics.renderers | 37 |
@@ -466,6 +466,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `arrow_head` | number | `6.0` | pt | Arrow head size |
 | `arrow_gap` | number | `0.6` | pt | Gap between an arrow's ends and the boxes |
 | `dashed_style` | list | `[0, [3, 2]]` | matplotlib dash pattern (offset, [on, off] in pt) | Line style of edges marked style: dashed |
+| `level_edges` | true / false | `True` |  | Draw a straight arrow level (horizontal or vertical) when the two nodes' spans overlap — false to join the middles of the two sides, even if the arrow then slants |
 | `edge_label_size` | number | `6.0` | pt | Edge label size |
 | `edge_label_color` | colour | `#374151` | hex color | Edge label colour |
 | `edge_label_offset` | number | `1.2` | diagram units | Edge label distance from the arrow's middle (above a horizontal arrow, right of others) |

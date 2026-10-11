@@ -121,3 +121,23 @@ def test_box_text_is_centred_vertically():
     top = ax2.transData.inverted().transform((0, ax2.texts[0].get_window_extent().y1))[1]
     assert abs(min(top, 30 - top) - 1.5) < 1.0       # top: the title starts text_pad below the top edge
     plt.close("all")
+
+
+def test_arrow_between_overlapping_spans_is_level():
+    """Side-by-side nodes of different heights: the arrow runs level through
+    the shared span (through a terminal's middle, where its rounded end is)."""
+    nodes = pd.DataFrame([{"id": "c", "x": 0, "y": 69, "w": 42, "h": 20},
+                          {"id": "e", "x": 49, "y": 75, "w": 31, "h": 12, "kind": "terminal"},
+                          {"id": "p", "x": 0, "y": 0, "w": 20, "h": 10},
+                          {"id": "q", "x": 30, "y": 4, "w": 20, "h": 10}])
+    fig, ax = plt.subplots()
+    render_flow_diagram(ax, nodes, {"edges": [{"from": "c", "to": "e"}, {"from": "p", "to": "q"}]})
+    (_, y0), (_, y1) = _arrows(ax)[0]._posA_posB
+    assert y0 == y1 == 81                       # the terminal's middle
+    (_, y0), (_, y1) = _arrows(ax)[1]._posA_posB
+    assert y0 == y1 == 7                        # middle of the shared span 4-10
+    render_flow_diagram(ax2 := plt.subplots()[1], nodes,
+                        {"edges": [{"from": "p", "to": "q"}], "level_edges": False})
+    (_, y0), (_, y1) = _arrows(ax2)[0]._posA_posB
+    assert (y0, y1) == (5, 9)                   # off: side middles, slanted
+    plt.close("all")

@@ -19,6 +19,10 @@ Edges come from the ``edges`` param: a list of {"from", "to"} with optional
 "label", "from_side"/"to_side" ("l", "r", "t", "b"; default: across the gap
 between the two nodes), "from_at"/"to_at" (where on that side, 0-1 from the
 left or top; default 0.5), "rad" (curvature) and "style" ("solid"/"dashed").
+A straight arrow between two nodes whose spans overlap (side by side: their
+heights; one above the other: their widths) is drawn level -- horizontal or
+vertical -- through the overlap, unless "from_at"/"to_at" place its ends
+(``level_edges: false`` turns this off).
 
 Returns the node rows drawn, ready for fig_atlas.source_data.add.
 """
@@ -84,6 +88,9 @@ SCHEMA = Schema("flow_diagram", params=[
     Param("arrow_gap", float, 0.6, unit="pt", range=(0, None), role="Gap between an arrow's ends and the boxes"),
     Param("dashed_style", list, [0, [3, 2]], unit="matplotlib dash pattern (offset, [on, off] in pt)",
           role="Line style of edges marked style: dashed"),
+    Param("level_edges", bool, True,
+          role="Draw a straight arrow level (horizontal or vertical) when the two nodes' spans overlap",
+          tune="false to join the middles of the two sides, even if the arrow then slants"),
     Param("edge_label_size", float, 6.0, unit="pt", range=(0, None), role="Edge label size"),
     Param("edge_label_color", "color", "#374151", unit="hex color", role="Edge label colour"),
     Param("edge_label_offset", float, 1.2, unit="diagram units",
@@ -110,6 +117,38 @@ def _auto_sides(a, b, y_down):
     if y_down:
         return ("b", "t") if later else ("t", "b")
     return ("t", "b") if later else ("b", "t")
+
+
+def _level_ats(a, b, sa, sb, y_down):
+    """``(from_at, to_at)`` that make the arrow from side ``sa`` of ``a`` to
+    side ``sb`` of ``b`` level, or None when their spans do not overlap. A
+    diamond or rounded end only meets its side at the middle, so that middle
+    is kept and the level line goes through it if the other node spans it."""
+    if {sa, sb} == {"l", "r"}:
+        lo, size = "y", "h"
+    elif {sa, sb} == {"t", "b"}:
+        lo, size = "x", "w"
+    else:
+        return None
+    fixed = [n for n in (a, b) if n["kind"] in ("decision", "terminal")]
+    lo_s, hi_s = max(a[lo], b[lo]), min(a[lo] + a[size], b[lo] + b[size])
+    if hi_s <= lo_s:
+        return None
+    if len(fixed) == 2:
+        mids = {n[lo] + n[size] / 2 for n in fixed}
+        if len(mids) > 1:
+            return None
+        level = mids.pop()
+    elif fixed:
+        level = fixed[0][lo] + fixed[0][size] / 2
+        if not lo_s <= level <= hi_s:
+            return None
+    else:
+        level = (lo_s + hi_s) / 2
+    def at(n):
+        f = (level - n[lo]) / n[size]
+        return 1 - f if lo == "y" and not y_down else f
+    return at(a), at(b)
 
 
 def _text(r, col):
@@ -181,7 +220,10 @@ def render_flow_diagram(ax, df, params):
         a, b = nodes[str(e["from"])], nodes[str(e["to"])]
         sa, sb = _auto_sides(a, b, y_down)
         sa, sb = e.get("from_side", sa), e.get("to_side", sb)
-        p0, p1 = _anchor(a, sa, y_down, e.get("from_at", 0.5)), _anchor(b, sb, y_down, e.get("to_at", 0.5))
+        at_a, at_b = 0.5, 0.5
+        if params.get("level_edges", True) and not e.get("rad") and "from_at" not in e and "to_at" not in e:
+            at_a, at_b = _level_ats(a, b, sa, sb, y_down) or (0.5, 0.5)
+        p0, p1 = _anchor(a, sa, y_down, e.get("from_at", at_a)), _anchor(b, sb, y_down, e.get("to_at", at_b))
         style = tuple(params.get("dashed_style", [0, [3, 2]])) if e.get("style") == "dashed" else "solid"
         ax.add_patch(FancyArrowPatch(p0, p1, arrowstyle="-|>", mutation_scale=params.get("arrow_head", 6.0),
                                      connectionstyle=f"arc3,rad={e.get('rad', 0.0)}",

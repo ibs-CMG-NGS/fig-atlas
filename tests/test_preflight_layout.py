@@ -149,3 +149,25 @@ def test_title_starts_at_the_tick_labels():
     labels = min(t.get_window_extent(r).x0 for t in ax.get_yticklabels())
     assert abs(title.get_window_extent(r).x0 - labels) < 1.0
     plt.close(fig)
+
+
+def test_panel_reaching_into_its_neighbour_is_reported():
+    """A title moved left over the neighbour's whitespace: no text lies on the
+    neighbour's plot area, yet the two panels' regions interleave."""
+    import matplotlib.pyplot as plt
+    from fig_atlas.preflight import preflight
+    fig = plt.figure(figsize=(6.0, 2.5))
+    a = fig.add_axes([0.08, 0.15, 0.4, 0.6])
+    b = fig.add_axes([0.62, 0.15, 0.3, 0.6])
+    a.set_title("Left", loc="left")
+    b.set_title("A long title that starts far left", loc="left").set_x(-0.6)
+    found = {f.check: f for f in preflight(fig, saved_bbox_in="tight")}
+    assert found["panel_regions_overlap"].severity == "warn"
+    assert "panel_intrusion" not in found
+    plt.close(fig)
+
+    fig = plt.figure(figsize=(6.0, 2.5))
+    for x in (0.08, 0.62):
+        fig.add_axes([x, 0.15, 0.3, 0.6]).set_title("Panel", loc="left")
+    assert "panel_regions_overlap" not in {f.check for f in preflight(fig, saved_bbox_in="tight")}
+    plt.close(fig)
