@@ -629,21 +629,26 @@ def _check_cvd(fig, p: dict) -> list[Finding]:
 
 def _check_colormaps(fig, p: dict) -> list[Finding]:
     from matplotlib.cm import ScalarMappable
+    # One finding per colormap and panel, located on the axes that uses it, so
+    # an overlay can show it and an allow-list can match it.
+    renderer = fig.canvas.get_renderer()
     cmaps = {}
     for a in fig.findobj(lambda a: isinstance(a, ScalarMappable)):
         if getattr(a, "get_visible", lambda: True)() and (a.get_array() is not None):
-            cmaps.setdefault(a.get_cmap().name, a.get_cmap())
+            ax = getattr(a, "axes", None)
+            cmaps.setdefault((a.get_cmap().name, id(ax)), (a.get_cmap(), ax))
     out = []
-    for name, cmap in sorted(cmaps.items()):
+    for (name, _), (cmap, ax) in sorted(cmaps.items(), key=lambda kv: kv[0][0]):
+        box = _bbox_mm(ax.get_window_extent(renderer), renderer.dpi) if ax is not None else _no_box()
         base = name[:-2] if name.endswith("_r") else name
         if base in _RAINBOW:
             out.append(Finding("cmap_rainbow", "warn", f"colormap '{name}' is rainbow-like: its lightness jumps, "
-                               f"creating false boundaries and hiding real ones", _no_box(),
+                               f"creating false boundaries and hiding real ones", box,
                                hint="use a perceptually uniform map (viridis, cividis, magma) or a diverging one (RdBu_r)"))
             continue
         if base in _RED_GREEN:
             out.append(Finding("cmap_red_green", "warn", f"colormap '{name}' separates its ends by red vs. green, "
-                               f"which red-green colour-blind readers can't distinguish", _no_box(),
+                               f"which red-green colour-blind readers can't distinguish", box,
                                hint="use RdBu_r, PuOr or BrBG"))
             continue
         if getattr(cmap, "N", 256) < 16:
@@ -654,7 +659,7 @@ def _check_colormaps(fig, p: dict) -> list[Finding]:
         turns = int(np.sum(np.diff(np.sign(d)) != 0)) if len(d) > 1 else 0
         if turns > 1:                             # sequential: 0 turns; diverging: 1
             out.append(Finding("cmap_nonuniform", "warn", f"colormap '{name}' gets lighter and darker "
-                               f"{turns + 1} times along its range", _no_box(), measured=float(turns),
+                               f"{turns + 1} times along its range", box, measured=float(turns),
                                threshold=1.0, hint="use a sequential or diverging colormap with monotonic lightness"))
     return out
 

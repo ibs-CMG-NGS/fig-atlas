@@ -136,3 +136,18 @@ def test_cvd_finding_points_at_the_legend():
     x0, y0, x1, y1 = found[0].bbox_mm
     assert abs(x0 - b.x0 * k) < 0.5 and abs(y1 - b.y1 * k) < 0.5 and x1 > x0
     plt.close(fig)
+
+
+def test_colormap_finding_points_at_its_axes():
+    import matplotlib.pyplot as plt
+    import numpy as np
+    from fig_atlas.preflight import preflight
+    fig, (a, b) = plt.subplots(1, 2, figsize=(4, 2))
+    a.imshow(np.arange(9).reshape(3, 3), cmap="jet")
+    b.imshow(np.arange(9).reshape(3, 3), cmap="viridis")
+    found = [f for f in preflight(fig) if f.check == "cmap_rainbow"]
+    assert len(found) == 1 and found[0].bbox_mm != [0.0, 0.0, 0.0, 0.0]
+    fig.canvas.draw()
+    x_mid = (found[0].bbox_mm[0] + found[0].bbox_mm[2]) / 2
+    assert x_mid < 2 * 25.4                       # on the left axes, the one using jet
+    plt.close(fig)
