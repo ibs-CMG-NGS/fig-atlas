@@ -10,7 +10,9 @@ Data: one row per node, with columns named by the *_col params:
     title  bold first line (optional)
     body   further lines, newline-separated (optional)
     kind   "box" (default), "group" (dashed container drawn underneath, title
-           at its top-left) or "text" (no frame)
+           at its top-left), "text" (no frame), and the flowchart shapes
+           "decision" (a diamond in the node's box) and "terminal" (a box with
+           fully rounded ends, for start and end); these two centre their text
     fill   fill colour for this node (optional; default box_fill)
     color  text colour for this node (optional; default text_color / body_color)
 Edges come from the ``edges`` param: a list of {"from", "to"} with optional
@@ -23,7 +25,7 @@ Returns the node rows drawn, ready for fig_atlas.source_data.add.
 from __future__ import annotations
 
 import pandas as pd
-from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
+from matplotlib.patches import FancyArrowPatch, FancyBboxPatch, Polygon
 
 from fig_atlas.schema import Param, Schema, uses_schema
 
@@ -39,7 +41,7 @@ SCHEMA = Schema("flow_diagram", params=[
     Param("h_col", str, "h", role="Column with the node's height"),
     Param("title_col", str, "title", role="Column with the node's bold first line"),
     Param("body_col", str, "body", role="Column with further lines, separated by newlines"),
-    Param("kind_col", str, "kind", role="Column with the node kind: box, group or text"),
+    Param("kind_col", str, "kind", role="Column with the node kind: box, group, text, decision or terminal"),
     Param("fill_col", str, "fill", role="Column with a node's own fill colour (empty: box_fill)"),
     Param("color_col", str, "color", role="Column with a node's own text colour (empty: text_color, body_color)"),
     Param("edges", list, [], role="Arrows: list of {from, to, label?, from_side?, to_side?, rad?, style?}"),
@@ -143,10 +145,25 @@ def render_flow_diagram(ax, df, params):
                                         facecolor=n["fill"] or params.get("box_fill", "#F3F4F6"),
                                         edgecolor=params.get("box_edge", "#4B5563"),
                                         linewidth=params.get("box_linewidth", 0.6), zorder=2))
-        # Groups label their top-left corner; boxes and text nodes fill from the top.
-        left = n["kind"] == "group" or align == "left"
+        elif n["kind"] in ("decision", "terminal"):
+            face = n["fill"] or params.get("box_fill", "#F3F4F6")
+            edge, lw = params.get("box_edge", "#4B5563"), params.get("box_linewidth", 0.6)
+            if n["kind"] == "decision":
+                ax.add_patch(Polygon([(x + w / 2, y), (x + w, y + h / 2), (x + w / 2, y + h), (x, y + h / 2)],
+                                     closed=True, facecolor=face, edgecolor=edge, linewidth=lw, zorder=2))
+            else:
+                ax.add_patch(FancyBboxPatch((x, y), w, h, boxstyle=f"round,pad=0,rounding_size={h / 2}",
+                                            facecolor=face, edgecolor=edge, linewidth=lw, zorder=2))
+        # Groups label their top-left corner; boxes and text nodes fill from the top;
+        # decisions and terminals centre their text.
+        left = n["kind"] == "group" or (align == "left" and n["kind"] not in ("decision", "terminal"))
         tx, ha = (x + pad, "left") if left else (x + w / 2, "center")
         ty = (y + pad) if y_down else (y + h - pad)
+        if n["kind"] in ("decision", "terminal"):
+            lines_pt = (t_size * spacing if n["title"] else 0) + (
+                b_size * spacing * len(n["body"].splitlines()) if n["body"] else 0)
+            block = lines_pt * MM_PER_PT * params.get("units_per_mm", 1.0) + (gap if n["title"] and n["body"] else 0)
+            ty = y + h / 2 - sign * block / 2 if y_down else y + h / 2 + block / 2
         if n["title"]:
             ax.text(tx, ty, n["title"], ha=ha, va="top", fontsize=t_size, fontweight=params.get("title_weight", "bold"),
                     color=n["color"] or params.get("text_color", "#111827"), zorder=3)

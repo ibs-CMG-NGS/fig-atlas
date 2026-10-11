@@ -86,3 +86,20 @@ def test_label_of_a_slanted_arrow_sits_off_the_line():
     dist = abs((y1 - y0) * lx - (x1 - x0) * ly + x1 * y0 - y1 * x0) / ((y1 - y0) ** 2 + (x1 - x0) ** 2) ** 0.5
     assert abs(dist - 2.0) < 1e-6
     plt.close(fig)
+
+
+def test_flowchart_shapes_centre_their_text():
+    from matplotlib.patches import Polygon
+    nodes = pd.DataFrame([{"id": "s", "x": 0, "y": 0, "w": 20, "h": 8, "title": "Start", "kind": "terminal"},
+                          {"id": "d", "x": 0, "y": 14, "w": 20, "h": 12, "title": "Changes files?", "kind": "decision"}])
+    fig, ax = plt.subplots()
+    render_flow_diagram(ax, nodes, {"edges": [{"from": "s", "to": "d"}]})
+    diamond = next(p for p in ax.patches if isinstance(p, Polygon))
+    assert sorted(map(tuple, diamond.get_xy()[:4])) == [(0, 20), (10, 14), (10, 26), (20, 20)]
+    fig.canvas.draw()
+    title = next(t for t in ax.texts if t.get_text() == "Changes files?")
+    bb = title.get_window_extent().transformed(ax.transData.inverted())
+    assert abs((bb.y0 + bb.y1) / 2 - 20) < 2.5          # text sits about the diamond's middle
+    (_, y0), (_, y1) = _arrows(ax)[0]._posA_posB
+    assert (y0, y1) == (8, 14)                          # terminal bottom -> diamond top vertex
+    plt.close(fig)

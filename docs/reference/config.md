@@ -435,7 +435,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `h_col` | text | `h` |  | Column with the node's height |
 | `title_col` | text | `title` |  | Column with the node's bold first line |
 | `body_col` | text | `body` |  | Column with further lines, separated by newlines |
-| `kind_col` | text | `kind` |  | Column with the node kind: box, group or text |
+| `kind_col` | text | `kind` |  | Column with the node kind: box, group, text, decision or terminal |
 | `fill_col` | text | `fill` |  | Column with a node's own fill colour (empty: box_fill) |
 | `color_col` | text | `color` |  | Column with a node's own text colour (empty: text_color, body_color) |
 | `edges` | list | `[]` |  | Arrows: list of {from, to, label?, from_side?, to_side?, rad?, style?} |
