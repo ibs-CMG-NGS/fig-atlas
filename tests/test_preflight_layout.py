@@ -134,3 +134,18 @@ def test_crowded_texts_and_uneven_titles_are_reported_as_info():
     found = {f.check for f in preflight(fig, saved_bbox_in="tight")}
     assert "title_misaligned" not in found and "text_crowded" not in found
     plt.close(fig)
+
+
+def test_title_starts_at_the_tick_labels():
+    import matplotlib.pyplot as plt
+    from fig_atlas.renderers import align_title_to_labels
+    fig, ax = plt.subplots(figsize=(3, 2))
+    ax.barh([0, 1], [3, 5])
+    ax.set_yticks([0, 1], ["a long category name", "short"])
+    title = ax.set_title("Title", loc="left")
+    align_title_to_labels(ax)
+    fig.canvas.draw()
+    r = fig.canvas.get_renderer()
+    labels = min(t.get_window_extent(r).x0 for t in ax.get_yticklabels())
+    assert abs(title.get_window_extent(r).x0 - labels) < 1.0
+    plt.close(fig)

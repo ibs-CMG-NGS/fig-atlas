@@ -59,3 +59,30 @@ def place_panel_tags(fig, columns, label_size, pad_pt=2.0, fontweight="bold", al
         tags.append(fig.text(fx, fy, letter, fontsize=label_size, fontweight=fontweight,
                              ha="left", va="bottom", gid=PANEL_TAG_GID))
     return tags
+
+
+def align_title_to_labels(ax, title=None):
+    """Start a left-aligned axes title at the axes' outer left edge.
+
+    A horizontal bar chart with long category names has its tick labels far
+    left of the spine; a title at ``x=0`` then starts over the bars, and one
+    placed by a typed axes fraction (``set_x(-1.25)``) drifts whenever the
+    labels or the axes width change. This measures the left edge of the tick
+    labels and axis title (the title itself left out) and moves the title
+    there, so the title -- and a panel tag placed on the outer box -- line up
+    with the labels. ``title`` defaults to the axes' left title (what
+    ``set_title(..., loc="left")`` sets), else its centre title. Call after the
+    axes are fully drawn; returns the title.
+    """
+    fig = ax.figure
+    if title is None:
+        title = ax._left_title if ax.get_title("left") else ax.title
+    fig.canvas.draw()
+    renderer = fig.canvas.get_renderer()
+    visible = title.get_visible()
+    title.set_visible(False)
+    left = ax.get_tightbbox(renderer).x0
+    title.set_visible(visible)
+    title.set_ha("left")
+    title.set_x(ax.transAxes.inverted().transform((left, 0))[0])
+    return title

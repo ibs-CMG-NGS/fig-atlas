@@ -29,7 +29,7 @@ from .image_panel import render_image_panel
 from .jaccard_heatmap import render_jaccard_heatmap
 from .line_band import render_line_band
 from .multi_group_heatmap import render_multi_group_heatmap
-from .panels import panel_label, place_panel_tags
+from .panels import align_title_to_labels, panel_label, place_panel_tags
 from .pca import render_pca
 from .sample_metric_bars import render_sample_metric_bars
 from .signed_heatmap import render_signed_heatmap
@@ -44,6 +44,7 @@ from .venn import render_venn
 __all__ = [
     "panel_label",
     "place_panel_tags",
+    "align_title_to_labels",
     "render_bar_scatter",
     "render_boxplot",
     "render_effect_dots",
