@@ -109,3 +109,28 @@ def test_profile_is_returned():
     prof = {}
     preflight(_grid([6, 6, 6, 6]), "tight", profile=prof)
     assert set(prof["tick"]) == {6.0}
+
+
+def test_crowded_texts_and_uneven_titles_are_reported_as_info():
+    import matplotlib.pyplot as plt
+    from fig_atlas.preflight import preflight
+    fig = plt.figure(figsize=(4.0, 2.0))
+    a = fig.add_axes([0.1, 0.2, 0.35, 0.55])
+    b = fig.add_axes([0.6, 0.2, 0.35, 0.45])            # lower top edge: its title sits lower
+    a.set_title("Left panel", fontsize=7)
+    b.set_title("Right panel", fontsize=7)
+    # two labels 0.2 mm apart, one above the other (in inches from the figure corner)
+    fig.text(0.5, 0.15, "upper label", va="bottom", fontsize=6, transform=fig.dpi_scale_trans)
+    fig.text(0.5, 0.15 - 0.2 / 25.4, "lower label", va="top", fontsize=6, transform=fig.dpi_scale_trans)
+    found = {f.check: f for f in preflight(fig, saved_bbox_in="tight")}
+    assert found["title_misaligned"].severity == "info"
+    assert found["text_crowded"].severity == "info"
+    plt.close(fig)
+
+    fig = plt.figure(figsize=(4.0, 2.0))
+    for x in (0.1, 0.6):
+        ax = fig.add_axes([x, 0.2, 0.35, 0.55])
+        ax.set_title("Panel", fontsize=7)
+    found = {f.check for f in preflight(fig, saved_bbox_in="tight")}
+    assert "title_misaligned" not in found and "text_crowded" not in found
+    plt.close(fig)

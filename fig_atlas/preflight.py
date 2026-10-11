@@ -45,6 +45,10 @@ C7/C8 layout rules and consistency
                               line (AGENTS.md rule 1.5)                          warn
     panel_tag_inconsistent    tags differ in size / weight / case              warn
     panel_tag_style           tag case or size differs from the journal preset warn
+    text_crowded              two texts closer than ``min_text_gap_mm`` without
+                              overlapping (a title on its column heads, ...)   info
+    title_misaligned          titles of panels side by side sit at different
+                              heights                                          info
     font_size_outlier         a few texts of one role (tick labels, axis
                               titles, tags, legend) in an odd size -- usually
                               a hardcoded fontsize                             warn
@@ -105,6 +109,8 @@ DEFAULTS = {
     "min_text_contrast": 3.0,    # WCAG contrast ratio of text against what is behind it
     "muted_text_min_contrast": 2.0,  # grey-on-white text at or above this is deliberate de-emphasis (info)
     "min_tick_gap_mm": 0.3,      # neighbouring tick labels closer than this read as one word
+    "min_text_gap_mm": 0.4,      # other texts closer than this (without overlapping) look crowded
+    "title_align_tol_mm": 0.5,   # titles of panels side by side may differ in height by this much
     "panel_tag_align_tol_mm": 0.3,   # tags in one column must share x within this
     "panel_tag_column_mm": 6.0,  # tags whose left edges are this close form a column
     "panel_tag_case": None,      # "lower" | "upper" (journal presets set it)
@@ -752,6 +758,79 @@ def _poly_distance(a, b) -> float:
                for pp, q in ((a, b), (b, a)))
 
 
+def _check_text_crowding(fig, texts: list[_Text], p: dict) -> list[Finding]:
+    """Texts that do not overlap but nearly touch: a title sitting on its
+    column heads, a label against a neighbour's title. Tick labels of one axis
+    (tick_labels_touching) and legend entries are left out; pairs are grouped
+    per pair of panels so a dense figure gives a few findings, not hundreds."""
+    g = p["min_text_gap_mm"]
+    items = sorted(texts, key=lambda t: t.bbox_mm[0])
+    groups: dict[tuple, list] = {}
+    for i, a in enumerate(items):
+        for b in items[i + 1:]:
+            if b.bbox_mm[0] > a.bbox_mm[2] + g:
+                break
+            if b.bbox_mm[1] > a.bbox_mm[3] + g or b.bbox_mm[3] < a.bbox_mm[1] - g:
+                continue
+            if (a.tick_axis and b.tick_axis) or (a.is_legend and b.is_legend):
+                continue
+            if _area(_clip(a.corners_mm, b.corners_mm)) > 0:
+                continue                                 # overlapping: the overlap checks report it
+            gap = _poly_distance(a.corners_mm, b.corners_mm)
+            if gap >= g:
+                continue
+            pa, pb = panel_of(a.axes, fig), panel_of(b.axes, fig)
+            key = tuple(sorted((id(pa), id(pb))))
+            groups.setdefault(key, []).append((a, b, gap, pa or pb))
+    out = []
+    for pairs in groups.values():
+        boxes = [t.bbox_mm for a, b, _, _ in pairs for t in (a, b)]
+        box = [min(x[0] for x in boxes), min(x[1] for x in boxes), max(x[2] for x in boxes), max(x[3] for x in boxes)]
+        ex = ", ".join(f"{a.text[:20]!r}|{b.text[:20]!r}" for a, b, _, _ in pairs[:2])
+        gmin = min(x[2] for x in pairs)
+        out.append(Finding("text_crowded", "info",
+                           f"{len(pairs)} pair(s) of texts {gmin:.2f} mm or less apart (e.g. {ex})", box,
+                           panel=_panel_label(pairs[0][3], fig), measured=round(gmin, 3), threshold=g,
+                           hint="add space between them (title pad, offsets, panel positions)"))
+    return out
+
+
+def _check_title_rows(fig, texts: list[_Text], p: dict) -> list[Finding]:
+    """Titles of panels side by side -- panels whose plot areas share most of
+    their height -- whose baselines differ: the row reads as uneven."""
+    titles = [t for t in texts if t.role == "title" and t.text.strip() and t.axes is not None]
+    titles.sort(key=lambda t: t.bbox_mm[0])
+    tol = p["title_align_tol_mm"]
+    k = MM_PER_INCH / fig.dpi
+
+    def band(t):
+        b = t.axes.get_window_extent()
+        return b.y0 * k, b.y1 * k
+
+    out, seen = [], set()
+    for i, a in enumerate(titles):
+        row = [a]
+        a0, a1 = band(a)
+        for b in titles[i + 1:]:
+            b0, b1 = band(b)
+            shared = min(a1, b1) - max(a0, b0)
+            if shared > 0.5 * min(a1 - a0, b1 - b0) and panel_of(b.axes, fig) is not panel_of(a.axes, fig):
+                row.append(b)
+        if len(row) < 2 or id(a) in seen:
+            continue
+        seen.update(id(t) for t in row)
+        lows = [t.bbox_mm[1] for t in row]
+        if max(lows) - min(lows) > tol:
+            box = [min(t.bbox_mm[0] for t in row), min(lows), max(t.bbox_mm[2] for t in row),
+                   max(t.bbox_mm[3] for t in row)]
+            out.append(Finding("title_misaligned", "info",
+                               f"{len(row)} titles side by side differ in height by {max(lows) - min(lows):.1f} mm "
+                               f"({', '.join(repr(t.text[:20]) for t in row[:3])})", box,
+                               panel=_panel_label(panel_of(a.axes, fig), fig), measured=round(max(lows) - min(lows), 2),
+                               threshold=tol, hint="give the panels in a row the same top edge, or the same title pad"))
+    return out
+
+
 def _check_tick_gaps(fig, texts: list[_Text], p: dict) -> list[Finding]:
     """Neighbouring tick labels of one axis that don't overlap but nearly
     touch ("24h48h" reads as one label)."""
@@ -934,6 +1013,8 @@ def preflight(fig, saved_bbox_in=None, params: dict | None = None,
                 + _check_colormaps(fig, p)
                 + _check_text_contrast(fig, rec.texts, p)
                 + _check_tick_gaps(fig, rec.texts, p)
+                + _check_text_crowding(fig, rec.texts, p)
+                + _check_title_rows(fig, rec.texts, p)
                 + _check_panel_tags(rec.texts, p)
                 + _check_font_sizes(fig, rec.texts, p))
     findings = _apply_allow(fig, _merge_repeats(findings), renderer, p)

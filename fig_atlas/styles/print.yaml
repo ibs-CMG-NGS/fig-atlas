@@ -101,6 +101,13 @@ preflight:
   # [Layout rules] Neighbouring tick labels closer than this (mm) read as one
   # label (e.g. "24h48h"). Raise to demand more breathing room.
   min_tick_gap_mm: 0.3
+  # Other texts closer than this (mm) without overlapping are reported as
+  # crowded (info): a title sitting on its column heads, a label against a
+  # neighbour's title. Raise to ask for more air.
+  min_text_gap_mm: 0.4
+  # Titles of panels side by side may differ in height by this much (mm)
+  # before the row is reported as uneven (info).
+  title_align_tol_mm: 0.5
   # Panel tags stacked in one column must share their left edge within this
   # (mm) -- AGENTS.md rule 1.5's common plumb line.
   panel_tag_align_tol_mm: 0.3
