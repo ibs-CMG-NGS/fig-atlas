@@ -69,6 +69,8 @@ SCHEMA = Schema("flow_diagram", params=[
     Param("text_color", "color", "#111827", unit="hex color", role="Title colour"),
     Param("body_color", "color", "#374151", unit="hex color", role="Body colour"),
     Param("text_align", str, "center", role="Text alignment in boxes: center or left"),
+    Param("text_valign", str, "center", role="Vertical placement of a box's or text node's text: center or top",
+          tune="top fills a box from its top edge (text_pad below it); groups always label their top-left corner"),
     Param("text_pad", float, 1.5, unit="diagram units", range=(0, None),
           role="Gap between a box's edge and its text", tune="raise if text touches the outline"),
     Param("line_spacing", float, 1.25, unit="multiple of the font size", range=(0, None),
@@ -127,6 +129,8 @@ def render_flow_diagram(ax, df, params):
                                   "color": _text(r, c["color"])}
     y_down = params.get("y_down", True)
     pad, align = params.get("text_pad", 1.5), params.get("text_align", "center")
+    valign = params.get("text_valign", "center")
+    to_centre = []          # (texts of one node, the node's vertical middle) to centre once laid out
     t_size, b_size = params.get("title_size", 7.0), params.get("body_size", 6.0)
     spacing, gap = params.get("line_spacing", 1.25), params.get("title_gap", 0.8)
     radius = params.get("box_radius", 1.0)
@@ -154,23 +158,22 @@ def render_flow_diagram(ax, df, params):
             else:
                 ax.add_patch(FancyBboxPatch((x, y), w, h, boxstyle=f"round,pad=0,rounding_size={h / 2}",
                                             facecolor=face, edgecolor=edge, linewidth=lw, zorder=2))
-        # Groups label their top-left corner; boxes and text nodes fill from the top;
-        # decisions and terminals centre their text.
+        # Groups label their top-left corner; other nodes are filled from the top
+        # and, unless text_valign is "top", centred vertically once drawn (below).
         left = n["kind"] == "group" or (align == "left" and n["kind"] not in ("decision", "terminal"))
         tx, ha = (x + pad, "left") if left else (x + w / 2, "center")
         ty = (y + pad) if y_down else (y + h - pad)
-        if n["kind"] in ("decision", "terminal"):
-            lines_pt = (t_size * spacing if n["title"] else 0) + (
-                b_size * spacing * len(n["body"].splitlines()) if n["body"] else 0)
-            block = lines_pt * MM_PER_PT * params.get("units_per_mm", 1.0) + (gap if n["title"] and n["body"] else 0)
-            ty = y + h / 2 - sign * block / 2 if y_down else y + h / 2 + block / 2
+        drawn = []
         if n["title"]:
-            ax.text(tx, ty, n["title"], ha=ha, va="top", fontsize=t_size, fontweight=params.get("title_weight", "bold"),
-                    color=n["color"] or params.get("text_color", "#111827"), zorder=3)
+            drawn.append(ax.text(tx, ty, n["title"], ha=ha, va="top", fontsize=t_size,
+                                 fontweight=params.get("title_weight", "bold"),
+                                 color=n["color"] or params.get("text_color", "#111827"), zorder=3))
             ty += sign * (t_size * MM_PER_PT * params.get("units_per_mm", 1.0) * spacing + gap)
         if n["body"] and n["kind"] != "group":
-            ax.text(tx, ty, n["body"], ha=ha, va="top", fontsize=b_size, linespacing=spacing,
-                    color=n["color"] or params.get("body_color", "#374151"), zorder=3)
+            drawn.append(ax.text(tx, ty, n["body"], ha=ha, va="top", fontsize=b_size, linespacing=spacing,
+                                 color=n["color"] or params.get("body_color", "#374151"), zorder=3))
+        if drawn and n["kind"] != "group" and (valign == "center" or n["kind"] in ("decision", "terminal")):
+            to_centre.append((drawn, y + h / 2))
 
     # Each edge is copied to a plain dict: its optional fields (label, sides, rad,
     # style) are per-arrow choices, not config keys a build should report as missing.
@@ -213,4 +216,23 @@ def render_flow_diagram(ax, df, params):
     ax.set_ylim((hi, lo) if y_down else (lo, hi))
     ax.set_aspect("equal")
     ax.axis("off")
+    _centre_texts(ax, to_centre)
     return df.copy()
+
+
+def _centre_texts(ax, groups):
+    """Move each node's texts so the block they form is centred on the node's
+    middle: measured from the drawn text, so it holds for any font and size."""
+    if not groups:
+        return
+    ax.apply_aspect()
+    renderer = ax.figure.canvas.get_renderer()
+    inv = ax.transData.inverted()
+    for texts, middle in groups:
+        boxes = [t.get_window_extent(renderer) for t in texts]
+        y0 = inv.transform((0, min(b.y0 for b in boxes)))[1]
+        y1 = inv.transform((0, max(b.y1 for b in boxes)))[1]
+        shift = middle - (y0 + y1) / 2
+        for t in texts:
+            x, y = t.get_position()
+            t.set_position((x, y + shift))

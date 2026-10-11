@@ -15,7 +15,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | [`cross_condition_dotplot`](#cross_condition_dotplot) | fig_atlas_omics.renderers | 62 |
 | [`cross_condition_heatmap`](#cross_condition_heatmap) | fig_atlas_omics.renderers | 42 |
 | [`effect_dots`](#effect_dots) | core | 24 |
-| [`flow_diagram`](#flow_diagram) | core | 40 |
+| [`flow_diagram`](#flow_diagram) | core | 41 |
 | [`funnel`](#funnel) | core | 16 |
 | [`go_bar`](#go_bar) | fig_atlas_omics.renderers | 25 |
 | [`go_cluster_dot`](#go_cluster_dot) | fig_atlas_omics.renderers | 37 |
@@ -457,6 +457,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `text_color` | colour | `#111827` | hex color | Title colour |
 | `body_color` | colour | `#374151` | hex color | Body colour |
 | `text_align` | text | `center` |  | Text alignment in boxes: center or left |
+| `text_valign` | text | `center` |  | Vertical placement of a box's or text node's text: center or top — top fills a box from its top edge (text_pad below it); groups always label their top-left corner |
 | `text_pad` | number | `1.5` | diagram units | Gap between a box's edge and its text — raise if text touches the outline |
 | `line_spacing` | number | `1.25` | multiple of the font size | Line spacing of the body text |
 | `title_gap` | number | `0.8` | diagram units | Gap between a node's title and its body |

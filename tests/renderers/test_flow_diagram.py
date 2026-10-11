@@ -103,3 +103,21 @@ def test_flowchart_shapes_centre_their_text():
     (_, y0), (_, y1) = _arrows(ax)[0]._posA_posB
     assert (y0, y1) == (8, 14)                          # terminal bottom -> diamond top vertex
     plt.close(fig)
+
+
+def test_box_text_is_centred_vertically():
+    """A tall box keeps its text in the middle, not stuck to the top edge."""
+    nodes = pd.DataFrame([{"id": "b", "x": 0, "y": 0, "w": 40, "h": 30, "title": "Title", "body": "one\ntwo"}])
+    fig, ax = plt.subplots(figsize=(3, 3))
+    render_flow_diagram(ax, nodes, {"xlim": [0, 40], "ylim": [0, 30]})
+    fig.canvas.draw()
+    inv = ax.transData.inverted()
+    boxes = [t.get_window_extent() for t in ax.texts]
+    y0 = inv.transform((0, min(b.y0 for b in boxes)))[1]
+    y1 = inv.transform((0, max(b.y1 for b in boxes)))[1]
+    assert abs((y0 + y1) / 2 - 15) < 0.5
+    render_flow_diagram(ax2 := plt.subplots(figsize=(3, 3))[1], nodes,
+                        {"xlim": [0, 40], "ylim": [0, 30], "text_valign": "top", "text_pad": 1.5})
+    top = ax2.transData.inverted().transform((0, ax2.texts[0].get_window_extent().y1))[1]
+    assert abs(min(top, 30 - top) - 1.5) < 1.0       # top: the title starts text_pad below the top edge
+    plt.close("all")
