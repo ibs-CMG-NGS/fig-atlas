@@ -253,6 +253,31 @@ def test_new_renderer_refuses_taken_and_bad_names(repo):
         plan_new_renderer(repo, "x_plot", package="no_such_pack.renderers")
 
 
+
+def test_new_renderer_in_a_project_repository(tmp_path, monkeypatch):
+    """Outside the fig-atlas source, the renderer goes in the repository's own
+    renderers/ folder, which fig-atlas then finds without installing anything."""
+    from fig_atlas import plugins
+    from fig_atlas.contracts import ingest_map
+    from fig_atlas.repo_commands import plan_new_renderer
+    (tmp_path / ".fig-atlas").write_text("# marker", encoding="utf-8")
+    cs = plan_new_renderer(tmp_path, "dot_strip", plot_type="dot_strip", today="2026-10-13")
+    assert {c.path for c in cs.changes} == {"renderers/dot_strip.py", "renderers/__init__.py",
+                                            "tests/renderers/test_dot_strip.py"}
+    cs.apply()
+    init = (tmp_path / "renderers" / "__init__.py").read_text(encoding="utf-8")
+    assert '"dot_strip": "renderers.dot_strip:render_dot_strip",' in init
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(sys, "path", list(sys.path))
+    for m in [m for m in sys.modules if m == "renderers" or m.startswith("renderers.")]:
+        monkeypatch.delitem(sys.modules, m)
+    assert any(p.name == "project" for p in plugins.entry_points("renderers"))
+    assert ingest_map()["dot_strip"] == "renderers.dot_strip:render_dot_strip"
+    second = plan_new_renderer(tmp_path, "ring", today="2026-10-13")          # the folder exists now: an edit
+    assert {c.path: c.kind for c in second.changes}["renderers/__init__.py"] == "edit"
+    for m in [m for m in sys.modules if m == "renderers" or m.startswith("renderers.")]:
+        monkeypatch.delitem(sys.modules, m)
+
 # ------------------------------------------------------------ retire, promote --
 def _exploratory(repo, name="lab-trial"):
     plan_new_project(repo, name, "lab", "exploratory", slug="trial", today="2026-10-08").apply()

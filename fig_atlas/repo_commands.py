@@ -481,11 +481,19 @@ def plan_new_renderer(root: Path, name: str, package: str = "fig_atlas.renderers
                       doc: str | None = None, today: str | None = None) -> ChangeSet:
     """A renderer skeleton with its SCHEMA, its test, the package export and,
     with ``plot_type``, the bundle mapping that lets `fa ingest bundle` find it."""
+    from .plugins import PROJECT_PACKAGE
     from .renderer_registry import CORE, available, modules
     if not RENDERER_NAME.fullmatch(name):
         raise ProjectError(f"renderer name {name!r}: use lower-case letters, digits and '_' (a Python name)")
-    pkg_dir = _source_dir(root, package)
-    if pkg_dir is None or not (pkg_dir / "__init__.py").is_file():
+    project = False
+    if package in (None, CORE) and _source_dir(root, CORE) is None:
+        # A project repository (not the fig-atlas source): the renderer goes in
+        # its own renderers/ folder, found by fig_atlas.plugins without installing.
+        package, project = PROJECT_PACKAGE, True
+    package = package or CORE
+    pkg_dir = root / PROJECT_PACKAGE if project else _source_dir(root, package)
+    new_pkg = project and not (pkg_dir / "__init__.py").is_file()
+    if not project and (pkg_dir is None or not (pkg_dir / "__init__.py").is_file()):
         raise ChangeConflict(f"renderer package {package!r} is not a folder in this repository")
     rerun = (pkg_dir / f"{name}.py").is_file()       # a second run: the files below must match
     if not rerun and name in {r["name"] for r in available()} | set(modules()):
@@ -496,8 +504,22 @@ def plan_new_renderer(root: Path, name: str, package: str = "fig_atlas.renderers
     cs.create(pkg_dir / f"{name}.py", _template("renderer.py.tmpl", **values))
     cs.create(Path("tests") / "renderers" / f"test_{name}.py", _template("renderer_test.py.tmpl", **values))
     init = pkg_dir / "__init__.py"
-    cs.edit(init, _with_export(init.read_bytes().decode("utf-8"), name))
-    if plot_type:
+    init_text = (_template("project_renderers_init.py.tmpl", **values) if new_pkg
+                 else _with_export(init.read_bytes().decode("utf-8"), name))
+    if plot_type and project:
+        from .contracts import ingest_map
+        if not RENDERER_NAME.fullmatch(plot_type):
+            raise ProjectError(f"plot_type {plot_type!r}: use lower-case letters, digits and '_'")
+        target = f"{PROJECT_PACKAGE}.{name}:render_{name}"
+        if ingest_map().get(plot_type, target) != target:
+            raise ChangeConflict(f"plot_type {plot_type!r} is already drawn by {ingest_map()[plot_type]}")
+        init_text = _with_ingest(init_text, "INGEST", plot_type, target)
+        cs.notes.append(f"bundles with plot_type: {plot_type} now go to render_{name} (renderers/__init__.py INGEST)")
+    if new_pkg:
+        cs.create(init, init_text)
+    else:
+        cs.edit(init, init_text)
+    if plot_type and not project:
         from .contracts import ingest_map
         if not RENDERER_NAME.fullmatch(plot_type):
             raise ProjectError(f"plot_type {plot_type!r}: use lower-case letters, digits and '_'")
@@ -519,13 +541,21 @@ def plan_new_renderer(root: Path, name: str, package: str = "fig_atlas.renderers
         cs.edit(mfile, _with_ingest(mfile.read_bytes().decode("utf-8"), attr, plot_type, f"{package}:render_{name}"))
         cs.notes.append(f"bundles with plot_type: {plot_type} now go to render_{name}; describe their columns in a "
                         "contract (docs/contracts/) so `fa bundle check` can check them")
-    if package != CORE:
+    if project:
+        cs.notes.append("a project renderer lives in this repository only; a shape other projects could use "
+                        "(a bar, line, scatter, heatmap) is worth offering to the fig-atlas core later")
+    elif package != CORE:
         cs.notes.append("a pack renderer is for a shape that means nothing outside its field (AGENTS.md section 3); "
                         "a bar, line, scatter or heatmap belongs in the core")
     module_rel = (pkg_dir / f"{name}.py").resolve().relative_to(root.resolve()).as_posix()
-    cs.notes.append(f"next: replace the placeholder drawing in {module_rel} (every visual value a Param in SCHEMA), "
-                    f"then `python -m pytest tests/renderers/test_{name}.py tests/test_renderer_schemas.py`, "
-                    "`fa lint --hardcoded`, and `fa inventory` (CI checks that the renderer list is current)")
+    if project:
+        cs.notes.append(f"next: replace the placeholder drawing in {module_rel} (every visual value a Param in SCHEMA), "
+                        f"then `python -m pytest tests/renderers/test_{name}.py` and `fa lint --hardcoded`; "
+                        f"`fa param scaffold` writes its config block")
+    else:
+        cs.notes.append(f"next: replace the placeholder drawing in {module_rel} (every visual value a Param in SCHEMA), "
+                        f"then `python -m pytest tests/renderers/test_{name}.py tests/test_renderer_schemas.py`, "
+                        "`fa lint --hardcoded`, and `fa inventory` (CI checks that the renderer list is current)")
     return cs
 
 

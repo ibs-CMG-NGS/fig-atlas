@@ -69,5 +69,7 @@ AI에게 말로 시키는 일은 모두 아래 명령으로도 할 수 있습니
 | 코드 속 숫자(하드코딩) 검사 | `fa lint --hardcoded` |
 | AI 도우미에 도구 제공 | `fa mcp` ([연결 방법](../howto/ai_agents.md)) |
 
+연구 저장소에서 `fa new renderer`를 실행하면 렌더러는 그 저장소의 `renderers/` 폴더에 만들어집니다. 패키지를 설치하거나 고칠 필요 없이 `fa renderers`, `fa ingest bundle`, `fa build`가 그 렌더러를 찾고, 출처 기록에도 그 파일이 남습니다. 다른 연구에도 쓸 만한 모양(막대, 선, 산점도, 히트맵)이면 나중에 fig-atlas 코어로 옮기는 것을 고려하세요.
+
 ---
 이전: [부록 B. 자주 묻는 질문과 문제 해결](92-faq.md) · 다음: [부록 D. 더 읽을거리](94-reading.md)

@@ -1,0 +1,15 @@
+"""This repository's own renderers (folder created by `fa new renderer` on ${date}).
+
+fig-atlas finds this folder without installing anything: a ``renderers/``
+package next to the repository's ``.fig-atlas`` marker counts as one more
+renderer package (fig_atlas.plugins). Each module draws one shape; INGEST maps
+a bundle's plot_type to the renderer `fa ingest bundle` uses for it.
+"""
+from .${name} import render_${name}
+
+__all__ = [
+    "render_${name}",
+]
+
+INGEST = {
+}

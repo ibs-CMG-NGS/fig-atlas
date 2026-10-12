@@ -16,12 +16,20 @@ Declared in the pack's pyproject.toml, e.g.::
 
 Entry points are read from the installed package metadata: after adding or
 changing one, re-run ``pip install -e .``.
+
+A project repository can hold renderers of its own, without a package to
+install: a ``renderers/`` folder at its root (a Python package; ``fa new
+renderer`` run in the repository creates it). It counts as one more plugin,
+named "project", in the renderers group, and its ``INGEST`` table
+({plot_type: "renderers.module:render_function"}) in the ingest group.
 """
 from __future__ import annotations
 
 import importlib
+import sys
 import warnings
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any
 
 GROUPS = {
@@ -31,6 +39,24 @@ GROUPS = {
     "recipes": "fig_atlas.recipes",
     "commands": "fig_atlas.commands",
 }
+
+
+PROJECT_PACKAGE = "renderers"   # a project repository's own renderer folder
+
+
+def project_root(start: Path | None = None) -> Path | None:
+    """The project repository around ``start`` (default: the working folder)
+    when it holds a ``renderers/`` package; its root is put on sys.path so the
+    package imports. None outside such a repository."""
+    here = (start or Path.cwd()).resolve()
+    for p in [here, *here.parents]:
+        if (p / ".fig-atlas").is_file():
+            if (p / PROJECT_PACKAGE / "__init__.py").is_file():
+                if str(p) not in sys.path:
+                    sys.path.insert(0, str(p))
+                return p
+            return None
+    return None
 
 
 @dataclass(frozen=True)
@@ -50,6 +76,9 @@ def entry_points(group: str) -> list[Plugin]:
     for ep in _eps(group=full):
         dist = getattr(getattr(ep, "dist", None), "name", "") or ""
         out.append(Plugin(short, ep.name, ep.value, dist))
+    if short in ("renderers", "ingest") and project_root() is not None:
+        value = PROJECT_PACKAGE if short == "renderers" else f"{PROJECT_PACKAGE}:INGEST"
+        out.append(Plugin(short, "project", value, "project"))
     return sorted(out, key=lambda p: (p.name, p.value))
 
 
