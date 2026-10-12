@@ -245,7 +245,7 @@ fa mcp [-h]
 create a project (config, analysis script, figure spec, build-list entry) or a renderer (module with its SCHEMA, test, export)
 
 ```
-fa new [-h] [--package PACKAGE] [--plot-type PLOT_TYPE] [--doc DOC] [--domain DOMAIN] [--category {exploratory,paper}] [--raw-root RAW_ROOT] [--slug SLUG] [--dry-run] [--json] {project,renderer} name
+fa new [-h] [--package PACKAGE] [--plot-type PLOT_TYPE] [--doc DOC] [--from RENDERER] [--domain DOMAIN] [--category {exploratory,paper}] [--raw-root RAW_ROOT] [--slug SLUG] [--dry-run] [--json] {project,renderer} name
 ```
 
 | Argument | Meaning |
@@ -255,6 +255,7 @@ fa new [-h] [--package PACKAGE] [--plot-type PLOT_TYPE] [--doc DOC] [--domain DO
 | `--package` | renderer: the package it goes in (default the core; a pack only for a field-specific shape) Default: `fig_atlas.renderers`. |
 | `--plot-type` | renderer: bundles with this plot_type are drawn by it (fa ingest bundle) |
 | `--doc` | renderer: one line on what the plot shows (module docstring) |
+| `--from` | renderer: start from a copy of this existing renderer (`fa renderers`; the gallery shows each) instead of the placeholder scatter plot |
 | `--domain` | namespace domain, e.g. lab (omit with --category for a flat sandbox project) |
 | `--category` | namespace category One of: exploratory, paper. |
 | `--raw-root` | input bundle folder (default raw_data/<name>) |

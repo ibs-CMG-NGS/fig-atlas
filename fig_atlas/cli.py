@@ -601,7 +601,8 @@ def cmd_new(args, root: Path) -> int:
     from .changeset import ChangeConflict
     from .repo_commands import plan_new_project, plan_new_renderer
     if args.kind == "renderer":
-        cs, err = _plan_or_fail(lambda: plan_new_renderer(root, args.name, args.package, args.plot_type, args.doc))
+        cs, err = _plan_or_fail(lambda: plan_new_renderer(root, args.name, args.package, args.plot_type, args.doc,
+                                                          start_from=args.start_from))
         return err if err else _run_changeset(cs, args)
     try:
         cs = plan_new_project(root, args.name, args.domain, args.category, args.raw_root, args.slug)
@@ -824,6 +825,9 @@ def build_parser() -> argparse.ArgumentParser:
                    help="renderer: the package it goes in (default the core; a pack only for a field-specific shape)")
     p.add_argument("--plot-type", help="renderer: bundles with this plot_type are drawn by it (fa ingest bundle)")
     p.add_argument("--doc", help="renderer: one line on what the plot shows (module docstring)")
+    p.add_argument("--from", dest="start_from", metavar="RENDERER",
+                   help="renderer: start from a copy of this existing renderer (`fa renderers`; the gallery shows "
+                        "each) instead of the placeholder scatter plot")
     p.add_argument("--domain", help="namespace domain, e.g. lab (omit with --category for a flat sandbox project)")
     p.add_argument("--category", choices=("exploratory", "paper"), help="namespace category")
     p.add_argument("--raw-root", help="input bundle folder (default raw_data/<name>)")

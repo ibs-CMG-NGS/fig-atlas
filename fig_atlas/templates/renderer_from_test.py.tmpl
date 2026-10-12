@@ -1,0 +1,14 @@
+"""render_${name} (started from render_${source} by `fa new renderer --from`, ${date}).
+
+The copy keeps the original's drawing; replace these checks with ones for the
+new shape as the drawing changes (a table in, what must be drawn).
+"""
+from __future__ import annotations
+
+from ${package} import render_${name}
+from ${package}.${name} import SCHEMA
+
+
+def test_${name}_is_its_own_renderer():
+    assert SCHEMA.name == "${name}"
+    assert callable(render_${name})

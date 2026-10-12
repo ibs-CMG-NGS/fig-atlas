@@ -278,6 +278,29 @@ def test_new_renderer_in_a_project_repository(tmp_path, monkeypatch):
     for m in [m for m in sys.modules if m == "renderers" or m.startswith("renderers.")]:
         monkeypatch.delitem(sys.modules, m)
 
+
+def test_new_renderer_from_an_existing_one(tmp_path):
+    """--from copies a core renderer into the project: renamed, its relative
+    imports made absolute, and it draws as the original did."""
+    import importlib.util
+    import matplotlib.pyplot as plt
+    import pandas as pd
+    from fig_atlas.repo_commands import plan_new_renderer
+    (tmp_path / ".fig-atlas").write_text("# marker", encoding="utf-8")
+    plan_new_renderer(tmp_path, "my_violin", start_from="violin", today="2026-10-13").apply()
+    src = (tmp_path / "renderers" / "my_violin.py").read_text(encoding="utf-8")
+    assert src.startswith('"""my_violin: started from render_violin')
+    assert "from fig_atlas.renderers._basic import" in src and "from .." not in src
+    body = src.split('"""', 2)[2]                    # the code, after the docstring that names the original
+    assert 'Schema("my_violin"' in body and "def render_my_violin(" in body and "render_violin(" not in body
+    spec = importlib.util.spec_from_file_location("my_violin_copy", tmp_path / "renderers" / "my_violin.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    fig, ax = plt.subplots()
+    drawn = mod.render_my_violin(ax, pd.DataFrame({"group": ["a"] * 5 + ["b"] * 5, "value": range(10)}), {})
+    assert list(drawn["category"]) == ["a", "b"]
+    plt.close(fig)
+
 # ------------------------------------------------------------ retire, promote --
 def _exploratory(repo, name="lab-trial"):
     plan_new_project(repo, name, "lab", "exploratory", slug="trial", today="2026-10-08").apply()

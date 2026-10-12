@@ -11,6 +11,7 @@ from __future__ import annotations
 import datetime as _dt
 import json
 import re
+import sys
 from pathlib import Path
 from string import Template
 
@@ -477,8 +478,35 @@ def _with_ingest(text: str, attr: str, plot_type: str, target: str) -> str:
     return nl.join(lines)
 
 
+def _from_existing(source: str, name: str, date: str) -> str:
+    """The module of an existing renderer, renamed for ``name``: render_<src> and
+    its SCHEMA name become the new name, relative imports become absolute (the
+    copy may live in another package), and the docstring says where it started."""
+    import inspect
+    from .renderer_registry import find
+    where, fn = find(source)
+    if where == "recipe":
+        raise ChangeConflict(f"{source!r} is a recipe (a core shape with preset columns); start from its shape "
+                             "instead (`fa renderers` names it)")
+    fn = inspect.unwrap(fn)                          # uses_schema wraps the function; copy its own module
+    module = sys.modules[fn.__module__]
+    src_name = fn.__name__.removeprefix("render_")
+    text = Path(module.__file__).read_text(encoding="utf-8").replace("\r\n", "\n")
+    pkg = module.__package__ or ""
+    parent = pkg.rpartition(".")[0]
+    text = re.sub(r"^from \.\.(\w)", lambda m: f"from {parent}.{m.group(1)}", text, flags=re.M)
+    text = re.sub(r"^from \.(\w)", lambda m: f"from {pkg}.{m.group(1)}", text, flags=re.M)
+    text = re.sub(rf"\brender_{src_name}\b", f"render_{name}", text)
+    text = re.sub(rf'Schema\("{re.escape(src_name)}"', f'Schema("{name}"', text)
+    note = (f'"""{name}: started from render_{src_name} (`fa new renderer {name} --from {src_name}`, {date}).\n'
+            f"Change the drawing and its SCHEMA to the new shape; the copy keeps every Param of the original.\n\n")
+    if text.startswith('"""'):
+        return note + text[3:]
+    return note + '"""\n' + text
+
+
 def plan_new_renderer(root: Path, name: str, package: str = "fig_atlas.renderers", plot_type: str | None = None,
-                      doc: str | None = None, today: str | None = None) -> ChangeSet:
+                      doc: str | None = None, today: str | None = None, start_from: str | None = None) -> ChangeSet:
     """A renderer skeleton with its SCHEMA, its test, the package export and,
     with ``plot_type``, the bundle mapping that lets `fa ingest bundle` find it."""
     from .plugins import PROJECT_PACKAGE
@@ -501,8 +529,13 @@ def plan_new_renderer(root: Path, name: str, package: str = "fig_atlas.renderers
     values = dict(name=name, package=package, date=today or _dt.date.today().isoformat(),
                   doc=doc or "describe what this plot shows and which data it takes.")
     cs = ChangeSet(root)
-    cs.create(pkg_dir / f"{name}.py", _template("renderer.py.tmpl", **values))
-    cs.create(Path("tests") / "renderers" / f"test_{name}.py", _template("renderer_test.py.tmpl", **values))
+    if start_from:
+        cs.create(pkg_dir / f"{name}.py", _from_existing(start_from, name, values["date"]))
+        cs.create(Path("tests") / "renderers" / f"test_{name}.py",
+                  _template("renderer_from_test.py.tmpl", **values, source=start_from.removeprefix("render_")))
+    else:
+        cs.create(pkg_dir / f"{name}.py", _template("renderer.py.tmpl", **values))
+        cs.create(Path("tests") / "renderers" / f"test_{name}.py", _template("renderer_test.py.tmpl", **values))
     init = pkg_dir / "__init__.py"
     init_text = (_template("project_renderers_init.py.tmpl", **values) if new_pkg
                  else _with_export(init.read_bytes().decode("utf-8"), name))
@@ -548,12 +581,14 @@ def plan_new_renderer(root: Path, name: str, package: str = "fig_atlas.renderers
         cs.notes.append("a pack renderer is for a shape that means nothing outside its field (AGENTS.md section 3); "
                         "a bar, line, scatter or heatmap belongs in the core")
     module_rel = (pkg_dir / f"{name}.py").resolve().relative_to(root.resolve()).as_posix()
+    what = (f"change the copied drawing in {module_rel} to the new shape" if start_from
+            else f"replace the placeholder drawing in {module_rel}")
     if project:
-        cs.notes.append(f"next: replace the placeholder drawing in {module_rel} (every visual value a Param in SCHEMA), "
+        cs.notes.append(f"next: {what} (every visual value a Param in SCHEMA), "
                         f"then `python -m pytest tests/renderers/test_{name}.py` and `fa lint --hardcoded`; "
                         f"`fa param scaffold` writes its config block")
     else:
-        cs.notes.append(f"next: replace the placeholder drawing in {module_rel} (every visual value a Param in SCHEMA), "
+        cs.notes.append(f"next: {what} (every visual value a Param in SCHEMA), "
                         f"then `python -m pytest tests/renderers/test_{name}.py tests/test_renderer_schemas.py`, "
                         "`fa lint --hardcoded`, and `fa inventory` (CI checks that the renderer list is current)")
     return cs
