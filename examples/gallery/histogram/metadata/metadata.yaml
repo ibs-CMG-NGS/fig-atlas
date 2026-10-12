@@ -1,0 +1,9 @@
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per cell -- condition (group), cell_diameter_um (value).
+plot_type: histogram
+plot_params:
+  x_col: cell_diameter_um
+  group_col: condition
+  bins: 25
+  density: true
+  labels_xlabel: "Cell diameter (um)"

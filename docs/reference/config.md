@@ -14,6 +14,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | [`count_summary`](#count_summary) | fig_atlas_omics.renderers | 20 |
 | [`cross_condition_dotplot`](#cross_condition_dotplot) | fig_atlas_omics.renderers | 62 |
 | [`cross_condition_heatmap`](#cross_condition_heatmap) | fig_atlas_omics.renderers | 42 |
+| [`dose_response`](#dose_response) | core | 37 |
 | [`effect_dots`](#effect_dots) | core | 24 |
 | [`flow_diagram`](#flow_diagram) | core | 44 |
 | [`funnel`](#funnel) | core | 16 |
@@ -24,13 +25,14 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | [`group_scatter`](#group_scatter) | core | 33 |
 | [`grouped_hbar`](#grouped_hbar) | core | 19 |
 | [`heatmap`](#heatmap) | core | 20 |
+| [`histogram`](#histogram) | core | 33 |
 | [`image_panel`](#image_panel) | core | 27 |
 | [`jaccard_heatmap`](#jaccard_heatmap) | core | 25 |
 | [`line_band`](#line_band) | core | 44 |
 | [`ma_plot`](#ma_plot) | fig_atlas_omics.renderers | 24 |
 | [`motif_architecture_table`](#motif_architecture_table) | fig_atlas_omics.renderers | 5 |
 | [`motif_dotplot`](#motif_dotplot) | fig_atlas_omics.renderers | 44 |
-| [`multi_group_heatmap`](#multi_group_heatmap) | core | 28 |
+| [`multi_group_heatmap`](#multi_group_heatmap) | core | 32 |
 | [`paired_dumbbell`](#paired_dumbbell) | core | 38 |
 | [`pathway_evidence_dotplot`](#pathway_evidence_dotplot) | fig_atlas_omics.renderers | 28 |
 | [`pathway_test_matrix`](#pathway_test_matrix) | fig_atlas_omics.renderers | 42 |
@@ -41,7 +43,9 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | [`signed_heatmap`](#signed_heatmap) | core | 34 |
 | [`single_tf_expression_scatter_bar`](#single_tf_expression_scatter_bar) | fig_atlas_omics.renderers | 36 |
 | [`species_response_scatter`](#species_response_scatter) | fig_atlas_omics.renderers | 30 |
+| [`stacked_bar`](#stacked_bar) | core | 32 |
 | [`stacked_share_hbar`](#stacked_share_hbar) | core | 28 |
+| [`survival`](#survival) | core | 32 |
 | [`tf_expression_scatter_grid`](#tf_expression_scatter_grid) | fig_atlas_omics.renderers | 36 |
 | [`threshold_scatter`](#threshold_scatter) | core | 60 |
 | [`tier_hbar`](#tier_hbar) | core | 16 |
@@ -49,6 +53,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | [`ts_profile`](#ts_profile) | core | 18 |
 | [`two_set_euler`](#two_set_euler) | core | 27 |
 | [`venn`](#venn) | core | 5 |
+| [`violin`](#violin) | core | 39 |
 | [`volcano`](#volcano) | fig_atlas_omics.renderers | 28 |
 
 ## bar_scatter
@@ -391,6 +396,50 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `label_margin_pad` | number | `1.2` | x label width | Room reserved for term labels relative to their width — raise if term labels clip at the left |
 | `label_margin_cap` | number | `0.72` | [0-1] grid fraction | Upper limit on the room reserved for term labels |
 
+## dose_response
+
+`fig_atlas.renderers:render_dose_response`
+
+| Key | Type | Default | Unit | What it does |
+|---|---|---|---|---|
+| `group_col` | text | auto |  | Column splitting the data into coloured groups (default: one group) |
+| `group_order` | list | auto |  | Group order in drawing and legend (default: order in the data) |
+| `group_colors` | mapping | `{}` | hex color | Colour per group (default: matplotlib colour cycle) |
+| `group_labels` | mapping | `{}` |  | Legend label per group (default: the group value) |
+| `color` | colour | `#4b5563` | hex color | Colour when there is no group_col |
+| `x_log` | true / false | `True` |  | Log-scaled dose axis (the usual way to show a dose series) |
+| `x_min` | number | auto | data coords | Lower x limit (both x_min and x_max needed) |
+| `x_max` | number | auto | data coords | Upper x limit |
+| `y_log` | true / false | `False` |  | Log-scaled y axis |
+| `y_min` | number | auto | data coords | Lower y limit (both y_min and y_max needed) |
+| `y_max` | number | auto | data coords | Upper y limit |
+| `grid` | true / false | `False` |  | Draw horizontal grid lines |
+| `grid_alpha` | number | `0.3` | [0-1] opacity | Grid opacity |
+| `spine_width` | number | auto | pt | Axis line width (default: rcParams) |
+| `hide_top_right` | true / false | `True` |  | Hide the top and right axis lines |
+| `labels_title` | text | auto |  | Panel title (none: no title) |
+| `labels_xlabel` | text | computed |  | x-axis title (default: the x column's name) |
+| `labels_ylabel` | text | computed |  | y-axis title (default: the y column's name) |
+| `title_size` | number | `8.0` | pt | Panel title size |
+| `axes_label_size` | number | auto | pt | Axis title size (default: rcParams) |
+| `tick_label_size` | number | auto | pt | Tick label size (default: rcParams) |
+| `show_legend` | true / false | `True` |  | Show the group legend (only with a group_col) |
+| `legend_loc` | text | `best` |  | Legend location (matplotlib loc) |
+| `legend_fontsize` | number | auto | pt | Legend font size (none: tick_label_size) |
+| `legend_frameon` | true / false | `False` |  | Draw a frame around the legend |
+| `x_col` | text | `dose` |  | Column with the doses (positive numbers) |
+| `y_col` | text | `response` |  | Column with the responses (one row per replicate) |
+| `points` | one of `mean`, `all` | `mean` |  | Per dose: the mean with an error bar, or every replicate |
+| `error` | one of `sem`, `sd` | `sem` |  | Error bar of the mean: standard error or standard deviation |
+| `marker_size` | number | `4.0` | pt | Point size |
+| `capsize` | number | `2.0` | pt | Width of the error-bar caps |
+| `error_width` | number | `0.8` | pt | Error-bar line width |
+| `fit` | true / false | `True` |  | Draw the four-parameter logistic fit |
+| `fit_line_width` | number | `1.2` | pt | Fit curve width |
+| `fit_points` | integer | `200` | points along the dose range | Smoothness of the fit curve |
+| `show_ec50` | true / false | `False` |  | Mark each fitted EC50 with a dashed vertical line |
+| `ec50_line_width` | number | `0.6` | pt | EC50 line width |
+
 ## effect_dots
 
 `fig_atlas.renderers:render_effect_dots`
@@ -704,6 +753,46 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `axes_label_size` | number | `8` | pt | Axis title font size |
 | `tick_label_size` | number | `6` | pt | Tick label font size |
 
+## histogram
+
+`fig_atlas.renderers:render_histogram`
+
+| Key | Type | Default | Unit | What it does |
+|---|---|---|---|---|
+| `group_col` | text | auto |  | Column splitting the data into coloured groups (default: one group) |
+| `group_order` | list | auto |  | Group order in drawing and legend (default: order in the data) |
+| `group_colors` | mapping | `{}` | hex color | Colour per group (default: matplotlib colour cycle) |
+| `group_labels` | mapping | `{}` |  | Legend label per group (default: the group value) |
+| `color` | colour | `#4b5563` | hex color | Colour when there is no group_col |
+| `x_log` | true / false | `False` |  | Log-scaled x axis |
+| `x_min` | number | auto | data coords | Lower x limit (both x_min and x_max needed) |
+| `x_max` | number | auto | data coords | Upper x limit |
+| `y_log` | true / false | `False` |  | Log-scaled y axis |
+| `y_min` | number | auto | data coords | Lower y limit (both y_min and y_max needed) |
+| `y_max` | number | auto | data coords | Upper y limit |
+| `grid` | true / false | `False` |  | Draw horizontal grid lines |
+| `grid_alpha` | number | `0.3` | [0-1] opacity | Grid opacity |
+| `spine_width` | number | auto | pt | Axis line width (default: rcParams) |
+| `hide_top_right` | true / false | `True` |  | Hide the top and right axis lines |
+| `labels_title` | text | auto |  | Panel title (none: no title) |
+| `labels_xlabel` | text | computed |  | x-axis title (default: the x column's name) |
+| `labels_ylabel` | text | computed |  | y-axis title (default: the y column's name) |
+| `title_size` | number | `8.0` | pt | Panel title size |
+| `axes_label_size` | number | auto | pt | Axis title size (default: rcParams) |
+| `tick_label_size` | number | auto | pt | Tick label size (default: rcParams) |
+| `show_legend` | true / false | `True` |  | Show the group legend (only with a group_col) |
+| `legend_loc` | text | `best` |  | Legend location (matplotlib loc) |
+| `legend_fontsize` | number | auto | pt | Legend font size (none: tick_label_size) |
+| `legend_frameon` | true / false | `False` |  | Draw a frame around the legend |
+| `x_col` | text | `value` |  | Column with the values |
+| `bins` | integer | `20` | number of bins | Number of equal-width bins (shared by all groups) — lower for small samples, raise for large ones |
+| `bin_min` | number | auto | data coords | Left edge of the first bin (default: smallest value) |
+| `bin_max` | number | auto | data coords | Right edge of the last bin (default: largest value) |
+| `density` | true / false | `False` |  | Show density (area 1 per group) instead of counts, so groups of different size compare |
+| `style` | one of `step`, `bar` | `step` |  | Outlines (step) or filled bars (bar); outlines read better with several groups |
+| `line_width` | number | `1.0` | pt | Outline width |
+| `fill_alpha` | number | `0.35` | [0-1] opacity | Fill opacity of bars (style bar) |
+
 ## image_panel
 
 `fig_atlas.renderers:render_image_panel`
@@ -939,6 +1028,10 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `show_group_bar` | true / false | `True` |  | Show the group colour strip (columns stay grouped when off) |
 | `group_bar_height` | number | `0.03` | fraction of the axes height | Strip height |
 | `group_bar_position` | one of `top`, `bottom` | `top` |  | Strip above or below the heatmap |
+| `margin_left` | number | auto | [0-1] fraction of the figure | Left edge of the heatmap block (default: matplotlib's figure.subplot.left) |
+| `margin_right` | number | auto | [0-1] fraction of the figure | Right edge of the heatmap block, colour bar outside it (default: matplotlib's) — lower if the colour bar's title is cut off |
+| `margin_bottom` | number | auto | [0-1] fraction of the figure | Bottom edge of the heatmap block (default: matplotlib's) — raise if the sample names below the heatmap are cut off |
+| `margin_top` | number | auto | [0-1] fraction of the figure | Top edge of the heatmap block (default: matplotlib's) |
 | `show_group_legend` | true / false | `True` |  | Show the group legend |
 | `show_gene_labels` | true / false | `True` |  | Show the row labels |
 | `gene_fontsize` | number | computed | pt | Row label size (default tick_label_size) |
@@ -1326,6 +1419,45 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `annotation_line_step` | number | `0.075` | axes fraction | Spacing between annotation lines |
 | `annotation_color` | colour | `#111827` | hex color | Annotation text colour |
 
+## stacked_bar
+
+`fig_atlas.renderers:render_stacked_bar`
+
+| Key | Type | Default | Unit | What it does |
+|---|---|---|---|---|
+| `y_log` | true / false | `False` |  | Log-scaled y axis |
+| `y_min` | number | auto | data coords | Lower y limit (both y_min and y_max needed) |
+| `y_max` | number | auto | data coords | Upper y limit |
+| `grid` | true / false | `False` |  | Draw horizontal grid lines |
+| `grid_alpha` | number | `0.3` | [0-1] opacity | Grid opacity |
+| `spine_width` | number | auto | pt | Axis line width (default: rcParams) |
+| `hide_top_right` | true / false | `True` |  | Hide the top and right axis lines |
+| `labels_title` | text | auto |  | Panel title (none: no title) |
+| `labels_xlabel` | text | computed |  | x-axis title (default: the x column's name) |
+| `labels_ylabel` | text | computed |  | y-axis title (default: the y column's name) |
+| `title_size` | number | `8.0` | pt | Panel title size |
+| `axes_label_size` | number | auto | pt | Axis title size (default: rcParams) |
+| `tick_label_size` | number | auto | pt | Tick label size (default: rcParams) |
+| `show_legend` | true / false | `True` |  | Show the group legend (only with a group_col) |
+| `legend_loc` | text | `best` |  | Legend location (matplotlib loc) |
+| `legend_fontsize` | number | auto | pt | Legend font size (none: tick_label_size) |
+| `legend_frameon` | true / false | `False` |  | Draw a frame around the legend |
+| `x_col` | text | `category` |  | Column with the categories (one bar each) |
+| `stack_col` | text | `part` |  | Column with the parts stacked in each bar |
+| `value_col` | text | `count` |  | Column with the counts |
+| `x_order` | list | auto |  | Bar order (default: order in the data) |
+| `stack_order` | list | auto |  | Part order from the bottom up (default: order in the data) |
+| `x_labels` | mapping | `{}` |  | Shown name per category (default: the category) |
+| `percent` | true / false | `True` |  | Each bar as shares of 100 % (False: counts) |
+| `stack_colors` | mapping | `{}` | hex color | Colour per part (default: matplotlib colour cycle) |
+| `stack_labels` | mapping | `{}` |  | Legend label per part (default: the part) |
+| `bar_width` | number | `0.7` | x units (bars are 1 apart) | Bar width |
+| `edge_color` | colour | `#ffffff` | hex color | Line between the parts |
+| `edge_width` | number | `0.5` | pt | Width of that line |
+| `x_tick_rotation` | number | `0.0` | degrees | Rotation of the category names — raise (e.g. 45) when long names collide |
+| `legend_outside` | true / false | `True` |  | Put the legend right of the bars (so it never covers them) |
+| `legend_anchor` | list | `[1.02, 0.5]` | axes fraction [x, y] | Where the legend's left middle sits when outside — raise x for more gap from the bars |
+
 ## stacked_share_hbar
 
 `fig_atlas.renderers:render_stacked_share_hbar`
@@ -1360,6 +1492,45 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `legend_fontsize` | number | `5.5` | pt | Legend text size |
 | `legend_loc` | text | `upper center` |  | Legend anchor point (matplotlib loc) |
 | `legend_anchor` | list | `[0.5, -0.3]` | axes fraction (x, y) | Where legend_loc is placed — lower y if the legend overlaps the x-axis title |
+
+## survival
+
+`fig_atlas.renderers:render_survival`
+
+| Key | Type | Default | Unit | What it does |
+|---|---|---|---|---|
+| `group_col` | text | auto |  | Column splitting the data into coloured groups (default: one group) |
+| `group_order` | list | auto |  | Group order in drawing and legend (default: order in the data) |
+| `group_colors` | mapping | `{}` | hex color | Colour per group (default: matplotlib colour cycle) |
+| `group_labels` | mapping | `{}` |  | Legend label per group (default: the group value) |
+| `color` | colour | `#4b5563` | hex color | Colour when there is no group_col |
+| `x_log` | true / false | `False` |  | Log-scaled x axis |
+| `x_min` | number | auto | data coords | Lower x limit (both x_min and x_max needed) |
+| `x_max` | number | auto | data coords | Upper x limit |
+| `y_log` | true / false | `False` |  | Log-scaled y axis |
+| `y_min` | number | auto | data coords | Lower y limit (both y_min and y_max needed) |
+| `y_max` | number | auto | data coords | Upper y limit |
+| `grid` | true / false | `False` |  | Draw horizontal grid lines |
+| `grid_alpha` | number | `0.3` | [0-1] opacity | Grid opacity |
+| `spine_width` | number | auto | pt | Axis line width (default: rcParams) |
+| `hide_top_right` | true / false | `True` |  | Hide the top and right axis lines |
+| `labels_title` | text | auto |  | Panel title (none: no title) |
+| `labels_xlabel` | text | computed |  | x-axis title (default: the x column's name) |
+| `labels_ylabel` | text | computed |  | y-axis title (default: the y column's name) |
+| `title_size` | number | `8.0` | pt | Panel title size |
+| `axes_label_size` | number | auto | pt | Axis title size (default: rcParams) |
+| `tick_label_size` | number | auto | pt | Tick label size (default: rcParams) |
+| `show_legend` | true / false | `True` |  | Show the group legend (only with a group_col) |
+| `legend_loc` | text | `best` |  | Legend location (matplotlib loc) |
+| `legend_fontsize` | number | auto | pt | Legend font size (none: tick_label_size) |
+| `legend_frameon` | true / false | `False` |  | Draw a frame around the legend |
+| `time_col` | text | `time` |  | Column with the time to the event or to the last follow-up |
+| `event_col` | text | `event` |  | Column: 1 (or True) if the event happened, 0 (or False) if censored |
+| `percent` | true / false | `True` |  | Show survival in % (0-100) instead of a fraction (0-1) |
+| `line_width` | number | `1.2` | pt | Curve width |
+| `show_censored` | true / false | `True` |  | Mark censored subjects with a tick on the curve |
+| `censor_marker` | text | `\|` |  | Censor mark (matplotlib marker) |
+| `censor_size` | number | `5.0` | pt | Censor mark size |
 
 ## tf_expression_scatter_grid
 
@@ -1596,6 +1767,52 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `unit` | text | `Gene` |  | What is counted, used in the title (e.g. Gene, Peak) |
 | `filter_name` | text | `All Genes` |  | Name of the filter, used in the title |
 | `title_size` | number | `12` | pt | Panel title font size |
+
+## violin
+
+`fig_atlas.renderers:render_violin`
+
+| Key | Type | Default | Unit | What it does |
+|---|---|---|---|---|
+| `y_log` | true / false | `False` |  | Log-scaled y axis |
+| `y_min` | number | auto | data coords | Lower y limit (both y_min and y_max needed) |
+| `y_max` | number | auto | data coords | Upper y limit |
+| `grid` | true / false | `False` |  | Draw horizontal grid lines |
+| `grid_alpha` | number | `0.3` | [0-1] opacity | Grid opacity |
+| `spine_width` | number | auto | pt | Axis line width (default: rcParams) |
+| `hide_top_right` | true / false | `True` |  | Hide the top and right axis lines |
+| `labels_title` | text | auto |  | Panel title (none: no title) |
+| `labels_xlabel` | text | computed |  | x-axis title (default: the x column's name) |
+| `labels_ylabel` | text | computed |  | y-axis title (default: the y column's name) |
+| `title_size` | number | `8.0` | pt | Panel title size |
+| `axes_label_size` | number | auto | pt | Axis title size (default: rcParams) |
+| `tick_label_size` | number | auto | pt | Tick label size (default: rcParams) |
+| `show_legend` | true / false | `True` |  | Show the group legend (only with a group_col) |
+| `legend_loc` | text | `best` |  | Legend location (matplotlib loc) |
+| `legend_fontsize` | number | auto | pt | Legend font size (none: tick_label_size) |
+| `legend_frameon` | true / false | `False` |  | Draw a frame around the legend |
+| `x_col` | text | `group` |  | Column with the categories (x axis) |
+| `y_col` | text | `value` |  | Column with the values |
+| `x_order` | list | auto |  | Category order on x (default: order in the data) |
+| `x_labels` | mapping | `{}` |  | Shown name per category (default: the category) |
+| `group_colors` | mapping | `{}` | hex color | Fill colour per category (default: matplotlib colour cycle) |
+| `violin_width` | number | `0.8` | x units (categories are 1 apart) | Width of each violin — lower for more space between categories |
+| `violin_alpha` | number | `0.6` | [0-1] opacity | Violin fill opacity |
+| `violin_edge_color` | colour | `#374151` | hex color | Violin outline colour |
+| `violin_edge_width` | number | `0.6` | pt | Violin outline width |
+| `bandwidth` | number | auto | fraction of the data's spread (scipy gaussian_kde bw_method) | Smoothing of the violin outline (default: Scott's rule) — lower to follow the data more closely, raise for a smoother outline |
+| `show_quartiles` | true / false | `True` |  | Draw the median (dot) and quartiles (thick line) inside each violin |
+| `median_color` | colour | `#ffffff` | hex color | Median dot colour |
+| `median_size` | number | `12.0` | pt^2 (marker area) | Median dot size |
+| `quartile_color` | colour | `#111827` | hex color | Quartile bar colour |
+| `quartile_width` | number | `3.0` | pt | Quartile bar width |
+| `show_points` | true / false | `False` |  | Overlay every value as a point |
+| `point_color` | colour | `#111827` | hex color | Point colour |
+| `point_size` | number | `6.0` | pt^2 (marker area) | Point size |
+| `point_alpha` | number | `0.6` | [0-1] opacity | Point opacity |
+| `point_edge_width` | number | `0.0` | pt | Point outline width (0: none) |
+| `point_jitter` | number | `0.08` | x units | Horizontal scatter of the points |
+| `point_seed` | integer | `0` | random seed | Seed of the jitter (fixed for reproducible output) |
 
 ## volcano
 

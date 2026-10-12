@@ -17,6 +17,7 @@ Compendium projects: none.
 | 2 | `render_bar_scatter` | `fig_atlas/renderers/bar_scatter.py` | 1 | — | `pilot-imaging` |
 | 2 | `render_image_panel` | `fig_atlas/renderers/image_panel.py` | 1 | — | `pilot-imaging` |
 | 2 | `render_line_band` | `fig_atlas/renderers/line_band.py` | 1 | — | `pilot-imaging` |
+| 4 | `align_title_to_labels` | `fig_atlas/renderers/panels.py` | 0 | — | — |
 | 4 | `count_cluster_row_groups` | `fig_atlas_omics/renderers/cross_condition_heatmap.py` | 0 | — | — |
 | 4 | `describe_stars` | `fig_atlas_omics/renderers/tf_expression_bars.py` | 0 | — | — |
 | 4 | `panel_label` | `fig_atlas/renderers/panels.py` | 0 | — | — |
@@ -27,6 +28,7 @@ Compendium projects: none.
 | 4 | `render_count_summary` | `fig_atlas_omics/renderers/count_summary.py` | 0 | — | — |
 | 4 | `render_cross_condition_dotplot` | `fig_atlas_omics/renderers/cross_condition_dotplot.py` | 0 | — | — |
 | 4 | `render_cross_condition_heatmap` | `fig_atlas_omics/renderers/cross_condition_heatmap.py` | 0 | — | — |
+| 4 | `render_dose_response` | `fig_atlas/renderers/dose_response.py` | 0 | — | — |
 | 4 | `render_effect_dots` | `fig_atlas/renderers/effect_dots.py` | 0 | — | — |
 | 4 | `render_flow_diagram` | `fig_atlas/renderers/flow_diagram.py` | 0 | — | — |
 | 4 | `render_funnel` | `fig_atlas/renderers/funnel.py` | 0 | — | — |
@@ -37,6 +39,7 @@ Compendium projects: none.
 | 4 | `render_group_scatter` | `fig_atlas/renderers/group_scatter.py` | 0 | — | — |
 | 4 | `render_grouped_hbar` | `fig_atlas/renderers/grouped_hbar.py` | 0 | — | — |
 | 4 | `render_heatmap` | `fig_atlas/renderers/heatmap.py` | 0 | — | — |
+| 4 | `render_histogram` | `fig_atlas/renderers/histogram.py` | 0 | — | — |
 | 4 | `render_jaccard_heatmap` | `fig_atlas/renderers/jaccard_heatmap.py` | 0 | — | — |
 | 4 | `render_ma_plot` | `fig_atlas_omics/renderers/ma_plot.py` | 0 | — | — |
 | 4 | `render_motif_architecture_table` | `fig_atlas_omics/renderers/motif_table.py` | 0 | — | — |
@@ -52,7 +55,9 @@ Compendium projects: none.
 | 4 | `render_signed_heatmap` | `fig_atlas/renderers/signed_heatmap.py` | 0 | — | — |
 | 4 | `render_single_tf_expression_scatter_bar` | `fig_atlas_omics/renderers/tf_expression_bars.py` | 0 | — | — |
 | 4 | `render_species_response_scatter` | `fig_atlas_omics/renderers/species_response_scatter.py` | 0 | — | — |
+| 4 | `render_stacked_bar` | `fig_atlas/renderers/stacked_bar.py` | 0 | — | — |
 | 4 | `render_stacked_share_hbar` | `fig_atlas/renderers/stacked_share_hbar.py` | 0 | — | — |
+| 4 | `render_survival` | `fig_atlas/renderers/survival.py` | 0 | — | — |
 | 4 | `render_tf_expression_scatter_grid` | `fig_atlas_omics/renderers/tf_expression_bars.py` | 0 | — | — |
 | 4 | `render_threshold_scatter` | `fig_atlas/renderers/threshold_scatter.py` | 0 | — | — |
 | 4 | `render_tier_hbar` | `fig_atlas/renderers/tier_hbar.py` | 0 | — | — |
@@ -60,6 +65,7 @@ Compendium projects: none.
 | 4 | `render_ts_profile` | `fig_atlas/renderers/ts_profile.py` | 0 | — | — |
 | 4 | `render_two_set_euler` | `fig_atlas/renderers/two_set_euler.py` | 0 | — | — |
 | 4 | `render_venn` | `fig_atlas/renderers/venn.py` | 0 | — | — |
+| 4 | `render_violin` | `fig_atlas/renderers/violin.py` | 0 | — | — |
 | 4 | `render_volcano` | `fig_atlas_omics/renderers/volcano.py` | 0 | — | — |
 
-Summary: tier 2 active — 4, tier 4 unused — 44.
+Summary: tier 2 active — 4, tier 4 unused — 50.

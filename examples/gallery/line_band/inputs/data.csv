@@ -1,0 +1,55 @@
+strain,hour,replicate,od600
+wild type,0,1,0.042
+wild type,3,1,0.087
+wild type,6,1,0.144
+wild type,9,1,0.357
+wild type,12,1,0.595
+wild type,15,1,0.872
+wild type,18,1,1.055
+wild type,21,1,1.103
+wild type,24,1,1.209
+wild type,0,2,0.05
+wild type,3,2,0.045
+wild type,6,2,0.135
+wild type,9,2,0.36
+wild type,12,2,0.56
+wild type,15,2,0.866
+wild type,18,2,1.072
+wild type,21,2,1.174
+wild type,24,2,1.161
+wild type,0,3,-0.024
+wild type,3,3,0.08
+wild type,6,3,0.148
+wild type,9,3,0.358
+wild type,12,3,0.616
+wild type,15,3,0.832
+wild type,18,3,1.053
+wild type,21,3,1.13
+wild type,24,3,1.174
+mutant,0,1,0.042
+mutant,3,1,0.129
+mutant,6,1,0.252
+mutant,9,1,0.369
+mutant,12,1,0.609
+mutant,15,1,0.765
+mutant,18,1,0.967
+mutant,21,1,1.043
+mutant,24,1,1.153
+mutant,0,2,0.107
+mutant,3,2,0.164
+mutant,6,2,0.244
+mutant,9,2,0.466
+mutant,12,2,0.628
+mutant,15,2,0.802
+mutant,18,2,0.935
+mutant,21,2,1.089
+mutant,24,2,1.121
+mutant,0,3,0.084
+mutant,3,3,0.174
+mutant,6,3,0.28
+mutant,9,3,0.477
+mutant,12,3,0.605
+mutant,15,3,0.787
+mutant,18,3,0.947
+mutant,21,3,1.105
+mutant,24,3,1.078

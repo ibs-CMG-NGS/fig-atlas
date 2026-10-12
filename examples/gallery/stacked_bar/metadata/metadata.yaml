@@ -1,0 +1,9 @@
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per (sample, cell type) -- sample (bar), cell_type (part), cells (count).
+plot_type: stacked_bar
+plot_params:
+  x_col: sample
+  stack_col: cell_type
+  value_col: cells
+  stack_colors: {neurons: "#0072B2", astrocytes: "#E69F00", microglia: "#009E73", oligodendrocytes: "#CC79A7"}   # Okabe-Ito: safe for colour-blind readers
+  labels_xlabel: ""

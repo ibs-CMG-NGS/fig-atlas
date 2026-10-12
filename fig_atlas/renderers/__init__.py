@@ -18,6 +18,7 @@ import warnings
 
 from .bar_scatter import render_bar_scatter
 from .boxplot import render_boxplot
+from .dose_response import render_dose_response
 from .dumbbell import render_paired_dumbbell
 from .effect_dots import render_effect_dots
 from .flow_diagram import render_flow_diagram
@@ -25,6 +26,7 @@ from .funnel import render_funnel
 from .group_scatter import render_group_scatter
 from .grouped_hbar import render_grouped_hbar
 from .heatmap import render_heatmap
+from .histogram import render_histogram
 from .image_panel import render_image_panel
 from .jaccard_heatmap import render_jaccard_heatmap
 from .line_band import render_line_band
@@ -33,13 +35,16 @@ from .panels import align_title_to_labels, panel_label, place_panel_tags
 from .pca import render_pca
 from .sample_metric_bars import render_sample_metric_bars
 from .signed_heatmap import render_signed_heatmap
+from .stacked_bar import render_stacked_bar
 from .stacked_share_hbar import render_stacked_share_hbar
+from .survival import render_survival
 from .threshold_scatter import render_threshold_scatter
 from .tier_hbar import render_tier_hbar
 from .treatment_schematic import render_treatment_schematic
 from .ts_profile import render_ts_profile
 from .two_set_euler import render_two_set_euler
 from .venn import render_venn
+from .violin import render_violin
 
 __all__ = [
     "panel_label",
@@ -47,12 +52,14 @@ __all__ = [
     "align_title_to_labels",
     "render_bar_scatter",
     "render_boxplot",
+    "render_dose_response",
     "render_effect_dots",
     "render_flow_diagram",
     "render_funnel",
     "render_group_scatter",
     "render_grouped_hbar",
     "render_heatmap",
+    "render_histogram",
     "render_image_panel",
     "render_jaccard_heatmap",
     "render_line_band",
@@ -61,13 +68,16 @@ __all__ = [
     "render_pca",
     "render_sample_metric_bars",
     "render_signed_heatmap",
+    "render_stacked_bar",
     "render_stacked_share_hbar",
+    "render_survival",
     "render_threshold_scatter",
     "render_tier_hbar",
     "render_treatment_schematic",
     "render_ts_profile",
     "render_two_set_euler",
     "render_venn",
+    "render_violin",
 ]
 
 

@@ -1,0 +1,12 @@
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per replicate measurement -- strain (line), hour (x), od600 (y).
+# With your data: keep these columns, or name yours in plot_params (x_col, y_col, group_col).
+plot_type: line_band
+plot_params:
+  x_col: hour
+  y_col: od600
+  group_col: strain
+  error: sd
+  labels_title: "Growth"
+  labels_xlabel: "Time (h)"
+  labels_ylabel: "OD600"

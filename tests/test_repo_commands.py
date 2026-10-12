@@ -213,8 +213,8 @@ def test_new_renderer_skeleton_passes_the_renderer_checks(repo):
     cs.apply()
     src = repo / "fig_atlas" / "renderers" / "dose_curve.py"
     init = (repo / "fig_atlas" / "renderers" / "__init__.py").read_text()
-    assert "from .dose_curve import render_dose_curve\nfrom .dumbbell import" in init
-    assert '    "render_dose_curve",\n    "render_effect_dots",' in init
+    assert "from .dose_curve import render_dose_curve\nfrom .dose_response import" in init
+    assert '    "render_dose_curve",\n    "render_dose_response",' in init
     assert '"dose_curve": "fig_atlas.renderers:render_dose_curve",\n}' in (repo / "fig_atlas" / "contracts.py").read_text()
     for f in (src, repo / "tests" / "renderers" / "test_dose_curve.py", repo / "fig_atlas" / "contracts.py"):
         py_compile.compile(str(f), doraise=True)

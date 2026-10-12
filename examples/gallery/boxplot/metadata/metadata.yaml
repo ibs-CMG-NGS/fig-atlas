@@ -1,0 +1,8 @@
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per sample -- treatment (category), relative_expression (value).
+plot_type: boxplot
+plot_params:
+  x_col: treatment
+  y_col: relative_expression
+  labels_xlabel: ""
+  labels_ylabel: "Relative expression"

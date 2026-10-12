@@ -1,0 +1,9 @@
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per animal -- group, days (to death or last follow-up), died (1) or censored (0).
+# No test is drawn; compare groups with a log-rank test through fig_atlas.stats.
+plot_type: survival
+plot_params:
+  time_col: days
+  event_col: died
+  group_col: group
+  labels_xlabel: "Days"

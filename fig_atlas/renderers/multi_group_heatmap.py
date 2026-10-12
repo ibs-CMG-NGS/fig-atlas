@@ -42,6 +42,16 @@ SCHEMA = Schema("multi_group_heatmap", params=[
     Param("show_group_bar", bool, True, role="Show the group colour strip (columns stay grouped when off)"),
     Param("group_bar_height", float, 0.03, unit="fraction of the axes height", range=(0, None), role="Strip height"),
     Param("group_bar_position", ("top", "bottom"), "top", role="Strip above or below the heatmap"),
+    Param("margin_left", float, None, unit="[0-1] fraction of the figure", range=(0, 1),
+          role="Left edge of the heatmap block (default: matplotlib's figure.subplot.left)"),
+    Param("margin_right", float, None, unit="[0-1] fraction of the figure", range=(0, 1),
+          role="Right edge of the heatmap block, colour bar outside it (default: matplotlib's)",
+          tune="lower if the colour bar's title is cut off"),
+    Param("margin_bottom", float, None, unit="[0-1] fraction of the figure", range=(0, 1),
+          role="Bottom edge of the heatmap block (default: matplotlib's)",
+          tune="raise if the sample names below the heatmap are cut off"),
+    Param("margin_top", float, None, unit="[0-1] fraction of the figure", range=(0, 1),
+          role="Top edge of the heatmap block (default: matplotlib's)"),
     Param("show_group_legend", bool, True, role="Show the group legend"),
     # [Labels]
     Param("show_gene_labels", bool, True, role="Show the row labels"),
@@ -162,6 +172,8 @@ def render_multi_group_heatmap(fig, df, params):
         height_ratios=height_ratios,
         width_ratios=[dendro_w, 1 - dendro_w] if show_dendro else [1],
         hspace=0.01, wspace=0.02,
+        **{side: float(params.get(f"margin_{side}")) for side in ("left", "right", "bottom", "top")
+           if params.get(f"margin_{side}") is not None},
     )
     ax = fig.add_subplot(gs[heatmap_row, n_cols - 1])
     ax_grp = fig.add_subplot(gs[grp_row, n_cols - 1]) if show_strip else None

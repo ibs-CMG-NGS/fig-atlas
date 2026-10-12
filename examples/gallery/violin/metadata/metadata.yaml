@@ -1,0 +1,10 @@
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per measurement -- genotype (category), spines_per_um (value).
+plot_type: violin
+plot_params:
+  x_col: genotype
+  y_col: spines_per_um
+  x_order: ["wild type", "heterozygous", "knockout"]
+  show_points: true
+  labels_ylabel: "Spine density (per um)"
+  labels_xlabel: ""

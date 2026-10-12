@@ -1,0 +1,7 @@
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per (list, item) -- dataset (which list), item (e.g. a gene); 2 or 3 lists.
+plot_type: venn
+plot_params:
+  set_labels: ["drug A", "drug B"]
+  filter_name: "Genes changed"
+  title_size: 7                 # pt; the title and its count line (the renderer's own default is for a larger canvas)

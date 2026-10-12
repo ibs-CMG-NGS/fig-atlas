@@ -85,6 +85,25 @@ CORE_CONTRACTS = [
              role_columns=(("x_col", None), ("y_col", None), ("effect_col", None), ("sig_col", None)),
              doc="docs/contracts/table_bundle_contract.md",
              title="Effect vs significance points: one row per item, columns named in plot_params"),
+    Contract("core.violin", ("violin",), role_columns=(("x_col", "group"), ("y_col", "value")),
+             doc="docs/contracts/table_bundle_contract.md",
+             title="Distribution per category: one row per observation (category, value)"),
+    Contract("core.histogram", ("histogram",), role_columns=(("x_col", "value"),), role_optional=("group_col",),
+             doc="docs/contracts/table_bundle_contract.md",
+             title="Distribution of a value: one row per observation, optional group"),
+    Contract("core.dose_response", ("dose_response",), role_columns=(("x_col", "dose"), ("y_col", "response")),
+             role_optional=("group_col",), doc="docs/contracts/table_bundle_contract.md",
+             title="Dose series: one row per replicate (dose > 0, response), optional group"),
+    Contract("core.survival", ("survival",), role_columns=(("time_col", "time"), ("event_col", "event")),
+             role_optional=("group_col",), doc="docs/contracts/table_bundle_contract.md",
+             title="Time to event: one row per subject (time, event 1/0), optional group"),
+    Contract("core.boxplot", ("boxplot",), role_columns=(("x_col", "Sample"), ("y_col", "Expression")),
+             doc="docs/contracts/table_bundle_contract.md",
+             title="Values per category: one row per observation (category, value)"),
+    Contract("core.stacked_bar", ("stacked_bar",),
+             role_columns=(("x_col", "category"), ("stack_col", "part"), ("value_col", "count")),
+             doc="docs/contracts/table_bundle_contract.md",
+             title="Composition: one row per (category, part) with a count"),
 ]
 CORE_INGEST = {
     "venn": "fig_atlas.renderers:render_venn",
@@ -92,6 +111,12 @@ CORE_INGEST = {
     "multi_group_heatmap": "fig_atlas.renderers:render_multi_group_heatmap",
     "line_band": "fig_atlas.renderers:render_line_band",
     "threshold_scatter": "fig_atlas.renderers:render_threshold_scatter",
+    "violin": "fig_atlas.renderers:render_violin",
+    "histogram": "fig_atlas.renderers:render_histogram",
+    "dose_response": "fig_atlas.renderers:render_dose_response",
+    "survival": "fig_atlas.renderers:render_survival",
+    "stacked_bar": "fig_atlas.renderers:render_stacked_bar",
+    "boxplot": "fig_atlas.renderers:render_boxplot",
 }
 
 

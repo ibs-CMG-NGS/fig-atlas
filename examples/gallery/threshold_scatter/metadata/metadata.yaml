@@ -1,0 +1,17 @@
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per gene -- log2_fold_change (x), padj (y, shown as -log10).
+plot_type: threshold_scatter
+plot_params:
+  x_col: log2_fold_change
+  y_col: padj
+  effect_col: log2_fold_change
+  sig_col: padj
+  y_transform: neg_log10
+  effect_threshold: 1.0
+  sig_threshold: 0.05
+  label_mode: top_n
+  label_cols: ["gene"]
+  label_top_n: 5
+  labels_title: "Treated vs control"
+  labels_xlabel: "log2 fold change"
+  labels_ylabel: "-log10 adjusted P"

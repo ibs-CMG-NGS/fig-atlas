@@ -1,0 +1,11 @@
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per replicate -- compound (group), dose_uM (x, > 0), viability (y).
+# The fitted EC50 per compound is in the figure's source data (four-parameter logistic).
+plot_type: dose_response
+plot_params:
+  x_col: dose_uM
+  y_col: viability
+  group_col: compound
+  show_ec50: true
+  labels_xlabel: "Dose (uM)"
+  labels_ylabel: "Viability (% of control)"

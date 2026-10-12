@@ -1,0 +1,17 @@
+sample,cell_type,cells
+control 1,neurons,226
+control 1,astrocytes,143
+control 1,microglia,84
+control 1,oligodendrocytes,47
+control 2,neurons,230
+control 2,astrocytes,147
+control 2,microglia,70
+control 2,oligodendrocytes,53
+treated 1,neurons,162
+treated 1,astrocytes,155
+treated 1,microglia,144
+treated 1,oligodendrocytes,39
+treated 2,neurons,153
+treated 2,astrocytes,172
+treated 2,microglia,136
+treated 2,oligodendrocytes,39

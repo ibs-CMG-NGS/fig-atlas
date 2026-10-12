@@ -105,6 +105,27 @@ def draw_plots(fig, plots: dict, root: Path, layout: dict | None = None, load=No
     return [columns[c] for c in sorted(columns)]
 
 
+
+def draw_bundle(bundle: Path, width_mm: float = 85.0, height_mm: float = 62.0, root: Path | None = None):
+    """One bundle drawn on its own, as `fa ingest bundle` would draw it: its
+    plot_type's renderer with its plot_params, on a figure of the given
+    printed size (single column by default). Returns the figure.
+    Used by the example gallery (docs/reference/gallery.md) and its test."""
+    import matplotlib.pyplot as plt
+    import yaml
+    from .contracts import ingest_map
+    bundle = Path(bundle)
+    meta = yaml.safe_load((bundle / "metadata" / "metadata.yaml").read_text(encoding="utf-8")) or {}
+    target = ingest_map().get(meta.get("plot_type"))
+    if target is None:
+        raise ValueError(f"{bundle}: no renderer for plot_type {meta.get('plot_type')!r}")
+    root = Path(root) if root is not None else bundle.parent
+    block = {"renderer": target, "bundle": bundle.resolve().relative_to(root.resolve()).as_posix(),
+             **(meta.get("plot_params") or {})}
+    fig = plt.figure(figsize=(width_mm / 25.4, height_mm / 25.4))
+    draw_plots(fig, {bundle.name: block}, root, layout={"columns": 1, "tags": {"show": False}})
+    return fig
+
 def fit_in_cells(fig, panels: list, pad_mm: float = 1.0, top_reserve_pt: float = 0.0, passes: int = 3) -> None:
     """Resize each panel's axes so its outer bounding box -- tick labels, axis
     titles, title and legend included -- fills its grid cell, ``pad_mm``

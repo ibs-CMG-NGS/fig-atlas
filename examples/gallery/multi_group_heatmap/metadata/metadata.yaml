@@ -1,0 +1,18 @@
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per gene -- gene_label, then one column per sample (values, e.g. z-scores).
+# sample_groups names which columns belong to which group (annotation strip above the heatmap).
+plot_type: multi_group_heatmap
+plot_params:
+  gene_label_col: gene_label
+  sample_groups:
+    control: ["C1", "C2", "C3"]
+    "day 1": ["D1_1", "D1_2", "D1_3"]
+    "day 3": ["D3_1", "D3_2", "D3_3"]
+  cluster_rows: true
+  gene_fontsize: 5              # pt; row labels
+  tick_label_size: 6            # pt; sample names and colour-bar ticks
+  axes_label_size: 7            # pt; colour-bar title
+  colorbar_pad: 0.22            # fraction of the axes width between the gene names and the colour bar
+  group_colors: {control: "#9CA3AF", "day 1": "#E69F00", "day 3": "#D55E00"}   # hex; the group strip above the columns
+  margin_bottom: 0.2            # fraction of the figure; room for the sample names below
+  margin_right: 0.8             # fraction of the figure; room for the colour bar and its title

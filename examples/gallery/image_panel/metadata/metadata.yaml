@@ -1,0 +1,16 @@
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/: one image file per channel (16-bit TIFF here). Images are shown from these files,
+# never from an adjusted copy; the display range per channel is set below.
+plot_type: image_panel
+pixel_size: 0.25
+pixel_unit: "µm"
+channels:
+  - file: "dapi.tif"
+  - file: "tubulin.tif"
+plot_params:
+  channel_colors: ["#3b82f6", "#22c55e"]
+  channel_labels: ["DAPI", "tubulin"]
+  display_ranges: [[100, 3000], [100, 1600]]
+  show_channel_labels: true
+  pixel_size: 0.25
+  scale_bar: 10
