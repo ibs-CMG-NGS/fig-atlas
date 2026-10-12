@@ -18,7 +18,11 @@ Data: one row per node, with columns named by the *_col params:
 Edges come from the ``edges`` param: a list of {"from", "to"} with optional
 "label", "from_side"/"to_side" ("l", "r", "t", "b"; default: across the gap
 between the two nodes), "from_at"/"to_at" (where on that side, 0-1 from the
-left or top; default 0.5), "rad" (curvature) and "style" ("solid"/"dashed").
+left or top; default 0.5), "rad" (curvature), "style" ("solid"/"dashed") and
+"route" ("straight" or "elbow"; default: the ``route`` param). An elbow edge is
+drawn with horizontal and vertical segments only, as flowcharts are: an L from
+a side to a perpendicular side, a Z between facing sides, a U around the
+outside between two sides facing the same way (``elbow_offset`` out).
 A straight arrow between two nodes whose spans overlap (side by side: their
 heights; one above the other: their widths) is drawn level -- horizontal or
 vertical -- through the overlap, unless "from_at"/"to_at" place its ends
@@ -30,6 +34,7 @@ from __future__ import annotations
 
 import pandas as pd
 from matplotlib.patches import FancyArrowPatch, FancyBboxPatch, Polygon
+from matplotlib.path import Path as MplPath
 
 from fig_atlas.schema import Param, Schema, uses_schema
 
@@ -48,7 +53,7 @@ SCHEMA = Schema("flow_diagram", params=[
     Param("kind_col", str, "kind", role="Column with the node kind: box, group, text, decision or terminal"),
     Param("fill_col", str, "fill", role="Column with a node's own fill colour (empty: box_fill)"),
     Param("color_col", str, "color", role="Column with a node's own text colour (empty: text_color, body_color)"),
-    Param("edges", list, [], role="Arrows: list of {from, to, label?, from_side?, to_side?, rad?, style?}"),
+    Param("edges", list, [], role="Arrows: list of {from, to, label?, from_side?, to_side?, rad?, style?, route?}"),
     # [Canvas]
     Param("xlim", list, None, unit="diagram units [min, max]", role="Horizontal extent (default: the nodes)"),
     Param("ylim", list, None, unit="diagram units [min, max]", role="Vertical extent (default: the nodes)"),
@@ -88,6 +93,11 @@ SCHEMA = Schema("flow_diagram", params=[
     Param("arrow_gap", float, 0.6, unit="pt", range=(0, None), role="Gap between an arrow's ends and the boxes"),
     Param("dashed_style", list, [0, [3, 2]], unit="matplotlib dash pattern (offset, [on, off] in pt)",
           role="Line style of edges marked style: dashed"),
+    Param("route", ("straight", "elbow"), "straight",
+          role="How edges run: straight lines, or right-angle segments as in flowcharts (an edge's own route wins)"),
+    Param("elbow_offset", float, 4.0, unit="diagram units", range=(0, None),
+          role="How far a U-shaped elbow edge (two sides facing the same way) runs out past the nodes",
+          tune="raise if the return line crowds the boxes it passes"),
     Param("level_edges", bool, True,
           role="Draw a straight arrow level (horizontal or vertical) when the two nodes' spans overlap",
           tune="false to join the middles of the two sides, even if the arrow then slants"),
@@ -149,6 +159,43 @@ def _level_ats(a, b, sa, sb, y_down):
         f = (level - n[lo]) / n[size]
         return 1 - f if lo == "y" and not y_down else f
     return at(a), at(b)
+
+
+_OUT = {"l": (-1, 0), "r": (1, 0), "t": (0, -1), "b": (0, 1)}   # side -> outward direction (y down)
+
+
+def _elbow(p0, sa, p1, sb, y_down, offset):
+    """Right-angle waypoints from p0 (leaving side sa) to p1 (entering side sb)."""
+    flip = 1 if y_down else -1
+    (ax_, ay), (bx, by) = _OUT[sa], _OUT[sb]
+    ay, by = ay * flip, by * flip
+    horiz_a, horiz_b = sa in "lr", sb in "lr"
+    if horiz_a != horiz_b:                                   # L: one turn
+        corner = (p1[0], p0[1]) if horiz_a else (p0[0], p1[1])
+        return [p0, corner, p1]
+    if sa == sb:                                             # U: out past both, across, back in
+        if horiz_a:
+            x = (max if ax_ > 0 else min)(p0[0], p1[0]) + ax_ * offset
+            return [p0, (x, p0[1]), (x, p1[1]), p1]
+        y = (max if ay > 0 else min)(p0[1], p1[1]) + ay * offset
+        return [p0, (p0[0], y), (p1[0], y), p1]
+    if horiz_a:                                              # Z: facing sides, turn half way
+        mx = (p0[0] + p1[0]) / 2
+        return [p0, (mx, p0[1]), (mx, p1[1]), p1] if p0[1] != p1[1] else [p0, p1]
+    my = (p0[1] + p1[1]) / 2
+    return [p0, (p0[0], my), (p1[0], my), p1] if p0[0] != p1[0] else [p0, p1]
+
+
+def _trim(points, gap):
+    """Shorten the first and last segments by ``gap`` (diagram units)."""
+    pts = [list(q) for q in points]
+    for i, j in ((0, 1), (-1, -2)):
+        dx, dy = pts[j][0] - pts[i][0], pts[j][1] - pts[i][1]
+        n = (dx * dx + dy * dy) ** 0.5
+        if n > 2 * gap:
+            pts[i][0] += dx / n * gap
+            pts[i][1] += dy / n * gap
+    return [tuple(q) for q in pts]
 
 
 def _text(r, col):
@@ -225,11 +272,23 @@ def render_flow_diagram(ax, df, params):
             at_a, at_b = _level_ats(a, b, sa, sb, y_down) or (0.5, 0.5)
         p0, p1 = _anchor(a, sa, y_down, e.get("from_at", at_a)), _anchor(b, sb, y_down, e.get("to_at", at_b))
         style = tuple(params.get("dashed_style", [0, [3, 2]])) if e.get("style") == "dashed" else "solid"
-        ax.add_patch(FancyArrowPatch(p0, p1, arrowstyle="-|>", mutation_scale=params.get("arrow_head", 6.0),
-                                     connectionstyle=f"arc3,rad={e.get('rad', 0.0)}",
-                                     color=params.get("arrow_color", "#374151"), linewidth=params.get("arrow_width", 0.8),
-                                     linestyle=style, shrinkA=params.get("arrow_gap", 0.6),
-                                     shrinkB=params.get("arrow_gap", 0.6), zorder=4))
+        look = dict(arrowstyle="-|>", mutation_scale=params.get("arrow_head", 6.0),
+                    color=params.get("arrow_color", "#374151"), linewidth=params.get("arrow_width", 0.8),
+                    linestyle=style, zorder=4)
+        route = e.get("route", params.get("route", "straight"))
+        pts = _elbow(p0, sa, p1, sb, y_down, params.get("elbow_offset", 4.0)) if route == "elbow" else [p0, p1]
+        if len(pts) > 2:
+            gap = params.get("arrow_gap", 0.6) / 72 * 25.4 * params.get("units_per_mm", 1.0)
+            pts = _trim(pts, gap)
+            ax.add_patch(FancyArrowPatch(path=MplPath(pts, [MplPath.MOVETO] + [MplPath.LINETO] * (len(pts) - 1)),
+                                         **look))
+            seg = max(range(len(pts) - 1), key=lambda i: abs(pts[i + 1][0] - pts[i][0]) + abs(pts[i + 1][1] - pts[i][1]))
+            p0, p1 = pts[seg], pts[seg + 1]                   # the label goes by the longest segment
+            sa, sb = ("l", "r") if p0[1] == p1[1] else ("t", "b")
+        else:
+            ax.add_patch(FancyArrowPatch(p0, p1, connectionstyle=f"arc3,rad={e.get('rad', 0.0)}",
+                                         shrinkA=params.get("arrow_gap", 0.6), shrinkB=params.get("arrow_gap", 0.6),
+                                         **look))
         if e.get("label"):
             mx, my = (p0[0] + p1[0]) / 2, (p0[1] + p1[1]) / 2
             off = params.get("edge_label_offset", 1.2)

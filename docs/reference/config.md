@@ -15,7 +15,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | [`cross_condition_dotplot`](#cross_condition_dotplot) | fig_atlas_omics.renderers | 62 |
 | [`cross_condition_heatmap`](#cross_condition_heatmap) | fig_atlas_omics.renderers | 42 |
 | [`effect_dots`](#effect_dots) | core | 24 |
-| [`flow_diagram`](#flow_diagram) | core | 42 |
+| [`flow_diagram`](#flow_diagram) | core | 44 |
 | [`funnel`](#funnel) | core | 16 |
 | [`go_bar`](#go_bar) | fig_atlas_omics.renderers | 25 |
 | [`go_cluster_dot`](#go_cluster_dot) | fig_atlas_omics.renderers | 37 |
@@ -438,7 +438,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `kind_col` | text | `kind` |  | Column with the node kind: box, group, text, decision or terminal |
 | `fill_col` | text | `fill` |  | Column with a node's own fill colour (empty: box_fill) |
 | `color_col` | text | `color` |  | Column with a node's own text colour (empty: text_color, body_color) |
-| `edges` | list | `[]` |  | Arrows: list of {from, to, label?, from_side?, to_side?, rad?, style?} |
+| `edges` | list | `[]` |  | Arrows: list of {from, to, label?, from_side?, to_side?, rad?, style?, route?} |
 | `xlim` | list | auto | diagram units [min, max] | Horizontal extent (default: the nodes) |
 | `ylim` | list | auto | diagram units [min, max] | Vertical extent (default: the nodes) |
 | `y_down` | true / false | `True` |  | y grows downward, like a page (false: upward, like a plot) |
@@ -466,6 +466,8 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `arrow_head` | number | `6.0` | pt | Arrow head size |
 | `arrow_gap` | number | `0.6` | pt | Gap between an arrow's ends and the boxes |
 | `dashed_style` | list | `[0, [3, 2]]` | matplotlib dash pattern (offset, [on, off] in pt) | Line style of edges marked style: dashed |
+| `route` | one of `straight`, `elbow` | `straight` |  | How edges run: straight lines, or right-angle segments as in flowcharts (an edge's own route wins) |
+| `elbow_offset` | number | `4.0` | diagram units | How far a U-shaped elbow edge (two sides facing the same way) runs out past the nodes — raise if the return line crowds the boxes it passes |
 | `level_edges` | true / false | `True` |  | Draw a straight arrow level (horizontal or vertical) when the two nodes' spans overlap — false to join the middles of the two sides, even if the arrow then slants |
 | `edge_label_size` | number | `6.0` | pt | Edge label size |
 | `edge_label_color` | colour | `#374151` | hex color | Edge label colour |

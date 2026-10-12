@@ -141,3 +141,22 @@ def test_arrow_between_overlapping_spans_is_level():
     (_, y0), (_, y1) = _arrows(ax2)[0]._posA_posB
     assert (y0, y1) == (5, 9)                   # off: side middles, slanted
     plt.close("all")
+
+
+def test_elbow_edges_run_horizontally_and_vertically():
+    """Flowchart connectors: an L from a bottom to a left side, a U around the
+    outside between two right sides; every segment is horizontal or vertical."""
+    nodes = pd.DataFrame([{"id": "p", "x": 0, "y": 0, "w": 20, "h": 10},
+                          {"id": "q", "x": 40, "y": 30, "w": 20, "h": 10},
+                          {"id": "s", "x": 40, "y": 0, "w": 20, "h": 10}])
+    fig, ax = plt.subplots()
+    render_flow_diagram(ax, nodes, {"route": "elbow", "elbow_offset": 5.0, "edges": [
+        {"from": "p", "to": "q", "from_side": "b", "to_side": "l"},
+        {"from": "s", "to": "q", "from_side": "r", "to_side": "r"}]})
+    l_shape, u_shape = (a._path_original.vertices for a in _arrows(ax))   # the route, before the head is added
+    for v in (l_shape, u_shape):
+        for (x0, y0), (x1, y1) in zip(v[:-1], v[1:]):
+            assert abs(x0 - x1) < 1e-9 or abs(y0 - y1) < 1e-9
+    assert len(l_shape) == 3 and abs(l_shape[1][0] - 10) < 1e-9 and abs(l_shape[1][1] - 35) < 1e-9
+    assert abs(max(u_shape[:, 0]) - 65) < 1e-9          # 5 units past the right sides at x = 60
+    plt.close(fig)
