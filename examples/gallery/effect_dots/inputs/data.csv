@@ -1,0 +1,11 @@
+factor,model,log_odds_ratio,ci_low,ci_high
+age (per 10 y),unadjusted,0.403,0.14,0.665
+age (per 10 y),adjusted,0.256,0.051,0.46
+smoking,unadjusted,0.609,0.379,0.839
+smoking,adjusted,0.406,0.146,0.665
+BMI (per 5),unadjusted,0.209,0.013,0.405
+BMI (per 5),adjusted,0.146,-0.132,0.424
+diabetes,unadjusted,0.442,0.178,0.706
+diabetes,adjusted,0.363,0.106,0.621
+statin use,unadjusted,-0.323,-0.521,-0.124
+statin use,adjusted,-0.22,-0.457,0.017

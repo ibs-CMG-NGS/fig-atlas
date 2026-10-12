@@ -1,0 +1,13 @@
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per replicate -- gene (category), condition (bar colour), relative_mrna (value).
+# Bars are the mean +/- SEM of the replicates; the dots are the replicates.
+plot_type: bar_scatter
+plot_params:
+  category_col: gene
+  group_col: condition
+  value_col: relative_mrna
+  group_colors: {control: "#9CA3AF", knockout: "#0072B2"}
+  labels_ylabel: "mRNA (relative to control)"
+  axes_label_size: 7            # pt; this renderer's own defaults are for a larger canvas
+  tick_label_size: 6            # pt
+  title_size: 8                 # pt

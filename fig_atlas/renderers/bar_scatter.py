@@ -24,7 +24,13 @@ SCHEMA = Schema("bar_scatter", params=[
     # [Data]
     Param("category_col", str, "symbol", role="Column holding the x categories"),
     Param("category_order", list, None, role="Category order, left to right (default: order in the data)"),
-    Param("groups", list, [], role="Series per category: list of {label, color, columns} (replicate columns)"),
+    Param("groups", list, [], role="Wide table: series per category, a list of {label, color, columns} (replicate columns)"),
+    Param("group_col", str, None, role="Long table (one row per replicate): column with the series; then value_col "
+          "holds the values and groups is built from group_order/group_colors/group_labels"),
+    Param("value_col", str, "value", role="Long table: column with the replicate values"),
+    Param("group_order", list, None, role="Long table: series order (default: order in the data)"),
+    Param("group_colors", dict, {}, open_keys=True, unit="hex color", role="Long table: bar colour per series"),
+    Param("group_labels", dict, {}, open_keys=True, role="Long table: legend label per series"),
     Param("pvalue_col", str, None, role="Column with the per-category p-value for the two-group bracket"),
     # [Bars and error bars]
     Param("bar_width", float, 0.8, unit="x units (one category = 1)", range=(0, None),
@@ -89,6 +95,28 @@ def _stars(p, thresholds, ns_display):
     return ns_display
 
 
+def _from_long(df, params, cat_col):
+    """One row per replicate (category, series, value) -> the wide table and the
+    groups list the drawing below reads: one column per replicate of a series."""
+    g_col, v_col = params.get("group_col"), params.get("value_col", "value")
+    order = params.get("group_order") or list(dict.fromkeys(df[g_col].dropna()))
+    colors, labels = params.get("group_colors", {}), params.get("group_labels", {})
+    long = df.assign(_k=df.groupby([cat_col, g_col]).cumcount())
+    wide = long.pivot_table(index=cat_col, columns=[g_col, "_k"], values=v_col, aggfunc="first")
+    wide.columns = [f"{g} #{k + 1}" for g, k in wide.columns]
+    wide = wide.reindex(list(dict.fromkeys(df[cat_col]))).reset_index()
+    pcol = params.get("pvalue_col")
+    if pcol and pcol in df.columns:
+        wide[pcol] = wide[cat_col].map(df.groupby(cat_col)[pcol].first())
+    groups = []
+    for gi, g in enumerate(order):
+        entry = {"label": str(labels.get(g, g)), "columns": [c for c in wide.columns if c.startswith(f"{g} #")]}
+        if g in colors:
+            entry["color"] = colors[g]
+        groups.append(entry)
+    return wide, groups
+
+
 @uses_schema(SCHEMA)
 def render_bar_scatter(ax, df, params):
     """Render a grouped bar + scatter plot onto ``ax``.
@@ -100,6 +128,8 @@ def render_bar_scatter(ax, df, params):
     """
     cat_col = params.get("category_col", "symbol")
     groups = params.get("groups", []) or []
+    if params.get("group_col"):
+        df, groups = _from_long(df, params, cat_col)
 
     if cat_col not in df.columns or not groups:
         ax.text(0.5, 0.5,

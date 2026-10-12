@@ -56,6 +56,21 @@ TEXT = Schema("basic_text", params=[
 SCHEMA = Schema("basic", extends=[GROUPS, X_AXIS, Y_AXIS, TEXT])
 
 
+def with_roles(df: pd.DataFrame, params, roles: dict[str, tuple[str, str]], fill: dict | None = None) -> pd.DataFrame:
+    """The columns a renderer reads, under the names its code uses: ``roles`` maps
+    a parameter to (its default column, the internal name). Only those columns
+    are kept, so an unrelated column called like an internal name cannot clash.
+    ``fill`` gives a constant for an internal column the table lacks (e.g. one group)."""
+    out = pd.DataFrame(index=df.index)
+    for param, (default, internal) in roles.items():
+        col = params.get(param, default)
+        if col in df.columns:
+            out[internal] = df[col]
+        elif fill and internal in fill:
+            out[internal] = fill[internal]
+    return out
+
+
 def groups(df: pd.DataFrame, params, col: str | None = None):
     """[(group value or None, its rows, colour or None, legend label)] in drawing order."""
     g_col = col if col is not None else params.get("group_col")

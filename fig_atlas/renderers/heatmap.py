@@ -14,7 +14,13 @@ from ..schema import CODE_DEFAULT, Param, Schema, uses_schema
 
 SCHEMA = Schema("heatmap", params=[
     # [Rows and values]
+    Param("label_col", str, None, role="Column with the row labels (default: symbol, else gene_id, else the row number)"),
+    Param("sample_columns", list, None, role="Columns to show as samples (default: every numeric column that is not "
+          "a statistic such as padj or log2FC)"),
     Param("n_genes", int, 50, unit="genes", range=(1, None), role="Genes shown (after sorting)"),
+    Param("max_gene_labels", int, 20, unit="genes", range=(0, None),
+          role="Genes are named only up to this many rows (more: no names, rather than row numbers)",
+          tune="raise with a taller panel and a smaller tick_label_size"),
     Param("sorting", ("padj", "log2fc", "clustering"), "padj", role="How the genes are chosen and ordered"),
     Param("normalization", ("z-score", "minmax", "log2", "none"), "z-score", role="Per-gene scaling of the values"),
     Param("transpose", bool, False, role="Samples as rows, genes as columns"),
@@ -57,9 +63,11 @@ def render_heatmap(fig, df, params):
     cbar_max = params.get('colorbar_max')
     show_dendrogram = bool(params.get('show_dendrogram', False))
 
-    sample_cols = [c for c in df.columns
-                   if not any(p in c.lower() for p in exclude_patterns)
-                   and pd.api.types.is_numeric_dtype(df[c])]
+    chosen = params.get('sample_columns')
+    sample_cols = ([c for c in chosen if c in df.columns] if chosen else
+                   [c for c in df.columns
+                    if not any(p in c.lower() for p in exclude_patterns)
+                    and pd.api.types.is_numeric_dtype(df[c])])
     if not sample_cols:
         ax = fig.add_subplot(111)
         ax.text(0.5, 0.5, 'No sample expression columns found.',
@@ -84,7 +92,10 @@ def render_heatmap(fig, df, params):
         variances = expr_data.var(axis=1)
         top_idx = variances.nlargest(min(n_genes, len(expr_data))).index
 
-    if 'symbol' in df.columns:
+    label_col = params.get('label_col')
+    if label_col and label_col in df.columns:
+        gene_labels = df.loc[top_idx, label_col].tolist()
+    elif 'symbol' in df.columns:
         gene_labels = df.loc[top_idx, 'symbol'].tolist()
     elif 'gene_id' in df.columns:
         gene_labels = df.loc[top_idx, 'gene_id'].tolist()
@@ -172,16 +183,20 @@ def render_heatmap(fig, df, params):
         if len(heatmap_data.index) <= 50:
             ax.set_yticks(range(len(heatmap_data.index)))
             ax.set_yticklabels(heatmap_data.index, fontsize=t_sz)
-        if len(gene_labels) <= 20:
+        if len(gene_labels) <= int(params.get('max_gene_labels', 20)):
             ax.set_xticks(range(len(gene_labels)))
             ax.set_xticklabels(gene_labels, rotation=rot, fontsize=t_sz, ha=align)
+        else:
+            ax.set_xticks([])
     else:
         if len(heatmap_data.columns) <= 50:
             ax.set_xticks(range(len(heatmap_data.columns)))
             ax.set_xticklabels(heatmap_data.columns, rotation=rot, fontsize=t_sz, ha=align)
-        if len(gene_labels) <= 20:
+        if len(gene_labels) <= int(params.get('max_gene_labels', 20)):
             ax.set_yticks(range(len(gene_labels)))
             ax.set_yticklabels(gene_labels, fontsize=t_sz)
+        else:
+            ax.set_yticks([])
         # If dendrogram is on the left, move heatmap ticks/labels to the right
         if ax_dendro is not None:
             ax.yaxis.tick_right()

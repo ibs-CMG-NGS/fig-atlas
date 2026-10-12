@@ -1,0 +1,14 @@
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per gene -- gene, then one column of counts per sample.
+# sample_groups names which columns belong to which group (point colour and legend).
+plot_type: pca
+plot_params:
+  sample_groups:
+    control: ["ctrl_1", "ctrl_2", "ctrl_3", "ctrl_4"]
+    treated: ["trt_1", "trt_2", "trt_3", "trt_4"]
+  group_colors: {control: "#9CA3AF", treated: "#0072B2"}
+  show_labels: false
+  title: ""
+  point_size: 30                # pt^2; this renderer's own defaults are for a larger canvas
+  axes_label_size: 7            # pt
+  tick_label_size: 6            # pt

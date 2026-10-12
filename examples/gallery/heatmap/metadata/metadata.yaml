@@ -1,0 +1,10 @@
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per gene -- gene (label), then one column per sample (values).
+plot_type: heatmap
+plot_params:
+  label_col: gene
+  sample_columns: ["ctrl_1", "ctrl_2", "ctrl_3", "trt_1", "trt_2", "trt_3"]
+  sorting: clustering
+  n_genes: 20                   # rows shown; up to max_gene_labels (20) are named
+  tick_label_size: 6            # pt; this renderer's own defaults are for a larger canvas
+  axes_label_size: 7            # pt

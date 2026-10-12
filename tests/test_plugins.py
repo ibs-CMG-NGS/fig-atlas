@@ -47,8 +47,8 @@ def test_every_contract_names_an_existing_document_and_a_renderer():
     ingest = C.ingest_map()
     for c in C.all_contracts():
         assert (ROOT / c.doc).is_file(), f"{c.name}: {c.doc} missing"
-        assert c.required or c.role_columns or (c.input_glob and c.required_meta), \
-            f"{c.name}: no required columns (table bundle) or required metadata (file bundle)"
+        assert c.required or c.role_columns or c.min_numeric or (c.input_glob and c.required_meta), \
+            f"{c.name}: no required or numeric columns (table bundle) or required metadata (file bundle)"
         for t in c.plot_types:
             assert t in ingest, f"{c.name}: no renderer for plot_type {t}"
 

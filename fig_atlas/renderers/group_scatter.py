@@ -8,8 +8,14 @@ from scipy.stats import pearsonr
 
 
 from ..schema import Param, Schema, uses_schema
+from ._basic import with_roles
 
 SCHEMA = Schema("group_scatter", params=[
+    # [Data]
+    Param("x_col", str, "x", role="Column with the x values"),
+    Param("y_col", str, "y", role="Column with the y values"),
+    Param("group_col", str, "group", role="Column with the group of each point (absent: one group)"),
+    Param("label_col", str, "label", role="Column with the text written beside each point (with point_labels)"),
     # [Groups and points]
     Param("group_order", list, None, role="Group draw order (default: order in the data)"),
     Param("group_colors", dict, {}, open_keys=True, role="Point colour per group (unlisted groups are grey)"),
@@ -65,6 +71,8 @@ def render_group_scatter(ax, df: pd.DataFrame, params: dict):
       title_pad (3.0), legend (False), legend_fontsize (5.0), legend_loc ('lower right'),
       spine_width (0.6)
     """
+    df = with_roles(df, params, {"x_col": ("x", "x"), "y_col": ("y", "y"), "group_col": ("group", "group"),
+                                 "label_col": ("label", "label")}, fill={"group": "all"})
     order = params.get("group_order") or list(pd.unique(df["group"]))
     colors, labels = params.get("group_colors", {}), params.get("group_labels", {})
     if params.get("zero_line", True):

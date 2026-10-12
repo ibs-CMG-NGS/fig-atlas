@@ -210,13 +210,11 @@ def render_multi_group_heatmap(fig, df, params):
         if params.get("show_group_legend", True):
             from matplotlib.patches import Patch
             handles = [Patch(color=group_colors.get(g, "#cccccc"), label=g) for g in uniq_groups]
-            # Anchored to the subfigure's own top-right corner (fig-fraction
-            # coords, independent of the colorbar's axes) so it can never
-            # compete for space with the centered title or the colorbar.
-            fig.legend(handles=handles, loc="upper right", bbox_to_anchor=(0.99, 0.99),
-                      bbox_transform=fig.transSubfigure if hasattr(fig, "transSubfigure")
-                      else fig.transFigure,
-                      fontsize=t_sz, frameon=False, handlelength=1.0, labelspacing=0.3)
+            # One row above the group strip, attached to it: it moves with the
+            # heatmap when the panel is fitted into its cell, and stays clear
+            # of the centred title and the colour bar.
+            ax_grp.legend(handles=handles, loc="lower right", bbox_to_anchor=(1.0, 1.0), ncol=len(handles),
+                          fontsize=t_sz, frameon=False, handlelength=1.0, columnspacing=1.0, borderaxespad=0.2)
 
     rename_map = params.get("sample_rename_map", {})
     col_labels = [rename_map.get(c, c) for c in columns]

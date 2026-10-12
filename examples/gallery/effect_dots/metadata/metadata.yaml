@@ -1,0 +1,11 @@
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per (factor, model) -- the estimate and its 95 % confidence limits.
+plot_type: effect_dots
+plot_params:
+  item_col: factor
+  series_col: model
+  estimate_col: log_odds_ratio
+  low_col: ci_low
+  high_col: ci_high
+  series_colors: {unadjusted: "#9CA3AF", adjusted: "#0072B2"}
+  xlabel: "log odds ratio (95 % CI)"

@@ -7,9 +7,15 @@ import pandas as pd
 
 
 from ..schema import Param, Schema, uses_schema
+from ._basic import with_roles
 
 SCHEMA = Schema("effect_dots", params=[
     # [Rows and series]
+    Param("item_col", str, "item", role="Column with the row names (what each estimate is about)"),
+    Param("series_col", str, "series", role="Column with the series (e.g. unadjusted / adjusted; absent: one)"),
+    Param("estimate_col", str, "estimate", role="Column with the estimate (dot)"),
+    Param("low_col", str, "ci_low", role="Column with the lower confidence limit"),
+    Param("high_col", str, "ci_high", role="Column with the upper confidence limit"),
     Param("item_order", list, None, role="Row order, top to bottom (default: order in the data)"),
     Param("item_labels", dict, {}, open_keys=True, role="Display label per item"),
     Param("series_order", list, None, role="Series order (default: order in the data)"),
@@ -53,6 +59,9 @@ def render_effect_dots(ax, df: pd.DataFrame, params: dict):
       axes-fraction anchor for legend_loc), legend_ncol (1),
       title, title_size (6.5), title_pad (3.0), spine_width (0.6)
     """
+    df = with_roles(df, params, {"item_col": ("item", "item"), "series_col": ("series", "series"),
+                                 "estimate_col": ("estimate", "estimate"), "low_col": ("ci_low", "ci_low"),
+                                 "high_col": ("ci_high", "ci_high")}, fill={"series": "estimate"})
     items = params.get("item_order") or list(pd.unique(df["item"]))
     series = params.get("series_order") or list(pd.unique(df["series"]))
     colors, s_lab = params.get("series_colors", {}), params.get("series_labels", {})

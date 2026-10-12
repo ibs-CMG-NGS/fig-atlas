@@ -132,6 +132,62 @@ def multi_group_heatmap(rng):
     return pd.DataFrame(rows)
 
 
+def group_scatter(rng):
+    rows = []
+    for batch, shift in (("batch 1", 0.0), ("batch 2", 0.3)):
+        for i in range(1, 16):
+            x = rng.uniform(20, 60)
+            rows.append({"library": f"{batch[-1]}{i:02d}", "batch": batch, "frip_pct": round(float(x), 2),
+                         "signal_log2": round(float(0.03 * x - 1.0 + shift + rng.normal(0, 0.15)), 3)})
+    return pd.DataFrame(rows)
+
+
+def effect_dots(rng):
+    rows = []
+    for item, est in (("age (per 10 y)", 0.35), ("smoking", 0.6), ("BMI (per 5)", 0.2), ("diabetes", 0.45),
+                      ("statin use", -0.3)):
+        for model, shrink in (("unadjusted", 1.0), ("adjusted", 0.7)):
+            e = est * shrink + rng.normal(0, 0.03)
+            se = 0.1 + rng.uniform(0, 0.05)
+            rows.append({"factor": item, "model": model, "log_odds_ratio": round(float(e), 3),
+                         "ci_low": round(float(e - 1.96 * se), 3), "ci_high": round(float(e + 1.96 * se), 3)})
+    return pd.DataFrame(rows)
+
+
+def bar_scatter(rng):
+    rows = []
+    for gene, ko in (("Gfap", 2.4), ("Aqp4", 1.6), ("S100b", 1.1), ("Aldh1l1", 0.6)):
+        for cond, mu in (("control", 1.0), ("knockout", ko)):
+            rows += [{"gene": gene, "condition": cond, "relative_mrna": round(float(v), 3)}
+                     for v in rng.lognormal(np.log(mu), 0.15, 4)]
+    return pd.DataFrame(rows)
+
+
+def heatmap(rng):
+    rows = []
+    for g in range(1, 26):
+        up = rng.choice([-1, 1]) * rng.uniform(0.5, 2.0)
+        row = {"gene": f"G{g:03d}"}
+        for s in ("ctrl_1", "ctrl_2", "ctrl_3"):
+            row[s] = round(float(5 + rng.normal(0, 0.3)), 3)
+        for s in ("trt_1", "trt_2", "trt_3"):
+            row[s] = round(float(5 + up + rng.normal(0, 0.3)), 3)
+        rows.append(row)
+    return pd.DataFrame(rows)
+
+
+def pca(rng):
+    genes = 300
+    base = rng.lognormal(5, 1, genes)
+    effect = np.where(rng.random(genes) < 0.2, rng.lognormal(0, 0.8, genes), 1.0)
+    data = {"gene": [f"G{i:04d}" for i in range(1, genes + 1)]}
+    for s in ("ctrl_1", "ctrl_2", "ctrl_3", "ctrl_4"):
+        data[s] = rng.poisson(base).astype(int)
+    for s in ("trt_1", "trt_2", "trt_3", "trt_4"):
+        data[s] = rng.poisson(base * effect).astype(int)
+    return pd.DataFrame(data)
+
+
 def image_files(rng):
     from PIL import Image
     yy, xx = np.mgrid[0:180, 0:240]
@@ -258,6 +314,65 @@ plot_params:
   margin_bottom: 0.2            # fraction of the figure; room for the sample names below
   margin_right: 0.8             # fraction of the figure; room for the colour bar and its title
 """,
+    "group_scatter": HEAD + """# inputs/data.csv: one row per library -- frip_pct (x), signal_log2 (y), batch (group), library (label).
+plot_type: group_scatter
+plot_params:
+  x_col: frip_pct
+  y_col: signal_log2
+  group_col: batch
+  group_colors: {"batch 1": "#0072B2", "batch 2": "#E69F00"}
+  legend: true
+  xlabel: "Fraction of reads in peaks (%)"
+  ylabel: "Signal (log2)"
+""",
+    "effect_dots": HEAD + """# inputs/data.csv: one row per (factor, model) -- the estimate and its 95 % confidence limits.
+plot_type: effect_dots
+plot_params:
+  item_col: factor
+  series_col: model
+  estimate_col: log_odds_ratio
+  low_col: ci_low
+  high_col: ci_high
+  series_colors: {unadjusted: "#9CA3AF", adjusted: "#0072B2"}
+  xlabel: "log odds ratio (95 % CI)"
+""",
+    "bar_scatter": HEAD + """# inputs/data.csv: one row per replicate -- gene (category), condition (bar colour), relative_mrna (value).
+# Bars are the mean +/- SEM of the replicates; the dots are the replicates.
+plot_type: bar_scatter
+plot_params:
+  category_col: gene
+  group_col: condition
+  value_col: relative_mrna
+  group_colors: {control: "#9CA3AF", knockout: "#0072B2"}
+  labels_ylabel: "mRNA (relative to control)"
+  axes_label_size: 7            # pt; this renderer's own defaults are for a larger canvas
+  tick_label_size: 6            # pt
+  title_size: 8                 # pt
+""",
+    "heatmap": HEAD + """# inputs/data.csv: one row per gene -- gene (label), then one column per sample (values).
+plot_type: heatmap
+plot_params:
+  label_col: gene
+  sample_columns: ["ctrl_1", "ctrl_2", "ctrl_3", "trt_1", "trt_2", "trt_3"]
+  sorting: clustering
+  n_genes: 20                   # rows shown; up to max_gene_labels (20) are named
+  tick_label_size: 6            # pt; this renderer's own defaults are for a larger canvas
+  axes_label_size: 7            # pt
+""",
+    "pca": HEAD + """# inputs/data.csv: one row per gene -- gene, then one column of counts per sample.
+# sample_groups names which columns belong to which group (point colour and legend).
+plot_type: pca
+plot_params:
+  sample_groups:
+    control: ["ctrl_1", "ctrl_2", "ctrl_3", "ctrl_4"]
+    treated: ["trt_1", "trt_2", "trt_3", "trt_4"]
+  group_colors: {control: "#9CA3AF", treated: "#0072B2"}
+  show_labels: false
+  title: ""
+  point_size: 30                # pt^2; this renderer's own defaults are for a larger canvas
+  axes_label_size: 7            # pt
+  tick_label_size: 6            # pt
+""",
     "image_panel": HEAD + """# inputs/: one image file per channel (16-bit TIFF here). Images are shown from these files,
 # never from an adjusted copy; the display range per channel is set below.
 plot_type: image_panel
@@ -281,10 +396,13 @@ def main() -> None:
     rng = np.random.default_rng(SEED)
     makers = {"line_band": line_band, "threshold_scatter": threshold_scatter, "venn": venn, "violin": violin,
               "histogram": histogram, "dose_response": dose_response, "survival": survival,
-              "stacked_bar": stacked_bar, "boxplot": boxplot, "multi_group_heatmap": multi_group_heatmap}
+              "stacked_bar": stacked_bar, "boxplot": boxplot, "multi_group_heatmap": multi_group_heatmap,
+              "group_scatter": group_scatter, "effect_dots": effect_dots, "bar_scatter": bar_scatter,
+              "heatmap": heatmap, "pca": pca}
     for name, make in makers.items():
         _write(name, make(rng), META[name])
-    _write("image_panel", None, META["image_panel"], image_files(rng))
+    # The images get their own random stream, so adding a table example never changes their pixels.
+    _write("image_panel", None, META["image_panel"], image_files(np.random.default_rng(SEED + 1)))
     print(f"wrote {len(META)} bundles in {HERE}")
 
 

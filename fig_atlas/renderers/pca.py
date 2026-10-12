@@ -21,6 +21,13 @@ SCHEMA = Schema("pca", params=[
     Param("scaling", ("standard", "none"), "standard", role="'standard': centre and scale each gene; otherwise centre only"),
     Param("x_pc", int, 1, unit="component number", range=(1, None), role="Component on the x axis"),
     Param("y_pc", int, 2, unit="component number", range=(1, None), role="Component on the y axis"),
+    Param("sample_columns", list, None, role="Columns to use as samples (default: every numeric column that is not "
+          "a statistic such as padj or log2FC)"),
+    Param("sample_groups", dict, None, open_keys=True,
+          role="Group name -> its sample columns; points are coloured by group, with a legend"),
+    Param("group_colors", dict, {}, open_keys=True, unit="hex color",
+          role="Colour per group (default: matplotlib tab10 by group)"),
+    Param("legend_loc", str, "best", role="Group legend location (matplotlib loc)"),
     Param("sample_rename_map", dict, {}, open_keys=True, role="Display label per raw sample name"),
     Param("point_size", float, 80, unit="pt^2 (marker area)", range=(0, None), role="Sample point size"),
     Param("show_labels", bool, True, role="Label each sample point"),
@@ -42,9 +49,11 @@ def render_pca(fig, df, params):
     ax = fig.add_subplot(111)
     df = df.copy() if df is not None else pd.DataFrame()
 
-    sample_cols = [c for c in df.columns
-                   if not any(p in c.lower() for p in exclude)
-                   and pd.api.types.is_numeric_dtype(df[c])]
+    chosen = params.get('sample_columns') or [c for cols in (params.get('sample_groups') or {}).values() for c in cols]
+    sample_cols = ([c for c in chosen if c in df.columns] if chosen else
+                   [c for c in df.columns
+                    if not any(p in c.lower() for p in exclude)
+                    and pd.api.types.is_numeric_dtype(df[c])])
     if not sample_cols:
         ax.text(0.5, 0.5, 'No sample expression columns found.',
                 ha='center', va='center', transform=ax.transAxes, fontsize=12)
@@ -89,10 +98,22 @@ def render_pca(fig, df, params):
 
     xs, ys = scores[:, xi], scores[:, yi]
     cmap = matplotlib.colormaps.get_cmap('tab10')
-    colors = [cmap(i % 10) for i in range(len(display_names))]
+    sample_groups = params.get('sample_groups') or {}
+    group_of = {c: g for g, cols in sample_groups.items() for c in cols}
+    if sample_groups:
+        names = list(sample_groups)
+        gcol = {g: params.get('group_colors', {}).get(g) or cmap(i % 10) for i, g in enumerate(names)}
+        colors = [gcol.get(group_of.get(c), cmap(0)) for c in sample_cols]
+    else:
+        colors = [cmap(i % 10) for i in range(len(display_names))]
 
     ax.scatter(xs, ys, s=int(params.get('point_size', 80)), c=colors, alpha=0.85,
                edgecolors='white', linewidths=0.8, zorder=3)
+    if sample_groups:
+        from matplotlib.lines import Line2D
+        handles = [Line2D([], [], linestyle='none', marker='o', color=gcol[g], label=str(g)) for g in sample_groups]
+        ax.legend(handles=handles, loc=params.get('legend_loc', 'best'), frameon=False,
+                  fontsize=params.get('tick_label_size', 7))
     if params.get('show_labels', True):
         for x, y, lbl in zip(xs, ys, display_names):
             ax.annotate(lbl, (x, y), xytext=(4, 4), textcoords='offset points',

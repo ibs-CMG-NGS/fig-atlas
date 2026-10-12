@@ -1,0 +1,11 @@
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per library -- frip_pct (x), signal_log2 (y), batch (group), library (label).
+plot_type: group_scatter
+plot_params:
+  x_col: frip_pct
+  y_col: signal_log2
+  group_col: batch
+  group_colors: {"batch 1": "#0072B2", "batch 2": "#E69F00"}
+  legend: true
+  xlabel: "Fraction of reads in peaks (%)"
+  ylabel: "Signal (log2)"

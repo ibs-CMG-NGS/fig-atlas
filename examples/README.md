@@ -40,3 +40,8 @@ requires preflight to report no error or warning.
 | `venn/` | Venn diagram | two gene lists |
 | `multi_group_heatmap/` | clustered heatmap with groups | 20 genes x 9 samples in three groups |
 | `image_panel/` | microscope image | two synthetic 16-bit channels with a scale bar |
+| `bar_scatter/` | bars (mean +/- SEM) with replicate dots | relative mRNA of four genes, control vs knockout |
+| `group_scatter/` | scatter with fitted line and Pearson r | two quality measures per library, two batches |
+| `effect_dots/` | estimates with confidence intervals (forest plot) | log odds ratios of five factors, two models |
+| `heatmap/` | heatmap of a feature x sample matrix | 25 genes x 6 samples (z-scored per gene) |
+| `pca/` | samples on principal components | counts of 300 genes x 8 samples in two groups |

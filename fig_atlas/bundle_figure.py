@@ -93,6 +93,7 @@ def draw_plots(fig, plots: dict, root: Path, layout: dict | None = None, load=No
         sf = fig.add_subfigure(gs[i // cols, i % cols])
         if shape[0] in FIGURE_ARGS:
             fn(sf, data, block)                   # lays out its own axes inside the subfigure
+            fitted.append((sf, list(sf.axes)))    # ...then all of them are fitted into the cell together
         else:
             ax = sf.add_subplot(1, 1, 1)
             fn(ax, data, block)
@@ -135,18 +136,30 @@ def fit_in_cells(fig, panels: list, pad_mm: float = 1.0, top_reserve_pt: float =
     change when the axes change size."""
     if not panels:
         return
+    from matplotlib.transforms import Bbox
     pad = pad_mm / 25.4 * fig.dpi
     top = top_reserve_pt / 72.0 * fig.dpi
     for _ in range(passes):
         fig.canvas.draw()
         renderer = fig.canvas.get_renderer()
-        for sf, ax in panels:
-            cell, outer, box = sf.bbox, ax.get_tightbbox(renderer), ax.get_window_extent(renderer)
+        for sf, axes in panels:
+            group = [a for a in (axes if isinstance(axes, list) else [axes]) if a.get_visible()]
+            if not group:
+                continue
+            cell = sf.bbox
+            outer = Bbox.union([a.get_tightbbox(renderer) for a in group])
+            box = Bbox.union([a.get_window_extent(renderer) for a in group])
             x0 = box.x0 + (cell.x0 + pad - outer.x0)
             x1 = box.x1 + (cell.x1 - pad - outer.x1)
             y0 = box.y0 + (cell.y0 + pad - outer.y0)
             y1 = box.y1 + (cell.y1 - pad - top - outer.y1)
             if x1 - x0 < pad or y1 - y0 < pad:
                 continue                          # labels larger than the cell: leave it to preflight
-            (fx0, fy0), (fx1, fy1) = sf.transSubfigure.inverted().transform([(x0, y0), (x1, y1)])
-            ax.set_position([fx0, fy0, fx1 - fx0, fy1 - fy0])
+            sx, sy = (x1 - x0) / box.width, (y1 - y0) / box.height
+            to_sub = sf.transSubfigure.inverted()
+            for a in group:                       # one mapping for the whole group: it keeps its arrangement
+                w = a.get_window_extent(renderer)
+                nx0, ny0 = x0 + (w.x0 - box.x0) * sx, y0 + (w.y0 - box.y0) * sy
+                nx1, ny1 = x0 + (w.x1 - box.x0) * sx, y0 + (w.y1 - box.y0) * sy
+                (fx0, fy0), (fx1, fy1) = to_sub.transform([(nx0, ny0), (nx1, ny1)])
+                a.set_position([fx0, fy0, fx1 - fx0, fy1 - fy0])

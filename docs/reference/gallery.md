@@ -6,6 +6,39 @@
 
 Each picture below is drawn from a small synthetic data bundle in `examples/gallery/`, exactly as `fa ingest bundle` would draw it, at single-column size (85 mm). Pick the picture closest to the figure you need, copy its folder, replace `inputs/data.csv` with your table -- same column names, or name yours in `plot_params` -- and run the commands under it. The config block `fa ingest bundle` writes lists every setting with its unit and what it changes ([config reference](config.md)). A test builds every example and checks it with preflight.
 
+### bar_scatter
+
+Bars (mean +/- error) with replicate dots: one row per replicate (category, group, value), or one row per category with replicate columns
+
+![bar_scatter](gallery/examples/bar_scatter.png)
+
+Inputs: `data.csv`. `metadata/metadata.yaml`:
+
+```yaml
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per replicate -- gene (category), condition (bar colour), relative_mrna (value).
+# Bars are the mean +/- SEM of the replicates; the dots are the replicates.
+plot_type: bar_scatter
+plot_params:
+  category_col: gene
+  group_col: condition
+  value_col: relative_mrna
+  group_colors: {control: "#9CA3AF", knockout: "#0072B2"}
+  labels_ylabel: "mRNA (relative to control)"
+  axes_label_size: 7            # pt; this renderer's own defaults are for a larger canvas
+  tick_label_size: 6            # pt
+  title_size: 8                 # pt
+```
+
+Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
+
+```bash
+cp -r <fig-atlas>/examples/gallery/bar_scatter raw_data/<project>/
+fa bundle check raw_data/<project>/bar_scatter
+fa ingest bundle raw_data/<project>/bar_scatter --project <project>
+fa build <project> --preflight
+```
+
 ### boxplot
 
 Values per category: one row per observation (category, value)
@@ -62,6 +95,98 @@ Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
 cp -r <fig-atlas>/examples/gallery/dose_response raw_data/<project>/
 fa bundle check raw_data/<project>/dose_response
 fa ingest bundle raw_data/<project>/dose_response --project <project>
+fa build <project> --preflight
+```
+
+### effect_dots
+
+Estimates with confidence intervals (forest plot): one row per item and series
+
+![effect_dots](gallery/examples/effect_dots.png)
+
+Inputs: `data.csv`. `metadata/metadata.yaml`:
+
+```yaml
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per (factor, model) -- the estimate and its 95 % confidence limits.
+plot_type: effect_dots
+plot_params:
+  item_col: factor
+  series_col: model
+  estimate_col: log_odds_ratio
+  low_col: ci_low
+  high_col: ci_high
+  series_colors: {unadjusted: "#9CA3AF", adjusted: "#0072B2"}
+  xlabel: "log odds ratio (95 % CI)"
+```
+
+Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
+
+```bash
+cp -r <fig-atlas>/examples/gallery/effect_dots raw_data/<project>/
+fa bundle check raw_data/<project>/effect_dots
+fa ingest bundle raw_data/<project>/effect_dots --project <project>
+fa build <project> --preflight
+```
+
+### group_scatter
+
+Two measurements per item, coloured by group, with a fitted line and Pearson r
+
+![group_scatter](gallery/examples/group_scatter.png)
+
+Inputs: `data.csv`. `metadata/metadata.yaml`:
+
+```yaml
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per library -- frip_pct (x), signal_log2 (y), batch (group), library (label).
+plot_type: group_scatter
+plot_params:
+  x_col: frip_pct
+  y_col: signal_log2
+  group_col: batch
+  group_colors: {"batch 1": "#0072B2", "batch 2": "#E69F00"}
+  legend: true
+  xlabel: "Fraction of reads in peaks (%)"
+  ylabel: "Signal (log2)"
+```
+
+Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
+
+```bash
+cp -r <fig-atlas>/examples/gallery/group_scatter raw_data/<project>/
+fa bundle check raw_data/<project>/group_scatter
+fa ingest bundle raw_data/<project>/group_scatter --project <project>
+fa build <project> --preflight
+```
+
+### heatmap
+
+A matrix: one row per feature, one numeric column per sample
+
+![heatmap](gallery/examples/heatmap.png)
+
+Inputs: `data.csv`. `metadata/metadata.yaml`:
+
+```yaml
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per gene -- gene (label), then one column per sample (values).
+plot_type: heatmap
+plot_params:
+  label_col: gene
+  sample_columns: ["ctrl_1", "ctrl_2", "ctrl_3", "trt_1", "trt_2", "trt_3"]
+  sorting: clustering
+  n_genes: 20                   # rows shown; up to max_gene_labels (20) are named
+  tick_label_size: 6            # pt; this renderer's own defaults are for a larger canvas
+  axes_label_size: 7            # pt
+```
+
+Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
+
+```bash
+cp -r <fig-atlas>/examples/gallery/heatmap raw_data/<project>/
+fa bundle check raw_data/<project>/heatmap
+fa ingest bundle raw_data/<project>/heatmap --project <project>
 fa build <project> --preflight
 ```
 
@@ -197,6 +322,40 @@ Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
 cp -r <fig-atlas>/examples/gallery/multi_group_heatmap raw_data/<project>/
 fa bundle check raw_data/<project>/multi_group_heatmap
 fa ingest bundle raw_data/<project>/multi_group_heatmap --project <project>
+fa build <project> --preflight
+```
+
+### pca
+
+Samples by principal components: one row per feature, one numeric column per sample
+
+![pca](gallery/examples/pca.png)
+
+Inputs: `data.csv`. `metadata/metadata.yaml`:
+
+```yaml
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per gene -- gene, then one column of counts per sample.
+# sample_groups names which columns belong to which group (point colour and legend).
+plot_type: pca
+plot_params:
+  sample_groups:
+    control: ["ctrl_1", "ctrl_2", "ctrl_3", "ctrl_4"]
+    treated: ["trt_1", "trt_2", "trt_3", "trt_4"]
+  group_colors: {control: "#9CA3AF", treated: "#0072B2"}
+  show_labels: false
+  title: ""
+  point_size: 30                # pt^2; this renderer's own defaults are for a larger canvas
+  axes_label_size: 7            # pt
+  tick_label_size: 6            # pt
+```
+
+Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
+
+```bash
+cp -r <fig-atlas>/examples/gallery/pca raw_data/<project>/
+fa bundle check raw_data/<project>/pca
+fa ingest bundle raw_data/<project>/pca --project <project>
 fa build <project> --preflight
 ```
 

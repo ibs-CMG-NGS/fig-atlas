@@ -6,7 +6,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 
 | Plot name | Where | Parameters |
 |---|---|---|
-| [`bar_scatter`](#bar_scatter) | core | 44 |
+| [`bar_scatter`](#bar_scatter) | core | 49 |
 | [`binary_motif_heatmap`](#binary_motif_heatmap) | fig_atlas_omics.renderers | 62 |
 | [`boxplot`](#boxplot) | core | 13 |
 | [`cis_linkage_panel`](#cis_linkage_panel) | fig_atlas_omics.renderers | 20 |
@@ -15,16 +15,16 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | [`cross_condition_dotplot`](#cross_condition_dotplot) | fig_atlas_omics.renderers | 62 |
 | [`cross_condition_heatmap`](#cross_condition_heatmap) | fig_atlas_omics.renderers | 42 |
 | [`dose_response`](#dose_response) | core | 37 |
-| [`effect_dots`](#effect_dots) | core | 24 |
+| [`effect_dots`](#effect_dots) | core | 29 |
 | [`flow_diagram`](#flow_diagram) | core | 44 |
 | [`funnel`](#funnel) | core | 16 |
 | [`go_bar`](#go_bar) | fig_atlas_omics.renderers | 25 |
 | [`go_cluster_dot`](#go_cluster_dot) | fig_atlas_omics.renderers | 37 |
 | [`go_dot`](#go_dot) | fig_atlas_omics.renderers | 11 |
 | [`go_rrvgo_treemap`](#go_rrvgo_treemap) | fig_atlas_omics.renderers | 14 |
-| [`group_scatter`](#group_scatter) | core | 33 |
+| [`group_scatter`](#group_scatter) | core | 37 |
 | [`grouped_hbar`](#grouped_hbar) | core | 19 |
-| [`heatmap`](#heatmap) | core | 20 |
+| [`heatmap`](#heatmap) | core | 23 |
 | [`histogram`](#histogram) | core | 33 |
 | [`image_panel`](#image_panel) | core | 27 |
 | [`jaccard_heatmap`](#jaccard_heatmap) | core | 25 |
@@ -36,7 +36,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | [`paired_dumbbell`](#paired_dumbbell) | core | 38 |
 | [`pathway_evidence_dotplot`](#pathway_evidence_dotplot) | fig_atlas_omics.renderers | 28 |
 | [`pathway_test_matrix`](#pathway_test_matrix) | fig_atlas_omics.renderers | 42 |
-| [`pca`](#pca) | core | 12 |
+| [`pca`](#pca) | core | 16 |
 | [`peak_feature_composition`](#peak_feature_composition) | fig_atlas_omics.renderers | 32 |
 | [`peak_feature_enrichment`](#peak_feature_enrichment) | fig_atlas_omics.renderers | 32 |
 | [`sample_metric_bars`](#sample_metric_bars) | core | 22 |
@@ -64,7 +64,12 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 |---|---|---|---|---|
 | `category_col` | text | `symbol` |  | Column holding the x categories |
 | `category_order` | list | auto |  | Category order, left to right (default: order in the data) |
-| `groups` | list | `[]` |  | Series per category: list of {label, color, columns} (replicate columns) |
+| `groups` | list | `[]` |  | Wide table: series per category, a list of {label, color, columns} (replicate columns) |
+| `group_col` | text | auto |  | Long table (one row per replicate): column with the series; then value_col holds the values and groups is built from group_order/group_colors/group_labels |
+| `value_col` | text | `value` |  | Long table: column with the replicate values |
+| `group_order` | list | auto |  | Long table: series order (default: order in the data) |
+| `group_colors` | mapping | `{}` | hex color | Long table: bar colour per series |
+| `group_labels` | mapping | `{}` |  | Long table: legend label per series |
 | `pvalue_col` | text | auto |  | Column with the per-category p-value for the two-group bracket |
 | `bar_width` | number | `0.8` | x units (one category = 1) | Total width of one category's bars |
 | `bar_edgecolor` | colour | `none` | color | Bar outline colour |
@@ -446,6 +451,11 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 
 | Key | Type | Default | Unit | What it does |
 |---|---|---|---|---|
+| `item_col` | text | `item` |  | Column with the row names (what each estimate is about) |
+| `series_col` | text | `series` |  | Column with the series (e.g. unadjusted / adjusted; absent: one) |
+| `estimate_col` | text | `estimate` |  | Column with the estimate (dot) |
+| `low_col` | text | `ci_low` |  | Column with the lower confidence limit |
+| `high_col` | text | `ci_high` |  | Column with the upper confidence limit |
 | `item_order` | list | auto |  | Row order, top to bottom (default: order in the data) |
 | `item_labels` | mapping | `{}` |  | Display label per item |
 | `series_order` | list | auto |  | Series order (default: order in the data) |
@@ -666,6 +676,10 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 
 | Key | Type | Default | Unit | What it does |
 |---|---|---|---|---|
+| `x_col` | text | `x` |  | Column with the x values |
+| `y_col` | text | `y` |  | Column with the y values |
+| `group_col` | text | `group` |  | Column with the group of each point (absent: one group) |
+| `label_col` | text | `label` |  | Column with the text written beside each point (with point_labels) |
 | `group_order` | list | auto |  | Group draw order (default: order in the data) |
 | `group_colors` | mapping | `{}` |  | Point colour per group (unlisted groups are grey) |
 | `group_labels` | mapping | `{}` |  | Legend label per group |
@@ -732,7 +746,10 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 
 | Key | Type | Default | Unit | What it does |
 |---|---|---|---|---|
+| `label_col` | text | auto |  | Column with the row labels (default: symbol, else gene_id, else the row number) |
+| `sample_columns` | list | auto |  | Columns to show as samples (default: every numeric column that is not a statistic such as padj or log2FC) |
 | `n_genes` | integer | `50` | genes | Genes shown (after sorting) |
+| `max_gene_labels` | integer | `20` | genes | Genes are named only up to this many rows (more: no names, rather than row numbers) — raise with a taller panel and a smaller tick_label_size |
 | `sorting` | one of `padj`, `log2fc`, `clustering` | `padj` |  | How the genes are chosen and ordered |
 | `normalization` | one of `z-score`, `minmax`, `log2`, `none` | `z-score` |  | Per-gene scaling of the values |
 | `transpose` | true / false | `False` |  | Samples as rows, genes as columns |
@@ -1183,6 +1200,10 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `scaling` | one of `standard`, `none` | `standard` |  | 'standard': centre and scale each gene; otherwise centre only |
 | `x_pc` | integer | `1` | component number | Component on the x axis |
 | `y_pc` | integer | `2` | component number | Component on the y axis |
+| `sample_columns` | list | auto |  | Columns to use as samples (default: every numeric column that is not a statistic such as padj or log2FC) |
+| `sample_groups` | mapping | auto |  | Group name -> its sample columns; points are coloured by group, with a legend |
+| `group_colors` | mapping | `{}` | hex color | Colour per group (default: matplotlib tab10 by group) |
+| `legend_loc` | text | `best` |  | Group legend location (matplotlib loc) |
 | `sample_rename_map` | mapping | `{}` |  | Display label per raw sample name |
 | `point_size` | number | `80` | pt^2 (marker area) | Sample point size |
 | `show_labels` | true / false | `True` |  | Label each sample point |
