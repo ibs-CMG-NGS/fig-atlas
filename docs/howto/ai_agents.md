@@ -54,7 +54,7 @@ fa mcp                     # 또는: python -m fig_atlas mcp [--root <저장소>
 agy mcp add fig-atlas -- <python> -m fig_atlas mcp
 ```
 
-**Claude Code**:
+**Claude Code** (검증함, 2026-10-13 — `--mcp-config` 파일로):
 
 ```bash
 claude mcp add fig-atlas -- <python> -m fig_atlas mcp
@@ -102,3 +102,5 @@ Codex는 저장소의 `AGENTS.md`를 스스로 읽으므로 규칙 파일은 따
 - (c) Antigravity CLI가 MCP 도구만으로
 
 세 결과의 config·분석 스크립트·figure spec·`.vscode/tasks.json`이 모두 같았고, 빌드된 PDF·PNG도 바이트 단위로 같았습니다. opencode의 호출 기록에서는 파일을 바꾸는 단계마다 dry run이 먼저 오고 그다음 `apply: true`가 왔습니다. 두 에이전트 모두 `fa_figure_images`로 받은 그림에서 Venn 숫자(A만 18, B만 15, 공통 12)를 읽어 냈습니다.
+
+2026-10-13에는 같은 과제를 Claude Code(claude-sonnet-5)로 다시 했습니다. 셸·파일 도구를 끄고(`--strict-mcp-config --disallowedTools ...`) MCP 도구만 썼고, 프롬프트에서 미리 승인하지 않았습니다. 에이전트는 바꾸는 세 단계마다 dry run 결과를 보여 주고 사람에게 물었으며, 사람이 승인한 뒤에만 `apply: true`로 다시 불렀습니다. 그날 코드로 다시 한 사람(CLI) 실행과 비교해 여섯 파일이 모두 바이트 단위로 같았습니다.
