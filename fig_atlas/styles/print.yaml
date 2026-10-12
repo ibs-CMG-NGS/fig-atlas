@@ -121,6 +121,13 @@ preflight:
   # Journal tag style; null = not enforced (journal presets set these).
   panel_tag_case: null          # "lower" | "upper"
   panel_tag_size_pt: null
+  # Journal limits, set by journal presets (off here): the largest text size
+  # in pt (panel tags apart, they have panel_tag_size_pt), the figure widths
+  # the journal prints in mm (its columns), and how close (mm) a figure must
+  # be to one of them.
+  max_font_pt: null
+  allowed_widths_mm: []
+  width_tol_mm: 0.5
   # Within one figure, a role's texts (tick labels, axis titles, tags, legend)
   # in a size different from the rest are reported when they are at most
   # this share [0-1] of that role -- a minority size usually means a

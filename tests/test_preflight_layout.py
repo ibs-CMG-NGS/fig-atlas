@@ -171,3 +171,25 @@ def test_panel_reaching_into_its_neighbour_is_reported():
         fig.add_axes([x, 0.15, 0.3, 0.6]).set_title("Panel", loc="left")
     assert "panel_regions_overlap" not in {f.check for f in preflight(fig, saved_bbox_in="tight")}
     plt.close(fig)
+
+
+def test_journal_text_cap_and_column_widths():
+    import matplotlib.pyplot as plt
+    from fig_atlas.preflight import preflight
+    fig = plt.figure(figsize=(150 / 25.4, 60 / 25.4))
+    ax = fig.add_axes([0.15, 0.2, 0.7, 0.6])
+    ax.set_title("Eight-point title", fontsize=8)
+    ax.tick_params(labelsize=6)
+    fig.text(0.01, 0.95, "a", fontsize=8, fontweight="bold", va="top")      # a tag: not capped
+    params = {"max_font_pt": 7, "allowed_widths_mm": [89, 183]}
+    found = {f.check: f for f in preflight(fig, saved_bbox_in=None, params=params)}
+    assert found["print_font_too_large"].measured == 8.0
+    assert "1 text(s)" in found["print_font_too_large"].message          # the title, not the tag
+    assert found["width_not_journal_column"].measured == 150.0
+    plt.close(fig)
+
+    fig = plt.figure(figsize=(183 / 25.4, 60 / 25.4))
+    fig.add_axes([0.15, 0.2, 0.7, 0.6]).set_title("Seven", fontsize=7)
+    checks = {f.check for f in preflight(fig, saved_bbox_in=None, params=params)}
+    assert not {"print_font_too_large", "width_not_journal_column"} & checks
+    plt.close(fig)

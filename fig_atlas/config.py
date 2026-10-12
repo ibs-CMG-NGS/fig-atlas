@@ -46,10 +46,21 @@ class ProjectConfig:
         with self._path.open(encoding="utf-8") as f:
             self._raw: dict = yaml.safe_load(f) or {}
         self._apply_style_presets()
+        self._apply_rcparams()
         # Under `fa build`, note which keys the run reads (fa lint; config_usage).
         from . import config_usage
         if config_usage.ENABLED:
             self._raw = config_usage.TrackingDict(self._raw, owner=str(self._path))
+
+    def _apply_rcparams(self) -> None:
+        """The ``rcparams:`` block (from the config or a style preset): matplotlib
+        settings no script sets itself, applied when the config is loaded --
+        e.g. a journal preset making maths text (exponents, subscripts) use the
+        journal's font instead of matplotlib's DejaVu."""
+        rc = self._raw.get("rcparams")
+        if rc:
+            import matplotlib
+            matplotlib.rcParams.update(dict(rc))
 
     def _apply_style_presets(self) -> None:
         names = self._raw.get("project", {}).get("style")

@@ -1,0 +1,54 @@
+# Journal preset: Science (research articles, figures at the revision stage).
+# Layer it last, in place of a page preset:
+#
+#   project:
+#     style: ["default", "print", "journal_science"]
+#
+# Source (checked 2026-10-12):
+#   https://www.science.org/content/page/instructions-authors-revised-research-articles
+# Stated there: 1 column = 9 cm (3.5 in), 1.5 columns = 5.0 in, 2 columns =
+# 18.4 cm (7.3 in); figures sized to fit one letter or A4 page; sans-serif,
+# "we prefer Myriad"; part labels capital (A, B, C), 9 pt bold; symbols at
+# least 6 pt; lines at least 0.5 pt; avoid red with green; >= 300 dpi. The
+# guide gives no text sizes: those below are marked "not stated".
+page:
+  name: "journal_science_double"
+  content_width_mm: 184      # mm; 2 columns = 18.4 cm (1 column 90 mm = width_frac 0.489)
+  content_height_mm: 240     # mm; not stated beyond "fits one letter or A4 page" -- a page-fitting limit
+
+figures:
+  font_family: "sans-serif"  # the first installed of rcparams font.sans-serif below: Myriad, else Arial
+  font_size: 7               # pt; not stated -- fig-atlas print default
+  tick_label_size: 6.0       # pt; not stated
+  axes_label_size: 7.0       # pt; not stated
+  title_size: 8.0            # pt; not stated
+  subpanel_label_size: 9     # pt; part labels A, B, C
+  panel_tag_case: "upper"    # panel letters A, B, C (scripts that draw their own tags read this)
+  subpanel_label_weight: "bold"
+
+rcparams:                    # matplotlib settings applied when the config loads
+  # Science prefers Myriad (a commercial font); where it is not installed, Arial
+  # (sans-serif, accepted) is used. Put a font first to prefer it.
+  font.sans-serif: ["Myriad Pro", "Arial", "Helvetica", "DejaVu Sans"]
+  mathtext.fontset: "custom" # maths text (10^1 exponents, H2O2 subscripts) in the same font, not DejaVu
+  mathtext.rm: "sans"
+  mathtext.it: "sans:italic"
+  mathtext.bf: "sans:bold"
+
+typography:
+  title_size: 8.0            # pt; not stated
+  axes_label_size: 7.0       # pt; not stated
+  tick_label_size: 6.0       # pt; not stated
+  legend_fontsize: 6.0       # pt; not stated
+
+print_check:
+  min_font_pt: 6.0           # pt; no text minimum stated -- 6 pt follows its minimum for symbols
+  min_line_pt: 0.5           # pt; stated minimum line width at final size
+
+preflight:
+  allowed_fonts: ["MyriadPro-Regular", "MyriadPro-Bold", "Myriad Pro", "Arial", "ArialMT", "Helvetica"]
+  allowed_widths_mm: [89, 127, 184]   # mm; 1 (3.5 in), 1.5 (5.0 in) and 2 columns (18.4 cm)
+  width_tol_mm: 1.0          # mm; the guide gives 1 column as both 9 cm and 3.5 in (88.9 mm)
+  panel_tag_case: "upper"    # A, B, C
+  panel_tag_size_pt: 9.0     # pt
+  min_dpi: 300               # px per printed inch

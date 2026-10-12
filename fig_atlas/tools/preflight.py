@@ -156,8 +156,9 @@ PRESET_KEYS = {"tick": "tick_label_size", "axis_label": "axes_label_size", "pane
 def consistency_rows(profiles: dict[tuple[str, str], dict]) -> list[dict]:
     """Figures drawn on one print preset should use one size per text role.
 
-    Reference per role: the size the shared print preset declares
-    (styles/print.yaml figures:) where it has one, otherwise the size most
+    Reference per role: the size the project's style presets declare (their
+    merged ``figures:`` block -- print.yaml, or a journal preset layered on it)
+    where they have one, otherwise the size most
     figures use (one vote per figure, so a figure with hundreds of tiny
     labels doesn't set the standard). Reported as info: a figure's own config
     may shrink a dense panel on purpose; this lists where figures diverge.
@@ -165,9 +166,27 @@ def consistency_rows(profiles: dict[tuple[str, str], dict]) -> list[dict]:
     from collections import Counter
 
     import yaml
-    preset = (yaml.safe_load((style_path(ROOT, "print")).read_text(encoding="utf-8")) or {}).get("figures", {})
+
+    from fig_atlas.config import _deep_merge, find_config_file
+
+    def preset_sizes(project: str) -> tuple[dict, str]:
+        names = ["print"]
+        try:
+            cfg = yaml.safe_load(find_config_file(ROOT, f"config_{project}.yaml").read_text(encoding="utf-8")) or {}
+            names = (cfg.get("project") or {}).get("style") or names
+        except FileNotFoundError:
+            pass
+        names = [names] if isinstance(names, str) else list(names)
+        merged: dict = {}
+        for name in names:
+            path = style_path(ROOT, name)
+            if path.exists():
+                merged = _deep_merge(merged, yaml.safe_load(path.read_text(encoding="utf-8")) or {})
+        return merged.get("figures", {}), names[-1]
+
     if len(profiles) < 2:
         return []
+    presets = {project: preset_sizes(project) for project, _ in profiles}
     modes = {key: {role: float(max(sizes, key=sizes.get)) for role, sizes in prof.items()}
              for key, prof in profiles.items()}
     votes: dict[str, Counter] = {}
@@ -177,8 +196,9 @@ def consistency_rows(profiles: dict[tuple[str, str], dict]) -> list[dict]:
     rows = []
     for (project, stem), m in sorted(modes.items()):
         for role, mine in m.items():
+            preset, last = presets[project]
             if role in PRESET_KEYS and preset.get(PRESET_KEYS[role]) is not None:
-                ref, src = float(preset[PRESET_KEYS[role]]), f"the print preset ({PRESET_KEYS[role]})"
+                ref, src = float(preset[PRESET_KEYS[role]]), f"the {last} preset ({PRESET_KEYS[role]})"
             else:
                 ref, src = votes[role].most_common(1)[0][0], f"most of the {len(modes)} figures checked"
             if abs(mine - ref) > 0.05:

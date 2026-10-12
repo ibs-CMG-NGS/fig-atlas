@@ -64,6 +64,8 @@ def _patch_width(p) -> tuple[float, str] | None:
 def _collection_width(c) -> tuple[float, str] | None:
     if not _visible(c):
         return None
+    if not c.get_paths():
+        return None          # draws nothing (e.g. a colorbar's empty divider lines)
     ecs = c.get_edgecolor()
     if ecs is None or len(ecs) == 0 or float(max(e[3] for e in ecs)) <= 0:
         return None

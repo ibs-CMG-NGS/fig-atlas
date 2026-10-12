@@ -277,3 +277,16 @@ def test_legend_check_tolerates_missing_points():
     ax.scatter(np.ma.masked_invalid([0.0, np.nan, 2.0]), [1.0, 2.0, np.nan], label="pts")
     ax.legend(loc="center")
     preflight(fig, saved_bbox_in="tight")
+
+
+def test_colorbar_divider_lines_that_draw_nothing_are_not_measured():
+    """A colorbar keeps an empty divider LineCollection half as wide as the
+    axes lines; it prints nothing, so it must not fail a line minimum."""
+    from fig_atlas.page import PageSpec
+    from fig_atlas.preflight import check_print_size
+    with plt.rc_context({"axes.linewidth": 0.6}):
+        fig, ax = plt.subplots(figsize=(3, 2))
+        fig.colorbar(ax.imshow(np.arange(9.0).reshape(3, 3)))
+        found = {f.check for f in check_print_size(fig, PageSpec("test", 180.0, 240.0), min_line_pt=0.5)}
+    assert "print_line_too_thin" not in found
+    plt.close(fig)

@@ -45,6 +45,10 @@ C7/C8 layout rules and consistency
                               line (AGENTS.md rule 1.5)                          warn
     panel_tag_inconsistent    tags differ in size / weight / case              warn
     panel_tag_style           tag case or size differs from the journal preset warn
+    print_font_too_large      texts (panel tags apart) larger than the journal's
+                              ``max_font_pt``                                  warn
+    width_not_journal_column  the saved figure is none of the journal's
+                              ``allowed_widths_mm`` (within ``width_tol_mm``)  warn
     panel_regions_overlap     a text of one panel (title, label, legend) stands
                               above or below the plot area of the panel beside
                               it, by more than ``panel_region_overlap_mm``:
@@ -115,6 +119,9 @@ DEFAULTS = {
     "muted_text_min_contrast": 2.0,  # grey-on-white text at or above this is deliberate de-emphasis (info)
     "min_tick_gap_mm": 0.3,      # neighbouring tick labels closer than this read as one word
     "panel_region_overlap_mm": 1.0,  # a panel's text may reach into the plot column beside it by this much
+    "max_font_pt": None,         # journal's largest text size (panel tags apart); None = no limit
+    "allowed_widths_mm": [],     # journal's figure widths (columns); empty = any width
+    "width_tol_mm": 0.5,         # a figure this close to an allowed width counts as that width
     "min_text_gap_mm": 0.4,      # other texts closer than this (without overlapping) look crowded
     "title_align_tol_mm": 0.5,   # titles of panels side by side may differ in height by this much
     "panel_tag_align_tol_mm": 0.3,   # tags in one column must share x within this
@@ -945,6 +952,40 @@ def _check_tick_gaps(fig, texts: list[_Text], p: dict) -> list[Finding]:
     return out
 
 
+def _check_journal_limits(fig, texts: list[_Text], saved_mm, renderer, p: dict) -> list[Finding]:
+    """A journal's upper text size and its column widths (journal presets set
+    ``max_font_pt`` and ``allowed_widths_mm``; both are off by default)."""
+    out = []
+    cap = p.get("max_font_pt")
+    if cap:
+        big = [t for t in texts if t.role != "panel_tag" and t.text.strip() and t.fontsize > float(cap) + 0.05]
+        if big:
+            boxes = [t.bbox_mm for t in big]
+            sizes = sorted({round(t.fontsize, 1) for t in big})
+            out.append(Finding("print_font_too_large", "warn",
+                               f"{len(big)} text(s) larger than {cap:g} pt ({', '.join(f'{s:g}' for s in sizes)} pt; "
+                               f"e.g. {big[0].text[:30]!r})",
+                               [min(b[0] for b in boxes), min(b[1] for b in boxes), max(b[2] for b in boxes),
+                                max(b[3] for b in boxes)],
+                               measured=max(sizes), threshold=float(cap),
+                               hint="lower the size keys in the config (title, axis label, value text) to the journal's limit"))
+    widths = [float(w) for w in p.get("allowed_widths_mm") or []]
+    if widths:
+        if saved_mm is None:
+            b = fig.get_tightbbox(renderer)
+            w_mm = (b.x1 - b.x0) * MM_PER_INCH
+        else:
+            w_mm = saved_mm[2] - saved_mm[0]
+        nearest = min(widths, key=lambda w: abs(w - w_mm))
+        if abs(nearest - w_mm) > float(p["width_tol_mm"]):
+            out.append(Finding("width_not_journal_column", "warn",
+                               f"figure is {w_mm:.1f} mm wide; the journal's widths are "
+                               f"{', '.join(f'{w:g}' for w in widths)} mm", _no_box(),
+                               measured=round(w_mm, 1), threshold=nearest,
+                               hint="use the journal preset's page width (page: content_width_mm / width_frac)"))
+    return out
+
+
 def _check_panel_tags(texts: list[_Text], p: dict) -> list[Finding]:
     """AGENTS.md rule 1.5 and journal tag style: tags stacked in one column
     share one plumb line; all tags share size, weight and case."""
@@ -1096,6 +1137,7 @@ def preflight(fig, saved_bbox_in=None, params: dict | None = None,
                 + _check_text_crowding(fig, rec.texts, p)
                 + _check_title_rows(fig, rec.texts, p)
                 + _check_panel_tags(rec.texts, p)
+                + _check_journal_limits(fig, rec.texts, saved_mm, renderer, p)
                 + _check_font_sizes(fig, rec.texts, p))
     findings = _apply_allow(fig, _merge_repeats(findings), renderer, p)
     if profile is not None:

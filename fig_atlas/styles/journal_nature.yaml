@@ -1,0 +1,52 @@
+# Journal preset: Nature (and Nature Research journals that follow its artwork guide).
+# Layer it last, in place of a page preset:
+#
+#   project:
+#     style: ["default", "print", "journal_nature"]
+#
+# Source (checked 2026-10-12):
+#   https://nature.com/documents/nature-final-artwork.pdf  (Guide to preparing final artwork)
+#   https://research-figure-guide.nature.com/figures/preparing-figures-our-specifications/
+# Stated there: widths 89 mm (1 column), 120 or 136 mm (1.5 columns), 183 mm
+# (2 columns); full page depth 247 mm; sans-serif, preferably Helvetica or
+# Arial; text 5-7 pt; panel labels 8 pt bold, upright, lowercase (a, b, c);
+# photographs >= 300 dpi. Values the guide does not state are marked "not stated".
+page:
+  name: "journal_nature_double"
+  content_width_mm: 183      # mm; double-column width (single column 89 mm = width_frac 0.486)
+  content_height_mm: 247     # mm; full page depth
+
+figures:
+  font_family: "sans-serif"  # the first installed of rcparams font.sans-serif below: Arial, else Helvetica
+  font_size: 7               # pt; body text -- 7 pt is the largest allowed
+  tick_label_size: 6.0       # pt; tick labels (5-7 pt allowed)
+  axes_label_size: 7.0       # pt; axis titles
+  title_size: 7.0            # pt; panel titles -- 7 pt is the largest allowed
+  subpanel_label_size: 8     # pt; panel labels a, b, c
+  panel_tag_case: "lower"    # panel letters a, b, c (scripts that draw their own tags read this)
+  subpanel_label_weight: "bold"
+
+rcparams:                    # matplotlib settings applied when the config loads
+  font.sans-serif: ["Arial", "Helvetica", "DejaVu Sans"]   # sans-serif, preferably Helvetica or Arial
+  mathtext.fontset: "custom" # maths text (10^1 exponents, H2O2 subscripts) in the same font, not DejaVu
+  mathtext.rm: "sans"
+  mathtext.it: "sans:italic"
+  mathtext.bf: "sans:bold"
+
+typography:
+  title_size: 7.0            # pt; panel titles drawn by a renderer
+  axes_label_size: 7.0       # pt; axis titles
+  tick_label_size: 6.0       # pt; tick labels
+  legend_fontsize: 6.0       # pt; legend text
+
+print_check:
+  min_font_pt: 5.0           # pt; smallest text Nature allows
+  min_line_pt: 0.25          # pt; not stated -- fig-atlas print default
+
+preflight:
+  allowed_fonts: ["Arial", "ArialMT", "Helvetica"]   # fonts accepted in the PDF; others are reported
+  max_font_pt: 7.0           # pt; largest text apart from panel labels
+  allowed_widths_mm: [89, 120, 136, 183]   # mm; 1, 1.5 (two options) and 2 columns
+  panel_tag_case: "lower"    # a, b, c
+  panel_tag_size_pt: 8.0     # pt
+  min_dpi: 300               # px per printed inch for photographs
