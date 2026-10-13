@@ -50,9 +50,9 @@ Folders are divided by research unit (for example a researcher or a study) and b
 
 | Stage | Folder | Use |
 |---|---|---|
-| exploratory | `configs/unit/exploratory/` | Trying things out. One dataset, one figure |
-| paper | `configs/unit/paper/` | Paper Figures. The Figure number is in the name (e.g. `…-paper-main-fig2-…`) |
-| archive | `configs/unit/archive/` | Figures no longer used. Kept, not deleted, and they can be rebuilt any time |
+| exploratory | `configs/<unit>/exploratory/` | Trying things out. One dataset, one figure |
+| paper | `configs/<unit>/paper/` | Paper Figures. The Figure number is in the name (e.g. `…-paper-main-fig2-…`) |
+| archive | `configs/<unit>/archive/` | Figures no longer used. Kept, not deleted, and they can be rebuilt any time |
 
 Moving an exploratory figure to the paper (**promote**) and archiving one (**retire**) are one command each. Chapter 11 covers them.
 
