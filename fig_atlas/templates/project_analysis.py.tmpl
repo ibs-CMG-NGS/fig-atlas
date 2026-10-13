@@ -32,7 +32,10 @@ def load(name: str, block: dict):
 def main() -> None:
     fcfg = CFG.get("figures", {})
     plt.rcParams.update({"font.family": fcfg.get("font_family", "DejaVu Sans")})   # AGENTS.md 1.4
-    fig_w, fig_h = CONFIG.page.figure_size_in(height_mm=float(fcfg.get("height_mm", 80)))
+    width_mm = fcfg.get("width_mm")                               # None: the page content width
+    fig_w, fig_h = CONFIG.page.figure_size_in(
+        height_mm=float(fcfg.get("height_mm", 80)),
+        width_frac=float(width_mm) / CONFIG.page.content_width_mm if width_mm else 1.0)
     fig = plt.figure(figsize=(fig_w, fig_h), dpi=CONFIG.dpi)
     # Every plots.<name> block in the config is one panel (fig_atlas.bundle_figure).
     columns = draw_plots(fig, CFG.get("plots", {}), CONFIG.project_root, fcfg, load=load)

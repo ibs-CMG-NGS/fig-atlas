@@ -49,7 +49,12 @@ TUTORIAL_PICTURES = {
     "case_a_port_script.md": {
         1: {"case_a_ported.png": "outputs/qpcr-antioxidant/figures/figure_01_main/figure_01.png"},
     },
+    "case_c_from_sketch.md": {
+        1: {"case_c_result.png": "outputs/antioxidant-effects/figures/figure_01_main/figure_01.png"},
+    },
 }
+# Pictures a tutorial shows as they are (a sketch a request starts from).
+TUTORIAL_COPIES = {"case_c_sketch.png": "examples/case_c/request/sketch.png"}
 # Pictures of a script a tutorial starts from: picture -> (script, the file it
 # saves); the script runs in a temporary copy of its folder.
 TUTORIAL_SCRIPTS = {
@@ -408,6 +413,9 @@ def draw_tutorial_pictures() -> None:
     from fig_atlas.tools import tutorial
     out = TUTORIALS / "img"
     out.mkdir(parents=True, exist_ok=True)
+    for name, src in TUTORIAL_COPIES.items():
+        shutil.copyfile(ROOT / src, out / name)
+        print(f"wrote docs/tutorials/img/{name}")
     for name, (script, saved) in TUTORIAL_SCRIPTS.items():
         tmp = Path(tempfile.mkdtemp(prefix="fa-script-"))
         try:
@@ -506,7 +514,8 @@ def tutorial_pictures_missing() -> list[str]:
     import re
     missing = [f"docs/tutorials/img/{n}" for pics in TUTORIAL_PICTURES.values() for step in pics.values()
                for n in step if not (TUTORIALS / "img" / n).is_file()]
-    missing += [f"docs/tutorials/img/{n}" for n in TUTORIAL_SCRIPTS if not (TUTORIALS / "img" / n).is_file()]
+    missing += [f"docs/tutorials/img/{n}" for n in (*TUTORIAL_SCRIPTS, *TUTORIAL_COPIES)
+                if not (TUTORIALS / "img" / n).is_file()]
     for doc in TUTORIALS.glob("*.md"):                    # a picture a tutorial links but no step makes
         for n in re.findall(r"\]\(img/([^)]+)\)", doc.read_text(encoding="utf-8")):
             if not (TUTORIALS / "img" / n).is_file():

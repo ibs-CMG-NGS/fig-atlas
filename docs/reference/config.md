@@ -15,7 +15,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | [`cross_condition_dotplot`](#cross_condition_dotplot) | fig_atlas_omics.renderers | 62 |
 | [`cross_condition_heatmap`](#cross_condition_heatmap) | fig_atlas_omics.renderers | 42 |
 | [`dose_response`](#dose_response) | core | 37 |
-| [`effect_dots`](#effect_dots) | core | 29 |
+| [`effect_dots`](#effect_dots) | core | 38 |
 | [`flow_diagram`](#flow_diagram) | core | 44 |
 | [`funnel`](#funnel) | core | 16 |
 | [`go_bar`](#go_bar) | fig_atlas_omics.renderers | 25 |
@@ -458,16 +458,25 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `low_col` | text | `ci_low` |  | Column with the lower confidence limit |
 | `high_col` | text | `ci_high` |  | Column with the upper confidence limit |
 | `item_order` | list | auto |  | Row order, top to bottom (default: order in the data) |
+| `item_sort` | one of `data`, `estimate_desc`, `estimate_asc` | `data` |  | Row order when item_order is unset: as in the data, or by the (first series') estimate, largest on top (estimate_desc) or smallest on top |
 | `item_labels` | mapping | `{}` |  | Display label per item |
 | `series_order` | list | auto |  | Series order (default: order in the data) |
 | `series_colors` | mapping | `{}` |  | Colour per series |
 | `series_labels` | mapping | `{}` |  | Legend label per series |
 | `dodge` | number | `0.18` | row units | Vertical offset between series within a row — raise if the series' intervals overlap |
+| `color_by` | one of `series`, `threshold` | `series` |  | Colour each series (series_colors), or each estimate by direction and significance (threshold) |
+| `sig_col` | text | auto |  | threshold: column with the significance value (smaller = stronger, e.g. padj) |
+| `sig_threshold` | number | `0.05` | significance units | threshold: estimates with sig_col at or below this are up / down |
+| `up_color` | colour | `#D55E00` | hex color | threshold: colour of significant positive estimates |
+| `down_color` | colour | `#0072B2` | hex color | threshold: colour of significant negative estimates |
+| `ns_color` | colour | `#9CA3AF` | hex color | threshold: colour of the others |
+| `class_labels` | mapping | `{'up': 'Up', 'down': 'Down', 'ns': 'n.s.'}` |  | threshold: legend label per class (keys up, down, ns) |
 | `marker_size` | number | `16` | pt^2 (marker area) | Point estimate marker size |
 | `ci_width` | number | `0.8` | pt | Confidence interval line width |
 | `zero_line` | true / false | `True` |  | Draw the no-effect line at x = 0 |
 | `zero_line_color` | colour | `#6b7280` | hex color | No-effect line colour |
 | `zero_line_width` | number | `0.5` | pt | No-effect line width |
+| `zero_line_style` | text | `-` | matplotlib line style | No-effect line style ('-', '--', ':') |
 | `xlim` | list | auto | data coords [min, max] | x-axis range (default: data) |
 | `spine_width` | number | `0.6` | pt | Axis spine width |
 | `legend` | true / false | `True` |  | Show the series legend |

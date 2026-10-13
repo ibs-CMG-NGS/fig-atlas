@@ -128,3 +128,49 @@ def test_case_a_tutorial(tmp_path, monkeypatch):
     plt.close(fig)
     assert after == before
 
+
+def test_case_c_tutorial(tmp_path):
+    """The recorded Case C session, from its bundle on: the request's table and
+    sketch are kept unchanged, and the figure follows the confirmed
+    interpretation -- rows by estimate, largest on top; up / down / n.s.
+    coloured by padj <= 0.05 and the sign; single column."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    import pandas as pd
+    from matplotlib.collections import PathCollection
+    from matplotlib.colors import to_hex
+
+    import fig_atlas
+    from fig_atlas import ProjectConfig
+
+    _copy_repo(tmp_path)
+    out = "\n".join(_run_tutorial(ROOT / "docs" / "tutorials" / "case_c_from_sketch.md", tmp_path))
+    assert "0 error(s), 0 warning(s)" in out and "PASS: 5/5" in out
+    bundle = tmp_path / "raw_data" / "antioxidant-effects" / "effects_bundle"
+    request = ROOT / "examples" / "case_c" / "request"
+    assert (bundle / "inputs" / "data.csv").read_bytes() == (request / "data.csv").read_bytes()
+    assert (bundle / "metadata" / "reference.png").read_bytes() == (request / "sketch.png").read_bytes()
+
+    cfg = ProjectConfig(tmp_path / "configs" / "config_antioxidant-effects.yaml").settings
+    assert cfg["figures"]["width_mm"] == 85
+    block = dict(cfg["plots"]["effects"])
+    block.pop("renderer"), block.pop("bundle")
+    data = pd.read_csv(bundle / "inputs" / "data.csv")
+    fig, ax = plt.subplots()
+    fig_atlas.render("effect_dots", ax, data, block)
+    rows = [t.get_text() for t in ax.get_yticklabels()]
+    assert rows == list(data.sort_values("log2fc", ascending=False)["gene"])
+    colour = {}
+    for coll in ax.collections:
+        if isinstance(coll, PathCollection):                            # the dots, one collection per class
+            (hexes,) = [{to_hex(c) for c in coll.get_facecolors()}]
+            assert len(hexes) == 1                                      # one colour per class
+            for _, y in coll.get_offsets():
+                colour[rows[round(y)]] = next(iter(hexes))
+    plt.close(fig)
+    want = {"up": "#d55e00", "down": "#0072b2", "ns": "#9ca3af"}
+    for _, r in data.iterrows():
+        cls = "ns" if r["padj"] > 0.05 else "up" if r["log2fc"] > 0 else "down"
+        assert colour[r["gene"]] == want[cls], r["gene"]
+

@@ -80,6 +80,7 @@ nav:
   - 튜토리얼:
       - 첫 그림 (15분): tutorials/first_figure.md
       - 내가 짠 스크립트 옮기기 (Case A): tutorials/case_a_port_script.md
+      - 스케치와 데이터로 그림 만들기 (Case C): tutorials/case_c_from_sketch.md
       - 현미경 이미지 그림: tutorials/imaging_figure.md
       - 데이터가 바뀐 뒤 (승격·스토리라인 개편): tutorials/data_change.md
   - How-to:

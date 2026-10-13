@@ -1,0 +1,30 @@
+# Case C example (docs/tutorials/case_c_from_sketch.md): the bundle made from
+# request/data.csv and request/sketch.png -- no code. inputs/data.csv is the
+# request's table, copied unchanged; metadata/reference.png is the sketch.
+# Every plot_params value below was read from the sketch and the data, or is
+# an answer the researcher gave at the confirmation step (2026-10-13).
+# Synthetic data.
+plot_type: effect_dots
+param_source: inferred_from_mockup    # not extracted from code: check against reference.png
+plot_params:
+  # what is plotted (from the data's columns)
+  item_col: gene                      # one row per gene
+  estimate_col: log2fc                # the dot
+  low_col: ci_low                     # the interval, 95 % CI ("log2 fold change (95% CI)")
+  high_col: ci_high
+  item_sort: estimate_desc            # sketch: "biggest up on top"
+  # colour by direction and significance (sketch note; researcher: a renderer option)
+  color_by: threshold
+  sig_col: padj                       # sketch: "(only if padj < 0.05)"
+  sig_threshold: 0.05
+  up_color: "#D55E00"                 # researcher: a colour-blind-safe palette, not the sketch's red/blue
+  down_color: "#0072B2"
+  ns_color: "#9CA3AF"
+  class_labels: {up: "Up", down: "Down", ns: "n.s."}
+  # marks
+  zero_line: true                     # sketch: dashed line at 0
+  zero_line_style: "--"
+  # text
+  title: "H2O2 response of antioxidant genes"
+  xlabel: "log2 fold change (95% CI)"
+  legend: true                        # researcher: a small legend (the sketch had a note)
