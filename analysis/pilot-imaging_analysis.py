@@ -21,7 +21,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(next(p for p in [Path(__file__).resolve().parent, *Path(__file__).resolve().parents]
-                            if (p / "fig_atlas").is_dir())))
+                            if (p / ".fig-atlas").is_file())))
 
 import matplotlib  # noqa: E402
 

@@ -42,7 +42,12 @@ python scripts/fetch_bbbc013.py
 fa build pilot-imaging --preflight
 ```
 
-한 번의 명령으로 분석 → 출판 → 검사가 이어집니다. 결과가 `[ok] pilot-imaging: 0 error(s), 0 warning(s)`와 `PASS: 12/12 checks passed`이면 됩니다.
+한 번의 명령으로 분석 → 출판 → 검사가 이어집니다. 결과가 `[ok] pilot-imaging: 0 error(s), 0 warning(s)`와 `PASS: 12/12 checks passed`이면 됩니다. 그림은 이렇게 나옵니다.
+
+<!-- img/: drawn by `fa reference` from this project where the BBBC013 data is present; do not edit by hand -->
+![완성된 그림: a는 약물 없음과 Wortmannin 150 nM의 대표 이미지(GFP 초록, DNA 자홍), b는 웰별 핵/세포질 GFP 비율 막대와 점, c는 농도 반응 곡선](img/imaging_build.png)
+
+약물이 없으면 GFP(초록)가 세포질 전체에 퍼져 있고, Wortmannin을 넣으면 핵으로 모여 핵이 밝은 청록색으로 보입니다. b와 c는 이를 숫자로 보여 줍니다.
 
 - **preflight:** 실제 인쇄 크기에서 글자·선이 너무 작지 않은지, 글자끼리 겹치지 않는지, 글자 대비가 충분한지 등을 검사합니다. 문제가 있으면 위치를 표시한 이미지가 `outputs/preflight/pilot-imaging/`에 생깁니다.
 - **verify:** 출판된 파일, 범례의 기록값, 검정표, 원본 이미지 해시가 모두 맞는지 확인합니다.
@@ -72,9 +77,13 @@ fa verify pilot-imaging         # 출판 후 무엇이 바뀌었는지 (원본 �
 
 파이썬 코드는 건드리지 않습니다. 예를 들어 `configs/config_pilot-imaging.yaml`에서:
 
-- 두 이미지가 너무 어두우면 `plots.images.display_ranges`의 위쪽 값을 낮춥니다(예: `[0, 120]`). 두 조건에 같은 범위가 적용됩니다.
+- 이미지가 너무 어두우면 `plots.images.display_ranges`의 위쪽 값을 낮춥니다. 값은 채널마다 `[최소, 최대]`이고 순서는 `channel_labels`와 같습니다(GFP, DNA). 예를 들어 GFP만 밝게 하려면 `[[0, 160], [0, 140]]`을 `[[0, 100], [0, 140]]`으로 바꿉니다. 두 조건에 같은 범위가 적용되므로 비교가 공정하게 유지됩니다.
 - 다른 시야를 보려면 `plots.images.crop`을 바꿉니다.
 - `plots.images.gamma`를 1이 아닌 값으로 바꾸면 비선형 조정입니다. 빌드는 되지만 verify가 범례에 밝히라고 경고합니다.
+
+아래는 GFP 범위만 바꿔 다시 빌드한 패널 a입니다. 오른쪽에서 GFP(초록)가 밝아졌고, 선형 조정이라 README의 **Images** 절에 새 범위가 그대로 기록됩니다.
+
+![패널 a 비교: 왼쪽은 원래 범위, 오른쪽은 GFP 범위를 0-100으로 좁혀 초록이 더 밝음](img/imaging_display_range.png)
 
 바꾼 뒤 `fa build pilot-imaging --preflight`를 다시 실행합니다. 어떤 값이 어디서 왔는지 궁금하면 `fa param explain pilot-imaging <키>`로 봅니다.
 

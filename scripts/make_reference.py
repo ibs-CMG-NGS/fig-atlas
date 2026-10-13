@@ -48,6 +48,21 @@ TUTORIAL_PICTURES = {
     },
 }
 TUTORIAL_PICTURE_WIDTH = 1200      # px; the builds write 300 dpi, more than a page needs
+# The imaging tutorial needs public data no CI machine has (scripts/fetch_bbbc013.py):
+# its pictures are drawn only where the data is, by building the repository's
+# pilot-imaging project in a temporary copy, and kept otherwise.
+IMAGING = {
+    "project": "pilot-imaging",
+    "data": "raw_data/pilot-imaging/bbbc013",
+    "files": ["configs/config_pilot-imaging.yaml", "analysis/pilot-imaging_analysis.py",
+              "figure_specs/figure_01_pilot-imaging.py"],
+    "figure": "outputs/pilot-imaging/figures/figure_01_imaging_translocation/figure_01.png",
+    # section 5: the same panel a with a narrower GFP display range (one config line)
+    "edit": ("configs/config_pilot-imaging.yaml", "display_ranges: [[0, 160], [0, 140]]",
+             "display_ranges: [[0, 100], [0, 140]]"),
+    "panel_a_frac": 0.42,          # panel a's share of the figure width (cropped for the comparison)
+    "captions": ["display_ranges: [[0, 160], [0, 140]]  (as built)", "display_ranges: [[0, 100], [0, 140]]"],
+}
 
 
 def _cell(text) -> str:
@@ -399,6 +414,71 @@ def draw_tutorial_pictures() -> None:
             shutil.rmtree(tmp, ignore_errors=True)
 
 
+def _trim(im, pad: int = 8):
+    """Cut the white margin around a picture (keeping ``pad`` px)."""
+    from PIL import Image, ImageChops
+    box = ImageChops.difference(im, Image.new(im.mode, im.size, "white")).getbbox()
+    if not box:
+        return im
+    return im.crop((max(0, box[0] - pad), max(0, box[1] - pad), min(im.width, box[2] + pad), min(im.height, box[3] + pad)))
+
+
+def draw_imaging_pictures() -> None:
+    import os
+    import shutil
+    import subprocess
+    import tempfile
+
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    from PIL import Image
+
+    from fig_atlas.tools import tutorial
+    data = ROOT / IMAGING["data"]
+    if not (data / "images").is_dir():
+        print(f"imaging tutorial pictures kept: no {IMAGING['data']} (python scripts/fetch_bbbc013.py)")
+        return
+    out = TUTORIALS / "img"
+    out.mkdir(parents=True, exist_ok=True)
+    tmp = Path(tempfile.mkdtemp(prefix="fa-imaging-"))
+    env = dict(os.environ, RAW_ROOT=str(data), PYTHONIOENCODING="utf-8")
+
+    def build() -> Image.Image:
+        res = subprocess.run([sys.executable, "-m", "fig_atlas", "build", IMAGING["project"], "--preflight"],
+                             cwd=tmp, env=env, capture_output=True, text=True, encoding="utf-8", errors="replace")
+        if res.returncode != 0:
+            raise SystemExit(f"pilot-imaging build failed:\n{res.stdout[-2000:]}\n{res.stderr[-2000:]}")
+        return Image.open(tmp / IMAGING["figure"]).convert("RGB")
+
+    try:
+        tutorial.new_project_repo(tmp)
+        for rel in IMAGING["files"]:
+            (tmp / rel).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(ROOT / rel, tmp / rel)
+        before = build()
+        h = round(before.height * TUTORIAL_PICTURE_WIDTH / before.width)
+        before.resize((TUTORIAL_PICTURE_WIDTH, h), Image.LANCZOS).save(out / "imaging_build.png", optimize=True)
+        print("wrote docs/tutorials/img/imaging_build.png")
+        rel, old, new = IMAGING["edit"]
+        text = (tmp / rel).read_text(encoding="utf-8")
+        assert text.count(old) == 1, f"{rel}: expected one {old!r}"
+        (tmp / rel).write_text(text.replace(old, new), encoding="utf-8")
+        after = build()
+        crops = [_trim(im.crop((0, 0, round(im.width * IMAGING["panel_a_frac"]), im.height))) for im in (before, after)]
+        fig, axes = plt.subplots(1, 2, figsize=(8.0, 8.0 * crops[0].height / crops[0].width / 2 + 0.4), dpi=150)
+        for ax, im, cap in zip(axes, crops, IMAGING["captions"]):
+            ax.imshow(im)
+            ax.set_axis_off()
+            ax.set_title(cap, fontsize=8, family="monospace")
+        fig.tight_layout()
+        fig.savefig(out / "imaging_display_range.png", bbox_inches="tight", metadata={"Software": None})
+        plt.close(fig)
+        print("wrote docs/tutorials/img/imaging_display_range.png")
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
 def tutorial_pictures_missing() -> list[str]:
     import re
     missing = [f"docs/tutorials/img/{n}" for pics in TUTORIAL_PICTURES.values() for step in pics.values()
@@ -442,6 +522,7 @@ def main() -> int:
     draw_gallery(cases)
     draw_examples()
     draw_tutorial_pictures()
+    draw_imaging_pictures()
     print(f"wrote {len(cases)} gallery pictures and {len(examples())} example pictures in docs/reference/gallery/")
     return 0
 
