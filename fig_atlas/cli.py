@@ -111,12 +111,15 @@ def cmd_verify(args, root: Path) -> int:
 
 def cmd_status(args, root: Path) -> int:
     from . import get_config
-    from .provenance import HashCache, check_freshness, published_records
+    from .provenance import HashCache, check_freshness, is_orphan, published_records
     bases = [get_config(find_project(root, n).config).figures_root for n in args.projects] if args.projects else [None]
     cache = HashCache(root)
-    rows = []
+    rows, orphans = [], []
     for base in bases:
         for rec_path, rec in published_records(root, base):
+            if is_orphan(root, rec):
+                orphans.append(rec_path.parent.relative_to(root).as_posix())
+                continue
             reasons = check_freshness(root, rec, cache)
             rows.append({"figure": rec_path.parent.relative_to(root).as_posix(), "fresh": not reasons,
                          "reasons": reasons, "built": (rec.get("run") or {}).get("finished")})
@@ -133,18 +136,27 @@ def cmd_status(args, root: Path) -> int:
             lines.append(f"         ... {len(r['reasons']) - 5} more")
     summary = (f"\n{len(rows)} figure(s) with a provenance record: {len(rows) - len(stale)} fresh, "
                f"{len(stale)} stale" + ("" if args.all else " (--all lists the fresh ones too)"))
+    if orphans:
+        summary += (f"\n{len(orphans)} old output folder(s) of projects that no longer exist (moved or removed), not "
+                    "checked: " + ", ".join(orphans[:5]) + (" ..." if len(orphans) > 5 else ""))
     text = "\n".join(lines + [summary])
-    _emit(args, {"figures": rows, "stale": len(stale)}, text)
+    _emit(args, {"figures": rows, "stale": len(stale), "orphans": orphans}, text)
     return EXIT_FAILED if (args.check and stale) else EXIT_OK
 
 
 def cmd_impact(args, root: Path) -> int:
     from .provenance import impacted_by
-    hits = impacted_by(root, args.path)
+    found = impacted_by(root, args.path)
+    hits = [h for h in found if not h["orphan"]]
+    old = [h for h in found if h["orphan"]]
     text = "\n".join(f"{h['figure']}\n    via {', '.join(h['via'][:3])}{' ...' if len(h['via']) > 3 else ''}"
                      for h in hits) or f"no published figure records {args.path} among what it read"
-    _emit(args, {"path": args.path, "figures": hits},
-          text + (f"\n\n{len(hits)} figure(s) affected" if hits else ""))
+    if hits:
+        text += f"\n\n{len(hits)} figure(s) affected"
+    if old:
+        text += (f"\n{len(old)} old output folder(s) of projects that no longer exist also read it: "
+                 + ", ".join(h["figure"] for h in old[:5]))
+    _emit(args, {"path": args.path, "figures": hits, "old_outputs": old}, text)
     return EXIT_OK
 
 
@@ -723,7 +735,7 @@ PASSTHROUGH = {
     "baseline": ("fig_atlas.tools.figure_baseline", "record/check compendium output hashes (check|record [--build])"),
     "inventory": ("fig_atlas.tools.renderer_inventory", "regenerate (or --check) docs/reference/renderer_inventory.md"),
     "preflight": ("fig_atlas.tools.preflight", "overlap, clipping and panel-intrusion checks (--projects ...)"),
-    "storyline": ("fig_atlas.tools.storyline", "storyline tools: compile [--plan|--all] | init | registry | check | revisions | snapshots | diff | requests | evidence"),
+    "storyline": ("fig_atlas.tools.storyline", "storyline tools: new | compile [--plan|--all] | init | registry | check | revisions | snapshots | diff | requests | evidence"),
     "manifest": ("fig_atlas.tools.consolidate_manifest", "consolidate outputs/clean_atlas_manifest.csv"),
     "reference": ("scripts/make_reference.py", "regenerate (or --check) docs/reference/{cli,config,gallery}.md"),
 }

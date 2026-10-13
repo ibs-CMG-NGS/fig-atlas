@@ -23,6 +23,7 @@ import argparse
 import importlib.util
 import json
 import os
+import re
 import sys
 from pathlib import Path
 
@@ -167,6 +168,75 @@ def cmd_registry(args) -> int:
     else:
         md.write_text(new, encoding="utf-8")
         print(f"{md.relative_to(ROOT)}: registry table rewritten from storyline.yaml")
+    return 0
+
+
+# ------------------------------------------------------------------------ new --
+NEW_YAML = """\
+# Storyline figure assignment -- the single source for which project fills which
+# manuscript slot. `fa storyline registry` writes the table in the plan from it;
+# `fa storyline check` checks it against the projects; `fa storyline compile`
+# builds the compendium PDF in this order.
+storyline: "{topic}"
+plan: "docs/storylines/figure_plan_{topic}.md"
+# [Narrative] Printed on the compendium cover; line breaks are kept as written.
+narrative: |-
+  {narrative}
+# [Figures] One entry per manuscript slot, in manuscript order. project: the bare
+# project name (configs/**/config_<project>.yaml); figure_number: which of its
+# figures; description: one line for the cover page.
+figures: []
+#  - slot: "Main Figure 1"
+#    project: "<domain>-paper-main-fig1-<slug>"
+#    figure_number: 1
+#    description: "<what the figure shows>"
+"""
+
+NEW_PLAN = """\
+# Figure plan: {title}
+
+The story the paper's figures tell, figure by figure, and how it changed. Which
+project fills which slot is kept in `storyline/{topic}/storyline.yaml`; the table
+below is generated from it (`fa storyline registry`).
+
+## Master Figure-Project 1:1 Mapping Registry
+
+| Manuscript Figure | Project |
+|---|---|
+
+## Revisions
+
+Log each change of the storyline here as a numbered entry, newest last, e.g.
+
+> **YYYY-MM-DD Revision (N) -- title**: why it changed, and the data behind it.
+
+with N one more than the last entry.
+
+`fa storyline diff --draft` suggests the entry from what changed since the last
+compile; `fa storyline revisions --sync` keeps a record of each in
+`{topic}/revisions/`.
+"""
+
+
+def cmd_new(args) -> int:
+    topic = args.topic
+    if not re.fullmatch(r"[a-z0-9][a-z0-9-]*", topic):
+        print(f"fa: storyline name {topic!r}: use lower-case letters, digits and '-'", file=sys.stderr)
+        return 1
+    yaml_path = ROOT / "docs" / "storylines" / topic / "storyline.yaml"
+    plan_path = ROOT / "docs" / "storylines" / f"figure_plan_{topic}.md"
+    if yaml_path.exists() or plan_path.exists():
+        print(f"fa: storyline {topic!r} already exists ({yaml_path.relative_to(ROOT).as_posix()})", file=sys.stderr)
+        return 1
+    yaml_path.parent.mkdir(parents=True, exist_ok=True)
+    yaml_path.write_text(NEW_YAML.format(topic=topic, narrative=args.narrative or "<one paragraph: the paper's argument>"),
+                         encoding="utf-8")
+    plan_path.write_text(NEW_PLAN.format(topic=topic, title=args.title or topic).replace("storyline/" + topic, topic),
+                         encoding="utf-8")
+    for p in (yaml_path, plan_path):
+        print(f"create  {p.relative_to(ROOT).as_posix()}")
+    print("note: add each paper figure to figures: in storyline.yaml, then `fa storyline registry` and "
+          "`fa storyline check`; `fa storyline compile --strict` builds the compendium")
     return 0
 
 
@@ -327,7 +397,8 @@ def cmd_diff(args) -> int:
         n = int(latest[1:]) + 1
         print("Suggested storyline entry (add the title and the reason, then compile and "
               "`fa storyline revisions --sync`):\n")
-        print(sn.draft_block(d, n, datetime.date.today().isoformat()))
+        word = "개편" if "개편(" in md.read_text(encoding="utf-8") else "Revision"
+        print(sn.draft_block(d, n, datetime.date.today().isoformat(), word))
     return 0
 
 
@@ -454,6 +525,10 @@ def main(argv: list[str] | None = None) -> int:
         argv = ["compile", *argv]
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
+    p = sub.add_parser("new", help="start a storyline: its storyline.yaml and plan document")
+    p.add_argument("topic", help="short name, e.g. h2o2-atac (lower-case letters, digits, -)")
+    p.add_argument("--title", help="title of the plan document (default: the topic)")
+    p.add_argument("--narrative", help="one paragraph for the compendium cover")
     p = sub.add_parser("init", help="write storyline.yaml from the legacy (hardcoded) assignment")
     p.add_argument("--plan"); p.add_argument("--force", action="store_true")
     p = sub.add_parser("registry", help="rewrite the Master Mapping Registry table from storyline.yaml")
@@ -484,7 +559,7 @@ def main(argv: list[str] | None = None) -> int:
         mod.main()
         return 0
     args = ap.parse_args(argv)
-    return {"init": cmd_init, "registry": cmd_registry, "check": cmd_check, "revisions": cmd_revisions,
+    return {"new": cmd_new, "init": cmd_init, "registry": cmd_registry, "check": cmd_check, "revisions": cmd_revisions,
             "snapshots": cmd_snapshots, "diff": cmd_diff, "requests": cmd_requests,
             "evidence": cmd_evidence}[args.cmd](args)
 

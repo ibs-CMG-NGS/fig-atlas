@@ -77,7 +77,7 @@ _DESIGN_BEFORE = re.compile(r"(?:\b(?:day|days|Day|stage|Stage|week|weeks|hour|h
 _DESIGN_AFTER = re.compile(r"^(?:\s?[-–]?\s?h\b|/\d|\s?%\s*CI|\s*CIs?\b|\s?[-–]h\b)")
 _REFERENCE = re.compile(
     r"(?:\b(?:Main\s+)?(?:Fig(?:ure|s)?\.?|Figures?|Tables?|Panels?|Supplementary(?:\s+(?:Figure|Table))?|Extended\s+Data"
-    r"(?:\s+Fig(?:ure)?\.?)?|ED|S|R|v|개편\(|Act|Step|step|row|rows|col|column|Request|item|§|section|Section|Part|"
+    r"(?:\s+Fig(?:ure)?\.?)?|ED|S|R|v|개편\(|Revision\s?\(|Act|Step|step|row|rows|col|column|Request|item|§|section|Section|Part|"
     r"phase|Phase|class|cluster|module|Module|Cluster|tier|Tier|pattern|Pattern|chr|top|Top)\s*[-–]?\s*)$")
 _THRESHOLD = re.compile(r"(?:[<>≤≥=]|<=|>=|\bat\s+least|\bover|\babove|\bbelow|\bunder|\bcut-?off|\bthreshold|"
                         r"\bFDR|\bpadj|\bq|\bp|\bP|\bFC|\|log2FC\||log2FC|\bmin(?:imum)?|\bmax(?:imum)?)\s*$")

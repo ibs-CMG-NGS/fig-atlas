@@ -95,7 +95,8 @@ def test_diff_reports_slot_moves_data_config_and_output_changes(sn, tmp_path):
     md = sn.render(d)
     assert "**Main Figure 1**: `proj-a` fig 1 -> `proj-b` fig 1" in md
     assert "input changed: `raw_data/b/data.csv`" in md and "config `plots.dots.size`: 6 -> 7" in md
-    assert "개편(3)" in sn.draft_block(d, 3, "2026-10-07")
+    assert "Revision (3)" in sn.draft_block(d, 3, "2026-10-07")
+    assert "개편(3)" in sn.draft_block(d, 3, "2026-10-07", word="개편")       # a plan written in Korean
 
     # A snapshot without provenance (made before S.3) still compares by PDF hash.
     (r1 / "provenance" / "proj-a__fig01.json").unlink()

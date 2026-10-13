@@ -58,7 +58,7 @@ def _snapshot_module():
 # paper the figures are drawn for, so each figure places 1:1 in its content box.
 COMPENDIUM_PAGE_PRESET = "page_a4_portrait_narrow"
 
-_REVISION_RE = re.compile(r"개편\((\d+)\)")
+_REVISION_RE = re.compile(r"(?:개편|Revision)\s?\((\d+)\)")   # Korean or English revision log
 
 
 def storyline_revision(content: str, records_dir: Path | None = None) -> str:

@@ -31,7 +31,7 @@ Every command of the `fa` tool. `fa <command> --help` shows the same. Commands t
 | [`fa renderers`](#fa-renderers) | plot names fig_atlas.render() can draw: core, packs and recipes |
 | [`fa retire`](#fa-retire) | move a project to <domain>/archive/ (AGENTS.md 5.3) and build it once |
 | [`fa status`](#fa-status) | which published figures are stale (inputs/code/config changed) |
-| [`fa storyline`](#fa-storyline) | storyline tools: compile [--plan\|--all] \| init \| registry \| check \| revisions \| snapshots \| diff \| requests \| evidence |
+| [`fa storyline`](#fa-storyline) | storyline tools: new \| compile [--plan\|--all] \| init \| registry \| check \| revisions \| snapshots \| diff \| requests \| evidence |
 | [`fa verify`](#fa-verify) | completeness checks for one built project |
 
 ## fa audit-print
@@ -367,7 +367,7 @@ fa status [-h] [--all] [--check] [--json] [PROJECT ...]
 
 ## fa storyline
 
-storyline tools: compile [--plan|--all] | init | registry | check | revisions | snapshots | diff | requests | evidence
+storyline tools: new | compile [--plan|--all] | init | registry | check | revisions | snapshots | diff | requests | evidence
 
 Runs `fig_atlas.tools.storyline`; its own options: `fa storyline --help`.
 

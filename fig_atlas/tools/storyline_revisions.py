@@ -19,7 +19,7 @@ from pathlib import Path
 
 # A revision block opens with a blockquote line whose bold header names the
 # revision: "> **2026-09 개편(18) — title**: ..." or "> *(이력)* **2026-09 개편(6)**: ...".
-HEADER = re.compile(r"^>\s*(?:\*\([^)]*\)\*\s*)?\*\*(?P<date>20\d\d-\d\d(?:-\d\d)?\s+)?개편\((?P<n>\d+)\)"
+HEADER = re.compile(r"^>\s*(?:\*\([^)]*\)\*\s*)?\*\*(?P<date>20\d\d-\d\d(?:-\d\d)?\s+)?(?:개편|Revision)\s?\((?P<n>\d+)\)"
                     r"(?:\s*[—-]\s*(?P<title>[^*]+?))?\*\*")
 FULL_DATE = re.compile(r"\((20\d\d-\d\d-\d\d)\)")
 KINDS = "renumber | redesign | promote | retire | data-update | definition-change | layout"

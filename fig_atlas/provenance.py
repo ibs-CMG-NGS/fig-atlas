@@ -425,6 +425,13 @@ def check_freshness(root: Path, record: dict, cache: HashCache | None = None) ->
     return reasons
 
 
+def is_orphan(root: Path, rec: dict) -> bool:
+    """An output whose project's config is gone: the project was moved (fa
+    promote, fa retire) or removed, and this folder is left from before."""
+    cfg = (rec.get("config") or {}).get("path")
+    return bool(cfg) and not (root / cfg).is_file()
+
+
 def impacted_by(root: Path, target: str | Path) -> list[dict]:
     """Published figures whose build read ``target`` (a file, or every file
     under a folder) as an input, config or code."""
@@ -443,6 +450,7 @@ def impacted_by(root: Path, target: str | Path) -> list[dict]:
         if matched:
             hits.append({"figure": rec_path.parent.relative_to(root).as_posix(),
                          "config": (rec.get("config") or {}).get("path"),
+                         "orphan": is_orphan(root, rec),
                          "via": [f"{k}: {p}" for k, p in matched]})
     return hits
 

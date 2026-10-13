@@ -352,3 +352,11 @@ def test_promote_refuses_non_exploratory_and_sandbox(repo):
     plan_new_project(repo, "lab-paper-main-fig1-done", "lab", "paper").apply()
     with pytest.raises(ProjectError, match="only exploratory"):
         plan_promote(repo, "lab-paper-main-fig1-done", 2, "again")
+
+
+def test_references_match_whole_names_only(tmp_path):
+    from fig_atlas.repo_commands import _references
+    (tmp_path / "configs").mkdir()
+    (tmp_path / "configs" / "a.yaml").write_text("name: lab-dose-qc\n", encoding="utf-8")
+    (tmp_path / "configs" / "b.yaml").write_text("uses: lab-dose\n", encoding="utf-8")
+    assert _references(tmp_path, "lab-dose", set()) == ["configs/b.yaml"]

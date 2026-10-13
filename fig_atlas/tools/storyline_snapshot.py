@@ -234,11 +234,13 @@ def render(d: dict) -> str:
     return "\n".join(L).rstrip() + "\n"
 
 
-def draft_block(d: dict, n: int, today: str) -> str:
-    """A suggested 개편(N) header for the storyline md, listing what changed;
-    the author adds the why."""
+def draft_block(d: dict, n: int, today: str, word: str = "Revision") -> str:
+    """A suggested revision header for the storyline md ("Revision (N)", or
+    "개편(N)" in a plan written that way), listing what changed; the author
+    adds the why."""
     what = [f"{p['slot']} {_id(p['a'])} -> {_id(p['b'])}" for p in d["placement"]]
     what += [f"`{f['project']}` ({', '.join(x for x in ('data' if any(f.get('inputs', [[]])) else '', 'config' if f.get('config_keys') else '', 'code' if any(f.get('code', [[]])) else '') if x) or 'output'})"
              for f in d["figures"] if _has_changes(f) and f["slot_a"] == f["slot_b"]]
-    return (f"> **{today} 개편({n}) — <title>**: <why>. Changes since {d['a']}: "
+    head = f"개편({n})" if word == "개편" else f"{word} ({n})"
+    return (f"> **{today} {head} — <title>**: <why>. Changes since {d['a']}: "
             + ("; ".join(what) if what else "none recorded") + ".")

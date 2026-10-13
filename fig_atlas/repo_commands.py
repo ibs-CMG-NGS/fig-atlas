@@ -161,12 +161,14 @@ def _references(root: Path, needle: str, own: set[Path]) -> list[str]:
     """Files outside the project's own that mention ``needle`` (configs, analysis,
     specs, scripts, storylines) -- reported, never edited automatically."""
     hits = []
+    # The whole name only: lab-dose must not match lab-dose-qc.
+    whole = re.compile(rf"(?<![\w-]){re.escape(needle)}(?![\w-])")
     for d, pattern in (("configs", "*.yaml"), ("analysis", "*.py"), ("figure_specs", "*.py"), ("scripts", "*.py"),
                        ("docs/storylines", "*.yaml")):
         for p in sorted((root / d).rglob(pattern)) if (root / d).is_dir() else []:
             if p.resolve() in own or "__pycache__" in p.parts:
                 continue
-            if needle in p.read_text(encoding="utf-8", errors="replace"):
+            if whole.search(p.read_text(encoding="utf-8", errors="replace")):
                 hits.append(p.relative_to(root).as_posix())
     return hits
 
