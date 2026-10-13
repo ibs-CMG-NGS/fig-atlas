@@ -42,6 +42,10 @@ def test_record_and_fill():
     ("odds ratios and 95% CIs", "95%", "other"),
     ("enriched in GO:0006979", "0006979", "other"),
     ("{n_anchors:,} anchors", None, None),                      # placeholders are not hand-typed
+    ("as noted at the time (design decision 0001)", "0001", "reference"),
+    ("measured on one machine (Windows 11, fixed)", "11", "reference"),
+    ("clustered across 8 conditions (Human", "8", "other"),     # experimental design
+    ("using a standardized 7-bin signed scale", "7", "other"),
 ])
 def test_scan_classifies(text, number, kind):
     hits = claims.scan(text)
@@ -52,3 +56,14 @@ def test_scan_classifies(text, number, kind):
         assert hits == []
     else:
         assert [(h["number"], h["kind"]) for h in hits] == [(number, kind)]
+
+
+@pytest.mark.parametrize("text", [
+    "details in Figs. 3, 5 and 7.",                  # every item of a reference list
+    "shown in Figs. 3, 5, 6 and 7.",
+    "Revisions 1, 2 and 9 were never numbered",
+    "Human cols 0-3, Mouse cols 4-7",
+])
+def test_scan_reference_lists(text):
+    assert {h["kind"] for h in claims.scan(text)} <= {"reference", "other"}
+    assert claims.scan(text)[0]["kind"] == "reference"

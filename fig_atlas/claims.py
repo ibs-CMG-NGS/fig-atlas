@@ -74,11 +74,16 @@ NUMBER = re.compile(r"(?<![\w.])[-−+]?\d(?:[\d,]*\d)?(?:\.\d+)?(?:\s?%)?(?![\w
 # Experimental design, not results: time points and stages ("acute day 1",
 # "chronic 24 h", "day 1/3", "3-h pulse", "Stage 1") and confidence levels.
 _DESIGN_BEFORE = re.compile(r"(?:\b(?:day|days|Day|stage|Stage|week|weeks|hour|hours|chronic|acute)\s*|\d/)$")
-_DESIGN_AFTER = re.compile(r"^(?:\s?[-–]?\s?h\b|/\d|\s?%\s*CI|\s*CIs?\b|\s?[-–]h\b)")
+# "8 conditions", "4 timepoints", "7-bin scale": the design of the experiment or the display
+_DESIGN_AFTER = re.compile(r"^(?:\s?[-–]?\s?h\b|/\d|\s?%\s*CI|\s*CIs?\b|\s?[-–]h\b|\s?[-–]bin\b|"
+                           r"\s+(?:conditions?|time\s?points?|timepoints?)\b)")
+# a reference word, then optionally the earlier items of a list ("Figs. 3, 5 and |7")
 _REFERENCE = re.compile(
     r"(?:\b(?:Main\s+)?(?:Fig(?:ure|s)?\.?|Figures?|Tables?|Panels?|Supplementary(?:\s+(?:Figure|Table))?|Extended\s+Data"
-    r"(?:\s+Fig(?:ure)?\.?)?|ED|S|R|v|개편\(|Revision\s?\(|Act|Step|step|row|rows|col|column|Request|item|§|section|Section|Part|"
-    r"phase|Phase|class|cluster|module|Module|Cluster|tier|Tier|pattern|Pattern|chr|top|Top)\s*[-–]?\s*)$")
+    r"(?:\s+Fig(?:ure)?\.?)?|ED|S|R|v|개편\(|Revisions?\s?\(?|Act|Step|step|row|rows|col|cols|column|columns|Request|item|"
+    r"§|section|Section|Part|phase|Phase|class|cluster|module|Module|Cluster|tier|Tier|pattern|Pattern|chr|top|Top|"
+    r"Main|decision|ADR|Windows|macOS|Python|Ubuntu)\s*[-–]?\s*)"
+    r"(?:\d+[a-z]?\s*(?:,\s*(?:and\s+|or\s+)?|and\s+|or\s+|&\s*))*$")
 _THRESHOLD = re.compile(r"(?:[<>≤≥=]|<=|>=|\bat\s+least|\bover|\babove|\bbelow|\bunder|\bcut-?off|\bthreshold|"
                         r"\bFDR|\bpadj|\bq|\bp|\bP|\bFC|\|log2FC\||log2FC|\bmin(?:imum)?|\bmax(?:imum)?)\s*$")
 _OTHER_BEFORE = re.compile(r"(?:GO:|hsa|mmu|KEGG:|R-HSA-|ENS\w*|rs|[A-Za-z]\d*[-_]|20\d\d-|\d\s?[-–]\s?|/\s?|\.)$")
@@ -89,7 +94,7 @@ _UNIT_AFTER = re.compile(r"^\s*(?:pt|mm|in|cm|px|dpi|uM|µM|μM|nM|mM|M|h|H|D|d|
 def classify(text: str, start: int, end: int) -> str:
     before = text[max(0, start - 40):start]
     token = text[start:end].strip()
-    after = text[end:end + 6]
+    after = text[end:end + 14]
     if _DATE.match(token) or _OTHER_BEFORE.search(before):
         return "other"
     if _DESIGN_BEFORE.search(before) or _DESIGN_AFTER.match(after) or (token.endswith("%") and
