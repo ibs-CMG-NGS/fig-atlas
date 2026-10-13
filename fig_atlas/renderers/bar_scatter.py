@@ -79,6 +79,7 @@ SCHEMA = Schema("bar_scatter", params=[
     Param("labels_xlabel", str, CODE_DEFAULT, role="x-axis title (default: category_col)"),
     Param("labels_ylabel", str, "Value", role="y-axis title"),
     Param("title_size", float, 12, unit="pt", range=(0, None), role="Panel title font size"),
+    Param("title_weight", str, "bold", role="Panel title weight (matplotlib: bold, normal, ...)"),
     Param("axes_label_size", float, 10, unit="pt", range=(0, None), role="Axis title font size"),
     Param("axes_label_weight", str, "bold", role="Axis title weight (matplotlib: bold, normal, ...)"),
     Param("tick_label_size", float, 8, unit="pt", range=(0, None), role="Tick label font size"),
@@ -268,7 +269,7 @@ def render_bar_scatter(ax, df, params):
 
     title = params.get("labels_title")
     if title:
-        ax.set_title(title, fontsize=title_sz, fontweight="bold")
+        ax.set_title(title, fontsize=title_sz, fontweight=params.get("title_weight", "bold"))
 
     if params.get("despine", True):
         ax.spines["top"].set_visible(False)

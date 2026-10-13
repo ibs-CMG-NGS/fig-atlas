@@ -6,7 +6,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 
 | Plot name | Where | Parameters |
 |---|---|---|
-| [`bar_scatter`](#bar_scatter) | core | 49 |
+| [`bar_scatter`](#bar_scatter) | core | 50 |
 | [`binary_motif_heatmap`](#binary_motif_heatmap) | fig_atlas_omics.renderers | 62 |
 | [`boxplot`](#boxplot) | core | 13 |
 | [`cis_linkage_panel`](#cis_linkage_panel) | fig_atlas_omics.renderers | 20 |
@@ -108,6 +108,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `labels_xlabel` | text | computed |  | x-axis title (default: category_col) |
 | `labels_ylabel` | text | `Value` |  | y-axis title |
 | `title_size` | number | `12` | pt | Panel title font size |
+| `title_weight` | text | `bold` |  | Panel title weight (matplotlib: bold, normal, ...) |
 | `axes_label_size` | number | `10` | pt | Axis title font size |
 | `axes_label_weight` | text | `bold` |  | Axis title weight (matplotlib: bold, normal, ...) |
 | `tick_label_size` | number | `8` | pt | Tick label font size |

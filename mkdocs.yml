@@ -79,6 +79,7 @@ nav:
           - guide/94-reading.md
   - 튜토리얼:
       - 첫 그림 (15분): tutorials/first_figure.md
+      - 내가 짠 스크립트 옮기기 (Case A): tutorials/case_a_port_script.md
       - 현미경 이미지 그림: tutorials/imaging_figure.md
       - 데이터가 바뀐 뒤 (승격·스토리라인 개편): tutorials/data_change.md
   - How-to:

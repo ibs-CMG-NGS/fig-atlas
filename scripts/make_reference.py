@@ -46,6 +46,14 @@ TUTORIAL_PICTURES = {
             "first_figure_preflight.png": "outputs/preflight/first-figure/figure1_main.png"},
         2: {"first_figure_fixed.png": "outputs/first-figure/figures/figure_01_main/figure_01.png"},
     },
+    "case_a_port_script.md": {
+        1: {"case_a_ported.png": "outputs/qpcr-antioxidant/figures/figure_01_main/figure_01.png"},
+    },
+}
+# Pictures of a script a tutorial starts from: picture -> (script, the file it
+# saves); the script runs in a temporary copy of its folder.
+TUTORIAL_SCRIPTS = {
+    "case_a_original.png": ("examples/case_a/original/plot_qpcr.py", "qpcr_antioxidant.png"),
 }
 TUTORIAL_PICTURE_WIDTH = 1200      # px; the builds write 300 dpi, more than a page needs
 # The imaging tutorial needs public data no CI machine has (scripts/fetch_bbbc013.py):
@@ -383,15 +391,33 @@ def draw_gallery(cases) -> None:
             stale.unlink()
 
 
-def draw_tutorial_pictures() -> None:
-    import shutil
-    import tempfile
-
+def _save_tutorial_picture(path: Path, name: str) -> None:
     from PIL import Image
+    img = Image.open(path).convert("RGB")
+    h = round(img.height * TUTORIAL_PICTURE_WIDTH / img.width)
+    img.resize((TUTORIAL_PICTURE_WIDTH, h), Image.LANCZOS).save(TUTORIALS / "img" / name, optimize=True)
+    print(f"wrote docs/tutorials/img/{name}")
+
+
+def draw_tutorial_pictures() -> None:
+    import os
+    import shutil
+    import subprocess
+    import tempfile
 
     from fig_atlas.tools import tutorial
     out = TUTORIALS / "img"
     out.mkdir(parents=True, exist_ok=True)
+    for name, (script, saved) in TUTORIAL_SCRIPTS.items():
+        tmp = Path(tempfile.mkdtemp(prefix="fa-script-"))
+        try:
+            src = ROOT / script
+            shutil.copytree(src.parent, tmp, dirs_exist_ok=True)
+            subprocess.run([sys.executable, src.name], cwd=tmp, check=True,
+                           env=dict(os.environ, MPLBACKEND="Agg"))
+            _save_tutorial_picture(tmp / saved, name)
+        finally:
+            shutil.rmtree(tmp, ignore_errors=True)
     for doc_name, wanted in TUTORIAL_PICTURES.items():
         builds = [0]
 
@@ -401,10 +427,7 @@ def draw_tutorial_pictures() -> None:
                 return
             builds[0] += 1
             for name, rel in wanted.get(builds[0], {}).items():
-                img = Image.open(repo / rel).convert("RGB")
-                h = round(img.height * TUTORIAL_PICTURE_WIDTH / img.width)
-                img.resize((TUTORIAL_PICTURE_WIDTH, h), Image.LANCZOS).save(out / name, optimize=True)
-                print(f"wrote docs/tutorials/img/{name}")
+                _save_tutorial_picture(repo / rel, name)
 
         tmp = Path(tempfile.mkdtemp(prefix="fa-tutorial-"))
         try:
@@ -483,6 +506,7 @@ def tutorial_pictures_missing() -> list[str]:
     import re
     missing = [f"docs/tutorials/img/{n}" for pics in TUTORIAL_PICTURES.values() for step in pics.values()
                for n in step if not (TUTORIALS / "img" / n).is_file()]
+    missing += [f"docs/tutorials/img/{n}" for n in TUTORIAL_SCRIPTS if not (TUTORIALS / "img" / n).is_file()]
     for doc in TUTORIALS.glob("*.md"):                    # a picture a tutorial links but no step makes
         for n in re.findall(r"\]\(img/([^)]+)\)", doc.read_text(encoding="utf-8")):
             if not (TUTORIALS / "img" / n).is_file():

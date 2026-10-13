@@ -1,0 +1,39 @@
+# Case A example (docs/tutorials/case_a_port_script.md): the bundle made from
+# examples/case_a/original/plot_qpcr.py. inputs/data.csv is qpcr_results.csv,
+# copied unchanged; every value the script typed into its code is a
+# plot_params key here, with the line it came from. Synthetic data.
+plot_type: bar_scatter
+plot_params:
+  # what is plotted
+  category_col: gene                  # sub["gene"]: one group of bars per gene
+  group_col: condition                # df["condition"]: one bar colour per condition
+  value_col: fold_change              # "fold_change": bar height = mean, dots = replicates
+  category_order: [Hmox1, Nqo1, Gclm, Txnrd1]          # genes = [...]
+  group_order: [vehicle, H2O2]                         # conditions = [...]
+  group_colors: {vehicle: "#9CA3AF", H2O2: "#D55E00"}  # colors = {...}
+  # bars, error bars and dots
+  bar_width: 0.8                      # width = 0.4 per bar, two bars per gene
+  errorbar: sem                       # yerr=sems (.sem(): standard error)
+  capsize: 3                          # capsize=3
+  point_size: 15                      # scatter(..., s=15)
+  point_color: "#000000"              # color="black"
+  point_edgecolor: none               # (no outline)
+  point_edgewidth: 0
+  point_jitter: 0                     # dots on the bar centre, no jitter
+  # axes and text
+  y_min: 0                            # set_ylim(0, 6)
+  y_max: 6
+  labels_title: "Antioxidant genes after H2O2"         # set_title(...)
+  title_size: 14                      # fontsize=14
+  title_weight: normal                # (matplotlib's default title weight)
+  labels_xlabel: Gene                 # set_xlabel("Gene", fontsize=12)
+  labels_ylabel: "Fold change (vs vehicle)"            # set_ylabel(..., fontsize=12)
+  axes_label_size: 12
+  axes_label_weight: normal
+  tick_label_size: 11                 # set_xticklabels(genes, fontsize=11)
+  legend_loc: best                    # legend() places it itself
+  legend_fontsize: 10                 # legend(fontsize=10)
+  legend_frameon: false               # legend(frameon=False)
+  grid: false                         # (no grid lines)
+  despine: false                      # (all four spines drawn)
+  show_significance: false            # (no test in the script)

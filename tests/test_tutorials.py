@@ -4,6 +4,8 @@ are marked and run: fig_atlas.tools.tutorial.
 """
 from __future__ import annotations
 
+import re
+import shutil
 from pathlib import Path
 
 import pytest
@@ -55,3 +57,74 @@ def test_marked_steps_parse(doc):
     """A malformed marker would silently skip a step."""
     text = doc.read_text(encoding="utf-8")
     assert text.count("<!-- run -->") + text.count("<!-- replace:") == len(steps(doc))
+
+
+FILE_BLOCK = re.compile(r"<!-- file: (?P<path>\S+) -->\s*```\w*\n(?P<body>.*?)```", re.S)
+
+
+@pytest.mark.parametrize("doc", sorted((ROOT / "docs" / "tutorials").glob("*.md")), ids=lambda p: p.name)
+def test_quoted_files_are_current(doc):
+    """A code block marked <!-- file: path --> shows that file exactly, so the page
+    cannot drift from the example it explains."""
+    for m in FILE_BLOCK.finditer(doc.read_text(encoding="utf-8")):
+        real = (ROOT / m.group("path")).read_text(encoding="utf-8").replace("\r\n", "\n")
+        assert m.group("body") == real, f"{doc.name}: the block for {m.group('path')} differs from the file"
+
+
+def _content(ax) -> dict:
+    """What a bar chart shows, without its size: bars (height, colour) left to
+    right, error bar spans, dots, axis range and texts."""
+    from matplotlib.colors import to_hex
+    from matplotlib.container import BarContainer
+    bars = sorted((r.get_x() + r.get_width() / 2, round(r.get_height(), 6), to_hex(r.get_facecolor()))
+                  for c in ax.containers if isinstance(c, BarContainer) for r in c)
+    spans = sorted(round(float(s[1][1] - s[0][1]), 6) for c in ax.containers
+                   if getattr(c, "errorbar", None) is not None
+                   for s in c.errorbar.lines[2][0].get_segments())
+    dots = sorted(round(float(y), 6) for coll in ax.collections for _, y in coll.get_offsets())
+    leg = ax.get_legend()
+    return {"bars": [(h, col) for _, h, col in bars], "error_spans": spans, "dots": dots,
+            "ylim": tuple(round(v, 6) for v in ax.get_ylim()),
+            "xticks": [t.get_text() for t in ax.get_xticklabels()],
+            "title": (ax.get_title(), ax.title.get_fontweight()), "xlabel": ax.get_xlabel(), "ylabel": ax.get_ylabel(),
+            "legend": [t.get_text() for t in leg.get_texts()] if leg else []}
+
+
+def test_case_a_tutorial(tmp_path, monkeypatch):
+    """The ported figure shows what the student's script showed: same bars,
+    error bars, dots, colours, order, axis range and texts (AGENTS.md 3, Case A);
+    and the bundle's data is the script's CSV, byte for byte."""
+    import runpy
+
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    import pandas as pd
+
+    import fig_atlas
+    from fig_atlas import ProjectConfig
+
+    _copy_repo(tmp_path)
+    out = "\n".join(_run_tutorial(ROOT / "docs" / "tutorials" / "case_a_port_script.md", tmp_path))
+    assert "0 error(s), 0 warning(s)" in out and "PASS: 5/5" in out
+    bundle = tmp_path / "raw_data" / "qpcr-antioxidant" / "qpcr_bundle"
+    original = ROOT / "examples" / "case_a" / "original"
+    assert (bundle / "inputs" / "data.csv").read_bytes() == (original / "qpcr_results.csv").read_bytes()
+
+    script_dir = tmp_path / "original"
+    shutil.copytree(original, script_dir)
+    monkeypatch.chdir(script_dir)
+    monkeypatch.setattr(plt, "savefig", lambda *a, **k: None)
+    plt.close("all")
+    runpy.run_path(str(script_dir / "plot_qpcr.py"), run_name="__main__")
+    before = _content(plt.gcf().axes[0])
+    plt.close("all")
+
+    block = dict(ProjectConfig(tmp_path / "configs" / "config_qpcr-antioxidant.yaml").settings["plots"]["qpcr"])
+    block.pop("renderer"), block.pop("bundle")
+    fig, ax = plt.subplots()
+    fig_atlas.render("bar_scatter", ax, pd.read_csv(bundle / "inputs" / "data.csv"), block)
+    after = _content(ax)
+    plt.close(fig)
+    assert after == before
+

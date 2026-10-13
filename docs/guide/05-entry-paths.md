@@ -35,7 +35,7 @@ flowchart TD
 
 ## Case B: 번들이 있을 때
 
-4장에서 한 방법입니다.
+4장에서 한 방법입니다. 따라 해 볼 예제: [튜토리얼: 첫 그림](../tutorials/first_figure.md).
 
 💬 **AI에게:** "`raw_data/…/volcano_bundle`을 프로젝트 `lab-acute-1d-de`에 붙여 줘."
 
@@ -44,6 +44,8 @@ flowchart TD
 번들의 그림 종류(`plot_type`)를 그리는 부품이 이미 있어야 합니다. 없으면 AI가 알려 주고, 그 그림 종류를 새로 만드는 일은 Case A나 C처럼 진행합니다.
 
 ## Case A: 내가 짠 그림 코드가 있을 때
+
+따라 해 볼 예제: [튜토리얼: 내가 짠 스크립트 옮기기](../tutorials/case_a_port_script.md). 학생이 짠 qPCR 막대그래프 스크립트를 옮기고, 옮긴 그림이 원래 그림과 같은지 확인합니다.
 
 💬 **AI에게:**
 
