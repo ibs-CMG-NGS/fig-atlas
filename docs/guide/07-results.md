@@ -1,67 +1,67 @@
 ---
-title: 7. 결과 확인
-audience: 연구자 (프로그래밍 경험 불필요)
-reviewed: 2026-10-08
+title: 7. Checking the results
+audience: researchers (no programming experience needed)
+reviewed: 2026-10-14
 ---
 
-# 7. 결과 확인
+# 7. Checking the results
 
-> **이런 적 있으시죠?** 저널에 그림을 올리면서 "Source Data 파일", "통계 검정 상세", "이미지 처리 내역"을 따로 요구받아, 투고 직전에 이것들을 모으느라 밤을 샜다.
+> **Has this ever happened to you?** Uploading figures to a journal, you were asked separately for "Source Data files", "details of statistical tests" and "image processing", and stayed up the night before submission collecting them.
 
-**핵심:** 빌드할 때마다 그림과 함께 **그림 설명서(README)**, 그림에 그려진 값, 통계표, 출처 기록이 한 폴더에 모입니다. 투고 때 필요한 자료가 이미 정리되어 있습니다.
+**The key idea:** every build gathers, in one folder with the figure, **a description of the figure (README)**, the values the figure shows, the statistics tables and the provenance record. What a submission needs is already in order.
 
-## 결과 폴더
+## The results folder
 
-그림 하나의 결과는 `outputs/프로젝트이름/figures/figure_01_이름/` 폴더에 모입니다.
+The results of one figure are gathered in `outputs/project-name/figures/figure_01_name/`.
 
 ```
 figure_01_main/
-  figure_01.png                ← 화면·발표용
-  figure_01.pdf                ← 인쇄·투고용 (글자가 편집 가능한 벡터)
-  figure_01.svg                ← 일러스트레이터 등에서 편집할 때
-  README.md                    ← 그림 설명서 (아래)
-  figure_01.provenance.json    ← 출처 기록 (프로그램이 읽는 형식)
-  figure_01_source_data/       ← 패널마다 실제로 그려진 값 (있을 때)
-  figure_01_statistics/        ← 통계 검정표 (별표가 있는 그림)
+  figure_01.png                ← for the screen and talks
+  figure_01.pdf                ← for print and submission (vector, editable text)
+  figure_01.svg                ← for editing in Illustrator and the like
+  README.md                    ← the figure's description (below)
+  figure_01.provenance.json    ← the provenance record (a format for programs)
+  figure_01_source_data/       ← the values each panel actually shows (when there are any)
+  figure_01_statistics/        ← the statistical test tables (figures with stars)
 ```
 
-**이 폴더의 파일은 손으로 고치지 않습니다.** 다음 빌드에서 새로 만들어지기 때문에 고친 내용이 사라지고, 그림과 기록이 어긋납니다. 바꾸고 싶은 것은 설정(6장)이나 그림 설명 파일에서 바꿉니다.
+**Do not edit the files of this folder by hand.** They are made anew at the next build, so your edits would be lost and the figure and its record would disagree. What you want to change, change in the config (chapter 6) or in the figure description.
 
-## 그림 설명서 (README) 읽기
+## Reading the figure's README
 
-README는 빌드가 자동으로 쓰는, 사람이 읽는 요약입니다. 실제 예(현미경 이미지 시범 프로젝트)의 구성입니다.
+The README is a human-readable summary the build writes. This is how a real one is laid out (the microscopy pilot project).
 
-| 부분 | 내용 | 어디서 오나 |
+| Part | Content | Where it comes from |
 |---|---|---|
-| 제목 | `Figure 1: Wortmannin drives FKHR-GFP into the nucleus…` | 그림 설명 파일의 `title` |
-| Panel-level analysis notes | 패널마다 무엇을 그렸는지, n, 오차 막대, 검정 | 그림 설명 파일의 `panel_notes` |
-| Statistics | 통계표 파일 목록과 무슨 검정인지 | 분석이 기록한 통계표 (9장) |
-| Source data | 패널마다 그려진 값의 표 | 분석이 기록한 값 |
-| Images | 현미경 이미지의 원본 파일, 자른 영역, 밝기 범위 | 이미지 패널이 자동 기록 (9장) |
-| Claim boundary | 이 그림이 주장할 수 있는 것과 없는 것 | 그림 설명 파일의 `claim_boundary` |
-| Provenance | 빌드 시각, 프로그램 버전, 설정 파일과 읽은 데이터 파일의 지문 | 자동 기록 (10장) |
+| Title | `Figure 1: Wortmannin drives FKHR-GFP into the nucleus…` | `title` in the figure description |
+| Panel-level analysis notes | What each panel shows, n, error bars, tests | `panel_notes` in the figure description |
+| Statistics | The statistics table files and which tests they are | The tables the analysis recorded (chapter 9) |
+| Source data | A table of the values each panel shows | The values the analysis recorded |
+| Images | A microscope image's original files, the cropped region, the brightness range | Recorded by the image panel (chapter 9) |
+| Claim boundary | What the figure can and cannot claim | `claim_boundary` in the figure description |
+| Provenance | When it was built, software versions, fingerprints of the config and of the data files read | Recorded automatically (chapter 10) |
 
-제목·패널 설명·주장 범위는 연구자가 그림 설명 파일(`figure_specs/` 아래)에 씁니다. 나머지는 빌드가 채웁니다.
+The title, panel notes and claim boundary are written by the researcher in the figure description (under `figure_specs/`). The build fills in the rest.
 
-## 인쇄 크기 그대로
+## At printed size
 
-PDF를 열어 100%로 보면 실제 지면 크기입니다. 그림 폭은 A4 본문 폭(184.6 mm)이고, 설정에 7 pt라고 적은 글자는 종이에서도 7 pt입니다. 그래서 "이 정도면 읽히나?"를 화면에서 바로 판단할 수 있습니다. 저널이 다른 폭(예: 단일 단 85 mm)을 요구하면 그 지면 설정으로 바꾸고 다시 빌드합니다.
+Open the PDF at 100 % and you see the size on paper. The figure is as wide as the A4 text width (184.6 mm), and text set to 7 pt in the config is 7 pt on paper. So you can judge "can this be read?" right on the screen. If a journal asks for another width (e.g. a single column of 85 mm), change to that page setting and build again.
 
-## 내가 할 일
+## What you do
 
-💬 **AI에게:** "first-figure 그림을 보여 주고, README에 무엇이 적혔는지 요약해 줘." AI가 그림을 직접 보고 설명해 줍니다.
+💬 **Ask an AI:** "Show me the first-figure figure and summarise what its README says." The AI looks at the figure itself and describes it.
 
-📂 **직접 보기:** 파일 탐색기에서 `outputs/프로젝트이름/figures/` 폴더를 열면 그림 파일(PNG·PDF)과 README가 있습니다. README는 글 파일이라 메모장으로도 열립니다.
+📂 **Look yourself:** open the folder `outputs/project-name/figures/` in your file browser: the figure files (PNG, PDF) and the README are there. The README is a text file, so Notepad opens it too.
 
-💡 **팁 (VS Code를 쓴다면):** README를 열고 `Ctrl+Shift+V`를 누르면 표와 제목이 정리된 모양으로 보입니다. GitHub에 올린 저장소라면 웹에서도 같은 모양으로 보입니다.
+💡 **Tip (if you use VS Code):** open the README and press `Ctrl+Shift+V` to see its tables and headings laid out. In a repository on GitHub, the web page shows it the same way.
 
-💬 **투고 자료를 묶을 때:** "first-figure를 투고용 패키지로 묶어 줘." 그림, 설명서, 그려진 값, 통계표, 출처 기록이 한 묶음(zip)으로 만들어집니다. 연구 데이터 공유 표준(RO-Crate) 형식이라 저장소나 저널에 그대로 올릴 수 있습니다.
+💬 **Packing material for submission:** "Pack first-figure for submission." The figure, its description, the values shown, the statistics tables and the provenance record are packed into one archive (zip). It is in a standard format for sharing research data (RO-Crate), so you can upload it as it is to a repository or a journal.
 
-## 알아 두면 좋은 것
+## Good to know
 
-- `outputs/` 폴더는 저장소(GitHub)에 올라가지 않습니다. 설정과 데이터만 있으면 언제든 같은 그림을 다시 만들 수 있기 때문입니다.
-- 같은 데이터와 설정으로 다시 빌드하면 **바이트 하나까지 같은 파일**이 나옵니다. "다시 만들었더니 미묘하게 달라졌다"는 일이 없습니다.
-- 같은 폴더에서 `outputs/프로젝트이름/manifests/`의 검증표는 이 결과가 빠짐없이 만들어졌는지 확인한 결과입니다(8장).
+- The `outputs/` folder is not uploaded to the repository (GitHub): with the config and the data, the same figure can be made again any time.
+- Building again from the same data and config gives **files that are the same down to the last byte**. "I rebuilt it and it came out slightly different" does not happen.
+- The verification table in `outputs/project-name/manifests/` records whether these results were all made (chapter 8).
 
 ---
-이전: [6. 그림 고치기: config 읽고 쓰기](06-config.md) · 다음: [8. 검사 결과 읽기](08-checks.md)
+Previous: [6. Changing a figure: reading and writing the config](06-config.md) · Next: [8. Reading the check results](08-checks.md)

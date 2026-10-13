@@ -1,75 +1,75 @@
 ---
-title: 부록 C. 명령 한 장 요약
-audience: 터미널을 쓰는 연구자
-reviewed: 2026-10-08
+title: Appendix C. Commands on one page
+audience: researchers who use a terminal
+reviewed: 2026-10-14
 ---
 
-# 부록 C. 명령 한 장 요약
+# Appendix C. Commands on one page
 
-AI에게 말로 시키는 일은 모두 아래 명령으로도 할 수 있습니다. 터미널(Windows의 명령 프롬프트·PowerShell, macOS·Linux의 터미널, 또는 편집기 안의 터미널)에서 저장소 폴더에 있을 때 씁니다. 환경을 먼저 켭니다(`conda activate fig-atlas`, 어느 폴더에서든).
+Everything you can ask an AI to do can also be done with the commands below. Use them in a terminal (Command Prompt or PowerShell on Windows, Terminal on macOS and Linux, or the terminal inside an editor) while in the repository folder. First switch the environment on (`conda activate fig-atlas`, from any folder).
 
-- 모든 명령은 `fa --help`, `fa 명령 --help`로 설명을 볼 수 있습니다.
-- 파일을 바꾸는 명령은 `--dry-run`을 붙이면 **바뀔 내용만 보여 주고 아무것도 쓰지 않습니다.**
-- `--json`을 붙이면 프로그램이 읽는 형식으로 결과를 냅니다(AI가 쓰는 방식).
+- Every command explains itself with `fa --help` and `fa <command> --help`.
+- Add `--dry-run` to a command that changes files and it **only shows what would change, writing nothing.**
+- Add `--json` and the result comes in a format for programs (the way an AI uses it).
 
-## 프로젝트와 데이터
+## Projects and data
 
-| 하고 싶은 일 | 명령 | 장 |
+| You want to | Command | Chapter |
 |---|---|---|
-| 새 프로젝트 | `fa new project 이름 --domain lab --category exploratory` | 4 |
-| 번들 검사 | `fa bundle check 번들폴더` | 3 |
-| 그릴 수 있는 그림 종류와 계약서 | `fa bundle contracts` | 3 |
-| 번들을 패널로 붙이기 (+ 빌드) | `fa ingest bundle 번들폴더 --project 이름` | 4 |
-| 프로젝트 목록 | `fa list` | — |
-| 그릴 수 있는 그림 이름 | `fa renderers` | — |
+| Create a project | `fa new project name --domain lab --category exploratory` | 4 |
+| Check a bundle | `fa bundle check bundle-folder` | 3 |
+| See the kinds of figure and their contracts | `fa bundle contracts` | 3 |
+| Attach a bundle as a panel (+ build) | `fa ingest bundle bundle-folder --project name` | 4 |
+| List projects | `fa list` | — |
+| See the names of figures that can be drawn | `fa renderers` | — |
 
-## 빌드와 검사
+## Building and checking
 
-| 하고 싶은 일 | 명령 | 장 |
+| You want to | Command | Chapter |
 |---|---|---|
-| 빌드 | `fa build 이름` | 4 |
-| 빌드 + 인쇄 전 검사 | `fa build 이름 --preflight` | 8 |
-| 검증만 | `fa verify 이름` | 8 |
-| 설정 값이 어디서 왔는지 | `fa param explain 이름 plots.패널.키` | 6 |
-| 빌드가 기본값으로 대신한 키를 설정에 채우기 | `fa param sync 이름` (미리보기) → `--apply` | 6 |
-| 안 쓰이는 설정 키·오타 찾기 | `fa lint 이름` | 6 |
-| 손으로 쓴 숫자 찾기 | `fa claims 이름 --list` | 9 |
-| 인쇄 크기 감사 | `fa audit-print` | 7 |
+| Build | `fa build name` | 4 |
+| Build + preflight | `fa build name --preflight` | 8 |
+| Verify only | `fa verify name` | 8 |
+| See where a config value comes from | `fa param explain name plots.panel.key` | 6 |
+| Write into the config the keys a build took from defaults | `fa param sync name` (preview) → `--apply` | 6 |
+| Find unused config keys and typos | `fa lint name` | 6 |
+| Find hand-typed numbers | `fa claims name --list` | 9 |
+| Audit printed sizes | `fa audit-print` | 7 |
 
-## 출처와 신선도
+## Provenance and freshness
 
-| 하고 싶은 일 | 명령 | 장 |
+| You want to | Command | Chapter |
 |---|---|---|
-| 낡은 그림 찾기 | `fa status` | 10 |
-| 이 파일을 쓰는 그림 | `fa impact 파일경로` | 10 |
-| 그림의 뿌리 | `fa lineage 이름` | 10 |
-| 스냅샷 이후 바뀐 것 | `fa diff-figure 이름` | 10 |
-| 투고 패키지 (RO-Crate zip) | `fa export 이름 --zip` | 7 |
+| Find stale figures | `fa status` | 10 |
+| Figures that use this file | `fa impact file-path` | 10 |
+| A figure's sources | `fa lineage name` | 10 |
+| What changed since a snapshot | `fa diff-figure name` | 10 |
+| A package for submission (RO-Crate zip) | `fa export name --zip` | 7 |
 
-## 논문 생애주기와 스토리라인
+## A paper's life and the storyline
 
-| 하고 싶은 일 | 명령 | 장 |
+| You want to | Command | Chapter |
 |---|---|---|
-| 승격 | `fa promote 이름 --figure 2 --slug 짧은이름` | 11 |
-| 은퇴 | `fa retire 이름` | 11 |
-| 대응표 다시 쓰기 | `fa storyline registry` | 11 |
-| 스토리라인 정합성 검사 | `fa storyline check` | 11 |
-| 바뀐 것 초안 | `fa storyline diff --draft` | 11 |
-| 개편 기록 동기화 | `fa storyline revisions --sync` | 11 |
-| 컴펜디움 PDF (엄격; 이 시점의 스냅샷도 저장) | `fa storyline compile --strict` | 11 |
-| 바뀐 내용 기록 저장 | `fa storyline diff --write` | 11 |
-| 저장된 스냅샷 목록 | `fa storyline snapshots` | 11 |
-| 그림의 근거 추적 | `fa storyline evidence "Main Figure 3"` | 11 |
+| Promote | `fa promote name --figure 2 --slug short-name` | 11 |
+| Retire | `fa retire name` | 11 |
+| Rewrite the mapping table | `fa storyline registry` | 11 |
+| Check the storyline's consistency | `fa storyline check` | 11 |
+| Draft what changed | `fa storyline diff --draft` | 11 |
+| Sync the revision records | `fa storyline revisions --sync` | 11 |
+| Compendium PDF (strict; also saves this point's snapshot) | `fa storyline compile --strict` | 11 |
+| Save the record of what changed | `fa storyline diff --write` | 11 |
+| List the saved snapshots | `fa storyline snapshots` | 11 |
+| Trace a figure's evidence | `fa storyline evidence "Main Figure 3"` | 11 |
 
-## 만드는 사람용
+## For people who build things
 
-| 하고 싶은 일 | 명령 |
+| You want to | Command |
 |---|---|
-| 새 그림 종류(렌더러) 골격 | `fa new renderer 이름 --plot-type 종류` |
-| 코드 속 숫자(하드코딩) 검사 | `fa lint --hardcoded` |
-| AI 도우미에 도구 제공 | `fa mcp` ([연결 방법](../howto/ai_agents.md)) |
+| Start a new kind of figure (a renderer) | `fa new renderer name --plot-type kind` |
+| Check for numbers typed into code | `fa lint --hardcoded` |
+| Offer the tools to an AI assistant | `fa mcp` ([how to connect](../howto/ai_agents.md)) |
 
-연구 저장소에서 `fa new renderer`를 실행하면 렌더러는 그 저장소의 `renderers/` 폴더에 만들어집니다. 패키지를 설치하거나 고칠 필요 없이 `fa renderers`, `fa ingest bundle`, `fa build`가 그 렌더러를 찾고, 출처 기록에도 그 파일이 남습니다. 다른 연구에도 쓸 만한 모양(막대, 선, 산점도, 히트맵)이면 나중에 fig-atlas 코어로 옮기는 것을 고려하세요.
+Run `fa new renderer` in a research repository and the renderer is made in that repository's `renderers/` folder. Without installing or changing the package, `fa renderers`, `fa ingest bundle` and `fa build` find that renderer, and the provenance record keeps its file too. If the shape would serve other research as well (bars, lines, scatter, heatmaps), consider moving it into the fig-atlas core later.
 
 ---
-이전: [부록 B. 자주 묻는 질문과 문제 해결](92-faq.md) · 다음: [부록 D. 더 읽을거리](94-reading.md)
+Previous: [Appendix B. Questions and troubleshooting](92-faq.md) · Next: [Appendix D. Further reading](94-reading.md)

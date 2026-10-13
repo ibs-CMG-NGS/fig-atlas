@@ -1,81 +1,81 @@
 ---
-title: "11. 논문으로: 그림의 생애주기"
-audience: 연구자 (프로그래밍 경험 불필요)
-reviewed: 2026-10-08
+title: "11. Into the paper: a figure's life"
+audience: researchers (no programming experience needed)
+reviewed: 2026-10-14
 ---
 
-# 11. 논문으로: 그림의 생애주기
+# 11. Into the paper: a figure's life
 
-> **이런 적 있으시죠?**
-> - 논문 구성을 바꾸면서 Figure 3이 Figure 4가 되고, 옛 Figure 4는 보충 그림으로 갔다. 석 달 뒤 회의록의 "Figure 3"이 지금의 어느 그림인지 헷갈렸다.
-> - 지운 그림을 리뷰어가 다시 보자고 해서 옛 버전을 찾느라 고생했다.
+> **Has this ever happened to you?**
+> - Reorganising the paper, Figure 3 became Figure 4 and the old Figure 4 went to the supplement. Three months later you could not tell which figure the "Figure 3" of the meeting notes was.
+> - A reviewer wanted to see a figure you had dropped, and finding the old version was a struggle.
 
-**핵심:** 그림은 **탐색 → 논문 Figure → 보관**의 길을 갑니다. 논문의 그림 배치는 **스토리라인 문서 한 곳**에 적고, 바뀔 때마다 **이유와 근거를 기록**합니다. 그림은 지우지 않고 보관하며, 언제든 다시 만들 수 있습니다.
+**The key idea:** a figure goes **exploration → paper Figure → archive**. The paper's figure plan is written in **one place, the storyline document**, and every change **records its reason and evidence**. Figures are archived, never deleted, and can be rebuilt any time.
 
-## 세 단계
+## Three stages
 
 ```mermaid
 flowchart LR
-    E["탐색 (exploratory)<br/>여러 조건을 그려 봄"] -->|승격| P["논문 Figure (paper)<br/>이름에 Figure 번호"]
-    P -->|은퇴| A["보관 (archive)<br/>지우지 않음, 다시 빌드 가능"]
-    E -->|은퇴| A
+    E["exploratory<br/>trying conditions"] -->|promote| P["paper Figure (paper)<br/>Figure number in the name"]
+    P -->|retire| A["archive<br/>not deleted, can be rebuilt"]
+    E -->|retire| A
 ```
 
-| 단계 | 언제 | 무엇이 바뀌나 |
+| Step | When | What changes |
 |---|---|---|
-| **승격** | 탐색 그림이 논문 Figure N으로 쓰이기로 정해졌을 때 | 프로젝트가 `paper/` 폴더로 옮겨지고, 이름이 `연구단위-paper-main-figN-짧은이름`으로 바뀌고, 안쪽의 경로가 모두 맞춰지고, 한 번 빌드해 확인합니다. |
-| **은퇴** | 논문에서 빠지거나 새 버전으로 대체될 때 | 프로젝트가 `archive/` 폴더로 옮겨지고, 빌드 목록에서 빠지고, 한 번 빌드해 여전히 만들어지는지 확인합니다. **데이터와 코드는 지우지 않습니다.** |
+| **Promote** | When an exploratory figure is chosen as paper Figure N | The project moves to the `paper/` folder, is renamed `unit-paper-main-figN-short-name`, every path inside it is updated, and it is built once to check. |
+| **Retire** | When a figure leaves the paper or is replaced by a new version | The project moves to the `archive/` folder, leaves the build list, and is built once to check it still builds. **Data and code are never deleted.** |
 
-💬 **AI에게:** "lab-acute-1d 프로젝트를 논문 Figure 2로 승격해 줘. 짧은 이름은 acute-comparison으로." 옮겨질 파일과 바뀔 내용을 먼저 보여 주고, 확인하면 진행합니다.
+💬 **Ask an AI:** "Promote the project lab-acute-1d to paper Figure 2, with the short name acute-comparison." It first shows the files that will move and what will change; once you confirm, it goes ahead.
 
-💬 **AI에게:** "옛 Figure 4 프로젝트를 은퇴시켜 줘."
+💬 **Ask an AI:** "Retire the old Figure 4 project."
 
-## 스토리라인 문서
+## The storyline documents
 
-논문 전체의 그림 배치와 이야기는 `docs/storylines/` 아래에 있습니다.
+The paper's figure plan and story are under `docs/storylines/`.
 
-| 파일 | 내용 | 누가 고치나 |
+| File | Content | Who edits it |
 |---|---|---|
-| `storyline.yaml` | **배치표.** "Main Figure 1 = 어느 프로젝트" 같은 짝. 컴펜디움 PDF, 검사, 대응표가 모두 여기를 읽습니다. | 연구자 (AI에게 부탁) |
-| `figure_plan_주제.md` | **이야기.** 각 Figure가 무엇을 보여 주고 왜 그 순서인지, 그리고 개편 기록 | 연구자 (AI에게 부탁) |
-| 맨 위의 대응표 | Figure 번호 ↔ 설정·분석·설명 파일 링크 | **자동 생성.** 손으로 고치지 않습니다. |
+| `storyline.yaml` | **The assignment.** Pairs such as "Main Figure 1 = which project". The compendium PDF, the checks and the mapping table all read it. | The researcher (asking the AI) |
+| `figure_plan_topic.md` | **The story.** What each Figure shows and why in that order, plus the revision records | The researcher (asking the AI) |
+| The mapping table at the top | Figure number ↔ links to the config, analysis script and figure description | **Generated.** Never edited by hand. |
 
-**Figure 번호와 프로젝트 이름은 1:1로 맞춥니다.** 스토리라인의 Main Figure 3은 반드시 이름에 `fig3`이 들어간 논문 프로젝트를 가리킵니다. 어긋나면 검사가 알려 줍니다.
+**Figure numbers and project names match one to one.** Main Figure 3 in the storyline always points to a paper project with `fig3` in its name. If they disagree, the checks tell you.
 
-## 개편 기록: 무엇을, 왜 바꿨나
+## Revision records: what changed, and why
 
-스토리라인을 바꿀 때마다 번호 붙은 **개편 기록**을 남깁니다. 기록은 이런 모양입니다.
+Each time the storyline changes, a numbered **revision record** is written. A record looks like this:
 
-> **개편(12) — 보충 그림 순서 교체(2026-10-02)**: 리뷰어가 먼저 볼 그림이 앞에 오도록 옛 S2를 Supplementary Figure S1로, 옛 S1을 S2로 바꿨다. 근거 데이터는 그대로 …
+> **Revision (12) — supplementary figures swapped (2026-10-02)**: the old S2 became Supplementary Figure S1 and the old S1 became S2, so that reviewers see first the figure they need first. The underlying data are unchanged …
 
-기록에는 다음이 함께 들어갑니다.
+A record holds together:
 
-- **바뀐 것:** 배치, 번호
-- **이유:** 사용자 지시, 판단 근거
-- **근거 데이터:** 어느 데이터 요청으로 어떤 파일을 받았는지
-- **바뀐 결과 숫자:** 손으로 옮기지 않고, 지난 스냅샷과 비교해 도구가 뽑아 줍니다.
+- **What changed:** the assignment, the numbers
+- **Why:** the instruction given, the reasoning
+- **The evidence:** which data request delivered which files
+- **Changed result numbers:** not copied by hand but extracted by the tool, by comparison with the last snapshot.
 
-순서는 이렇습니다.
+The steps:
 
-1. 💬 "지난 스냅샷 이후 스토리라인에서 실제로 바뀐 것을 정리해 줘." 바뀐 배치·데이터·숫자가 초안으로 나옵니다.
-2. 연구자가 **왜** 바꿨는지를 한두 문장으로 씁니다(또는 AI에게 받아쓰게 합니다).
-3. 💬 "개편 기록을 동기화하고, 컴펜디움 PDF를 엄격 모드로 만들고, 바뀐 내용 기록을 저장해 줘." 컴펜디움을 만들 때 이 개편 시점의 **스냅샷**(배치, 그림 출처, 숫자)이 함께 저장되어, 다음 개편 때 비교의 기준이 됩니다.
+1. 💬 "Summarise what actually changed in the storyline since the last snapshot." The changed assignment, data and numbers come out as a draft.
+2. The researcher writes **why** in a sentence or two (or dictates it to the AI).
+3. 💬 "Sync the revision records, compile the compendium PDF in strict mode and save the record of what changed." Compiling the compendium also saves a **snapshot** of this revision (assignment, figure provenance, numbers), the baseline for the next comparison.
 
-이렇게 하면 석 달 뒤에도 "그때 Figure 3이 무엇이었고 왜 바꿨는지"를 기록에서 찾을 수 있습니다. 기록 속 옛 번호도 당시 프로젝트로 거슬러 올라갈 수 있습니다.
+Three months later you can still find in the records "what Figure 3 was then, and why it changed". The old numbers in the records can also be traced back to the projects of the time.
 
-## 데이터 요청과 근거 추적
+## Data requests and tracing evidence
 
-분석 파이프라인에 새 데이터를 요청할 때는 `docs/data_contracts/` 아래에 요청 문서를 씁니다. 문서 머리에 상태(요청함 / 받음), 날짜, 받은 파일 위치를 적어 두면, 💬 "Main Figure 3의 근거를 보여 줘"라고 했을 때 **그림 → 프로젝트 → 입력 파일 → 데이터 요청 → 관련 개편 기록**이 한 줄로 이어져 나옵니다.
+When you ask an analysis pipeline for new data, write a request document under `docs/data_contracts/`. Note at its top the status (requested / delivered), the date and where the files landed, and 💬 "Show the evidence for Main Figure 3" gives one chain: **figure → project → input files → data request → related revision records**.
 
-## 컴펜디움 PDF
+## The compendium PDF
 
-스토리라인의 모든 Figure를 순서대로 한 PDF에 모은 것입니다. 공동저자와 공유하거나 회의에서 볼 때 씁니다.
+All the storyline's Figures in order in one PDF, for sharing with co-authors or looking at in meetings.
 
-⌨ **명령:** `fa storyline compile`
+⌨ **Command:** `fa storyline compile`
 
-💡 **팁 (VS Code를 쓴다면):** `Ctrl+Shift+B` → **Compile Storyline Multi-Page PDF**로도 만들 수 있습니다.
+💡 **Tip (if you use VS Code):** `Ctrl+Shift+B` → **Compile Storyline Multi-Page PDF** makes it too.
 
-💬 **엄격 모드:** "컴펜디움을 엄격 모드로 만들어 줘." 낡은 그림이나 검사 오류가 있는 그림이 있으면 PDF를 만들지 않고 무엇이 문제인지 알려 줍니다.
+💬 **Strict mode:** "Compile the compendium in strict mode." If a figure is stale or has check errors, no PDF is made and you are told what is wrong.
 
 ---
-이전: [10. 데이터가 바뀌었을 때](10-freshness.md) · 다음: [12. AI와 함께 일하기](12-ai.md)
+Previous: [10. When the data change](10-freshness.md) · Next: [12. Working with AI](12-ai.md)

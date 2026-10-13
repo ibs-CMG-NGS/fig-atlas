@@ -39,6 +39,7 @@ def pending() -> list[str]:
 
 
 def _uncomment(lang: str, body: str) -> str:
+    body = re.sub(r"[ \t]*←.*$", "", body, flags=re.M)        # "<- note" annotations (a folder tree) are prose
     mark = COMMENTED.get(lang)
     if not mark:
         return body
@@ -50,16 +51,22 @@ def _uncomment(lang: str, body: str) -> str:
     return "\n".join(out)
 
 
+PROSE_BLOCK = "<!-- i18n: prose -->"     # before a code block that is text to read or paste (translated)
+
+
 def structure(text: str) -> dict:
-    blocks = [(m.group("lang"), m.group("body")) for m in FENCE.finditer(text)]
+    blocks = [(m.group("lang"), "(prose)" if text[:m.start()].rstrip().endswith(PROSE_BLOCK) else m.group("body"))
+              for m in FENCE.finditer(text)]
     prose = _prose(text)
+    linked = re.sub(r"`[^`\n]*`", "", prose)             # a link written inside inline code is an example, not a link
     return {
         "headings": [len(m.group(1)) for m in re.finditer(r"^(#{1,6}) ", prose, re.M)],
-        "code": [(lang, "(diagram)" if lang == "mermaid" else _uncomment(lang, body)) for lang, body in blocks],
+        "code": [(lang, "(diagram)" if lang == "mermaid" else body if body == "(prose)" else _uncomment(lang, body))
+                 for lang, body in blocks],
         "markers": MARKER.findall(text),
-        "images": IMAGE.findall(prose),
+        "images": IMAGE.findall(linked),
         "tables": len(re.findall(r"^\|[-:| ]+\|\s*$", prose, re.M)),
-        "links": [t.split("#")[0] for t in LINK.findall(prose) if t.split("#")[0]],
+        "links": [t.split("#")[0] for t in LINK.findall(linked) if t.split("#")[0]],
     }
 
 
@@ -91,9 +98,9 @@ def test_korean_page_matches_its_english_page(ko):
 
 
 def test_structure_reads_what_it_should():
-    text = ("# T\n\n## S\n\n<!-- run -->\n```bash\nfa build x  # 빌드\n```\n\n![a](img/x.png)\n\n"
+    text = ("# T\n\n## S\n\n<!-- run -->\n```bash\nfa build x  # 빌드\n```\n\n```\nd/   ← 폴더\n```\n\n![a](img/x.png)\n\n"
             "| a |\n|---|\n| 1 |\n\n[g](guide/01.md#왜)\n\n```mermaid\nflowchart TD\n  A[\"가\"]\n```\n")
     s = structure(text)
     assert s["headings"] == [1, 2] and s["markers"] == ["<!-- run -->"] and s["images"] == ["img/x.png"]
     assert s["tables"] == 1 and s["links"] == ["guide/01.md"]
-    assert s["code"] == [("bash", "fa build x"), ("mermaid", "(diagram)")]
+    assert s["code"] == [("bash", "fa build x"), ("", "d/\n"), ("mermaid", "(diagram)")]

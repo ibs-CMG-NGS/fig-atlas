@@ -1,46 +1,46 @@
 ---
-title: 10. 데이터가 바뀌었을 때
-audience: 연구자 (프로그래밍 경험 불필요)
-reviewed: 2026-10-08
+title: 10. When the data change
+audience: researchers (no programming experience needed)
+reviewed: 2026-10-14
 ---
 
-# 10. 데이터가 바뀌었을 때: 출처와 신선도
+# 10. When the data change: provenance and freshness
 
-> **이런 적 있으시죠?** 공동연구자가 "정렬 기준을 바꿔서 결과 파일을 다시 보냈어요"라고 했다. 그 파일을 쓰는 그림이 몇 개인지, 어느 것을 다시 그려야 하는지 일일이 찾아야 했다.
+> **Has this ever happened to you?** A collaborator wrote "I changed the alignment criteria and sent the result files again". You had to find, one by one, how many figures used those files and which ones to redraw.
 
-**핵심:** 빌드는 그림마다 **어떤 파일을 읽었는지 지문과 함께** 기록합니다. 그래서 파일이 바뀌면 어느 그림이 **낡았는지(stale)** 바로 알 수 있고, 한 파일을 쓰는 그림을 모두 찾을 수 있습니다.
+**The key idea:** a build records, for each figure, **which files it read, with their fingerprints**. So when a file changes you see at once which figures are **stale**, and you can find every figure that uses a file.
 
-## 출처 기록에 남는 것
+## What the provenance record keeps
 
-| 기록 | 예 |
+| Record | Example |
 |---|---|
-| 읽은 데이터 파일과 지문 | `raw_data/.../data.csv` — `e8db6666271d` |
-| 설정 파일과 지문 | `configs/config_pilot-imaging.yaml` — `608a6c941faa` |
-| 프로그램 버전 | 저장소 커밋, 분석 파일, 렌더러 파일의 지문 |
-| 환경 | Python과 주요 패키지 버전 |
-| 빌드 시각 | 2026-10-08 12:37 |
+| Data files read, with fingerprints | `raw_data/.../data.csv` — `e8db6666271d` |
+| The config, with its fingerprint | `configs/config_pilot-imaging.yaml` — `608a6c941faa` |
+| Software versions | The repository commit, fingerprints of the analysis script and the renderer files |
+| Environment | Versions of Python and the main packages |
+| Build time | 2026-10-08 12:37 |
 
-**지문(해시)**은 파일 내용으로 계산한 짧은 문자열입니다. 내용이 1바이트만 달라도 완전히 다른 값이 됩니다. 파일 이름이나 날짜가 같아도 내용이 바뀌었는지 정확히 알 수 있습니다.
+**A fingerprint (hash)** is a short string computed from a file's content. If even one byte of the content differs, it is a completely different value. Even when a file's name or date is the same, you know exactly whether its content changed.
 
-이 기록은 분석 파일을 고치지 않아도 빌드가 알아서 남깁니다. 실제로 읽은 파일을 관찰해서 적기 때문에, 적어 둔 경로와 실제로 읽은 파일이 다를 수 없습니다.
+The build keeps this record on its own, without any change to the analysis script. It writes down the files it actually saw being read, so a path written somewhere cannot differ from the file really read.
 
-## 내가 할 일
+## What you do
 
-💬 **어떤 그림이 낡았는지:** "낡은 그림이 있는지 확인해 줘." 그림마다 **fresh(최신)** 또는 **stale(낡음)**과 그 이유가 나옵니다. 예: "data.csv 변경", "설정 키 3개 변경", "렌더러 파일 변경".
+💬 **Which figures are stale:** "Check whether any figures are stale." Each figure is reported as **fresh** or **stale**, with the reason, e.g. "data.csv changed", "3 config keys changed", "renderer file changed".
 
-💬 **한 파일을 쓰는 그림 찾기:** "`raw_data/…/concordance.csv`를 쓰는 그림을 모두 찾아 줘." 프로젝트 경계를 넘어 모두 찾습니다.
+💬 **Find the figures that use a file:** "Find every figure that uses `raw_data/…/concordance.csv`." It finds them across projects.
 
-💬 **그림 하나의 뿌리 보기:** "Figure 3의 출처를 거슬러 올라가 보여 줘." 결과 ← 실행 ← 설정 ← 코드 ← 데이터 ← (있으면) 데이터를 만든 분석 도구 순서로 보여 줍니다.
+💬 **See where one figure comes from:** "Trace the sources of Figure 3." It shows results ← run ← config ← code ← data ← (if recorded) the analysis tool that made the data.
 
-💬 **무엇이 바뀌었나:** "Figure 3이 지난 스토리라인 스냅샷과 비교해 무엇이 바뀌었는지 보여 줘." 바뀐 입력 파일, 바뀐 설정 키, 바뀐 숫자를 표로 보여 줍니다. 리뷰어 답변서를 쓸 때 유용합니다.
+💬 **What changed:** "Show what changed in Figure 3 since the last storyline snapshot." It lists the input files, config keys and numbers that changed. Useful when writing a response to reviewers.
 
-그다음 낡은 그림을 다시 빌드합니다(💬 "낡은 그림을 모두 다시 빌드해 줘", ⌨ `fa status`로 확인한 뒤 `fa build 프로젝트이름`).
+Then build the stale figures again (💬 "rebuild all stale figures", or ⌨ check with `fa status`, then `fa build project-name`).
 
-## 알아 두면 좋은 것
+## Good to know
 
-- **파일 날짜만 바뀐 것은 낡음이 아닙니다.** 내용(지문)이 같으면 fresh입니다. 파일을 복사하거나 다시 받아도 내용이 같으면 다시 그릴 필요가 없습니다.
-- **스토리라인 PDF를 만들 때 낡은 그림을 막을 수 있습니다.** 엄격 모드로 만들면 낡은 그림이나 검사 오류가 있는 그림이 있을 때 PDF를 만들지 않고 알려 줍니다(11장).
-- **분석 파이프라인이 남긴 출처도 이어집니다.** 번들의 메모에 데이터를 만든 도구와 버전이 적혀 있으면 그림의 출처 기록에 함께 들어갑니다. 출처의 사슬이 번들에서 끊기지 않습니다.
+- **A file whose date alone changed is not stale.** If the content (the fingerprint) is the same, the figure is fresh. Copying or downloading a file again does not call for a redraw when its content is the same.
+- **You can keep stale figures out of the storyline PDF.** Built in strict mode, it refuses to make the PDF when a figure is stale or has check errors, and tells you (chapter 11).
+- **Provenance left by the analysis pipeline carries on.** If a bundle's note names the tool and version that made the data, they go into the figure's provenance record too. The chain of sources does not break at the bundle.
 
 ---
-이전: [9. 숫자·통계·이미지의 정직성](09-integrity.md) · 다음: [11. 논문으로: 그림의 생애주기](11-lifecycle.md)
+Previous: [9. Honest numbers, statistics and images](09-integrity.md) · Next: [11. Into the paper: a figure's life](11-lifecycle.md)

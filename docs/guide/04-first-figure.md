@@ -1,59 +1,59 @@
 ---
-title: 4. 첫 그림 만들기
-audience: 연구자 (프로그래밍 경험 불필요)
-reviewed: 2026-10-08
+title: 4. Making your first figure
+audience: researchers (no programming experience needed)
+reviewed: 2026-10-14
 ---
 
-# 4. 첫 그림 만들기
+# 4. Making your first figure
 
-> **이런 적 있으시죠?** 새 데이터로 그림을 하나 그리려는데, 지난번 그림의 스크립트를 복사해 경로와 열 이름을 고치다 보니 반나절이 갔다.
+> **Has this ever happened to you?** To draw a figure from new data, you copied last time's script and spent half a day fixing paths and column names.
 
-**핵심:** 새 그림은 **프로젝트 만들기 → 번들 붙이기 → 빌드** 세 단계입니다. 코드는 쓰지 않습니다. 파일을 만들거나 바꾸는 단계마다 무엇이 바뀌는지 먼저 확인하고 진행합니다.
+**The key idea:** a new figure takes three steps: **create a project → attach bundles → build**. You write no code. At every step that creates or changes files, you first see what will change, then go ahead.
 
-## 도구가 하는 일
+## What the tool does
 
-| 단계 | 도구가 하는 일 |
+| Step | What the tool does |
 |---|---|
-| **프로젝트 만들기** | 설정 파일, 분석 파일, 그림 설명 파일을 이름 규칙에 맞는 자리에 만듭니다. |
-| **번들 붙이기** | 번들을 검사하고, 그 그림 종류가 쓰는 **모든 설정값**을 설명 주석과 함께 설정 파일에 적습니다. 번들의 메모에 있던 값은 그대로 옮기고 "(from the bundle)"이라고 표시합니다. 번들 하나가 패널 하나(a, b, c, …)가 됩니다. |
-| **빌드** | 설정대로 그림을 그리고(인쇄 크기 그대로), 결과 폴더를 정리하고, 검사하고, 출처를 기록합니다. |
+| **Create a project** | Makes the config, the analysis script and the figure description, in the places the naming rules give. |
+| **Attach a bundle** | Checks the bundle and writes **every setting** that kind of figure uses into the config, with an explaining comment. Values from the bundle's note are copied as they are and marked "(from the bundle)". Each bundle becomes one panel (a, b, c, ...). |
+| **Build** | Draws the figure from the config (at printed size), arranges the results folder, checks it and records its sources. |
 
-## 내가 할 일
+## What you do
 
-예제 데이터 두 번들(용량-반응 곡선, 스크리닝 결과)로 2패널 그림을 만들어 봅니다.
+Make a two-panel figure from two example bundles (a dose-response curve and a screen's hits).
 
-💬 **AI에게:**
+💬 **Ask an AI:**
 
-> "`first-figure`라는 새 프로젝트를 만들고, `examples/dose_response`와 `examples/screen_hits` 번들을 붙여서 그림을 그려 줘. 파일을 바꾸기 전에는 무엇이 바뀌는지 보여 줘."
+> "Create a new project called `first-figure`, attach the bundles `examples/dose_response` and `examples/screen_hits`, and draw the figure. Show me what will change before you change any file."
 
-AI는 다음 순서로 진행합니다.
+The AI goes through these steps.
 
-1. **새 프로젝트를 미리보기로 보여 줍니다.** 생길 파일 세 개와 빌드 목록에 더해질 한 줄이 나옵니다. 아직 아무것도 만들어지지 않았습니다. 확인하고 "진행해"라고 답합니다.
-2. **번들마다 설정 파일에 더해질 내용을 보여 줍니다.** `plots:` 아래에 `dose_response:`, `screen_hits:` 블록이 생기고, 줄마다 설명 주석이 붙어 있습니다. 확인하고 진행합니다.
-3. **빌드하고 결과를 알려 줍니다.** 그림 위치와 검사 결과(오류·경고 수)를 말해 줍니다. AI에게 "그림을 보여 줘"라고 하면 그림을 보고 설명해 주기도 합니다.
+1. **It shows a preview of the new project.** You see the three files it will create and the line it will add to the build list. Nothing is created yet. Check it and answer "go ahead".
+2. **For each bundle it shows what will be added to the config.** `dose_response:` and `screen_hits:` blocks appear under `plots:`, each line with an explaining comment. Check and go ahead.
+3. **It builds and tells you the result.** You hear where the figure is and what the checks found (numbers of errors and warnings). Ask the AI "show me the figure" and it will look at the figure and describe it.
 
-⌨ **명령:** `fa new project first-figure` → `fa ingest bundle examples/dose_response --project first-figure` (두 번째 번들도 같은 방식) → 이후 다시 그릴 때는 `fa build first-figure`. 파일을 바꾸는 명령은 `--dry-run`을 붙이면 바뀔 내용만 보여 줍니다.
+⌨ **Commands:** `fa new project first-figure` → `fa ingest bundle examples/dose_response --project first-figure` (the second bundle the same way) → to draw again later, `fa build first-figure`. Add `--dry-run` to a command that changes files and it only shows what would change.
 
-💡 **팁 (VS Code를 쓴다면):** 이 저장소에는 VS Code용 빌드 목록이 들어 있어서, `Ctrl+Shift+B` → **Build Figure Atlas (Select Project)** → 프로젝트 선택으로 다시 빌드할 수 있습니다. 새 프로젝트는 이 목록에 자동으로 더해집니다.
+💡 **Tip (if you use VS Code):** this repository has a build list for VS Code: `Ctrl+Shift+B` → **Build Figure Atlas (Select Project)** → choose the project to build it again. New projects are added to the list automatically.
 
-## 결과
+## The result
 
-그림은 `outputs/first-figure/figures/figure_01_main/` 폴더에 PNG(화면용), PDF·SVG(인쇄·편집용)로 만들어집니다.
+The figure is made in `outputs/first-figure/figures/figure_01_main/` as PNG (for the screen) and PDF and SVG (for print and editing).
 
-![예제 데이터로 만든 첫 그림: 왼쪽 패널 a는 화합물 세 가지의 용량-반응 곡선, 오른쪽 패널 b는 스크리닝 결과 산점도](img/first-figure.png)
+![The first figure from the example data: panel a on the left shows dose-response curves of three compounds, panel b on the right a scatter of the screen's results](img/first-figure.png)
 
-- 그림의 폭은 A4 본문 폭(184.6 mm)이고, **이 크기 그대로 인쇄**됩니다. 따로 줄이거나 늘리지 않습니다.
-- 패널 태그 a, b는 각 패널의 바깥 경계(눈금 글자와 축 제목까지 포함한 가장자리)에 맞춰 자동으로 붙습니다.
-- 같은 폴더의 `README.md`에 그림 제목, 패널 설명, 사용한 데이터 목록이 적혀 있습니다(7장).
+- The figure is as wide as the A4 text width (184.6 mm) and **prints at exactly this size**. It is not shrunk or enlarged afterwards.
+- The panel tags a and b are placed automatically on each panel's outer edge (including its tick labels and axis titles).
+- `README.md` in the same folder has the figure title, the panel notes and the list of data used (chapter 7).
 
-이 그림의 빌드 결과에는 **경고가 하나** 있습니다. 패널 a의 주황과 초록이 색각이상 독자에게 비슷해 보인다는 내용입니다. 이 경고를 설정으로 고치는 방법이 다음 장의 첫 예입니다.
+This build ends with **one warning**: the orange and green of panel a look alike to colour-blind readers. Fixing that warning in the config is the first example of the next chapter.
 
-## 알아 두면 좋은 것
+## Good to know
 
-- **이름 짓기:** 연습용 프로젝트는 아무 이름이나 괜찮습니다. 실제 연구라면 연구 단위와 단계를 함께 알려 주세요. 예: "연구 단위 `lab`의 탐색(exploratory) 프로젝트로 만들어 줘". 그러면 그 연구 단위의 탐색 폴더(`configs/<연구단위>/exploratory/`) 아래에 정리됩니다(2장).
-- **패널 배치:** 패널은 번들을 붙인 순서대로 a, b, c…가 되고, 한 줄에 최대 세 개씩 놓입니다. 배치는 설정 파일에서 바꿉니다(6장).
-- **그릴 수 없는 그림 종류라면** AI가 그렇게 알려 줍니다. 새 그림 종류를 만드는 일은 AI와 함께 할 수 있지만, 연구자가 원하는 모양을 확인하는 단계가 꼭 필요합니다(12장).
-- **직접 따라 하며 배우려면:** 같은 과정을 명령으로 한 단계씩 하는 [튜토리얼: 첫 그림](../tutorials/first_figure.md)이 있습니다.
+- **Naming:** a practice project can have any name. For real research, also tell the AI the research unit and stage, for example "make it an exploratory project of the unit `lab`". It is then filed under that unit's exploratory folder (`configs/<unit>/exploratory/`; chapter 2).
+- **Panel layout:** panels become a, b, c, ... in the order you attach the bundles, up to three in a row. You change the layout in the config (chapter 6).
+- **If a kind of figure cannot be drawn,** the AI tells you. A new kind of figure can be made together with the AI, but you must confirm the shape you want (chapter 12).
+- **To learn by doing:** [Tutorial: first figure](../tutorials/first_figure.md) goes through the same process step by step with commands.
 
 ---
-이전: [3. 데이터 준비: 번들](03-data-bundles.md) · 다음: [5. 그림을 들여오는 세 가지 길](05-entry-paths.md)
+Previous: [3. Preparing data: bundles](03-data-bundles.md) · Next: [5. Three ways in](05-entry-paths.md)

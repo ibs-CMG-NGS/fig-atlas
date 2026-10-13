@@ -1,59 +1,59 @@
 ---
-title: 부록 B. 자주 묻는 질문과 문제 해결
-audience: 연구자 (프로그래밍 경험 불필요)
-reviewed: 2026-10-08
+title: Appendix B. Questions and troubleshooting
+audience: researchers (no programming experience needed)
+reviewed: 2026-10-14
 ---
 
-# 부록 B. 자주 묻는 질문과 문제 해결
+# Appendix B. Questions and troubleshooting
 
-## 그림·설정
+## Figures and the config
 
-**설정을 고쳤는데 그림이 그대로예요.**
-- 설정 파일을 **저장**했는지 확인합니다.
-- **맞는 프로젝트**를 다시 빌드했는지 확인합니다(설정 파일 이름의 `config_` 뒤가 프로젝트 이름).
-- 결과 폴더의 PNG를 다시 열어 봅니다. 그림 보기 창이 옛 그림을 붙잡고 있을 수 있습니다.
+**I changed the config but the figure is the same.**
+- Check that you **saved** the config.
+- Check that you rebuilt **the right project** (the project name follows `config_` in the config's file name).
+- Open the PNG in the results folder again. The image viewer may be holding on to the old figure.
 
-**설정을 고쳤더니 빌드가 실패해요.**
-오류 메시지에 설정 파일의 줄 번호가 나옵니다. 대개 들여쓰기가 틀렸거나, `:` 뒤에 띄어쓰기가 없거나, 글자에 `:`·`#`가 있는데 따옴표를 빠뜨린 경우입니다(6장 "고칠 때 주의할 것"). 오류 메시지를 AI에게 보여 주며 고쳐 달라고 해도 됩니다.
+**I changed the config and now the build fails.**
+The error message gives the line number in the config. Usually the indentation is wrong, a space is missing after `:`, or text containing `:` or `#` lacks quotes (chapter 6, "Take care when editing"). You can also show the error message to the AI and ask it to fix it.
 
-**두 패널의 글자 크기가 달라요.**
-그림 종류마다 기본값이 달라서 생기는 차이입니다. 패널 블록마다 같은 이름의 값(`title_size` 등)을 같은 숫자로 맞춥니다(6장 예).
+**The two panels' text sizes differ.**
+Each kind of figure has its own defaults. Set the value of the same name (`title_size` and the like) to the same number in each panel block (example in chapter 6).
 
-**저널이 다른 폭(예: 85 mm 한 단)을 요구해요.**
-그림은 지면 설정(스타일)의 폭에 맞춰 그려지므로, 그 저널의 폭·최소 글자 크기를 담은 지면 설정을 만들어 바꿔 끼우면 됩니다. 저널별 설정은 아직 없습니다. 투고할 저널이 정해지면 그 규정으로 만들고, 규정의 출처와 확인 날짜를 함께 적습니다([설계 결정 0001](../decisions/0001-final-size-rendering.md)). 그 뒤 인쇄 전 검사가 새 기준으로 다시 확인합니다.
+**The journal asks for another width (e.g. one column of 85 mm).**
+Figures are drawn to the width of the page setting (style), so make a page setting with that journal's width and minimum text size and switch to it. Journal settings for Nature and Science are included ([Switch to a journal's format](../howto/journal_presets.md)); for another journal, make one from its rules and note their source and the date you checked them ([design decision 0001](../decisions/0001-final-size-rendering.md)). Preflight then checks again against the new limits.
 
-**인쇄 전 검사 경고를 꼭 고쳐야 하나요?**
-아니요. **오류**는 반드시 고치고, **경고**는 읽고 판단합니다. 의도한 디자인이면 그대로 둡니다(8장).
+**Do I have to fix preflight warnings?**
+No. **Errors** must be fixed; **warnings** you read and judge. If it is an intended design, leave it (chapter 8).
 
-## 데이터
+## Data
 
-**원본 데이터를 실수로 고쳤어요.**
-원본(`raw_data/`)은 저장소(GitHub)에 올라가지 않으므로 되돌리기 기능으로 복구되지 않습니다. 데이터를 보낸 분석 파이프라인이나 공동연구자에게 원본을 다시 받으세요. 다시 받은 파일이 원래 것과 같으면 지문이 같아서 그림이 "최신"으로 나옵니다. 다르면 "낡음"으로 나와 바로 알 수 있습니다(10장).
+**I changed the raw data by mistake.**
+The raw data (`raw_data/`) are not uploaded to the repository (GitHub), so undo in git cannot restore them. Get the original again from the analysis pipeline or the collaborator who sent it. If the file you get is the same as the original, its fingerprint is the same and the figure shows as "fresh". If it differs, it shows as "stale", so you know at once (chapter 10).
 
-**번들 검사에서 오류가 나요.**
-그림에 필요한 열이 표에 없다는 뜻입니다. 메시지에 어떤 열인지 나옵니다. 표(`data.csv`)는 고치지 말고, 메모가 표의 열 이름을 맞게 가리키는지 보거나 데이터를 다시 내보내 달라고 요청합니다(3장).
+**The bundle check reports an error.**
+A column the figure needs is not in the table; the message says which. Do not edit the table (`data.csv`): check that the note points to the table's real column name, or ask for the data to be exported again (chapter 3).
 
-**데이터가 바뀌었는데 어떤 그림을 다시 그려야 할지 모르겠어요.**
-💬 "낡은 그림이 있는지 확인해 줘." 낡은 그림과 그 이유가 나옵니다(10장).
+**The data changed and I do not know which figures to redraw.**
+💬 "Check whether any figures are stale." You get the stale figures and the reasons (chapter 10).
 
-## 빌드·환경
+## Build and environment
 
-**(VS Code를 쓸 때) `Ctrl+Shift+B` 목록에 새 프로젝트가 없어요.**
-프로젝트를 명령이나 AI로 만들었다면 목록에 자동으로 들어갑니다. 그래도 안 보이면 VS Code 창을 다시 불러옵니다(`Ctrl+Shift+P` → "Reload Window"). VS Code를 쓰지 않는다면 이 목록은 필요 없습니다.
+**(With VS Code) the new project is not in the `Ctrl+Shift+B` list.**
+A project made with a command or by the AI is added to the list automatically. If you still do not see it, reload the VS Code window (`Ctrl+Shift+P` → "Reload Window"). If you do not use VS Code, you do not need this list.
 
-**Windows에서 빌드가 아무 메시지 없이 멈추거나 꺼져요.**
-그림을 그리는 프로그램이 필요한 파일(conda 환경의 `Library/bin` 안)을 찾지 못한 경우입니다. AI와 `fa` 명령(그리고 VS Code 빌드 버튼)은 이것을 자동으로 처리합니다. 분석 파일을 직접 실행할 때만 생기며, 직접 실행해야 한다면 먼저 `conda activate fig-atlas`로 환경을 켭니다.
+**On Windows the build stops or closes without a message.**
+The drawing program did not find files it needs (in the conda environment's `Library/bin`). The AI and the `fa` commands (and the VS Code build button) handle this for you. It only happens when you run an analysis script directly; if you must, first switch the environment on with `conda activate fig-atlas`.
 
-**빌드가 실패했는데 무슨 뜻인지 모르겠어요.**
-빌드 출력의 마지막 부분(어느 단계에서 멈췄는지)을 AI에게 보여 주며 "왜 실패했는지 설명하고 고쳐 줘"라고 합니다. 설정 문제면 설정을, 데이터 문제면 무엇이 필요한지 알려 줍니다.
+**The build failed and I do not understand why.**
+Show the last part of the build output (where it stopped) to the AI and say "explain why it failed and fix it". If it is a config problem it fixes the config; if it is a data problem it tells you what is needed.
 
 ## AI
 
-**AI가 fig-atlas 도구를 모른다고 해요.**
-AI 도우미에 fig-atlas를 연결해야 합니다(한 번만). [AI 에이전트 연결](../howto/ai_agents.md)을 보세요. 연결하지 않은 AI도 규칙 파일(`AGENTS.md`)을 읽고 명령을 실행할 수는 있지만, 연결하면 미리보기와 그림 보기가 더 안전하고 편합니다.
+**The AI says it does not know the fig-atlas tools.**
+fig-atlas must be connected to the AI assistant (once). See [Connect AI agents](../howto/ai_agents.md). An AI that is not connected can still read the rules file (`AGENTS.md`) and run commands, but once connected, previews and viewing figures are safer and easier.
 
-**AI가 미리보기 없이 바로 바꿨어요.**
-파일을 바꾸는 도구는 미리보기 단계가 기본입니다. 그래도 이런 일이 있으면 요청에 "바꾸기 전에 무엇이 바뀌는지 보여 줘"를 붙입니다. 이미 바뀐 것은 설정 파일의 변경으로 남아 있으니 되돌릴 수 있습니다(💬 "방금 바꾼 것을 되돌려 줘").
+**The AI changed things without a preview.**
+Tools that change files preview first by default. If it happens anyway, add "show me what will change before you change it" to your request. What was changed stays as a change to the config, so it can be undone (💬 "undo what you just changed").
 
 ---
-이전: [부록 A. 용어집](91-glossary.md) · 다음: [부록 C. 명령 한 장 요약](93-commands.md)
+Previous: [Appendix A. Glossary](91-glossary.md) · Next: [Appendix C. Commands on one page](93-commands.md)

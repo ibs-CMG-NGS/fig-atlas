@@ -1,28 +1,28 @@
 ---
-title: "3. 데이터 준비: 번들"
-audience: 연구자 (프로그래밍 경험 불필요)
-reviewed: 2026-10-08
+title: "3. Preparing data: bundles"
+audience: researchers (no programming experience needed)
+reviewed: 2026-10-14
 ---
 
-# 3. 데이터 준비: 번들
+# 3. Preparing data: bundles
 
-> **이런 적 있으시죠?** 분석 결과 표를 그림용으로 열 이름을 바꾸고 몇 줄 지워서 따로 저장했는데, 나중에 원본 결과와 맞지 않아 어디서 바뀌었는지 찾느라 고생했다.
+> **Has this ever happened to you?** You copied an analysis table for a figure, renamed some columns and deleted a few rows, and later it no longer matched the original results and you could not find where it had changed.
 
-**핵심:** 그림에 쓰는 데이터는 **번들**이라는 정해진 모양의 폴더로 받고, **받은 그대로 두고 읽기만** 합니다. 바꾸고 싶은 것은 그림을 그릴 때 설정으로 바꿉니다.
+**The key idea:** the data a figure uses arrive as a folder of a fixed shape, a **bundle**, and are **kept as received and only read**. What you want to change, you change in the settings when the figure is drawn.
 
-## 번들의 모양
+## What a bundle looks like
 
-번들은 패널 하나에 들어갈 데이터입니다. 폴더 하나에 파일 두 개가 들어 있습니다.
+A bundle is the data for one panel. One folder holds two files.
 
 ```
-dose_response/                ← 번들 폴더 (이름은 자유)
+dose_response/                ← the bundle folder (any name)
   inputs/
-    data.csv                  ← 그림이 읽는 표
+    data.csv                  ← the table the figure reads
   metadata/
-    metadata.yaml             ← "무슨 그림인지" 적은 메모
+    metadata.yaml             ← a note saying "what figure this is"
 ```
 
-**`data.csv`** 는 엑셀에서 "CSV로 저장"한 것과 같은 표입니다. 예제의 처음 몇 줄입니다.
+**`data.csv`** is a table, the same as "Save as CSV" in Excel. The first rows of the example:
 
 | compound | dose_uM | replicate | viability |
 |---|---|---|---|
@@ -30,71 +30,71 @@ dose_response/                ← 번들 폴더 (이름은 자유)
 | compound A | 0.01 | 2 | 92.95 |
 | … | … | … | … |
 
-**`metadata.yaml`** 에는 어떤 그림으로 그릴지(`plot_type`)와 처음 그릴 때의 설정(`plot_params`)이 들어 있습니다.
+**`metadata.yaml`** says which kind of figure to draw (`plot_type`) and the settings to draw it with at first (`plot_params`).
 
 ```yaml
-plot_type: line_band          # 선 + 오차 띠 그림
+plot_type: line_band          # a line with an error band
 plot_params:
-  x_col: dose_uM              # 가로축에 쓸 열
-  y_col: viability            # 세로축에 쓸 열
-  group_col: compound         # 선을 나눌 열
-  x_log: true                 # 가로축을 로그 눈금으로
+  x_col: dose_uM              # the column on the x axis
+  y_col: viability            # the column on the y axis
+  group_col: compound         # the column that splits the lines
+  x_log: true                 # a log scale on the x axis
   labels_title: "Viability after 48 h"
 ```
 
-어떤 그림 종류(`plot_type`)가 있고 각각 어떤 열이 필요한지는 [데이터 번들 계약서](../contracts/README.md)에 정리되어 있습니다. 분야와 무관한 기본 그림(선 + 오차 띠, 효과 대 유의성 산점도, 벤 다이어그램, 현미경 이미지)과 오믹스 그림(volcano, GO 등)이 있습니다.
+Which kinds of figure (`plot_type`) exist, and which columns each needs, are listed in the [data bundle contracts](../contracts/README.md). There are basic figures for any field (line with error band, effect versus significance scatter, Venn diagram, microscope image) and omics figures (volcano, GO and others).
 
-## 어디에 두나
+## Where bundles go
 
-| 데이터 | 위치 |
+| Data | Place |
 |---|---|
-| 실제 연구 데이터 | `raw_data/연구이름/프로젝트이름/번들이름/` — 연구실 컴퓨터에만 있고 저장소(GitHub)에는 올라가지 않습니다. |
-| 예제 데이터 | `examples/` — 연습과 문서용 |
+| Real research data | `raw_data/<study>/<project>/<bundle>/` — only on the lab's computers, never uploaded to the repository (GitHub). |
+| Example data | `examples/` — for practice and the documentation |
 
-분석 파이프라인(예: 시퀀싱 2차 분석 도구)이 이 모양대로 내보내 주면, 연구자는 폴더를 옮겨 놓기만 하면 됩니다.
+If an analysis pipeline (for example a secondary analysis tool for sequencing) exports bundles in this shape, the researcher only has to put the folder in place.
 
-## 원본은 고치지 않습니다
+## Raw data are not changed
 
-번들의 표는 **분석 결과 그대로** 둡니다. 그림을 위해 바꾸고 싶은 것은 대부분 설정에서 할 수 있습니다.
+A bundle's table stays **exactly as the analysis produced it**. Most changes you want for a figure can be made in the settings instead.
 
-| 하고 싶은 일 | 원본을 고치는 대신 |
+| You want to | Instead of editing the raw data |
 |---|---|
-| 샘플 이름을 짧게 (`Chronic_24H_vs_Control` → `24 h`) | 설정의 이름 바꾸기 표(`…_rename_map`, `group_labels`) |
-| 축 범위를 자르기 | 설정의 `x_min`, `x_max` 등 |
-| 일부 항목만 그리기 | 설정의 순서·선택 값(`group_order`, 상위 N개 등) |
-| 값을 다시 계산하기 (정규화, 다른 기준) | 분석 파이프라인에서 **새 번들로** 다시 내보내기. 무엇을 바꿨는지 요청 문서로 남깁니다(11장). |
+| shorten sample names (`Chronic_24H_vs_Control` → `24 h`) | the renaming tables in the settings (`…_rename_map`, `group_labels`) |
+| cut an axis range | `x_min`, `x_max` and the like in the settings |
+| draw only some items | order and selection values in the settings (`group_order`, top N, ...) |
+| recalculate values (normalisation, another criterion) | export a **new bundle** from the analysis pipeline, and record what changed in a request document (chapter 11). |
 
-이렇게 하는 이유는 **그림이 어떤 데이터에서 왔는지 언제든 증명할 수 있어야** 하기 때문입니다. 빌드는 번들 파일의 지문(내용이 1바이트만 달라도 바뀌는 값)을 기록합니다. 원본이 바뀌면 그 그림이 낡았다고 알려 줍니다(10장).
+The reason is that **you must always be able to show which data a figure came from**. A build records a fingerprint of each bundle file (a value that changes if even one byte of the content changes). If the raw data change, you are told that the figure is stale (chapter 10).
 
-## 번들 검사
+## Checking a bundle
 
-그림을 그리기 전에 번들이 계약서에 맞는지 검사합니다.
+Before drawing, check that the bundle matches its contract.
 
-💬 **AI에게:** "`examples/dose_response` 번들을 검사해 줘."
+💬 **Ask an AI:** "Check the bundle `examples/dose_response`."
 
-⌨ **명령:** `fa bundle check examples/dose_response`
+⌨ **Command:** `fa bundle check examples/dose_response`
 
-결과는 세 가지 중 하나입니다.
+The result is one of three.
 
-| 결과 | 뜻 | 할 일 |
+| Result | Meaning | What to do |
 |---|---|---|
-| **ok** | 그림을 그릴 수 있습니다. | 4장으로 |
-| **경고** (warn) | 그릴 수는 있지만 계약서가 권하는 열이 빠졌습니다. | 내용을 읽고 괜찮으면 진행 |
-| **오류** (ERROR) | 그림에 꼭 필요한 열이 없습니다. | 원본을 고치지 말고, 메모(`metadata.yaml`)의 열 이름이 맞는지 보거나 데이터를 다시 내보냅니다. |
+| **ok** | The figure can be drawn. | Go to chapter 4 |
+| **warning** (warn) | It can be drawn, but a column the contract recommends is missing. | Read it, and go ahead if that is fine |
+| **error** (ERROR) | A column the figure needs is missing. | Do not change the raw data: check that the column names in the note (`metadata.yaml`) are right, or export the data again. |
 
-예를 들어 메모에 `group_col: drug`라고 적었는데 표에 `drug` 열이 없으면 이렇게 나옵니다.
+For example, if the note says `group_col: drug` but the table has no `drug` column, you see:
 
 ```
 ERROR missing column(s) named by plot_params: drug (group_col)
 ```
 
-"메모가 `group_col`로 지정한 `drug`라는 열이 표에 없다"는 뜻입니다. 메모가 표의 실제 열 이름(`compound`)을 가리켜야 합니다.
+It means "the column `drug`, which the note names as `group_col`, is not in the table". The note must point to the table's real column name (`compound`).
 
-- **분석 파이프라인에서 받은 번들:** 번들을 만든 쪽에 메모를 고쳐 다시 내보내 달라고 요청합니다.
-- **직접 만든 번들:** 메모(`metadata.yaml`)의 열 이름을 고칩니다.
-- **표(`data.csv`)는 어느 경우에도 고치지 않습니다.**
+- **A bundle from an analysis pipeline:** ask whoever made it to fix the note and export it again.
+- **A bundle you made yourself:** fix the column name in the note (`metadata.yaml`).
+- **In either case, do not edit the table (`data.csv`).**
 
-검사를 통과한 뒤에는 메모의 값이 설정 파일로 옮겨지고, 그다음부터는 설정 파일에서 고칩니다(6장).
+Once the check passes, the note's values are copied into the config, and from then on you change them in the config (chapter 6).
 
 ---
-이전: [2. 한눈에 보기](02-overview.md) · 다음: [4. 첫 그림 만들기](04-first-figure.md)
+Previous: [2. Overview](02-overview.md) · Next: [4. Making your first figure](04-first-figure.md)

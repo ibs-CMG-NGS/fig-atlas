@@ -1,46 +1,47 @@
 ---
-title: 새 장 쓰는 법 (작성자용 틀)
-audience: 안내서 작성자
-reviewed: 2026-10-08
+title: How to write a new chapter (a template for authors)
+audience: authors of the guide
+reviewed: 2026-10-14
 ---
 
-# 새 장 쓰는 법
+# How to write a new chapter
 
-이 파일은 안내서(`docs/guide/`)에 장을 더할 때 복사해 쓰는 틀입니다. 사이트에는 나오지 않습니다.
+Copy this file to add a chapter to the guide (`docs/guide/`). It does not appear on the site.
 
-## 파일과 목차
+## File and table of contents
 
-1. 파일 이름은 `NN-짧은-영문-이름.md`입니다(예: `07-results.md`). 번호가 읽는 순서입니다.
-2. 맨 위 머리말에 `title`(장 제목), `audience`, `reviewed`(마지막으로 내용을 확인한 날짜)를 씁니다.
-3. `mkdocs.yml`의 `nav` → `안내서` 아래에 한 줄을 더합니다. 목차에 없는 장은 테스트가 막습니다(`tests/test_guide.py`).
-4. 그림은 `docs/guide/img/`에 둡니다. 예제 데이터로 만들 수 있는 그림은 `scripts/make_guide_images.py`에 추가해 스크립트가 다시 만들게 합니다.
+1. The file name is `NN-short-english-name.md` (e.g. `07-results.md`). The number is the reading order. The English version (`NN-name.md`) is the source, and the Korean version (`NN-name.ko.md`) is written in the same commit (`tests/test_docs_i18n.py` compares their structure).
+2. In the front matter at the top, write `title` (the chapter title), `audience` and `reviewed` (the date its content was last checked).
+3. Add a line under `nav` → `Guide for researchers` in `mkdocs.yml` (with the English file name). The tests stop a chapter missing from the table of contents (`tests/test_guide.py`).
+4. Pictures go in `docs/guide/img/`. A picture that can be made from example data is added to `scripts/make_guide_images.py`, so the script makes it again.
 
-## 쓰는 원칙
+## Principles
 
-- **독자는 연구자입니다.** 프로그래밍이나 AI를 몰라도 읽혀야 합니다. 기술 용어는 처음 나올 때 한 번 풀어 쓰고, 용어집에 없으면 용어집에도 넣습니다.
-- **순수 Markdown만 씁니다.** 표준 링크(`[글](상대경로)`), 표, 인용 블록, 코드 블록만 씁니다. 특정 도구 전용 문법(`!!! note` 같은 MkDocs 문법, `[[링크]]` 같은 위키 문법)은 쓰지 않습니다. GitHub에서도, 다른 문서 도구로 옮겨도 그대로 보이게 하기 위해서입니다. 도표는 GitHub과 사이트가 모두 그리는 `mermaid` 코드 블록으로 그립니다.
-- **명령과 경로는 실제로 있는 것만** 씁니다. 테스트가 확인합니다.
+- **The reader is a researcher.** It must read well without knowing programming or AI. Explain a technical term once where it first appears, and add it to the glossary if it is not there.
+- **Plain Markdown only.** Use standard links (`[text](relative-path)`), tables, block quotes and code blocks only. No syntax specific to one tool (MkDocs syntax such as `!!! note`, wiki syntax such as `[[link]]`), so the page looks the same on GitHub and in any other documentation tool. Draw diagrams as `mermaid` code blocks, which both GitHub and the site draw.
+- **Write only commands and paths that exist.** The tests check.
 
-## 장의 순서
+## The order of a chapter
 
+<!-- i18n: prose -->
 ```markdown
-# N. 장 제목
+# N. Chapter title
 
-> **이런 적 있으시죠?** 연구실에서 실제로 겪는 장면 한두 문장.
+> **Has this ever happened to you?** One or two sentences of a scene from real lab life.
 
-**핵심:** 이 장에서 기억할 한 문장.
+**The key idea:** the one sentence to remember from this chapter.
 
-## 도구가 하는 일
-무엇이 자동으로 일어나는지. 그림이나 표 하나.
+## What the tool does
+What happens automatically. One picture or table.
 
-## 내가 할 일
-💬 **AI에게:** "…라고 말합니다."
-⌨ **명령:** 한 줄 (전체 목록은 부록 C).
-💡 **팁 (특정 편집기를 쓴다면):** 있어도 되고 없어도 되는 편의 기능만. 본문이 특정 편집기에 기대지 않게 합니다.
+## What you do
+💬 **Ask an AI:** "say ...".
+⌨ **Command:** one line (the full list in Appendix C).
+💡 **Tip (if you use a particular editor):** only conveniences you can do without. The text must not depend on one editor.
 
-## 알아 두면 좋은 것
-주의할 점, 자주 하는 실수.
+## Good to know
+Things to watch for, common mistakes.
 
 ---
-다음: [N+1. 다음 장](NN-다음.md)
+Next: [N+1. Next chapter](NN-next.md)
 ```

@@ -1,35 +1,35 @@
 ---
-title: 13. 규칙 한 장 요약
-audience: 연구자 (프로그래밍 경험 불필요)
-reviewed: 2026-10-08
+title: 13. The rules on one page
+audience: researchers (no programming experience needed)
+reviewed: 2026-10-14
 ---
 
-# 13. 규칙 한 장 요약
+# 13. The rules on one page
 
-**핵심:** 규칙은 많아 보이지만, 모두 **"그림과 기록이 언제나 일치해서, 누가 물어도 근거를 보여 줄 수 있게"**라는 하나의 목적에서 나옵니다. 전체 규칙은 [`AGENTS.md`](../../AGENTS.md)에 있고, 사람과 AI가 같은 규칙을 따릅니다. 설계 이유는 [설계 결정 기록](../decisions/README.md)에 있습니다.
+**The key idea:** there seem to be many rules, but they all serve one purpose: **"the figure and its record always agree, so you can show the basis for anything anyone asks"**. The full rules are in [`AGENTS.md`](../../AGENTS.md), and people and AI follow the same ones. The reasons behind the design are in the [design decisions](../decisions/README.md).
 
-| # | 규칙 | 왜 | 지키는 장치 |
+| # | Rule | Why | What keeps it |
 |---|---|---|---|
-| 1 | **원본 데이터는 읽기만 합니다.** 이름 줄이기·범위 자르기는 설정으로 합니다. | 그림이 어떤 데이터에서 왔는지 언제든 증명하기 위해 (3장) | 출처 기록의 지문, 원본이 바뀌면 "낡음" 표시 |
-| 2 | **그림의 모든 값은 설정 파일에, 설명 주석과 함께 둡니다.** 코드에 숫자를 박지 않습니다. | 프로그램을 몰라도 설정만 보고 그림을 이해하고 고치기 위해 (6장) | 번들을 붙일 때 전체 값 자동 기록, 코드 속 숫자 검사 |
-| 3 | **결과 폴더의 파일을 손으로 고치지 않습니다.** 고칠 것은 설정이나 그림 설명에서 고칩니다. | 다음 빌드에서 사라지고, 그림과 기록이 어긋나기 때문에 (7장) | 매 빌드가 결과를 새로 만듦 |
-| 4 | **그림은 인쇄 크기 그대로 그리고, 인쇄 전 검사 오류를 0으로 만든 뒤 완성이라고 합니다.** | 교정쇄에서야 문제를 발견하지 않기 위해 (8장) | 인쇄 전 검사, 투고 전 엄격 모드 |
-| 5 | **설명 속 결과 숫자는 데이터에서 채웁니다.** 별표는 설정한 검정으로 계산하고 검정표를 남깁니다. | 데이터가 바뀌어도 그림·설명·본문이 어긋나지 않기 위해 (9장) | 값 없는 자리 → 검증 실패, 손 숫자 증가 → CI 차단, 검정표 없음 → 검증 실패 |
-| 6 | **이미지는 원본을 넣고, 조정은 그림을 그릴 때 설정으로 합니다.** 비선형 조정은 그림 설명에 밝힙니다. | 저널의 이미지 무결성 규정에 기록으로 답하기 위해 (9장) | 조정 내역 자동 기록, 원본 변경 → 검증 실패 |
-| 7 | **Figure 번호와 논문 프로젝트 이름을 1:1로 맞추고, 스토리라인을 바꿀 때마다 개편 기록을 남깁니다.** 그림은 지우지 않고 보관합니다. | 석 달 뒤에도 "그때 무엇을 왜 바꿨나"에 답하기 위해 (11장) | 스토리라인 검사, 대응표 자동 생성, 보관 후 재빌드 확인 |
+| 1 | **Raw data are only read.** Shortening names and cutting ranges are done in the config. | To be able to show at any time which data a figure came from (chapter 3) | Fingerprints in the provenance record; a changed original marks the figure "stale" |
+| 2 | **Every value of a figure is in the config, with an explaining comment.** No numbers typed into code. | To understand and change a figure from its config alone, without knowing the program (chapter 6) | The full set of values written when a bundle is attached; a check for numbers in code |
+| 3 | **Files in the results folder are not edited by hand.** What to fix is fixed in the config or the figure description. | They are lost at the next build, and figure and record would disagree (chapter 7) | Every build makes the results anew |
+| 4 | **Figures are drawn at printed size, and a figure is done only when it has 0 preflight errors.** | Not to find problems only in the proofs (chapter 8) | Preflight; strict mode before submission |
+| 5 | **Result numbers in legends are filled in from the data.** Stars are computed with the test set in the config, and the test table is kept. | So figure, legend and text never drift apart when data change (chapter 9) | A placeholder without a value → verify fails; more hand-typed numbers → CI stops; no test table → verify fails |
+| 6 | **Images go in as their originals; adjustments are made in the config when the figure is drawn.** Nonlinear adjustments are stated in the legend. | To answer journals' image integrity rules from the record (chapter 9) | Adjustments recorded automatically; a changed original → verify fails |
+| 7 | **Figure numbers and paper project names match one to one, and every storyline change leaves a revision record.** Figures are archived, not deleted. | To answer, three months later, "what changed then, and why" (chapter 11) | Storyline checks; a generated mapping table; a rebuild check after archiving |
 
-## 이름과 위치 (참고)
+## Names and places (for reference)
 
-| 무엇 | 위치와 이름 |
+| What | Place and name |
 |---|---|
-| 설정 파일 | `configs/연구단위/단계/config_프로젝트이름.yaml` |
-| 분석 파일 | `analysis/연구단위/단계/프로젝트이름_analysis.py` |
-| 그림 설명 파일 | `figure_specs/연구단위/단계/figure_01_프로젝트이름.py` |
-| 단계 | `exploratory` (탐색), `paper` (논문), `archive` (보관) |
-| 논문 프로젝트 이름 | `연구단위-paper-main-fig번호-짧은이름` (보충 그림은 `supp`) |
-| 원본 데이터 | `raw_data/연구이름/프로젝트이름/번들이름/` |
+| Config | `configs/<unit>/<stage>/config_<project>.yaml` |
+| Analysis script | `analysis/<unit>/<stage>/<project>_analysis.py` |
+| Figure description | `figure_specs/<unit>/<stage>/figure_01_<project>.py` |
+| Stage | `exploratory`, `paper`, `archive` |
+| Paper project name | `<unit>-paper-main-fig<N>-<short-name>` (`supp` for supplementary figures) |
+| Raw data | `raw_data/<study>/<project>/<bundle>/` |
 
-이름과 위치는 프로젝트 만들기·승격·은퇴 명령이 알아서 맞춥니다. 직접 기억할 필요는 없지만, 파일을 찾을 때 참고하세요.
+The commands that create, promote and retire projects get the names and places right on their own. You do not need to remember them, but they help when you look for a file.
 
 ---
-이전: [12. AI와 함께 일하기](12-ai.md) · 다음: [부록 A. 용어집](91-glossary.md)
+Previous: [12. Working with AI](12-ai.md) · Next: [Appendix A. Glossary](91-glossary.md)

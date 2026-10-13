@@ -1,130 +1,130 @@
 ---
-title: "6. 그림 고치기: config 읽고 쓰기"
-audience: 연구자 (프로그래밍 경험 불필요)
-reviewed: 2026-10-08
+title: "6. Changing a figure: reading and writing the config"
+audience: researchers (no programming experience needed)
+reviewed: 2026-10-14
 ---
 
-# 6. 그림 고치기: config 읽고 쓰기
+# 6. Changing a figure: reading and writing the config
 
-> **이런 적 있으시죠?** "패널 제목 크기를 맞춰 주세요"라는 요청을 받고 그림 편집 프로그램에서 글자를 하나씩 고쳤는데, 데이터를 다시 그리면서 그 수정이 모두 사라졌다.
+> **Has this ever happened to you?** Asked to "make the panel titles the same size", you fixed the text one by one in a drawing program, and every fix was lost when the figure was redrawn with new data.
 
-**핵심:** 그림의 모든 값은 **설정 파일(config) 한 곳**에 있습니다. 한 줄을 고치고 다시 빌드하면 그림이 바뀌고, 그 수정은 사라지지 않습니다. 각 줄에는 그 값이 무엇인지 설명이 붙어 있어서, 프로그램을 열지 않고도 무엇을 바꿔야 할지 알 수 있습니다.
+**The key idea:** every value of a figure is in **one place, the config**. Change a line and build again: the figure changes, and the change is not lost. Each line explains its value, so you know what to change without opening the program.
 
-## 설정 파일 한 줄 읽기
+## Reading one line of the config
 
-설정 파일은 `configs/` 아래의 `config_프로젝트이름.yaml`입니다. 메모장이나 아무 글 편집기로 열 수 있는 글 파일입니다. 한 줄은 이렇게 생겼습니다.
+The config is `config_project-name.yaml` under `configs/`. It is a text file you can open in Notepad or any text editor. A line looks like this:
 
 ```yaml
     title_size: 8.0                    # Panel title size; pt
 ```
 
-| 부분 | 뜻 |
+| Part | Meaning |
 |---|---|
-| `title_size` | 값의 이름 (바꾸지 않습니다) |
-| `8.0` | 값 — **여기를 고칩니다** |
-| `#` 뒤 | 설명. 무엇을 조절하는지(Panel title size), 단위(pt)가 적혀 있습니다. 어떤 줄에는 "늘리면/줄이면 어떻게 되는지"도 있습니다(예: *lower for dense plots* = 점이 빽빽하면 줄이세요). |
+| `title_size` | The name of the value (do not change it) |
+| `8.0` | The value — **change this** |
+| after `#` | The explanation: what it controls (Panel title size) and its unit (pt). Some lines also say what raising or lowering it does (e.g. *lower for dense plots*). |
 
-설명이 영어로 되어 있는 이유는, 프로그램이 자동으로 만들고 AI 도우미도 같은 설명을 읽기 때문입니다. 자주 나오는 단어는 이 장 끝의 표를 보세요.
+The explanations are written by the program, and AI assistants read the same ones. Common words are listed in the table at the end of this chapter.
 
-## 설정 파일의 구조
+## How the config is laid out
 
 ```yaml
-project:            # 프로젝트 이름, 스타일(인쇄 크기·A4 지면) — 거의 고치지 않음
-paths:              # 데이터와 결과 위치 — 거의 고치지 않음
-figures:            # 그림 전체: 높이, 한 줄에 놓을 패널 수, 패널 사이 간격, 패널 태그 크기
-plots:              # 패널마다 한 블록
-  dose_response:    #   패널 a: 용량-반응 곡선의 모든 값
-  screen_hits:      #   패널 b: 스크리닝 산점도의 모든 값
+project:            # the project's name and style (printed size, A4 page) — rarely changed
+paths:              # where the data and results are — rarely changed
+figures:            # the whole figure: height, panels per row, gaps between panels, panel tag size
+plots:              # one block per panel
+  dose_response:    #   panel a: every value of the dose-response curve
+  screen_hits:      #   panel b: every value of the screen's scatter
 ```
 
-번들을 붙일 때 도구가 각 패널 블록에 **그 그림 종류가 쓰는 값을 빠짐없이** 적어 둡니다. 그래서 "이 그림에서 바꿀 수 있는 것"이 무엇인지 이 파일만 보면 다 나옵니다.
+When a bundle is attached, the tool writes into its panel block **every value that kind of figure uses**. So this one file shows everything you can change in the figure.
 
-## 특별한 표시 세 가지
+## Three special marks
 
-| 표시 | 뜻 |
+| Mark | Meaning |
 |---|---|
-| `(from the bundle)` | 번들의 메모에서 옮겨 온 값입니다. 고쳐도 됩니다. 번들은 그대로이고, 이제 설정 파일의 값이 쓰입니다. |
-| `null` | "정해 두지 않음 = 자동"입니다. 예를 들어 `y_max: null`이면 축 범위를 데이터에 맞춰 자동으로 정합니다. 숫자를 넣으면 그 값으로 고정됩니다. |
-| 줄 맨 앞의 `#` | 꺼져 있는 줄입니다. 설명에 *(computed when unset)* 이 붙은 값은 비워 두면 프로그램이 계산해 정합니다. 직접 정하려면 `#`를 지우고 값을 넣습니다. |
+| `(from the bundle)` | The value came from the bundle's note. You may change it: the bundle stays as it is, and the config's value is used from now on. |
+| `null` | "Not set = automatic". For example `y_max: null` fits the axis range to the data. Put a number and it is fixed to that. |
+| `#` at the start of a line | A line that is switched off. A value marked *(computed when unset)* is worked out by the program when left empty. To set it yourself, remove the `#` and put a value. |
 
-## 예: 경고 고치기와 제목 크기 맞추기
+## Example: fixing a warning and matching title sizes
 
-4장의 그림에는 두 가지 고칠 점이 있었습니다.
+The figure of chapter 4 had two things to fix.
 
-1. **색:** 패널 a의 주황과 초록이 색각이상 독자에게 비슷해 보인다는 경고.
-2. **일관성:** 패널 a의 제목은 8 pt, 패널 b의 제목은 10 pt로 서로 다릅니다. 그림 종류마다 기본값이 달라서 생긴 차이입니다.
+1. **Colour:** the warning that the orange and green of panel a look alike to colour-blind readers.
+2. **Consistency:** panel a's title is 8 pt and panel b's 10 pt. Each kind of figure had its own default.
 
-`dose_response` 블록에서:
+In the `dose_response` block:
 
 ```yaml
-    group_colors:                      # 집단별 색: 색각이상에도 구분되는 Okabe–Ito 색
+    group_colors:                      # colour per group: Okabe–Ito colours, distinct for colour-blind readers too
       "compound A": "#0072B2"
       "compound B": "#E69F00"
       vehicle: "#999999"
 ```
 
-`screen_hits` 블록에서:
+In the `screen_hits` block:
 
 ```yaml
-    title_size: 8                      # Panel title font size; pt   ← 10에서 8로, 패널 a와 맞춤
-    label_top_n: 3                     # Points labelled in top_n mode   ← 이름 붙일 점 6개에서 3개로
+    title_size: 8                      # Panel title font size; pt   ← from 10 to 8, as in panel a
+    label_top_n: 3                     # Points labelled in top_n mode   ← from 6 labelled points to 3
 ```
 
-다시 빌드한 결과입니다. 패널 a의 색이 바뀌었고, 두 패널의 제목 크기가 같아졌고, 패널 b의 라벨이 줄었습니다.
+The figure built again: panel a's colours changed, the two panels' titles are the same size, and panel b has fewer labels.
 
-![설정을 고친 뒤의 그림: 패널 a는 파랑·주황·회색 선, 두 패널의 제목 크기가 같고, 패널 b는 라벨 세 개](img/after-config.png)
+![The figure after the config change: panel a with blue, orange and grey lines, both titles the same size, panel b with three labels](img/after-config.png)
 
-## 내가 할 일
+## What you do
 
-💬 **AI에게:**
+💬 **Ask an AI:**
 
-> "first-figure의 패널 b 제목 크기를 패널 a와 같은 8 pt로 맞추고, 이름 붙는 점을 3개로 줄여 줘."
+> "In first-figure, make panel b's title 8 pt like panel a's, and label only 3 points."
 
-AI는 설정 파일에서 바뀔 줄을 먼저 보여 줍니다. **그 줄들이 말한 내용과 맞는지 확인**하고 진행하라고 답합니다. AI는 설정 파일의 설명 주석을 지우지 않고 값만 고칩니다(규칙입니다).
+The AI first shows the lines it will change in the config. **Check that those lines match what you asked**, then tell it to go ahead. The AI changes only the values and never deletes the explaining comments (that is a rule).
 
-✏ **직접 고치기:** 글 편집기로 설정 파일을 열어 값을 고치고 저장한 뒤 다시 빌드합니다(💬 "first-figure 다시 빌드해 줘" 또는 ⌨ `fa build first-figure`).
+✏ **Editing it yourself:** open the config in a text editor, change the value, save, and build again (💬 "build first-figure again" or ⌨ `fa build first-figure`).
 
-💡 **팁 (VS Code를 쓴다면):** 설정 파일을 열면 들여쓰기가 색으로 구분되어 실수가 줄고, 저장 뒤 `Ctrl+Shift+B`로 바로 다시 빌드할 수 있습니다.
+💡 **Tip (if you use VS Code):** it colours the indentation of the config, which prevents mistakes, and after saving, `Ctrl+Shift+B` builds again at once.
 
-💬 **값이 어디서 왔는지 궁금할 때:** "first-figure의 `plots.dose_response.band_alpha` 값은 어디서 온 거야?" 하고 물으면, 기본값인지, 스타일 설정에서 온 것인지, 이 설정 파일에서 정한 것인지 알려 줍니다.
+💬 **When you wonder where a value came from:** ask "Where does the value of `plots.dose_response.band_alpha` in first-figure come from?" and you are told whether it is a default, comes from a style setting, or is set in this config.
 
-## 고칠 때 주의할 것
+## Take care when editing
 
-설정 파일은 YAML이라는 형식입니다. 세 가지만 지키면 됩니다.
+The config is in a format called YAML. Three things to keep:
 
-| 주의 | 예 |
+| Take care | Example |
 |---|---|
-| **들여쓰기(앞 공백)를 그대로 둡니다.** 공백 수가 소속을 나타냅니다. | `    title_size: 8` 앞의 공백 4칸을 지우면 다른 블록으로 넘어갑니다. |
-| **`:` 뒤에 한 칸 띄웁니다.** | `title_size: 8` (O), `title_size:8` (X) |
-| **글자에 `:`, `#`가 들어가면 따옴표로 감쌉니다.** | `labels_title: "Dose: 48 h"` |
+| **Keep the indentation (leading spaces).** The number of spaces says what a line belongs to. | Delete the 4 spaces before `    title_size: 8` and it moves to another block. |
+| **Put one space after `:`.** | `title_size: 8` (right), `title_size:8` (wrong) |
+| **Quote text that contains `:` or `#`.** | `labels_title: "Dose: 48 h"` |
 
-잘못 고쳐서 빌드가 실패하면 오류 메시지에 몇 번째 줄인지 나옵니다. AI에게 오류 메시지를 보여 주며 고쳐 달라고 해도 됩니다.
+If an edit breaks the build, the error message gives the line number. You can also show the error to the AI and ask it to fix it.
 
-## 자주 고치는 값
+## Values often changed
 
-| 하고 싶은 일 | 찾을 이름 | 어디에 |
+| You want to change | Look for | Where |
 |---|---|---|
-| 글자 크기 (제목, 축 제목, 눈금, 범례) | `title_size`, `axes_label_size`, `tick_label_size`, `legend_fontsize` | 패널 블록 |
-| 색 | `…_color`, `group_colors` | 패널 블록 |
-| 축 범위 | `x_min`, `x_max`, `y_min`, `y_max` | 패널 블록 |
-| 축·패널 제목 글 | `labels_title`, `labels_xlabel`, `labels_ylabel` | 패널 블록 |
-| 점·선 크기 | `dot_size`, `point_size`, `line_width`, `marker_size` | 패널 블록 |
-| 판정 기준(임계값) | `…_threshold` | 패널 블록 |
-| 그림 높이 | `height_mm` (폭은 A4 본문 폭으로 고정) | `figures:` |
-| 한 줄에 놓을 패널 수 | `columns` (0이면 패널 수만큼, 최대 3) | `figures:` |
-| 패널 둘레 여백 | `panel_pad_mm` | `figures:` |
+| Text size (title, axis titles, ticks, legend) | `title_size`, `axes_label_size`, `tick_label_size`, `legend_fontsize` | the panel block |
+| Colours | `…_color`, `group_colors` | the panel block |
+| Axis ranges | `x_min`, `x_max`, `y_min`, `y_max` | the panel block |
+| Axis and panel title text | `labels_title`, `labels_xlabel`, `labels_ylabel` | the panel block |
+| Point and line sizes | `dot_size`, `point_size`, `line_width`, `marker_size` | the panel block |
+| Criteria (thresholds) | `…_threshold` | the panel block |
+| Figure height | `height_mm` (the width is the A4 text width) | `figures:` |
+| Panels per row | `columns` (0: as many as panels, up to 3) | `figures:` |
+| Space around a panel | `panel_pad_mm` | `figures:` |
 
-## 설명 주석에 자주 나오는 단어
+## Words often found in the explanations
 
-| 단어 | 뜻 |
+| Word | Meaning |
 |---|---|
-| pt | 포인트. 글자·선 굵기 단위 (1 pt ≈ 0.35 mm) |
-| mm | 밀리미터. 실제 지면 위 길이 |
-| hex color | `#0072B2` 같은 색 코드 |
-| [0-1] opacity | 불투명도. 0은 투명, 1은 불투명 |
-| data coords | 축 눈금과 같은 단위 (예: 축이 0–100이면 그 숫자) |
-| default | 정하지 않았을 때 쓰는 값 |
-| raise / lower | 늘리세요 / 줄이세요 |
+| pt | Point. The unit of text size and line width (1 pt ≈ 0.35 mm) |
+| mm | Millimetre. A length on the printed page |
+| hex color | A colour code such as `#0072B2` |
+| [0-1] opacity | 0 is transparent, 1 is opaque |
+| data coords | The same units as the axis ticks (e.g. if the axis runs 0–100, those numbers) |
+| default | The value used when you set none |
+| raise / lower | Increase it / decrease it |
 
 ---
-이전: [5. 그림을 들여오는 세 가지 길](05-entry-paths.md) · 다음: [7. 결과 확인](07-results.md)
+Previous: [5. Three ways in](05-entry-paths.md) · Next: [7. Checking the results](07-results.md)

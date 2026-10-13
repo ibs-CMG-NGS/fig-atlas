@@ -1,70 +1,70 @@
 ---
-title: 9. 숫자·통계·이미지의 정직성
-audience: 연구자 (프로그래밍 경험 불필요)
-reviewed: 2026-10-08
+title: 9. Honest numbers, statistics and images
+audience: researchers (no programming experience needed)
+reviewed: 2026-10-14
 ---
 
-# 9. 숫자·통계·이미지의 정직성
+# 9. Honest numbers, statistics and images
 
-> **이런 적 있으시죠?**
-> - 재분석 뒤 그림은 새 데이터인데 그림 설명의 "n = 1,212"는 옛 숫자 그대로였다.
-> - 리뷰어가 "별표는 어떤 검정이고 다중검정 보정은 했습니까?"라고 물었다.
-> - 저널이 현미경 이미지의 밝기 조정 내역을 요구했다.
+> **Has this ever happened to you?**
+> - After a reanalysis the figure showed the new data, but the legend's "n = 1,212" was still the old number.
+> - A reviewer asked "Which test are the stars from, and did you correct for multiple testing?"
+> - A journal asked how the brightness of microscope images had been adjusted.
 
-**핵심:** 그림에 담긴 **숫자, 별표, 이미지 조정**은 모두 데이터와 설정에서 자동으로 나오고 기록됩니다. 손으로 적거나 따로 보정하지 않습니다. 그래야 데이터가 바뀌어도 그림과 설명이 어긋나지 않고, 어떤 질문에도 근거를 보여 줄 수 있습니다.
+**The key idea:** the **numbers, stars and image adjustments** in a figure all come from the data and the settings automatically, and are recorded. Nothing is typed by hand or adjusted separately. That is how figure and legend stay in agreement when the data change, and how you can show the basis for any answer.
 
-## 살아 있는 숫자
+## Live numbers
 
-그림 제목이나 패널 설명에 들어가는 결과 숫자(개수, 비율, 통계값)는 **손으로 쓰지 않습니다.**
+Result numbers in a figure's title or panel notes (counts, percentages, statistics) are **not typed by hand**.
 
-| 손으로 쓴 숫자 | 살아 있는 숫자 |
+| A hand-typed number | A live number |
 |---|---|
 | `"... 1,240 concordant genes ..."` | `"... {n_concordant:,} concordant genes ..."` |
-| 데이터가 바뀌면 그대로 남아 틀린 말이 됩니다. | 분석이 계산한 값을 빌드 때 채웁니다. 데이터가 바뀌면 같이 바뀝니다. |
+| When the data change, it stays and becomes wrong. | The value the analysis computed is filled in at the build. When the data change, it changes too. |
 
-- 분석 파일이 값을 기록하고(`claims.record("n_concordant", n)`), 설명에는 중괄호로 그 이름을 씁니다.
-- 기록되지 않은 이름이 설명에 있으면 검증이 실패합니다(8장).
-- 임계값(`P < 0.05`), 다른 그림 번호, 실험 설계 값(시간, 용량)은 손으로 써도 됩니다. 결과가 아니라 설계이기 때문입니다.
-- 손으로 쓴 결과 숫자가 늘어나면 CI(저장소의 자동 검사)가 막습니다.
+- The analysis script records the value (`claims.record("n_concordant", n)`), and the legend writes its name in braces.
+- If a legend names a value that was not recorded, verify fails (chapter 8).
+- Thresholds (`P < 0.05`), other figure numbers and design values (times, doses) may be typed by hand: they are the design, not the results.
+- If hand-typed result numbers increase, CI (the repository's automatic checks) stops it.
 
-💬 **AI에게:** "Figure 2 설명에 손으로 쓴 숫자가 있는지 찾아서, 분석에서 기록하도록 바꿔 줘."
+💬 **Ask an AI:** "Find hand-typed numbers in Figure 2's legend and have the analysis record them instead."
 
-## 별표 뒤의 통계표
+## The statistics table behind the stars
 
-별표(`*`, `**`)나 비교 괄호를 그리는 그림은 다음 순서를 따릅니다.
+A figure that draws stars (`*`, `**`) or comparison brackets follows these steps.
 
-1. 어떤 검정(예: Welch t-검정)을 쓸지, 다중검정 보정(예: Benjamini–Hochberg)을 할지, 별표 기준(예: `* P < 0.05`)을 **설정에 적습니다.**
-2. 빌드가 그 설정대로 검정을 하고, **검정표**(비교, n, 통계량, P, 보정 P, 별표)를 그림 옆에 저장합니다.
-3. 그림 설명의 "별표 기준" 문장도 설정에서 채워집니다. 설정을 바꾸면 그림의 별표, 검정표, 설명이 함께 바뀝니다.
-4. 검정표가 없으면 검증이 실패합니다.
+1. **Write in the config** which test to use (e.g. Welch's t-test), whether to correct for multiple testing (e.g. Benjamini–Hochberg), and the star thresholds (e.g. `* P < 0.05`).
+2. The build runs the tests as set and saves a **test table** (comparison, n, statistic, P, adjusted P, stars) next to the figure.
+3. The legend's sentence on the star thresholds is filled in from the config too. Change the config and the stars, the table and the legend change together.
+4. Without a test table, verify fails.
 
-그래서 "어떤 검정을 했나"라는 질문에는 결과 폴더의 `figure_NN_statistics/`를 보여 주면 됩니다.
+So to "which test did you use?", you show the `figure_NN_statistics/` folder of the results.
 
-> 어떤 검정과 보정이 맞는지는 **연구자가 정합니다.** 도구는 정한 대로 계산하고 기록할 뿐입니다.
+> Which test and correction are right is **for you to decide**. The tool computes and records what you set.
 
-## 그려진 값 (Source Data)
+## Values shown (Source Data)
 
-일부 저널은 그림마다 실제로 그려진 값을 표로 제출하라고 요구합니다(Source Data). 분석이 패널마다 그린 값을 등록해 두면, 빌드가 `figure_NN_source_data/`에 패널별 표로 내보냅니다. 원본 데이터가 아니라 **그림에 찍힌 바로 그 값**입니다.
+Some journals ask for the values actually plotted in each figure as tables (Source Data). If the analysis registers the values each panel draws, the build exports them per panel to `figure_NN_source_data/`. They are not the raw data but **exactly the values on the figure**.
 
-## 현미경·블롯·젤 이미지
+## Microscope, blot and gel images
 
-이미지는 **원본 파일을 그대로 넣고, 조정은 그림을 그릴 때 설정으로** 합니다.
+Images go in **as their original files, and adjustments are made in the settings when the figure is drawn**.
 
-| 하지 않는 것 | 대신 하는 것 |
+| Not this | But this |
 |---|---|
-| 밝기·대비를 조정한 사본을 만들어 넣기 | 설정에 채널마다 표시 범위(어디부터 어디까지를 검정~최대 밝기로 보일지)를 적기 |
-| 잘라 낸 사본을 넣기 | 설정에 자를 영역(픽셀 좌표)을 적기 |
-| 눈금자를 그림 위에 손으로 그리기 | 메모에 픽셀 크기(µm)를 적으면 정확한 눈금자가 자동으로 그려짐 |
+| Putting in a copy with adjusted brightness and contrast | Writing, per channel, the display range in the config (which values show as black and as full brightness) |
+| Putting in a cropped copy | Writing the region to crop (pixel coordinates) in the config |
+| Drawing a scale bar by hand on the figure | Writing the pixel size (µm) in the note: an exact scale bar is drawn automatically |
 
-빌드는 원본 파일의 지문, 자른 영역, 채널별 표시 범위, 색을 README의 "Images" 부분에 기록합니다(7장). 원본 파일이 바뀌면 검증이 실패합니다.
+The build records the original files' fingerprints, the cropped region, the display range and colour per channel in the "Images" part of the README (chapter 7). If an original file changes, verify fails.
 
-밝기를 비선형으로 조정(감마 ≠ 1)하면 검증이 경고합니다. 감마 조정은 허용되지만, 저널의 이미지 무결성 규정에 따라 **그림 설명에 그 사실을 밝혀야** 합니다.
+A nonlinear brightness adjustment (gamma ≠ 1) makes verify warn. Gamma adjustment is allowed, but under journals' image integrity rules **the legend must say so**.
 
-자세한 예: [현미경 이미지 튜토리얼](../tutorials/imaging_figure.md)
+A worked example: [the microscopy tutorial](../tutorials/imaging_figure.md)
 
-## 알아 두면 좋은 것
+## Good to know
 
-이 장의 규칙은 귀찮은 형식이 아닙니다. 리뷰어의 질문, 저널의 자료 요구, 연구 부정 의혹에 **기록으로 답할 수 있게** 해 주는 장치입니다. "그때 어떻게 했더라"를 기억에 의존하지 않아도 됩니다.
+The rules of this chapter are not paperwork. They let you **answer from the record** to reviewers' questions, journals' requests for material and any suspicion of misconduct. You do not have to rely on remembering "how did I do that back then".
 
 ---
-이전: [8. 검사 결과 읽기](08-checks.md) · 다음: [10. 데이터가 바뀌었을 때](10-freshness.md)
+Previous: [8. Reading the check results](08-checks.md) · Next: [10. When the data change](10-freshness.md)

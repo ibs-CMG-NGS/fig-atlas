@@ -1,106 +1,107 @@
 ---
-title: "5. 그림을 들여오는 세 가지 길 (Case A·B·C)"
-audience: 연구자 (프로그래밍 경험 불필요)
-reviewed: 2026-10-08
+title: "5. Three ways in (Case A, B, C)"
+audience: researchers (no programming experience needed)
+reviewed: 2026-10-14
 ---
 
-# 5. 그림을 들여오는 세 가지 길 (Case A·B·C)
+# 5. Three ways in (Case A, B, C)
 
-> **이런 적 있으시죠?** 학생이 주피터 노트북에서 그린 그림이 마음에 들어서 논문에 쓰고 싶은데, 그 코드를 어떻게 정리해야 할지 막막했다. 또는 다른 논문의 그림을 보여 주며 "우리 데이터도 이렇게 그리고 싶다"고만 말할 수 있었다.
+> **Has this ever happened to you?** A student drew a figure in a Jupyter notebook that you wanted for the paper, but you had no idea how to tidy that code. Or all you could do was show a figure from another paper and say "we want our data to look like this".
 
-**핵심:** 새 그림이 들어오는 길은 **내가 무엇을 가지고 있느냐**에 따라 세 가지입니다. 어느 길이든 끝은 같습니다. 번들로 정리된 데이터와 모든 값이 적힌 설정 파일, 그리고 4장과 같은 그림이 됩니다.
+**The key idea:** there are three ways for a new figure to come in, depending on **what you have**. Every way ends in the same place: data arranged as a bundle, a config with every value written out, and a figure like the one in chapter 4.
 
-## 어느 길인가
+## Which way?
 
 ```mermaid
 flowchart TD
-    Q{"무엇을 가지고 있나?"}
-    Q -->|"규격 번들<br/>(표 + 메모)"| B["Case B<br/>번들 반입"]
-    Q -->|"내가 짠 그림 코드<br/>+ 데이터"| A["Case A<br/>코드 이식"]
-    Q -->|"데이터 + 원하는 그림의<br/>캡처·스케치·말 설명"| C["Case C<br/>의도로 합성"]
-    A --> R["번들 + 설정 파일 + 그림"]
+    Q{"What do you have?"}
+    Q -->|"a standard bundle<br/>(table + note)"| B["Case B<br/>bring in the bundle"]
+    Q -->|"plotting code you wrote<br/>+ data"| A["Case A<br/>port the code"]
+    Q -->|"data + a capture, sketch or<br/>description of the figure"| C["Case C<br/>draw from intent"]
+    A --> R["bundle + config + figure"]
     B --> R
     C --> R
 ```
 
-| | Case B: 번들 반입 | Case A: 코드 이식 | Case C: 의도로 합성 |
+| | Case B: bring in a bundle | Case A: port code | Case C: draw from intent |
 |---|---|---|---|
-| **가진 것** | 규격 번들 (표 + 메모, 3장) | 직접 짠 그림 스크립트(파이썬, 노트북)와 데이터 | 데이터와 원하는 그림의 캡처·스케치, 또는 말 설명 |
-| **도구·AI가 하는 일** | 번들을 검사하고 설정에 모든 값을 적고 빌드 (명령 하나) | 데이터를 번들로 옮기고, 코드의 숫자·색·글자를 설정으로 빼내고, 그림 부분을 재사용할 수 있는 부품으로 정리 | 그림을 해석해 해석안을 보여 주고, 승인받은 뒤 그림을 만듦 |
-| **연구자가 확인할 것** | 바뀔 설정 미리보기 | 옮긴 뒤의 그림이 **원래 코드의 그림과 같은지** | ① 그리기 전에 **해석안** ② 그린 뒤 **원하는 모양인지** |
-| **걸리는 시간** | 몇 분 | 코드 길이에 따라 수십 분 | 확인 대화를 포함해 수십 분 |
-| **언제 좋은가** | 분석 도구가 번들로 내보낼 때 (가장 빠르고 안전) | 이미 만족스러운 그림 코드가 있을 때 | 코드는 없고 원하는 모양만 분명할 때 |
+| **What you have** | A standard bundle (table + note, chapter 3) | A plotting script you wrote (Python, notebook) and its data | Data and a capture or sketch of the figure you want, or a description in words |
+| **What the tool or AI does** | Checks the bundle, writes every value into the config and builds (one command) | Moves the data into a bundle, takes the numbers, colours and text out of the code into the config, and turns the drawing part into a reusable component | Interprets the figure, shows its interpretation, and draws after you approve |
+| **What you check** | A preview of the config changes | That the ported figure is **the same as the original code's figure** | ① before drawing, **the interpretation** ② after drawing, **whether it is the shape you wanted** |
+| **Time** | A few minutes | Tens of minutes, depending on the code | Tens of minutes, including the confirming conversation |
+| **Best when** | An analysis tool exports bundles (fastest and safest) | You already have plotting code you are happy with | There is no code, only a clear idea of the shape |
 
-세 길의 이름(Case A·B·C)은 AI 도우미가 읽는 규칙([`AGENTS.md`](../../AGENTS.md))과 같습니다. AI에게 "Case A로 들여와 줘"라고 해도 통합니다.
+The three names (Case A, B, C) are the same as in the rules AI assistants read ([`AGENTS.md`](../../AGENTS.md)). Telling an AI "bring it in as Case A" works too.
 
-## Case B: 번들이 있을 때
+## Case B: when you have a bundle
 
-4장에서 한 방법입니다. 따라 해 볼 예제: [튜토리얼: 첫 그림](../tutorials/first_figure.md).
+This is what you did in chapter 4. Example to follow: [Tutorial: first figure](../tutorials/first_figure.md).
 
-💬 **AI에게:** "`raw_data/…/volcano_bundle`을 프로젝트 `lab-acute-1d-de`에 붙여 줘."
+💬 **Ask an AI:** "Attach `raw_data/…/volcano_bundle` to the project `lab-acute-1d-de`."
 
-⌨ **명령:** `fa ingest bundle 번들폴더 --project 이름`
+⌨ **Command:** `fa ingest bundle bundle-folder --project name`
 
-번들의 그림 종류(`plot_type`)를 그리는 부품이 이미 있어야 합니다. 없으면 AI가 알려 주고, 그 그림 종류를 새로 만드는 일은 Case A나 C처럼 진행합니다.
+A component that draws the bundle's kind of figure (`plot_type`) must already exist. If not, the AI tells you, and making that kind of figure goes like Case A or C.
 
-## Case A: 내가 짠 그림 코드가 있을 때
+## Case A: when you have plotting code you wrote
 
-따라 해 볼 예제: [튜토리얼: 내가 짠 스크립트 옮기기](../tutorials/case_a_port_script.md). 학생이 짠 qPCR 막대그래프 스크립트를 옮기고, 옮긴 그림이 원래 그림과 같은지 확인합니다.
+Example to follow: [Tutorial: port a script you wrote](../tutorials/case_a_port_script.md). A student's qPCR bar chart script is ported, and the ported figure is checked against the original.
 
-💬 **AI에게:**
+💬 **Ask an AI:**
 
-> "`analysis_notebook.py`와 `results.csv`로 그린 그림을 fig-atlas로 들여와 줘(Case A). 프로젝트는 `lab-acute-1d-heatmap`으로 새로 만들어 줘."
+> "Bring the figure drawn by `analysis_notebook.py` and `results.csv` into fig-atlas (Case A). Make a new project called `lab-acute-1d-heatmap`."
 
-AI는 다음 순서로 진행합니다. 단계마다 무엇을 바꾸는지 보여 줍니다.
+The AI goes through these steps, showing what it changes at each one.
 
-1. **코드를 읽고 세 부분으로 나눕니다.** 데이터를 읽는 부분, 그림의 값(축 범위·색·크기·임계값), 그리는 부분.
-2. **데이터를 번들로 옮깁니다.** 원본 표를 `raw_data/…/inputs/data.csv`로 **그대로** 복사합니다. 값은 바꾸지 않습니다.
-3. **그림의 값을 메모와 설정으로 옮깁니다.** 코드에 박혀 있던 `fontsize=12`, `color="red"` 같은 값이 설명 주석 달린 설정 줄이 됩니다.
-4. **그리는 부분을 부품(렌더러)으로 정리합니다.** 같은 모양의 부품이 이미 있으면 그것을 씁니다. 없으면 새로 만들어 다음 프로젝트도 쓸 수 있게 남깁니다.
-5. **빌드해서 원래 그림과 비교합니다.**
+1. **It reads the code and splits it into three parts:** reading the data, the figure's values (axis ranges, colours, sizes, thresholds), and drawing.
+2. **It moves the data into a bundle.** The original table is copied **unchanged** to `raw_data/…/inputs/data.csv`. No value is changed.
+3. **It moves the figure's values into the note and the config.** Values typed into the code, such as `fontsize=12` or `color="red"`, become config lines with explaining comments.
+4. **It turns the drawing part into a component (a renderer).** If a component of the same shape exists, it uses that. If not, it makes one and leaves it for later projects.
+5. **It builds and compares with the original figure.**
 
-**연구자가 확인할 것:** 새 그림과 원래 코드의 그림을 나란히 놓고 **같은지** 봅니다. 색·순서·축 범위가 다르면 알려 주세요. 처음 옮길 때는 원래 그림과 똑같이 만드는 것이 목표입니다. 바꾸고 싶은 점은 옮긴 뒤에 설정으로 바꿉니다.
+**What you check:** put the new figure next to the original code's figure and see **whether they are the same**. Tell the AI if colours, order or axis ranges differ. The first port aims to be identical to the original; what you want to change, you change in the config afterwards.
 
-## Case C: 원하는 모양만 있을 때
+## Case C: when you only have the shape you want
 
-따라 읽을 예제: [튜토리얼: 스케치와 데이터로 그림 만들기](../tutorials/case_c_from_sketch.md). 실제로 있었던 한 번의 진행(해석안, 질문과 답, 결과 검토)을 기록했습니다.
+Example to read: [Tutorial: from a sketch and a table](../tutorials/case_c_from_sketch.md). It records one real session: the interpretation, the questions and answers, and the review of the result.
 
-다른 논문의 그림 캡처, 손으로 그린 스케치, 또는 "가로축은 용량, 화합물별로 선을 나누고, 오차 띠를 넣어 줘" 같은 말 설명이면 됩니다.
+A capture of a figure from another paper, a hand-drawn sketch, or a description such as "dose on the x axis, one line per compound, with an error band" is enough.
 
-💬 **AI에게:**
+💬 **Ask an AI:**
 
-> "`results.csv`를 이 그림(첨부)처럼 그리고 싶어(Case C). 그리기 전에 어떻게 해석했는지 먼저 보여 줘."
+> "I want to draw `results.csv` like this figure (attached) (Case C). Show me how you interpret it before drawing."
 
-1. **해석안을 먼저 확인받습니다.** 예: "`log2FC`를 가로축, `-log10(padj)`를 세로축으로 보고 volcano plot으로 해석했습니다. 기준은 padj ≤ 0.05, |log2FC| ≥ 1입니다. 이대로 진행할까요?" 그림에서 알 수 없는 값(임계값, 어느 열이 무엇인지)은 **추측하지 않고 묻습니다.** 여기서 정확히 답하는 것이 결과를 가장 크게 좌우합니다.
-2. **승인 뒤에 그립니다.** 같은 모양의 부품이 있으면 그것을 쓰고, 없으면 새로 만듭니다. 메모에는 이 값들이 "참조 그림에서 추론함"이라고 표시되고, 참조 그림도 번들에 함께 보관됩니다.
-3. **결과를 보여 줍니다.** 원하는 모양과 비슷한지는 **연구자가 판단합니다.** 다른 점을 말해 주면 설정으로 조정합니다.
+1. **It has you confirm its interpretation first.** For example: "I read `log2FC` as the x axis and `-log10(padj)` as the y axis, as a volcano plot, with padj ≤ 0.05 and |log2FC| ≥ 1 as the criteria. Shall I go ahead?" Values the figure cannot tell (thresholds, which column is which) are **asked, not guessed**. Answering precisely here matters most for the result.
+2. **It draws after you approve.** If a component of that shape exists, it uses it; if not, it makes one. The note marks these values as "inferred from the reference figure", and the reference figure is kept in the bundle too.
+3. **It shows you the result.** Whether it is close to the shape you wanted is **for you to judge**. Tell it what differs and it adjusts the config.
 
-## 처음부터 번들로 받기
+## Getting results as a bundle from the start
 
-분석 파이프라인이나 다른 AI(ChatGPT 등)에게 분석·그림을 맡길 때, 결과를 처음부터 번들 모양으로 달라고 하면 Case B로 바로 들여올 수 있습니다. 아래 글을 요청에 붙이세요.
+When you hand analysis or plotting to an analysis pipeline or another AI (ChatGPT and the like), ask for the results in bundle shape from the start, and they come in directly as Case B. Add the text below to your request.
 
+<!-- i18n: prose -->
 ```text
-[fig-atlas 번들 형식으로 결과 내기]
-그림에 쓸 데이터를 아래 폴더 구조로 저장해 주세요.
+[Results in fig-atlas bundle format]
+Please save the data for the figure in this folder structure.
 
-<번들이름>/
-  inputs/data.csv            # 그림이 읽는 표. 한 행 = 한 관측(또는 한 항목). 값은 가공·반올림하지 않음
-  metadata/metadata.yaml     # 아래 항목
-  scripts/figure.py          # (있으면) 그림을 다시 그리는 코드. 상대 경로 ../inputs/data.csv 사용
-  outputs/figure.png         # (있으면) 그 코드로 그린 그림
+<bundle-name>/
+  inputs/data.csv            # the table the figure reads. One row = one observation (or item). Values not processed or rounded
+  metadata/metadata.yaml     # the entries below
+  scripts/figure.py          # (if any) code that redraws the figure, reading ../inputs/data.csv
+  outputs/figure.png         # (if any) the figure that code drew
 
-metadata.yaml 항목:
-  plot_type: 그림 종류 (예: line_band, threshold_scatter, venn, volcano)
-  plot_params: 그 그림의 값 -- 어느 열을 가로축·세로축·집단으로 쓰는지, 축 범위, 임계값, 색, 제목
+metadata.yaml entries:
+  plot_type: the kind of figure (e.g. line_band, threshold_scatter, venn, volcano)
+  plot_params: the figure's values -- which columns are the x axis, y axis and groups, axis ranges, thresholds, colours, title
 ```
 
-`plot_type`에 쓸 수 있는 이름과 그림 종류별로 필요한 열은 [데이터 번들 계약서](../contracts/README.md)에 있습니다(⌨ `fa bundle contracts`).
+The names you can use for `plot_type`, and the columns each kind of figure needs, are in the [data bundle contracts](../contracts/README.md) (⌨ `fa bundle contracts`).
 
-## 알아 두면 좋은 것
+## Good to know
 
-- **어느 길이든 원본 데이터는 그대로입니다.** Case A에서도 표를 옮겨 놓을 뿐 고치지 않습니다(3장).
-- **새 그림 종류는 자산이 됩니다.** Case A·C에서 새로 만든 그림 부품은 저장소에 남아, 다음에는 같은 종류의 데이터를 Case B처럼 바로 들여올 수 있습니다.
-- **그림 모양은 분야와 무관하게 만듭니다.** 예를 들어 "효과 대 유의성 산점도"는 오믹스의 volcano에도, 약물 스크리닝에도 같은 부품을 씁니다. 분야별 이름과 기본값은 따로 둡니다([설계 결정 0003](../decisions/0003-renderers-are-shapes.md)).
+- **On every way, the raw data stay as they are.** In Case A too, the table is only moved, never edited (chapter 3).
+- **New kinds of figure become assets.** A component made in Case A or C stays in the repository, so the next time data of that kind come in directly, like Case B.
+- **Figure shapes are made independent of the field.** For example, the "effect versus significance scatter" is the same component for an omics volcano plot and for a drug screen. Field-specific names and defaults are kept separately ([design decision 0003](../decisions/0003-renderers-are-shapes.md)).
 
 ---
-이전: [4. 첫 그림 만들기](04-first-figure.md) · 다음: [6. 그림 고치기: config 읽고 쓰기](06-config.md)
+Previous: [4. Making your first figure](04-first-figure.md) · Next: [6. Changing a figure: reading and writing the config](06-config.md)

@@ -106,7 +106,8 @@ def test_no_editor_is_required(page):
     the AI or `fa` commands, and VS Code appears only as an optional tip."""
     body = _body(page)
     assert "🖱" not in body, f"{page.name}: an editor-button step (use 💬 / ⌨, and 💡 for editor tips)"
-    optional = ("💡", "VS Code를 쓴다면", "VS Code를 쓸 때", "필요하지 않습니다", "그리고 VS Code")
+    optional = ("💡", "VS Code를 쓴다면", "VS Code를 쓸 때", "필요하지 않습니다", "그리고 VS Code",
+                "if you use VS Code", "(With VS Code)", "is needed", "and the VS Code")
     for para in re.split(r"\n\s*\n", body):
         if ("VS Code" in para or "Ctrl+Shift" in para) and not any(o in para for o in optional):
             pytest.fail(f"{page.name}: VS Code presented as required: {para.strip()[:120]}")
@@ -125,8 +126,12 @@ def test_entry_paths_are_named_the_same_everywhere():
         assert all(f"Case {c}" in text or f"Case A·B·C" in text for c in "ABC"), f"{name}: Case A/B/C missing"
         assert not re.search(r"트랙 [A-D]", text), f"{name}: old 'track' naming"
     guide = sources["guide"].read_text(encoding="utf-8")
+    guide_ko = (GUIDE / "05-entry-paths.ko.md").read_text(encoding="utf-8")
     rules = sources["rules"].read_text(encoding="utf-8")
-    # A = own code + data, B = compliant bundle, C = data + visual intent -- in both
-    assert re.search(r"Case A \(Unstructured custom script", rules) and "Case A: 코드 이식" in guide
-    assert re.search(r"Case B \(Pre-packaged compliant bundle", rules) and "Case B: 번들 반입" in guide
-    assert re.search(r"Case C \(Data \+ visual intent", rules) and "Case C: 의도로 합성" in guide
+    # A = own code + data, B = compliant bundle, C = data + visual intent -- in the rules and both languages
+    assert re.search(r"Case A \(Unstructured custom script", rules)
+    assert re.search(r"Case B \(Pre-packaged compliant bundle", rules)
+    assert re.search(r"Case C \(Data \+ visual intent", rules)
+    assert "Case A: port code" in guide and "Case A: 코드 이식" in guide_ko
+    assert "Case B: bring in a bundle" in guide and "Case B: 번들 반입" in guide_ko
+    assert "Case C: draw from intent" in guide and "Case C: 의도로 합성" in guide_ko
