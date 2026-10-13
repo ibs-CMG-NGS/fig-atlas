@@ -91,6 +91,7 @@ nav:
       - 이미지 번들: contracts/image_bundle_contract.md
       - 새 그림 유형 요청: contracts/new_plot_type_contract.md
       - 명령 (자동 생성): reference/cli.md
+      - 파이썬 함수 (자동 생성): reference/api.md
       - 설정 키 (자동 생성): reference/config.md
       - 렌더러 갤러리 (자동 생성): reference/gallery.md
       - 렌더러 사용처: reference/renderer_inventory.md

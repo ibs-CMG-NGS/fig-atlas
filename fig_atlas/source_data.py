@@ -26,7 +26,12 @@ PENDING: list[dict] = []
 
 
 def add(df, panel: str, title: str = "", name: str = "", note: str = ""):
-    """Register the table panel ``panel`` is drawn from; returns ``df``."""
+    """Register the table panel ``panel`` is drawn from; returns ``df``.
+
+    ``source_data.add(table, panel="a", title="log2FC per gene")`` before the
+    figure is saved: publish writes it as CSV into ``figure_NN_source_data/``
+    with an index, the per-panel data many journals ask for. Pass the values
+    as plotted (after filtering and renaming), not the raw input."""
     if not re.fullmatch(r"[A-Za-z0-9]+", str(panel)):
         raise ValueError(f"panel must be letters/digits, e.g. 'a': {panel!r}")
     if name and not re.fullmatch(r"[A-Za-z0-9_-]+", name):

@@ -29,13 +29,13 @@ description: "Assemble multi-panel publication figures by composing modular expl
    from fig_atlas.renderers import place_panel_tags
 
    config = get_config()
-   fcfg = config._raw["figures"]["figure1"]                  # 레이아웃 키: 주석과 함께 config에
+   fcfg = config.settings["figures"]["figure1"]                  # 레이아웃 키: 주석과 함께 config에
    w, h = config.page.figure_size_in(height_mm=float(fcfg["height_mm"]))
    fig = plt.figure(figsize=(w, h))
    gs = fig.add_gridspec(2, 2, height_ratios=fcfg["height_ratios"], hspace=fcfg["hspace"], wspace=fcfg["wspace"])
    ax_a, ax_b = fig.add_subplot(gs[0, 0]), fig.add_subplot(gs[0, 1])
-   render("volcano", ax_a, data_a, config._raw["plots"]["volcano"])    # 렌더러가 코어든 팩이든
-   render("heatmap", ax_b, data_b, config._raw["plots"]["heatmap"])
+   render("volcano", ax_a, data_a, config.settings["plots"]["volcano"])    # 렌더러가 코어든 팩이든
+   render("heatmap", ax_b, data_b, config.settings["plots"]["heatmap"])
    place_panel_tags(fig, [[("a", [ax_a])], [("b", [ax_b])]])          # 외곽 경계 기준 정렬 (AGENTS.md §1.5)
    save_page_figure(fig, stem.with_suffix(".pdf"))
    ```

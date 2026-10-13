@@ -67,6 +67,17 @@ class StyleRef:
 
 @dataclass(frozen=True)
 class Param:
+    """One parameter a renderer or script reads from the config.
+
+    ``type`` is float, int, bool, str, list, dict, ``"color"``, ``"cmap"`` or
+    a tuple of allowed values. ``default`` is the value used when the config
+    has none (a number, a ``StyleRef`` to a style preset key, or
+    ``CODE_DEFAULT``). ``unit``, ``role`` and ``tune`` are the three parts of
+    the config comment (AGENTS.md 1.6): `fa param scaffold` writes them next
+    to the key. ``range`` is (min, max), ``aliases`` old names still
+    accepted, and ``open_keys`` marks a dict whose keys are free (rename
+    maps, per-group colours).
+    """
     name: str
     type: Any                     # float, int, bool, str, "color", "cmap", list, dict, or a tuple of choices
     default: Any = None
@@ -113,6 +124,10 @@ class Param:
 
 @dataclass
 class Schema:
+    """The parameters of one renderer (or, as ``LAYOUT_SCHEMA``, the keys an
+    analysis script reads itself): a list of ``Param`` plus shared groups in
+    ``extends`` (e.g. ``typography()``). `fa param` and `fa lint` read it, and
+    ``uses_schema`` checks the values a renderer receives against it."""
     name: str
     params: list[Param] = field(default_factory=list)
     extends: list["Schema"] = field(default_factory=list)

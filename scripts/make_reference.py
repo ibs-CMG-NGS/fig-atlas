@@ -4,6 +4,8 @@
     python scripts/make_reference.py --check    # exit 1 if a page is out of date (CI)
 
 - docs/reference/cli.md      every `fa` command and option, from the CLI parser
+- docs/reference/api.md      the Python functions a script or figure spec calls, by task, from their
+                             docstrings (the list: API below)
 - docs/reference/config.md   every renderer parameter (type, default, unit, what it does), from
                              the renderers' SCHEMA; and the recipes with their defaults
 - docs/reference/gallery.md  first, one picture per example bundle (examples/gallery/: copy a
@@ -70,6 +72,116 @@ def cli_page() -> str:
             rows.append(f"| `{name}` | {_cell((a.help or '') + choices + default)} |\n")
         if rows:
             out += ["| Argument | Meaning |\n|---|---|\n", *rows]
+    return "".join(out)
+
+
+# ------------------------------------------------------------------- api.md --
+# The Python names an analysis script or figure spec uses, by task, in the
+# order a script needs them. tests/test_api_reference.py checks that each
+# resolves and has a docstring, and that fig_atlas.__all__ and the names the
+# `fa new project` template imports are all here.
+API = [
+    ("Config and paths",
+     "Every script starts here: `get_config()` finds the project's config (the build passes it as "
+     "CONFIG_PATH) and merges its style presets.",
+     ["fig_atlas:get_config",
+      ("fig_atlas:ProjectConfig", ["settings", "page", "raw_root", "figures_root", "formats", "dpi",
+                                   "project_root", "output_root", "project_name", "require_path"]),
+      "fig_atlas:repo_root", "fig_atlas:load_bundle_params", "fig_atlas:text_param"]),
+    ("Final size",
+     "Figures are drawn at the size they print, so point sizes in the config are the printed sizes "
+     "(design decision 0001).",
+     [("fig_atlas:PageSpec", ["figure_size_in", "content_width_in", "content_height_in"]),
+      "fig_atlas:save_page_figure", "fig_atlas:audit_figure"]),
+    ("Drawing panels",
+     "Draw by plot name (`fa renderers` lists them; the gallery shows each), or let `draw_plots` draw "
+     "every `plots:` block of the config.",
+     ["fig_atlas:render", "fig_atlas.bundle_figure:draw_plots", "fig_atlas.bundle_figure:draw_bundle",
+      "fig_atlas.renderers:render_image_panel", "fig_atlas.renderers:place_panel_tags",
+      "fig_atlas.renderers:panel_label", "fig_atlas.renderers:align_title_to_labels",
+      "fig_atlas.renderers.text_color:readable_text_color"]),
+    ("Numbers in legends",
+     "A number a legend quotes is recorded by the script and written as `{name}` in the figure spec "
+     "(AGENTS.md 4.5).",
+     ["fig_atlas.claims:record", "fig_atlas.claims:use_from", "fig_atlas.claims:scan"]),
+    ("Statistics",
+     "Stars and brackets come from these tests; the table is published with the figure (AGENTS.md 4.6).",
+     ["fig_atlas.stats:compare_to_control", "fig_atlas.stats:two_group", "fig_atlas.stats:anova",
+      "fig_atlas.stats:adjust", "fig_atlas.stats:stars", "fig_atlas.stats:describe", "fig_atlas.stats:record"]),
+    ("Source data",
+     "The values each panel plots, published as CSV next to the figure.",
+     ["fig_atlas.source_data:add"]),
+    ("Publishing",
+     "A figure spec describes one figure; `fa build` runs the script, then `publish` and `verify_atlas`.",
+     ["fig_atlas:FigureSpec", "fig_atlas:publish", "fig_atlas:verify_atlas", "fig_atlas:write_report"]),
+    ("Parameters of your own code",
+     "A renderer declares its parameters in a `SCHEMA`, a script the keys it reads itself in a "
+     "`LAYOUT_SCHEMA`; `fa param` and `fa lint` read them.",
+     ["fig_atlas.schema:Param", "fig_atlas.schema:Schema", "fig_atlas.schema:uses_schema",
+      "fig_atlas.schema:typography", "fig_atlas.schema:StyleRef", "fig_atlas.schema:CODE_DEFAULT"]),
+    ("Reading provenance",
+     "What a published figure was built from; `fa status`, `fa impact` and `fa lineage` print the same.",
+     ["fig_atlas.provenance:published_records", "fig_atlas.provenance:check_freshness",
+      "fig_atlas.provenance:impacted_by", "fig_atlas.provenance:lineage"]),
+]
+
+
+# modules a script imports whole and calls through (``claims.record``)
+MODULE_STYLE = {"fig_atlas.claims", "fig_atlas.stats", "fig_atlas.source_data"}
+
+
+def api_object(ref: str):
+    module, _, name = ref.partition(":")
+    return getattr(importlib.import_module(module), name)
+
+
+def _signature(obj, name: str) -> str:
+    import inspect
+    if not (inspect.isfunction(obj) or inspect.isclass(obj)):
+        return name                                  # a constant
+    sig = inspect.signature(obj)
+    params = [p.replace(annotation=inspect.Parameter.empty) for p in sig.parameters.values() if p.name != "self"]
+    return name + str(sig.replace(parameters=params, return_annotation=inspect.Signature.empty))
+
+
+def api_doc(obj) -> str:
+    import inspect
+    if not (inspect.isfunction(obj) or inspect.isclass(obj) or isinstance(obj, property)):
+        obj = type(obj)                              # a constant: its class says what it means
+    return inspect.cleandoc(obj.__doc__ or "")
+
+
+def api_page() -> str:
+    from string import Template
+    skeleton = Template((ROOT / "fig_atlas" / "templates" / "project_analysis.py.tmpl").read_text(encoding="utf-8"))
+    skeleton = skeleton.safe_substitute(name="my-project", date="<date>", slug="main",
+                                        config="configs/config_my-project.yaml")
+    out = [HEADER, "# Python reference\n\n",
+           "The functions an analysis script or figure spec calls, by task. Everything else -- building, "
+           "checking, promoting -- is a command ([Command reference](cli.md)); renderer parameters are in the "
+           "[Config reference](config.md) and a picture of every plot in the [gallery](gallery.md).\n\n",
+           "A new project's script (`fa new project`) already uses the common ones:\n\n",
+           "```python\n", skeleton.rstrip("\n"), "\n```\n\n", "## Contents\n\n"]
+    out += [f"- [{title}](#{title.lower().replace(' ', '-')})\n" for title, _, _ in API]
+    for title, intro, entries in API:
+        out.append(f"\n## {title}\n\n{intro}\n")
+        for entry in entries:
+            ref, members = entry if isinstance(entry, tuple) else (entry, [])
+            module, _, name = ref.partition(":")
+            obj = api_object(ref)
+            if module in MODULE_STYLE:                   # used as claims.record(...), stats.stars(...)
+                parent, _, short = module.rpartition(".")
+                name, imp = f"{short}.{name}", f"from {parent} import {short}"
+            else:
+                imp = f"from {module} import {name}"
+            out.append(f"\n### `{name}`\n\n`{imp}`\n\n"
+                       f"```python\n{_signature(obj, name)}\n```\n\n{api_doc(obj)}\n")
+            if members:
+                out.append("\n")
+            for m in members:
+                attr = obj.__dict__[m]
+                label = f"{name}.{m}" if isinstance(attr, property) else _signature(attr, f"{name}.{m}")
+                out.append(f"- **`{label}`** -- {' '.join(api_doc(attr).split())}\n")
     return "".join(out)
 
 
@@ -224,7 +336,8 @@ def main() -> int:
     ap.add_argument("--check", action="store_true", help="exit 1 if a page is out of date")
     args = ap.parse_args()
     cases = _cases()
-    pages = {REF / "cli.md": cli_page(), REF / "config.md": config_page(), REF / "gallery.md": gallery_page(cases)}
+    pages = {REF / "cli.md": cli_page(), REF / "api.md": api_page(), REF / "config.md": config_page(),
+             REF / "gallery.md": gallery_page(cases)}
     if args.check:
         stale = [p.relative_to(ROOT).as_posix() for p, text in pages.items()
                  if not p.is_file() or p.read_text(encoding="utf-8") != text]

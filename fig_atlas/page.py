@@ -22,6 +22,9 @@ MM_PER_INCH = 25.4
 
 @dataclass(frozen=True)
 class PageSpec:
+    """The printed area a figure is drawn at 1:1 (mm), from the config's
+    ``page:`` block (``ProjectConfig.page``). ``figure_size_in`` gives the
+    figure size in inches for ``plt.figure(figsize=...)``."""
     name: str
     content_width_mm: float
     content_height_mm: float
@@ -37,10 +40,12 @@ class PageSpec:
 
     @property
     def content_width_in(self) -> float:
+        """Width of the printed area, inches."""
         return self.content_width_mm / MM_PER_INCH
 
     @property
     def content_height_in(self) -> float:
+        """Height of the printed area, inches."""
         return self.content_height_mm / MM_PER_INCH
 
     def figure_size_in(

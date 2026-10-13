@@ -113,6 +113,12 @@ def audit_figure(
     min_line_pt: float = 0.25,
     max_offenders: int = 8,
 ) -> dict:
+    """How ``fig`` prints on ``page``: drawn, shrunk to the page width if wider,
+    and measured. Returns a dict with ``scale_to_page_width``,
+    ``pages_needed``, the smallest printed text and line (``min_font_printed_pt``,
+    ``min_line_printed_pt``), the texts below ``min_font_pt``
+    (``smallest_texts``) and the verdicts ``font_ok``, ``line_ok`` and
+    ``fits_one_page``. `fa audit-print` and preflight run it on every figure."""
     with _record_draws() as (texts, lines):
         fig.canvas.draw()
     renderer = fig.canvas.get_renderer()

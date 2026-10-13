@@ -40,7 +40,13 @@ PLACEHOLDER = re.compile(r"\{([A-Za-z_]\w*)(?::([^{}]*))?\}")
 
 
 def record(name: str, value, source: str = "") -> object:
-    """Register a number this run computed; returns ``value`` unchanged."""
+    """Register a number this run computed; returns ``value`` unchanged.
+
+    ``claims.record("n_anchors", int(n), source="promoter DA peaks, padj < 0.05")``
+    lets the figure spec write ``{n_anchors:,}`` (Python format: ``{share:.0%}``,
+    ``{p:.2g}``); publish fills it in and the value is kept in the figure's
+    provenance record. ``name`` must be a Python identifier; ``source`` says
+    what was counted."""
     if not re.fullmatch(r"[A-Za-z_]\w*", name):
         raise ValueError(f"claim name must be an identifier: {name!r}")
     if hasattr(value, "item"):                 # numpy scalars -> plain Python, for JSON

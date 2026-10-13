@@ -113,7 +113,15 @@ class ProjectConfig:
         return p if p.is_absolute() else self.project_root / p
 
     @property
+    def settings(self) -> dict:
+        """The whole config as a dict, merged with its style presets: the
+        ``figures``, ``plots``, ``paths`` and any other blocks a script reads
+        (``CONFIG.settings["plots"]["volcano"]``)."""
+        return self._raw
+
+    @property
     def project_name(self) -> str:
+        """``project.name``: the project identifier."""
         return str(self._raw.get("project", {}).get("name", "default"))
 
     @property
@@ -153,10 +161,13 @@ class ProjectConfig:
 
     @property
     def figure_count(self) -> int:
+        """``project.figure_count``: how many figures the project publishes."""
         return int(self._raw["project"]["figure_count"])
 
     @property
     def figures_root(self) -> Path:
+        """Where the script saves its figures: ``paths.figures_root``, else
+        ``outputs/<domain>/<category>/<project>/figures``."""
         path_str = self._raw.get("paths", {}).get("figures_root")
         if path_str:
             return self._resolve(path_str)
@@ -164,6 +175,8 @@ class ProjectConfig:
 
     @property
     def supplementary_root(self) -> Path:
+        """Where supplementary tables go (``paths.supplementary_root``, else
+        the project's ``supplementary_tables`` output folder)."""
         path_str = self._raw.get("paths", {}).get("supplementary_root")
         if path_str:
             return self._resolve(path_str)
@@ -171,6 +184,7 @@ class ProjectConfig:
 
     @property
     def manifests_root(self) -> Path:
+        """Where build reports go (manifest, verification, preflight)."""
         path_str = self._raw.get("paths", {}).get("manifests_root")
         if path_str:
             return self._resolve(path_str)
@@ -178,10 +192,12 @@ class ProjectConfig:
 
     @property
     def dpi(self) -> int:
+        """``figures.dpi`` (default 300): resolution of the PNG files."""
         return int(self._raw.get("figures", {}).get("dpi", 300))
 
     @property
     def formats(self) -> list[str]:
+        """``figures.formats`` (default png, pdf, svg): the files to save."""
         return list(self._raw.get("figures", {}).get("formats", ["png", "pdf", "svg"]))
 
     @property
@@ -214,6 +230,7 @@ class ProjectConfig:
         }
 
     def require_path(self, path: Path, label: str) -> None:
+        """Raise FileNotFoundError naming ``label`` if ``path`` is missing."""
         if not path.exists():
             raise FileNotFoundError(f"{label} does not exist: {path}")
 

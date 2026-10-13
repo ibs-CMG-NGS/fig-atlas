@@ -62,7 +62,12 @@ def bundle_data(bundle: Path, shape: tuple[str, str]):
 
 def draw_plots(fig, plots: dict, root: Path, layout: dict | None = None, load=None) -> list:
     """Draw every ``plots:`` block that names a renderer; returns the
-    ``place_panel_tags`` columns ([(letter, axes), ...] per grid column)."""
+    ``place_panel_tags`` columns ([(letter, axes), ...] per grid column).
+
+    ``plots`` is the config's ``plots:`` mapping, ``root`` the repository
+    (``CONFIG.project_root``) and ``layout`` the ``figures:`` block (grid
+    columns, gaps). A block with a ``bundle`` is drawn from that bundle's
+    table; for one without, ``load(name, block)`` returns the data."""
     layout = layout or {}
     names = [k for k, v in (plots or {}).items() if isinstance(v, dict) and v.get("renderer")]
     if not names:

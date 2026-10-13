@@ -94,7 +94,16 @@ def _scale_bar(ax, width_px: int, height_px: int, params) -> float | None:
 
 @uses_schema(SCHEMA)
 def render_image_panel(ax, source, params):
-    """Draw the image onto ``ax`` and register its adjustments; returns the record entry."""
+    """Draw a microscope image, blot or gel onto ``ax`` from its original file.
+
+    ``source`` is one image file, or a list of greyscale files (one per
+    channel) that are tinted and combined. ``params`` (the panel's
+    ``plots:`` block; keys in the config reference under image_panel) sets
+    the crop, the linear display range per channel, gamma and the scale bar
+    (from ``pixel_size``). Never pass a brightened or cropped copy: the
+    adjustments are made here and recorded with the source file hashes, so
+    the figure's README lists them and verify fails if a source image
+    changes (AGENTS.md 4.7). Returns the recorded entry."""
     from ..images import prepare, record
     chans = _channels(source, params)
     prep = prepare(chans, crop=params.get("crop"), gamma=float(params.get("gamma", 1.0)),
