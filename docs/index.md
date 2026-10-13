@@ -1,23 +1,23 @@
 # fig-atlas
 
-논문 그림을 **설정(config)으로 그리고, 인쇄 전에 검사하고, 출처를 기록하고, 논문의 생애주기(탐색 → 논문 그림 → 은퇴)에 따라 관리하는** 도구입니다. 분야와 무관한 코어에 분야 팩(오믹스 등)을 더해 씁니다.
+A tool that **draws paper figures from a config, checks them before print, records where they came from, and manages them through a paper's life (exploration → paper figure → retirement)**. A field-neutral core is used together with domain packs (omics and others).
 
-- **그림은 config로 조정합니다.** 색·크기·임계값·레이아웃이 모두 주석 달린 YAML에 있어, 파이썬을 읽지 않고도 바꿀 수 있습니다.
-- **인쇄 크기 그대로 그립니다.** A4 본문 폭에 1:1로 그리고, `--preflight`가 글자 겹침·잘림·최소 크기·색각이상 구분·폰트를 검사합니다.
-- **출처가 남습니다.** 그림마다 입력 데이터·코드·파라미터의 해시가 기록되고, 데이터가 바뀌면 어떤 그림이 낡았는지 알려 줍니다.
-- **절차는 명령입니다.** 프로젝트 생성, 데이터 반입, 승격, 은퇴가 `fa` 명령이고, AI 에이전트는 같은 명령을 MCP 도구로 부릅니다.
+- **You adjust a figure in its config.** Colours, sizes, thresholds and layout are all in a commented YAML file, so you can change them without reading Python.
+- **Figures are drawn at their printed size.** They are drawn 1:1 on the A4 text width, and `--preflight` checks for overlapping or clipped text, minimum sizes, colours that colour-blind readers cannot tell apart, and fonts.
+- **Every figure keeps a record of its sources.** The hashes of its input data, code and parameters are recorded, and when data change you are told which figures are now stale.
+- **Procedures are commands.** Creating a project, bringing in data, promoting and retiring figures are `fa` commands, and AI agents call the same commands as MCP tools.
 
-## 어디서 시작할까
+## Where to start
 
-| 하고 싶은 일 | 문서 |
+| I want to | Read |
 |---|---|
-| 이 도구가 무엇이고 어떻게 쓰는지 알고 싶다 (연구자용, 비전문가 대상) | [연구자 안내서](guide/00-how-to-read.md) |
-| 처음 써 본다 | [튜토리얼: 첫 그림 (15분)](tutorials/first_figure.md) |
-| 내 데이터를 그림으로 | [데이터 번들 계약서](contracts/README.md) → `fa ingest bundle` |
-| 현미경·블롯 이미지 그림 | [튜토리얼: 현미경 이미지 그림](tutorials/imaging_figure.md) |
-| AI 에이전트와 함께 쓴다 | [AI 에이전트 연결](howto/ai_agents.md) |
-| 다른 분야에 쓴다 | [새 분야 팩 만들기](howto/new_domain_pack.md) |
-| 논문 그림을 조립한다 | [그림의 생애주기](guide/11-lifecycle.md) |
-| 왜 이렇게 설계했나 | [설계 결정 (ADR)](decisions/README.md) |
+| understand what this tool is and how to use it (for researchers, no programming needed) | [Researcher guide](guide/00-how-to-read.md) |
+| try it for the first time | [Tutorial: first figure (15 min)](tutorials/first_figure.md) |
+| make a figure from my data | [Data bundle contracts](contracts/README.md) → `fa ingest bundle` |
+| make a figure of microscope or blot images | [Tutorial: a microscopy figure](tutorials/imaging_figure.md) |
+| use it with an AI agent | [Connect AI agents](howto/ai_agents.md) |
+| use it in another field | [Write a domain pack](howto/new_domain_pack.md) |
+| assemble paper figures | [A figure's life](guide/11-lifecycle.md) |
+| know why it is designed this way | [Design decisions (ADR)](decisions/README.md) |
 
-명령은 `fa --help`로 모두 볼 수 있습니다. 저장소의 규칙(사람과 AI 모두에게)은 [`AGENTS.md`](../AGENTS.md)에 있습니다.
+`fa --help` lists every command. The repository's rules, for people and AI alike, are in [`AGENTS.md`](../AGENTS.md).

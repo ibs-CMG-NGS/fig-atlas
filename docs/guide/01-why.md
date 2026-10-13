@@ -1,46 +1,46 @@
 ---
-title: 1. 왜 이런 도구가 필요한가
-audience: 연구자 (프로그래밍 경험 불필요)
-reviewed: 2026-10-08
+title: 1. Why a tool like this
+audience: researchers (no programming experience needed)
+reviewed: 2026-10-13
 ---
 
-# 1. 왜 이런 도구가 필요한가
+# 1. Why a tool like this
 
-> **이런 적 있으시죠?**
+> **Sound familiar?**
 >
-> - 다른 저널로 재투고하느라 그림 열 장의 크기와 글자를 다시 맞췄다.
-> - 데이터를 다시 분석했더니 본문에는 "1,240개"인데 그림 설명에는 아직 "1,212개"가 남아 있었다.
-> - 리뷰어가 "Figure 3c는 어떤 데이터와 기준으로 그렸습니까?"라고 물었는데, 반년 전 일이라 기억이 나지 않았다.
-> - 공동저자가 "글자 좀 키워 주세요"라고 해서 고쳤더니, 다른 그림들과 글자 크기가 달라졌다.
+> - Resubmitting to another journal, you resized ten figures and their text, one by one.
+> - After reanalysing the data, the text said "1,240" but a figure legend still said "1,212".
+> - A reviewer asked "Which data and criteria is Figure 3c based on?", and six months later you could not remember.
+> - A co-author asked for "bigger text, please"; once you changed it, that figure no longer matched the others.
 
-**핵심:** fig-atlas는 그림을 **손으로 다듬는 대상이 아니라 설정에서 다시 만들어지는 결과물**로 다룹니다. 그래서 위 장면들이 "다시 빌드 한 번"으로 끝납니다.
+**The key idea:** fig-atlas treats a figure **not as something you touch up by hand but as a result rebuilt from settings**. Each of the scenes above then ends with "build again".
 
-## 도구가 약속하는 것
+## What the tool promises
 
-| 약속 | 무엇이 달라지나 |
+| Promise | What changes |
 |---|---|
-| **설정으로 그린다** | 색·크기·축 범위·배치가 모두 설정 파일(config)에 있습니다. 그림을 고칠 때 그림 파일이나 프로그램을 열지 않고 설정 한 줄을 바꾸고 다시 빌드합니다. 무엇을 바꿨는지가 글로 남아, 되돌리기도 쉽습니다. |
-| **인쇄 크기 그대로 그린다** | 그림을 큰 화면에 그린 뒤 줄이지 않고, 실제 지면 크기(A4 본문 폭)에 1:1로 그립니다. 설정에 7 pt라고 쓰면 종이에서도 7 pt입니다. 저널이 바뀌면 지면 설정 하나만 바꿉니다. |
-| **자동으로 검사한다** | 빌드할 때마다 글자 겹침, 잘림, 너무 작은 글자, 색각이상 독자가 구분하기 어려운 색, 저널이 싫어하는 폰트 형식을 찾아 알려 줍니다. |
-| **출처가 남는다** | 그림마다 어떤 데이터 파일(지문처럼 고유한 값까지), 어떤 설정, 어떤 프로그램으로 만들었는지 기록됩니다. 데이터가 바뀌면 어느 그림이 낡았는지 알려 줍니다. |
-| **숫자가 데이터에서 온다** | 그림 설명 속 개수·비율·통계값을 손으로 쓰지 않고 분석 결과에서 채웁니다. 데이터가 바뀌면 설명도 같이 바뀝니다. |
-| **논문의 흐름을 따라간다** | 탐색용 그림 → 논문 Figure로 승격 → 쓰지 않게 된 그림은 보관. 스토리라인이 바뀐 이유와 근거 데이터도 기록으로 남깁니다. |
+| **Drawn from settings** | Colours, sizes, axis ranges and layout are all in a settings file (the config). To change a figure you do not open the figure or the program: you change one line of the config and build again. What you changed stays in writing, so it is easy to undo. |
+| **Drawn at printed size** | A figure is not drawn large on screen and then shrunk; it is drawn 1:1 at its size on the page (the A4 text width). Write 7 pt in the config and it is 7 pt on paper. When the journal changes, you change one page setting. |
+| **Checked automatically** | Every build looks for overlapping or clipped text, text that is too small, colours that colour-blind readers cannot tell apart, and font formats journals reject. |
+| **Its sources are recorded** | Each figure records which data files (down to a value unique to each file, like a fingerprint), which settings and which software made it. When data change, you are told which figures are stale. |
+| **Numbers come from the data** | Counts, percentages and statistics in a legend are not typed by hand; they are filled in from the analysis. When the data change, the legend changes with them. |
+| **It follows the paper's course** | Exploratory figure → promoted to a paper Figure → figures no longer used are archived. Why the storyline changed, and the data behind each change, are recorded too. |
 
-## 도구가 하지 않는 것
+## What the tool does not do
 
-- **분석 방법이나 통계 기준을 정하지 않습니다.** 어떤 검정을 쓸지, 어떤 임계값이 맞는지는 연구자가 정하고 설정에 적습니다.
-- **논문의 이야기를 정하지 않습니다.** 어떤 그림이 Figure 1이 될지, 무엇을 주장할지는 연구자의 판단입니다. 도구는 그 결정을 기록하고, 결정대로 그림이 맞춰져 있는지 확인합니다.
-- **원본 데이터를 고치지 않습니다.** 원본은 읽기만 합니다. 보기 좋게 바꾸는 일(이름 줄이기, 단위 바꾸기)은 그림을 그릴 때 설정으로 합니다.
+- **It does not choose analysis methods or statistical criteria.** Which test to use and which threshold is right are yours to decide; you write them in the config.
+- **It does not decide the paper's story.** Which figure becomes Figure 1 and what you claim are your judgement. The tool records those decisions and checks that the figures match them.
+- **It does not change raw data.** Raw data are only read. Making them look better (shorter names, other units) is done in the config when the figure is drawn.
 
-## 그래서 연구자가 익혀야 할 것
+## So what does a researcher need to learn?
 
-많지 않습니다. 이 안내서를 다 읽으면 다음 다섯 가지를 할 수 있습니다.
+Not much. By the end of this guide you will be able to:
 
-1. 데이터를 **번들**로 준비하고 검사 결과를 읽는다 (3장)
-2. 번들, 내가 짠 코드, 또는 원하는 그림의 스케치로 **그림을 만든다** (4·5장)
-3. **설정 파일을 읽고 고친다** (6장)
-4. **검사 결과**를 보고 무엇을 고칠지 판단한다
-5. 그림을 **논문 Figure로 승격**하고 기록을 남긴다
+1. prepare data as a **bundle** and read its check results (chapter 3)
+2. **make a figure** from a bundle, from code you wrote, or from a sketch of the figure you want (chapters 4 and 5)
+3. **read and change the config** (chapter 6)
+4. read the **check results** and decide what to fix
+5. **promote** a figure to a paper Figure and keep a record
 
 ---
-이전: [0. 이 안내서를 읽는 법](00-how-to-read.md) · 다음: [2. 한눈에 보기](02-overview.md)
+Previous: [0. How to read this guide](00-how-to-read.md) · Next: [2. Overview](02-overview.md)
