@@ -72,6 +72,9 @@ fa build first-figure --preflight
 
 그림은 `outputs/first-figure/figures/figure_01_main/figure_01.png`(PDF·SVG도)에 있습니다. A4 본문 폭(184.6 mm)에 **실제 인쇄 크기로** 그려졌고, 패널 a·b의 태그는 각 패널의 바깥 경계(눈금 글자·축 제목 포함)에 맞춰져 있습니다.
 
+<!-- img/: drawn by `fa reference` from this page's own steps; do not edit by hand -->
+![첫 빌드 결과: 패널 a는 세 처리군의 용량-반응 곡선(파랑, 주황, 초록), 패널 b는 스크리닝 결과의 효과 크기-유의도 산점도](img/first_figure_build.png)
+
 `--preflight`는 인쇄 전 검사입니다. 출력은 이렇습니다.
 
 ```text
@@ -104,7 +107,9 @@ ALL 1 PROJECT(S) PASSED
 warn  cvd_indistinct  legend of axes[0] 'Viability after 48 h': #ff7f0e and #2ca02c look alike with protanomaly
 ```
 
-패널 a의 주황과 초록이 적색약 독자에게는 거의 같은 색으로 보인다는 뜻입니다. 문제 위치는 `outputs/preflight/first-figure/`의 오버레이 그림에 번호로 표시됩니다.
+패널 a의 주황과 초록이 적색약 독자에게는 거의 같은 색으로 보인다는 뜻입니다. 문제 위치는 `outputs/preflight/first-figure/`의 오버레이 그림에 번호로 표시됩니다. 이 경고의 1번 상자는 패널 a의 범례를 가리킵니다.
+
+![preflight 오버레이: 패널 a의 범례에 주황 상자와 번호 1](img/first_figure_preflight.png)
 
 ## 5. config로 고치기
 
@@ -125,7 +130,11 @@ warn  cvd_indistinct  legend of axes[0] 'Viability after 48 h': #ff7f0e and #2ca
 fa build first-figure --preflight
 ```
 
-이번에는 경고 없이 통과합니다(`0 error(s), 0 warning(s)`). 글자 크기, 축 범위, 임계값, 라벨 개수 같은 다른 값도 같은 방법으로 바꿉니다. 키마다 단위와 조정 방향이 주석으로 적혀 있습니다. 어떤 값이 어디서 왔는지는 `fa param explain first-figure plots.dose_response.band_alpha`처럼 확인합니다.
+이번에는 경고 없이 통과합니다(`0 error(s), 0 warning(s)`). 패널 a의 세 색이 색각이상 독자도 구분할 수 있는 파랑, 주황, 회색으로 바뀌었습니다. 파이썬 코드는 건드리지 않았고 config 한 블록만 바꿨습니다.
+
+![config를 고친 뒤: 패널 a가 Okabe-Ito 팔레트(파랑, 주황, 회색)로 바뀜](img/first_figure_fixed.png)
+
+글자 크기, 축 범위, 임계값, 라벨 개수 같은 다른 값도 같은 방법으로 바꿉니다. 키마다 단위와 조정 방향이 주석으로 적혀 있습니다. 어떤 값이 어디서 왔는지는 `fa param explain first-figure plots.dose_response.band_alpha`처럼 확인합니다.
 
 ## 6. 그림 설명 쓰기
 
