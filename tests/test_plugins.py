@@ -112,6 +112,16 @@ def test_fa_bundle_check_exit_codes(tmp_path, capsys):
     assert "1 with errors" in capsys.readouterr().out
 
 
+def test_fa_bundle_check_names_contract_and_renderer(tmp_path, capsys):
+    """A bundle named on the command line gets a line even when it is ok:
+    what it is, the contract it matched and the renderer that draws it."""
+    ok = _bundle(tmp_path, "venn", "dataset,item\nA,g\n", "ok")
+    capsys.readouterr()
+    assert main(["--root", str(ROOT), "bundle", "check", str(ok)]) == 0
+    out = capsys.readouterr().out
+    assert out.startswith("ok ") and "plot_type venn -> contract core.venn, renderer " in out
+
+
 def test_fa_bundle_check_json(tmp_path, capsys):
     bad = _bundle(tmp_path, "venn", "dataset\nA\n", "bad")
     capsys.readouterr()

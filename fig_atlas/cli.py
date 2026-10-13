@@ -553,11 +553,17 @@ def cmd_bundle(args, root: Path) -> int:
     if args.json:
         print(json.dumps([r.as_dict() for r in reports], indent=1))
     else:
+        # Bundles named on the command line each get a line (what they are and
+        # what draws them); a scan of raw_data/ (--all) lists only problems.
+        named = bool(args.paths) and not args.all
         for r in reports:
-            if not (r.findings and (args.verbose or r.errors or r.warnings)):
+            if not (named or args.verbose or r.errors or r.warnings):
                 continue
-            print(f"{r.bundle}  [{r.plot_type or 'no plot_type'}"
-                  + (f" -> {r.contract}" if r.contract else "") + "]")
+            state = (f"{r.errors} error(s)" if r.errors else f"{r.warnings} warning(s)" if r.warnings else "ok")
+            print(f"{state:<12} {r.bundle}")
+            print(f"    plot_type {r.plot_type or '-'} -> contract {r.contract or 'none'}"
+                  + (f", renderer {r.renderer}" if r.renderer else "")
+                  + (f", {r.rows} rows" if r.rows is not None else ""))
             for f in r.findings:
                 if args.verbose or f.level != "info":
                     print(f"    {f.level.upper():<5} {f.message}")

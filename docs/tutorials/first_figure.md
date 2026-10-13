@@ -42,7 +42,16 @@ fa new project first-figure
 fa bundle check examples/dose_response examples/screen_hits
 ```
 
-두 번들 모두 `ok`이고 계약 `core.line_band`, `core.threshold_scatter`에 맞는다고 나옵니다. 범용 그림은 열 이름을 `plot_params`에서 지정합니다(예: `x_col: dose_uM`). 검사기는 지정된 열이 실제로 있는지 봅니다([표 번들 계약서](../contracts/table_bundle_contract.md)).
+번들마다 결과와 함께 어떤 그림인지(`plot_type`), 맞는 계약, 그릴 렌더러, 행 수가 나옵니다.
+
+```text
+ok           examples/dose_response
+    plot_type line_band -> contract core.line_band, renderer fig_atlas.renderers:render_line_band, 84 rows
+ok           examples/screen_hits
+    plot_type threshold_scatter -> contract core.threshold_scatter, renderer fig_atlas.renderers:render_threshold_scatter, 400 rows
+```
+
+두 번들 모두 `ok`이고 계약 `core.line_band`, `core.threshold_scatter`에 맞습니다. 문제가 있으면 `ok` 자리에 오류·경고 수가, 그 아래에 무엇이 빠졌는지가 나옵니다. 범용 그림은 열 이름을 `plot_params`에서 지정합니다(예: `x_col: dose_uM`). 검사기는 지정된 열이 실제로 있는지 봅니다([표 번들 계약서](../contracts/table_bundle_contract.md)).
 
 ## 3. 번들을 패널로 붙이기
 
