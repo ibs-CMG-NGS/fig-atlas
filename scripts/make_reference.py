@@ -271,6 +271,26 @@ def examples() -> list[Path]:
         if EXAMPLES.is_dir() else []
 
 
+DATA_PREVIEW_ROWS = 5         # rows of an example's data.csv shown under its picture
+DATA_PREVIEW_CHARS = 110      # longer lines are cut (wide tables), saying how many columns are left out
+
+
+def _data_preview(csv: Path) -> str:
+    """The head of an example's table as it is in the file, to hold your own
+    table against: header, the first rows, and its size."""
+    import pandas as pd
+    lines = csv.read_text(encoding="utf-8").splitlines()
+    shape = pd.read_csv(csv).shape
+    shown = []
+    for ln in lines[:DATA_PREVIEW_ROWS + 1]:
+        if len(ln) > DATA_PREVIEW_CHARS:
+            kept = ln[:DATA_PREVIEW_CHARS].rsplit(",", 1)[0]
+            ln = f"{kept},... (+{ln.count(',') - kept.count(',')} more columns)"
+        shown.append(ln)
+    return (f"`inputs/data.csv`, first {min(DATA_PREVIEW_ROWS, shape[0])} of {shape[0]:,} rows "
+            f"({shape[1]} columns):\n\n```text\n" + "\n".join(shown) + "\n```\n\n")
+
+
 def _example_section(bundle: Path) -> str:
     from fig_atlas.contracts import contract_for
     import yaml
@@ -279,8 +299,10 @@ def _example_section(bundle: Path) -> str:
     c = contract_for(meta.get("plot_type"))
     name = bundle.name
     inputs = sorted(f.name for f in (bundle / "inputs").iterdir())
+    data = bundle / "inputs" / "data.csv"
     return (f"### {name}\n\n{c.title if c else ''}\n\n![{name}](gallery/examples/{name}.png)\n\n"
-            f"Inputs: {', '.join(f'`{f}`' for f in inputs)}. `metadata/metadata.yaml`:\n\n"
+            + (_data_preview(data) if data.is_file() else "")
+            + f"Inputs: {', '.join(f'`{f}`' for f in inputs)}. `metadata/metadata.yaml`:\n\n"
             f"```yaml\n{meta_text.rstrip()}\n```\n\n"
             "Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):\n\n"
             "```bash\n"

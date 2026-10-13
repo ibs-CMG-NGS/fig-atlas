@@ -12,6 +12,17 @@ Bars (mean +/- error) with replicate dots: one row per replicate (category, grou
 
 ![bar_scatter](gallery/examples/bar_scatter.png)
 
+`inputs/data.csv`, first 5 of 32 rows (3 columns):
+
+```text
+gene,condition,relative_mrna
+Gfap,control,0.944
+Gfap,control,1.137
+Gfap,control,1.154
+Gfap,control,0.864
+Gfap,knockout,2.501
+```
+
 Inputs: `data.csv`. `metadata/metadata.yaml`:
 
 ```yaml
@@ -45,6 +56,17 @@ Values per category: one row per observation (category, value)
 
 ![boxplot](gallery/examples/boxplot.png)
 
+`inputs/data.csv`, first 5 of 24 rows (2 columns):
+
+```text
+treatment,relative_expression
+untreated,1.191
+untreated,1.285
+untreated,0.884
+untreated,1.148
+untreated,0.833
+```
+
 Inputs: `data.csv`. `metadata/metadata.yaml`:
 
 ```yaml
@@ -72,6 +94,17 @@ fa build <project> --preflight
 Dose series: one row per replicate (dose > 0, response), optional group
 
 ![dose_response](gallery/examples/dose_response.png)
+
+`inputs/data.csv`, first 5 of 54 rows (4 columns):
+
+```text
+compound,dose_uM,replicate,viability
+compound A,0.01,1,90.89
+compound A,0.01,2,99.93
+compound A,0.01,3,102.86
+compound A,0.0316,1,102.07
+compound A,0.0316,2,99.64
+```
 
 Inputs: `data.csv`. `metadata/metadata.yaml`:
 
@@ -104,6 +137,17 @@ Estimates with confidence intervals (forest plot): one row per item and series
 
 ![effect_dots](gallery/examples/effect_dots.png)
 
+`inputs/data.csv`, first 5 of 10 rows (5 columns):
+
+```text
+factor,model,log_odds_ratio,ci_low,ci_high
+age (per 10 y),unadjusted,0.403,0.14,0.665
+age (per 10 y),adjusted,0.256,0.051,0.46
+smoking,unadjusted,0.609,0.379,0.839
+smoking,adjusted,0.406,0.146,0.665
+BMI (per 5),unadjusted,0.209,0.013,0.405
+```
+
 Inputs: `data.csv`. `metadata/metadata.yaml`:
 
 ```yaml
@@ -134,6 +178,17 @@ fa build <project> --preflight
 Two measurements per item, coloured by group, with a fitted line and Pearson r
 
 ![group_scatter](gallery/examples/group_scatter.png)
+
+`inputs/data.csv`, first 5 of 30 rows (4 columns):
+
+```text
+library,batch,frip_pct,signal_log2
+101,batch 1,35.22,-0.174
+102,batch 1,42.74,0.408
+103,batch 1,20.17,-0.486
+104,batch 1,34.21,0.175
+105,batch 1,51.44,0.644
+```
 
 Inputs: `data.csv`. `metadata/metadata.yaml`:
 
@@ -166,6 +221,17 @@ A matrix: one row per feature, one numeric column per sample
 
 ![heatmap](gallery/examples/heatmap.png)
 
+`inputs/data.csv`, first 5 of 25 rows (7 columns):
+
+```text
+gene,ctrl_1,ctrl_2,ctrl_3,trt_1,trt_2,trt_3
+G001,5.042,4.961,5.106,3.814,3.918,3.7
+G002,4.25,5.44,4.698,5.388,5.402,5.728
+G003,5.098,4.652,5.613,2.987,3.461,3.001
+G004,6.118,5.096,5.224,3.379,3.573,3.892
+G005,4.828,4.542,5.719,3.244,3.478,3.394
+```
+
 Inputs: `data.csv`. `metadata/metadata.yaml`:
 
 ```yaml
@@ -195,6 +261,17 @@ fa build <project> --preflight
 Distribution of a value: one row per observation, optional group
 
 ![histogram](gallery/examples/histogram.png)
+
+`inputs/data.csv`, first 5 of 600 rows (2 columns):
+
+```text
+condition,cell_diameter_um
+control,7.75
+control,10.6
+control,12.46
+control,12.0
+control,10.09
+```
 
 Inputs: `data.csv`. `metadata/metadata.yaml`:
 
@@ -261,6 +338,17 @@ Lines with error bands: replicate rows (x, value, optional group), or summarised
 
 ![line_band](gallery/examples/line_band.png)
 
+`inputs/data.csv`, first 5 of 54 rows (4 columns):
+
+```text
+strain,hour,replicate,od600
+wild type,0,1,0.042
+wild type,3,1,0.087
+wild type,6,1,0.144
+wild type,9,1,0.357
+wild type,12,1,0.595
+```
+
 Inputs: `data.csv`. `metadata/metadata.yaml`:
 
 ```yaml
@@ -292,6 +380,17 @@ fa build <project> --preflight
 One row per gene: label plus normalised expression for every sample of every condition
 
 ![multi_group_heatmap](gallery/examples/multi_group_heatmap.png)
+
+`inputs/data.csv`, first 5 of 20 rows (10 columns):
+
+```text
+gene_label,C1,C2,C3,D1_1,D1_2,D1_3,D3_1,D3_2,D3_3
+G001,0.002,-0.334,0.321,1.442,0.752,0.866,0.471,-0.69,-0.332
+G002,-1.452,-0.78,-1.138,-1.032,-1.371,-1.316,-0.912,-1.214,-1.118
+G003,-0.669,-1.273,-1.022,-0.086,0.172,0.053,-0.816,-0.772,-0.748
+G004,0.022,-0.337,0.476,0.237,0.052,0.008,-1.071,-1.196,-0.917
+G005,-0.362,0.054,0.164,-0.63,-1.442,-0.538,-1.114,-1.153,-1.092
+```
 
 Inputs: `data.csv`. `metadata/metadata.yaml`:
 
@@ -331,6 +430,17 @@ Samples by principal components: one row per feature, one numeric column per sam
 
 ![pca](gallery/examples/pca.png)
 
+`inputs/data.csv`, first 5 of 300 rows (9 columns):
+
+```text
+gene,ctrl_1,ctrl_2,ctrl_3,ctrl_4,trt_1,trt_2,trt_3,trt_4
+G0001,484,485,461,485,478,547,483,511
+G0002,33,22,23,24,29,33,42,31
+G0003,117,89,88,89,83,84,97,105
+G0004,63,75,69,71,70,67,73,57
+G0005,176,193,159,153,173,171,185,159
+```
+
 Inputs: `data.csv`. `metadata/metadata.yaml`:
 
 ```yaml
@@ -365,6 +475,17 @@ Composition: one row per (category, part) with a count
 
 ![stacked_bar](gallery/examples/stacked_bar.png)
 
+`inputs/data.csv`, first 5 of 16 rows (3 columns):
+
+```text
+sample,cell_type,cells
+control 1,neurons,226
+control 1,astrocytes,143
+control 1,microglia,84
+control 1,oligodendrocytes,47
+control 2,neurons,230
+```
+
 Inputs: `data.csv`. `metadata/metadata.yaml`:
 
 ```yaml
@@ -394,6 +515,17 @@ Time to event: one row per subject (time, event 1/0), optional group
 
 ![survival](gallery/examples/survival.png)
 
+`inputs/data.csv`, first 5 of 50 rows (4 columns):
+
+```text
+group,mouse,days,died
+vehicle,V01,28.4,1
+vehicle,V02,27.9,1
+vehicle,V03,35.3,1
+vehicle,V04,15.1,1
+vehicle,V05,3.0,1
+```
+
 Inputs: `data.csv`. `metadata/metadata.yaml`:
 
 ```yaml
@@ -422,6 +554,17 @@ fa build <project> --preflight
 Effect vs significance points: one row per item, columns named in plot_params
 
 ![threshold_scatter](gallery/examples/threshold_scatter.png)
+
+`inputs/data.csv`, first 5 of 300 rows (3 columns):
+
+```text
+gene,log2_fold_change,padj
+G001,-0.667,0.25
+G002,0.058,0.987
+G003,0.213,0.94
+G004,-0.177,0.967
+G005,0.261,0.711
+```
 
 Inputs: `data.csv`. `metadata/metadata.yaml`:
 
@@ -460,6 +603,17 @@ Set membership: one row per (set, item); 2-3 sets
 
 ![venn](gallery/examples/venn.png)
 
+`inputs/data.csv`, first 5 of 115 rows (2 columns):
+
+```text
+dataset,item
+drug A,G002
+drug A,G003
+drug A,G004
+drug A,G005
+drug A,G006
+```
+
 Inputs: `data.csv`. `metadata/metadata.yaml`:
 
 ```yaml
@@ -486,6 +640,17 @@ fa build <project> --preflight
 Distribution per category: one row per observation (category, value)
 
 ![violin](gallery/examples/violin.png)
+
+`inputs/data.csv`, first 5 of 120 rows (2 columns):
+
+```text
+genotype,spines_per_um
+wild type,2.053
+wild type,1.655
+wild type,1.586
+wild type,1.961
+wild type,1.36
+```
 
 Inputs: `data.csv`. `metadata/metadata.yaml`:
 
