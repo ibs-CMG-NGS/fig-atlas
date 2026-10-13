@@ -7,6 +7,11 @@ source: agents read it directly (Codex, opencode, Cursor, Antigravity, Copilot, 
 the main design choices are recorded in `docs/decisions/` (ADRs). Procedures are `fa` commands
 (`fa --help`); agents connected over MCP call the same commands as tools (`docs/howto/ai_agents.md`).
 
+**Documentation in two languages.** The documentation site is English, the source of truth, with a
+Korean version beside each page (`page.md` and `page.ko.md`, shown at `/ko/`). Change both in the same
+commit: `tests/test_docs_i18n.py` fails when their headings, code blocks, tutorial steps, images,
+tables or link targets differ. Pages not yet in English are listed in `docs/i18n_pending.txt`.
+
 ---
 
 ## 1. Core Philosophy & Development Principles

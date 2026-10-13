@@ -11,7 +11,7 @@ strict: true
 
 theme:
   name: material
-  language: ko
+  language: en
   features:
     - navigation.sections
     - navigation.top
@@ -33,6 +33,56 @@ markdown_extensions:
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.highlight
+
+# English is the site's language and the source of truth; Korean beside it at /ko/
+# (docs/decisions/0006). A page's Korean version is page.ko.md next to page.md;
+# tests/test_docs_i18n.py keeps the two in step. Pages not yet in English are listed in
+# docs/i18n_pending.txt and shown as they are on both sites.
+plugins:
+  - search
+  - i18n:
+      docs_structure: suffix
+      fallback_to_default: true
+      reconfigure_material: true
+      reconfigure_search: true
+      languages:
+        - locale: en
+          default: true
+          name: English
+          build: true
+        - locale: ko
+          name: 한국어
+          build: true
+          nav_translations:
+            "Home": "홈"
+            "Researcher guide": "연구자 안내서"
+            "Appendix": "부록"
+            "Tutorials": "튜토리얼"
+            "First figure (15 min)": "첫 그림 (15분)"
+            "Port a script you wrote (Case A)": "내가 짠 스크립트 옮기기 (Case A)"
+            "From a sketch and a table (Case C)": "스케치와 데이터로 그림 만들기 (Case C)"
+            "A microscopy figure": "현미경 이미지 그림"
+            "After the data change (promotion, storyline revision)": "데이터가 바뀐 뒤 (승격·스토리라인 개편)"
+            "Connect AI agents (fa mcp)": "AI 에이전트 연결 (fa mcp)"
+            "Write a domain pack": "새 분야 팩 만들기"
+            "Switch to a journal's format": "저널 규격으로 바꾸기"
+            "Reference": "레퍼런스"
+            "Data bundle contracts": "데이터 번들 계약서"
+            "Table bundles (lines, scatter)": "표 번들 (선·산점도)"
+            "Image bundles": "이미지 번들"
+            "Requesting a new plot type": "새 그림 유형 요청"
+            "Commands (generated)": "명령 (자동 생성)"
+            "Python functions (generated)": "파이썬 함수 (자동 생성)"
+            "Config keys (generated)": "설정 키 (자동 생성)"
+            "Renderer gallery (generated)": "렌더러 갤러리 (자동 생성)"
+            "Where renderers are used": "렌더러 사용처"
+            "Explanation": "설명"
+            "Design decisions (ADR)": "설계 결정 (ADR)"
+            "0001 Final-size rendering": "0001 최종 크기 렌더링"
+            "0002 The config holds the full block": "0002 config가 정본"
+            "0003 Renderers are shapes": "0003 렌더러는 모양"
+            "0004 Procedures are commands, served over MCP": "0004 절차는 명령 + MCP"
+            "0005 One source for the rules": "0005 규칙의 단일 정본"
 
 # Links to repository files outside docs/ (AGENTS.md, examples/, configs/, ...) become links
 # to the file on GitHub; tests/test_docs_site.py checks that every such link resolves.
@@ -56,8 +106,8 @@ validation:
     anchors: info
 
 nav:
-  - 홈: index.md
-  - 연구자 안내서:
+  - Home: index.md
+  - Researcher guide:
       - guide/00-how-to-read.md
       - guide/01-why.md
       - guide/02-overview.md
@@ -72,36 +122,36 @@ nav:
       - guide/11-lifecycle.md
       - guide/12-ai.md
       - guide/13-rules.md
-      - 부록:
+      - Appendix:
           - guide/91-glossary.md
           - guide/92-faq.md
           - guide/93-commands.md
           - guide/94-reading.md
-  - 튜토리얼:
-      - 첫 그림 (15분): tutorials/first_figure.md
-      - 내가 짠 스크립트 옮기기 (Case A): tutorials/case_a_port_script.md
-      - 스케치와 데이터로 그림 만들기 (Case C): tutorials/case_c_from_sketch.md
-      - 현미경 이미지 그림: tutorials/imaging_figure.md
-      - 데이터가 바뀐 뒤 (승격·스토리라인 개편): tutorials/data_change.md
+  - Tutorials:
+      - First figure (15 min): tutorials/first_figure.md
+      - Port a script you wrote (Case A): tutorials/case_a_port_script.md
+      - From a sketch and a table (Case C): tutorials/case_c_from_sketch.md
+      - A microscopy figure: tutorials/imaging_figure.md
+      - After the data change (promotion, storyline revision): tutorials/data_change.md
   - How-to:
-      - AI 에이전트 연결 (fa mcp): howto/ai_agents.md
-      - 새 분야 팩 만들기: howto/new_domain_pack.md
-      - 저널 규격으로 바꾸기: howto/journal_presets.md
-  - 레퍼런스:
-      - 데이터 번들 계약서: contracts/README.md
-      - 표 번들 (선·산점도): contracts/table_bundle_contract.md
-      - 이미지 번들: contracts/image_bundle_contract.md
-      - 새 그림 유형 요청: contracts/new_plot_type_contract.md
-      - 명령 (자동 생성): reference/cli.md
-      - 파이썬 함수 (자동 생성): reference/api.md
-      - 설정 키 (자동 생성): reference/config.md
-      - 렌더러 갤러리 (자동 생성): reference/gallery.md
-      - 렌더러 사용처: reference/renderer_inventory.md
-  - 설명:
-      - 설계 결정 (ADR):
+      - Connect AI agents (fa mcp): howto/ai_agents.md
+      - Write a domain pack: howto/new_domain_pack.md
+      - Switch to a journal's format: howto/journal_presets.md
+  - Reference:
+      - Data bundle contracts: contracts/README.md
+      - Table bundles (lines, scatter): contracts/table_bundle_contract.md
+      - Image bundles: contracts/image_bundle_contract.md
+      - Requesting a new plot type: contracts/new_plot_type_contract.md
+      - Commands (generated): reference/cli.md
+      - Python functions (generated): reference/api.md
+      - Config keys (generated): reference/config.md
+      - Renderer gallery (generated): reference/gallery.md
+      - Where renderers are used: reference/renderer_inventory.md
+  - Explanation:
+      - Design decisions (ADR):
           - decisions/README.md
-          - 0001 최종 크기 렌더링: decisions/0001-final-size-rendering.md
-          - 0002 config가 정본: decisions/0002-config-holds-the-full-block.md
-          - 0003 렌더러는 모양: decisions/0003-renderers-are-shapes.md
-          - 0004 절차는 명령 + MCP: decisions/0004-procedures-are-commands.md
-          - 0005 규칙의 단일 정본: decisions/0005-agents-md-single-source.md
+          - 0001 Final-size rendering: decisions/0001-final-size-rendering.md
+          - 0002 The config holds the full block: decisions/0002-config-holds-the-full-block.md
+          - 0003 Renderers are shapes: decisions/0003-renderers-are-shapes.md
+          - 0004 Procedures are commands, served over MCP: decisions/0004-procedures-are-commands.md
+          - 0005 One source for the rules: decisions/0005-agents-md-single-source.md

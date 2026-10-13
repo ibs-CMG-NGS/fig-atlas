@@ -1,0 +1,43 @@
+# Pages of the documentation site not yet in English (docs/decisions/0006).
+# Each stays Korean in its page.md until its English version is written; then the
+# Korean text moves to page.ko.md and the page leaves this list.
+# tests/test_docs_i18n.py keeps this list exact.
+
+contracts/image_bundle_contract.md
+contracts/new_plot_type_contract.md
+contracts/README.md
+contracts/table_bundle_contract.md
+decisions/0001-final-size-rendering.md
+decisions/0002-config-holds-the-full-block.md
+decisions/0003-renderers-are-shapes.md
+decisions/0004-procedures-are-commands.md
+decisions/0005-agents-md-single-source.md
+decisions/README.md
+guide/00-how-to-read.md
+guide/01-why.md
+guide/02-overview.md
+guide/03-data-bundles.md
+guide/04-first-figure.md
+guide/05-entry-paths.md
+guide/06-config.md
+guide/07-results.md
+guide/08-checks.md
+guide/09-integrity.md
+guide/10-freshness.md
+guide/11-lifecycle.md
+guide/12-ai.md
+guide/13-rules.md
+guide/91-glossary.md
+guide/92-faq.md
+guide/93-commands.md
+guide/94-reading.md
+guide/_template.md
+howto/ai_agents.md
+howto/journal_presets.md
+howto/new_domain_pack.md
+index.md
+tutorials/case_a_port_script.md
+tutorials/case_c_from_sketch.md
+tutorials/data_change.md
+tutorials/first_figure.md
+tutorials/imaging_figure.md
