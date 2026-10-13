@@ -47,7 +47,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | [`stacked_share_hbar`](#stacked_share_hbar) | core | 28 |
 | [`survival`](#survival) | core | 32 |
 | [`tf_expression_scatter_grid`](#tf_expression_scatter_grid) | fig_atlas_omics.renderers | 36 |
-| [`threshold_scatter`](#threshold_scatter) | core | 60 |
+| [`threshold_scatter`](#threshold_scatter) | core | 61 |
 | [`tier_hbar`](#tier_hbar) | core | 16 |
 | [`treatment_schematic`](#treatment_schematic) | core | 25 |
 | [`ts_profile`](#ts_profile) | core | 18 |
@@ -919,7 +919,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `labels_title` | text | auto |  | Panel title |
 | `labels_xlabel` | text | computed |  | x-axis title (default: x_col) |
 | `labels_ylabel` | text | computed |  | y-axis title (default: y_col) |
-| `title_size` | number | `8.0` | pt | Panel title size |
+| `title_size` | number | style `typography.title_size` (else `8.0`) | pt | Panel title font size — lower if the title wraps or crowds the panel |
 | `axes_label_size` | number | auto | pt | Axis title size (default: rcParams) |
 | `tick_label_size` | number | auto | pt | Tick label size (default: rcParams) |
 | `show_legend` | true / false | `True` |  | Show the group legend (only with a group_col) |
@@ -1639,6 +1639,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `label_expand` | list | `[1.15, 1.4]` | multiple of the label box (x, y) | Room adjustText keeps around each label — raise if labels still touch |
 | `label_force` | list | `[0.4, 0.6]` | adjustText force (x, y) | How hard labels push apart |
 | `label_iter_lim` | integer | `1000` | iterations | Label-placement steps (a fixed count, so every build places the labels the same way) — raise if labels still overlap; lower for a faster build |
+| `label_axes_pad_pt` | number | `2.0` | pt | Room kept between a point label and the axes frame (the axis limits widen to make it) — raise if labels still crowd the frame |
 | `x_min` | number | auto | data coords (after transform) | Lower x limit (both x_min and x_max needed) |
 | `x_max` | number | auto | data coords (after transform) | Upper x limit |
 | `y_min` | number | auto | data coords (after transform) | Lower y limit (both y_min and y_max needed) |
@@ -1648,7 +1649,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `labels_title` | text | auto |  | Panel title |
 | `labels_xlabel` | text | computed |  | x-axis title (default: the x column name) |
 | `labels_ylabel` | text | computed |  | y-axis title (default: the y column name) |
-| `title_size` | number | `10` | pt | Panel title font size |
+| `title_size` | number | style `typography.title_size` (else `10`) | pt | Panel title font size — lower if the title wraps or crowds the panel |
 | `axes_label_size` | number | auto | pt | Axis title size (default: rcParams) |
 | `tick_label_size` | number | auto | pt | Tick label size (default: rcParams) |
 | `show_xticklabels` | true / false | `True` |  | Show x tick labels |

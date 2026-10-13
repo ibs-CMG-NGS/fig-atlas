@@ -17,7 +17,7 @@ import numpy as np
 import pandas as pd
 
 from ..params import text_param
-from ..schema import CODE_DEFAULT, Param, Schema, uses_schema
+from ..schema import CODE_DEFAULT, Param, Schema, typography, uses_schema
 
 SCHEMA = Schema("threshold_scatter", params=[
     # [Data: column roles and transforms]
@@ -71,6 +71,9 @@ SCHEMA = Schema("threshold_scatter", params=[
     Param("label_iter_lim", int, 1000, unit="iterations", range=(1, None),
           role="Label-placement steps (a fixed count, so every build places the labels the same way)",
           tune="raise if labels still overlap; lower for a faster build"),
+    Param("label_axes_pad_pt", float, 2.0, unit="pt", range=(0, None),
+          role="Room kept between a point label and the axes frame (the axis limits widen to make it)",
+          tune="raise if labels still crowd the frame"),
     # [Axes and text]
     Param("x_min", float, None, unit="data coords (after transform)", role="Lower x limit (both x_min and x_max needed)"),
     Param("x_max", float, None, unit="data coords (after transform)", role="Upper x limit"),
@@ -81,7 +84,7 @@ SCHEMA = Schema("threshold_scatter", params=[
     Param("labels_title", str, None, role="Panel title"),
     Param("labels_xlabel", str, CODE_DEFAULT, role="x-axis title (default: the x column name)"),
     Param("labels_ylabel", str, CODE_DEFAULT, role="y-axis title (default: the y column name)"),
-    Param("title_size", float, 10, unit="pt", range=(0, None), role="Panel title font size"),
+    *typography(title_size=10),            # the preset's typography.title_size, else 10
     Param("axes_label_size", float, None, unit="pt", range=(0, None), role="Axis title size (default: rcParams)"),
     Param("tick_label_size", float, None, unit="pt", range=(0, None), role="Tick label size (default: rcParams)"),
     Param("show_xticklabels", bool, True, role="Show x tick labels"),
@@ -162,18 +165,93 @@ def _draw_labels(ax, df, xs, ys, regulation, effect, sig, params):
     try:
         from adjustText import adjust_text
     except ImportError:
-        return
-    adjust_text(
-        texts, ax=ax,
-        arrowprops=dict(arrowstyle="-", color=params.get("label_arrow_color", "grey"),
-                        lw=float(params.get("label_arrow_width", 0.5))),
-        expand=tuple(params.get("label_expand", [1.15, 1.4])),
-        force_text=tuple(params.get("label_force", [0.4, 0.6])),
-        only_move={"text": "xy"}, max_move=None,
-        # A step count, not adjustText's default 1-second time limit, so the
-        # result does not depend on machine speed or load.
-        iter_lim=int(params.get("label_iter_lim", 1000)),
-    )
+        return texts
+    import logging
+    # adjustText calls ax.figure.draw_without_rendering(), which a SubFigure
+    # (draw_plots puts each panel in one) lacks; it then draws the canvas
+    # instead -- the same result -- but logs "old matplotlib version". Quiet it.
+    log = logging.getLogger("adjustText")
+    level = log.level
+    log.setLevel(logging.ERROR)
+    try:
+        adjust_text(
+            texts, ax=ax,
+            arrowprops=dict(arrowstyle="-", color=params.get("label_arrow_color", "grey"),
+                            lw=float(params.get("label_arrow_width", 0.5))),
+            expand=tuple(params.get("label_expand", [1.15, 1.4])),
+            force_text=tuple(params.get("label_force", [0.4, 0.6])),
+            only_move={"text": "xy"}, max_move=None,
+            # A step count, not adjustText's default 1-second time limit, so the
+            # result does not depend on machine speed or load.
+            iter_lim=int(params.get("label_iter_lim", 1000)),
+        )
+    finally:
+        log.setLevel(level)
+    _labels_inside(ax, texts, params)
+    return texts
+
+
+def _label_extent(text, renderer):
+    """The label with its background box (which would hide the frame)."""
+    from matplotlib.transforms import Bbox
+    bb = text.get_window_extent(renderer)
+    patch = text.get_bbox_patch()
+    return Bbox.union([bb, patch.get_window_extent(renderer)]) if patch is not None else bb
+
+
+def _labels_inside(ax, texts, params):
+    """Widen the axis limits until every label (with its box) sits inside the
+    axes, ``label_axes_pad_pt`` from the frame: adjustText keeps the labels'
+    centres inside, so a label at the edge would otherwise sit on the spine.
+    Limits the config fixes (x_min/x_max, y_min/y_max) are left alone."""
+    pad = float(params.get("label_axes_pad_pt", 2.0)) * ax.figure.dpi / 72
+    free_x = params.get("x_min") is None or params.get("x_max") is None
+    free_y = params.get("y_min") is None or params.get("y_max") is None
+    root = getattr(ax.figure, "figure", ax.figure)
+    for _ in range(4):                       # each widening shrinks the data scale; repeat until it fits
+        renderer = root.canvas.get_renderer()
+        box = ax.get_window_extent(renderer)
+        ext = [_label_extent(t, renderer) for t in texts]
+        over = {"left": max(0.0, box.x0 + pad - min(e.x0 for e in ext)),
+                "right": max(0.0, max(e.x1 for e in ext) - (box.x1 - pad)),
+                "bottom": max(0.0, box.y0 + pad - min(e.y0 for e in ext)),
+                "top": max(0.0, max(e.y1 for e in ext) - (box.y1 - pad))}
+        changed = False
+        if free_x and (over["left"] or over["right"]):
+            lo, hi = ax.get_xlim()
+            per_px = (hi - lo) / box.width
+            ax.set_xlim(lo - over["left"] * per_px, hi + over["right"] * per_px)
+            changed = True
+        if free_y and (over["bottom"] or over["top"]):
+            lo, hi = ax.get_ylim()
+            per_px = (hi - lo) / box.height
+            ax.set_ylim(lo - over["bottom"] * per_px, hi + over["top"] * per_px)
+            changed = True
+        if not changed:
+            return
+
+
+def _legend_clear_of_labels(ax, labels, xs, ys, leg_kw):
+    """legend(loc="best") avoids the points but not the point labels: try each
+    corner and edge position and keep the one covering the fewest labels, then
+    the fewest points (ties: matplotlib's own order of positions)."""
+    import numpy as np
+    root = getattr(ax.figure, "figure", ax.figure)
+    renderer = root.canvas.get_renderer()
+    boxes = [_label_extent(t, renderer) for t in labels]
+    pts = ax.transData.transform(np.column_stack([np.asarray(xs, float), np.asarray(ys, float)]))
+    pts = pts[np.isfinite(pts).all(axis=1)]
+    best = None
+    for loc in ("upper right", "upper left", "lower left", "lower right", "right",
+                "center left", "center right", "lower center", "upper center"):
+        leg = ax.legend(loc=loc, **leg_kw)
+        lb = leg.get_window_extent(renderer)
+        n_labels = sum(lb.overlaps(b) for b in boxes)
+        n_points = int(((pts[:, 0] > lb.x0) & (pts[:, 0] < lb.x1) & (pts[:, 1] > lb.y0) & (pts[:, 1] < lb.y1)).sum())
+        if best is None or (n_labels, n_points) < best[0]:
+            best = ((n_labels, n_points), loc)
+        leg.remove()
+    ax.legend(loc=best[1], **leg_kw)
 
 
 def _fit_width(ax, params):
@@ -248,7 +326,7 @@ def render_threshold_scatter(ax, df, params):
     if params.get("grid", False):
         ax.grid(True, alpha=float(params.get("grid_alpha", 0.3)))
 
-    _draw_labels(ax, df, xs, ys, regulation, effect, sig, params)
+    labels = _draw_labels(ax, df, xs, ys, regulation, effect, sig, params) or []
 
     a_sz = params.get("axes_label_size")
     label_kw = {} if a_sz is None else {"fontsize": a_sz}
@@ -272,6 +350,8 @@ def render_threshold_scatter(ax, df, params):
         loc = params.get("legend_position", "best")
         if loc == "outside right":
             ax.legend(loc="center left", bbox_to_anchor=(1.02, 0.5), **leg_kw)
+        elif loc == "best" and labels:
+            _legend_clear_of_labels(ax, labels, xs, ys, leg_kw)
         else:
             ax.legend(loc=loc, **leg_kw)
 

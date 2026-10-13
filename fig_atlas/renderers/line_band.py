@@ -19,7 +19,7 @@ import numpy as np
 import pandas as pd
 
 from ..params import text_param
-from ..schema import CODE_DEFAULT, Param, Schema, uses_schema
+from ..schema import CODE_DEFAULT, Param, Schema, typography, uses_schema
 
 SCHEMA = Schema("line_band", params=[
     # [Data]
@@ -66,7 +66,7 @@ SCHEMA = Schema("line_band", params=[
     Param("labels_title", str, None, role="Panel title"),
     Param("labels_xlabel", str, CODE_DEFAULT, role="x-axis title (default: x_col)"),
     Param("labels_ylabel", str, CODE_DEFAULT, role="y-axis title (default: y_col)"),
-    Param("title_size", float, 8.0, unit="pt", range=(0, None), role="Panel title size"),
+    *typography(title_size=8.0),           # the preset's typography.title_size, else 8
     Param("axes_label_size", float, None, unit="pt", range=(0, None), role="Axis title size (default: rcParams)"),
     Param("tick_label_size", float, None, unit="pt", range=(0, None), role="Tick label size (default: rcParams)"),
     Param("show_legend", bool, True, role="Show the group legend (only with a group_col)"),

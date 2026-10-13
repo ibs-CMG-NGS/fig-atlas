@@ -58,6 +58,8 @@ C7/C8 layout rules and consistency
                               overlapping (a title on its column heads, ...)   info
     title_misaligned          titles of panels side by side sit at different
                               heights                                          info
+    text_on_frame             a text in a plot area (point label, annotation)
+                              straddles the frame across a visible spine       warn
     font_size_outlier         a few texts of one role (tick labels, axis
                               titles, tags, legend) in an odd size -- usually
                               a hardcoded fontsize                             warn
@@ -124,6 +126,7 @@ DEFAULTS = {
     "width_tol_mm": 0.5,         # a figure this close to an allowed width counts as that width
     "min_text_gap_mm": 0.4,      # other texts closer than this (without overlapping) look crowded
     "title_align_tol_mm": 0.5,   # titles of panels side by side may differ in height by this much
+    "frame_cross_tol_mm": 0.1,   # a plot-area text may reach past its frame by this much
     "panel_tag_align_tol_mm": 0.3,   # tags in one column must share x within this
     "panel_tag_column_mm": 6.0,  # tags whose left edges are this close form a column
     "panel_tag_case": None,      # "lower" | "upper" (journal presets set it)
@@ -164,6 +167,7 @@ class _Text:
     weight: str = "normal"
     gid: str | None = None
     role: str = "other"      # tick | axis_label | title | panel_tag | legend | colorbar_tick | colorbar_label | other
+    box_mm: list[float] | None = None    # extent of a filled background box (``bbox=``), which hides what is under it
 
 
 @dataclass
@@ -273,6 +277,12 @@ def _hook_texts(fig, rec: _Record, dpi_holder: dict):
 
     orig_text, orig_leg = Text.draw, Legend.draw
 
+    def _filled_box_mm(text, renderer, dpi):
+        patch = text.get_bbox_patch()
+        if patch is None or not patch.get_visible() or to_rgba(patch.get_facecolor())[3] == 0:
+            return None
+        return _bbox_mm(patch.get_window_extent(renderer), dpi)
+
     def text_draw(self, renderer, *a, **k):
         out = orig_text(self, renderer, *a, **k)
         try:
@@ -300,7 +310,7 @@ def _hook_texts(fig, rec: _Record, dpi_holder: dict):
                     bbox_mm=_bbox_mm(bb, dpi), obj_id=id(self),
                     color=tuple(to_rgba(self.get_color(), self.get_alpha())),
                     fontsize=float(self.get_fontsize()), weight=str(self.get_fontweight()),
-                    gid=self.get_gid(),
+                    gid=self.get_gid(), box_mm=_filled_box_mm(self, renderer, dpi),
                     is_legend=isinstance(getattr(self, "_fa_parent_legend", None), Legend)))
         except Exception as exc:   # never break the draw, but don't hide it either
             rec.errors.append(f"{type(self).__name__} {self.get_text()[:30]!r}: {exc!r}")
@@ -881,6 +891,43 @@ def _check_text_crowding(fig, texts: list[_Text], p: dict) -> list[Finding]:
     return out
 
 
+def _check_text_on_frame(fig, texts: list[_Text], p: dict) -> list[Finding]:
+    """Texts drawn in a plot area (point labels, annotations) that straddle its
+    frame: part inside, part outside, across a visible spine -- the label reads
+    as struck through or cut off, or its filled background box erases part of
+    the frame. Grouped per axes."""
+    tol = p["frame_cross_tol_mm"]
+    k = MM_PER_INCH / fig.dpi
+    by_axes: dict[int, list] = {}
+    for t in texts:
+        if t.role != "other" or t.axes is None or t.is_legend or not t.axes.axison:
+            continue                                     # axis("off") hides the frame, whatever the spines say
+        b = t.axes.get_window_extent()
+        x0, y0, x1, y1 = b.x0 * k, b.y0 * k, b.x1 * k, b.y1 * k
+        xs, ys = [c[0] for c in t.corners_mm], [c[1] for c in t.corners_mm]
+        tx0, tx1, ty0, ty1 = min(xs), max(xs), min(ys), max(ys)
+        if t.box_mm:                                     # a filled box behind the text hides the spine too
+            tx0, ty0 = min(tx0, t.box_mm[0]), min(ty0, t.box_mm[1])
+            tx1, ty1 = max(tx1, t.box_mm[2]), max(ty1, t.box_mm[3])
+        if tx1 <= x0 or tx0 >= x1 or ty1 <= y0 or ty0 >= y1:
+            continue                                     # wholly outside: a label beside the plot
+        sides = [s for s, crosses in (("left", tx0 < x0 - tol), ("right", tx1 > x1 + tol),
+                                      ("bottom", ty0 < y0 - tol), ("top", ty1 > y1 + tol))
+                 if crosses and t.axes.spines[s].get_visible()]
+        if sides:
+            by_axes.setdefault(id(t.axes), []).append((t, sides))
+    out = []
+    for hits in by_axes.values():
+        ax = hits[0][0].axes
+        boxes = [t.bbox_mm for t, _ in hits]
+        box = [min(x[0] for x in boxes), min(x[1] for x in boxes), max(x[2] for x in boxes), max(x[3] for x in boxes)]
+        ex = ", ".join(f"{t.text[:20]!r} ({'/'.join(s)})" for t, s in hits[:3])
+        out.append(Finding("text_on_frame", "warn", f"{len(hits)} text(s) in the plot area cross its frame: {ex}",
+                           box, panel=_panel_label(panel_of(ax, fig), fig), measured=len(hits), threshold=tol,
+                           hint="keep labels inside the axes (widen the axis limits or move the labels)"))
+    return out
+
+
 def _check_title_rows(fig, texts: list[_Text], p: dict) -> list[Finding]:
     """Titles of panels side by side -- panels whose plot areas share most of
     their height -- whose baselines differ: the row reads as uneven."""
@@ -1136,6 +1183,7 @@ def preflight(fig, saved_bbox_in=None, params: dict | None = None,
                 + _check_tick_gaps(fig, rec.texts, p)
                 + _check_text_crowding(fig, rec.texts, p)
                 + _check_title_rows(fig, rec.texts, p)
+                + _check_text_on_frame(fig, rec.texts, p)
                 + _check_panel_tags(rec.texts, p)
                 + _check_journal_limits(fig, rec.texts, saved_mm, renderer, p)
                 + _check_font_sizes(fig, rec.texts, p))

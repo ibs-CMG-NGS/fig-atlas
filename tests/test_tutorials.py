@@ -89,7 +89,12 @@ def test_first_figure_tutorial(tmp_path):
     # What the page promises: the first preflight warns about colours, the config fix clears it.
     preflights = [o for o in outputs if "error(s)," in o]
     assert "cvd_indistinct" in preflights[0]
+    assert "0 error(s), 1 warning(s)" in preflights[0]                 # the output step 4 shows, and nothing else:
+    assert "title_misaligned" not in preflights[0]                    # panel titles from one preset size
+    assert "text_on_frame" not in preflights[0]                       # point labels inside the frame
+    assert "old matplotlib" not in "".join(outputs)                   # adjustText's message is quieted
     assert "0 error(s), 0 warning(s)" in preflights[-1]
+    assert "PASS: 5/5" in preflights[-1]                              # step 6 ends with no warning left
     assert "Two compounds lower viability" in (figure / "README.md").read_text(encoding="utf-8")
 
 

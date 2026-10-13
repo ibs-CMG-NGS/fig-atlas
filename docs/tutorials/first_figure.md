@@ -72,7 +72,33 @@ fa build first-figure --preflight
 
 그림은 `outputs/first-figure/figures/figure_01_main/figure_01.png`(PDF·SVG도)에 있습니다. A4 본문 폭(184.6 mm)에 **실제 인쇄 크기로** 그려졌고, 패널 a·b의 태그는 각 패널의 바깥 경계(눈금 글자·축 제목 포함)에 맞춰져 있습니다.
 
-`--preflight`는 인쇄 전 검사입니다. 결과에 경고가 하나 있습니다.
+`--preflight`는 인쇄 전 검사입니다. 출력은 이렇습니다.
+
+```text
+==== first-figure ====
+[provenance] 1 figure record(s) written
+  Published Figure 1: Title of figure 1 (one sentence: what it shows)
+Manifest: outputs/first-figure/manifests/clean_atlas_manifest.csv
+[ok] first-figure: 0 error(s), 1 warning(s)
+
+Report: outputs/preflight/preflight_findings.csv  (overlays: outputs/preflight/<project>/)
+  warn  cvd_indistinct               1
+PASS: 4/5 checks passed, 1 warning(s) - outputs/first-figure/manifests/clean_atlas_verification.csv
+  WARN [preflight] warnings: 1 preflight warning(s); see outputs/first-figure/manifests/preflight.csv
+
+ALL 1 PROJECT(S) PASSED
+```
+
+한 줄씩 읽으면 이렇습니다.
+
+- `[provenance] 1 figure record(s) written`: 이 그림이 어떤 데이터·코드·설정으로 만들어졌는지 기록했습니다.
+- `Published Figure 1: Title of figure 1 ...`: 그림을 `figure_01_main/`에 게시했습니다. 제목은 아직 틀에 있던 문장이고, 6단계에서 씁니다.
+- `[ok] first-figure: 0 error(s), 1 warning(s)`: 인쇄 전 검사 결과입니다. **error**(겹침, 잘림, 너무 작은 글자 등)가 있으면 빌드가 실패합니다. **warning**은 고칠 것을 권하지만 빌드를 막지 않고, **info**는 참고 사항입니다.
+- `warn cvd_indistinct 1`: 경고의 종류와 개수입니다. 자세한 내용은 `outputs/first-figure/manifests/preflight.csv`에 있습니다.
+- `PASS: 4/5 checks passed, 1 warning(s)`: 게시된 결과 점검입니다. 그림 파일 세 개(PNG·PDF·SVG), README, preflight 결과 다섯 항목 가운데 preflight 결과에 경고가 있어 4/5입니다.
+- `ALL 1 PROJECT(S) PASSED`: 빌드 전체가 성공했습니다.
+
+경고의 내용은 `preflight.csv`에 이렇게 적혀 있습니다.
 
 ```
 warn  cvd_indistinct  legend of axes[0] 'Viability after 48 h': #ff7f0e and #2ca02c look alike with protanomaly
@@ -112,8 +138,10 @@ figure spec(`figure_specs/figure_01_first-figure.py`)에는 그림 제목, 패�
 
 <!-- run -->
 ```bash
-fa build first-figure
+fa build first-figure --preflight
 ```
+
+그림 폴더의 `README.md` 제목이 바뀌고, 검사는 그대로 `0 error(s), 0 warning(s)`입니다. `--preflight`를 빼고 빌드하면 마지막 검사가 그림보다 오래되었다는 경고(`preflight results are older than the published figures`)가 나옵니다. 그림을 바꿨으면 검사도 다시 하라는 뜻입니다.
 
 > 실제 그림에서는 "51" 같은 결과 숫자를 손으로 쓰지 않습니다. 분석 스크립트에서 `claims.record("n_hits", n)`으로 기록하고 텍스트에는 `{n_hits}`라고 씁니다. 데이터가 바뀌면 설명도 따라 바뀝니다(AGENTS.md §4.5).
 

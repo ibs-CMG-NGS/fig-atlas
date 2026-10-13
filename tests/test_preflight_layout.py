@@ -136,6 +136,33 @@ def test_crowded_texts_and_uneven_titles_are_reported_as_info():
     plt.close(fig)
 
 
+def test_label_on_the_frame_is_reported():
+    """A point label pushed onto the spine (adjustText keeps only its centre
+    inside) reads as struck through; one inside, or wholly outside, is fine."""
+    def fig_with(x, y, spines=True):
+        fig = plt.figure(figsize=(3.0, 2.0))
+        ax = fig.add_axes([0.15, 0.15, 0.7, 0.7])
+        ax.set_xlim(0, 1)
+        ax.set_ylim(0, 1)
+        if not spines:
+            for s in ax.spines.values():
+                s.set_visible(False)
+        ax.text(x, y, "F400", ha="center", va="center", fontsize=7, fontweight="bold")
+        return fig
+
+    for x, y, spines, expect in [(0.5, 1.0, True, True),      # on the top spine
+                                 (1.0, 0.5, True, True),      # on the right spine
+                                 (0.5, 0.5, True, False),     # inside
+                                 (1.2, 0.5, True, False),     # beside the plot, outside
+                                 (0.5, 1.0, False, False)]:   # no spine to cross
+        fig = fig_with(x, y, spines)
+        found = {f.check: f for f in preflight(fig, saved_bbox_in="tight")}
+        assert ("text_on_frame" in found) is expect, (x, y, spines)
+        if expect:
+            assert found["text_on_frame"].severity == "warn"
+        plt.close(fig)
+
+
 def test_title_starts_at_the_tick_labels():
     import matplotlib.pyplot as plt
     from fig_atlas.renderers import align_title_to_labels

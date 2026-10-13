@@ -39,16 +39,21 @@ def test_recipe_names_only_generic_parameters(name):
 def test_recipe_defaults_equal_the_domain_schema_defaults(name):
     """Drawn through the recipe with nothing set, every domain key has the value
     the domain renderer documents -- so recipes.render() alone draws the same plot."""
-    from fig_atlas.schema import CODE_DEFAULT
+    from fig_atlas.schema import CODE_DEFAULT, StyleRef
     import fig_atlas_omics.renderers as pack
     r = recipes.get(name)
     domain = getattr(pack, f"render_{name}").SCHEMA.all()
+    core = r.function().SCHEMA.all()
     effective = r.params({})
     for k in r.surface:
         d = domain[k].default
         if d is CODE_DEFAULT:
             continue
-        assert effective.get(r.aliases.get(k, k)) == d, f"{name}.{k}: recipe gives {effective.get(r.aliases.get(k, k))!r}, schema says {d!r}"
+        generic = r.aliases.get(k, k)
+        got = effective.get(generic)
+        if generic not in effective and isinstance(core[generic].default, StyleRef):
+            got = core[generic].default.fallback          # resolved by the renderer: this when no preset sets it
+        assert got == d, f"{name}.{k}: recipe gives {got!r}, schema says {d!r}"
 
 
 def test_params_translate_names_and_keep_out_unused_keys():

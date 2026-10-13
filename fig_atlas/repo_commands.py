@@ -294,10 +294,13 @@ def _value_from_bundle(param, value):
 
 
 def plot_block(name: str, target: str, bundle_rel: str, schema, plot_params: dict, extra: dict,
-               plot_type: str, today: str) -> list[str]:
+               plot_type: str, today: str, style: dict | None = None) -> list[str]:
     """The config lines for one plots.<name> block: renderer, bundle, then every
     schema parameter -- the bundle's value where it gives one, else the default
-    -- each with its description (AGENTS.md 1.2, 1.6)."""
+    -- each with its description (AGENTS.md 1.2, 1.6). A default that follows
+    the style (``StyleRef``, e.g. ``typography.title_size``) is written with the
+    value the project's presets give (``style``: its merged config), so panels
+    from different renderers start at the same text sizes."""
     from .param_tools import _yaml_value, comment_for
     from .schema import CODE_DEFAULT, StyleRef
 
@@ -319,8 +322,15 @@ def plot_block(name: str, target: str, bundle_rel: str, schema, plot_params: dic
         elif p.default is CODE_DEFAULT:
             out.append(line(key, None, comment_for(p) + " (computed when unset)", commented=True))
         else:
-            d = p.default.fallback if isinstance(p.default, StyleRef) else p.default
-            out.append(line(key, d, comment_for(p)))
+            if isinstance(p.default, StyleRef):
+                unset = object()
+                d = StyleRef(p.default.path, unset).resolve(style)
+                if d is unset:
+                    out.append(line(key, p.default.fallback, comment_for(p)))
+                else:
+                    out.append(line(key, d, comment_for(p) + " (from the style preset)"))
+            else:
+                out.append(line(key, p.default, comment_for(p)))
     for key, v in given.items():          # bundle keys this renderer does not read
         out.append(f"    # {key}: {_yaml_value(v)}   # in the bundle metadata; not a parameter of this renderer")
     return out
@@ -390,8 +400,10 @@ def plan_ingest_bundle(root: Path, bundle: Path, project: str, name: str | None 
                                    ("channel_labels", [c.get("label", "") for c in chans] or None),
                                    ("channel_colors", [c.get("color") for c in chans] if chans and all(c.get("color") for c in chans) else None))
                  if v is not None}
+    from .config import ProjectConfig
+    style = ProjectConfig(p.config).settings                  # the config merged with its presets
     block = plot_block(name, report.renderer, rel, getattr(fn, "SCHEMA", None), meta.get("plot_params") or {},
-                       extra, report.plot_type, today or _dt.date.today().isoformat())
+                       extra, report.plot_type, today or _dt.date.today().isoformat(), style=style)
     new_text = _insert_plot_block(cfg_text, name, block)
     got = ((yaml.safe_load(new_text) or {}).get("plots") or {}).get(name) or {}
     if got.get("bundle") != rel or got.get("renderer") != report.renderer:
