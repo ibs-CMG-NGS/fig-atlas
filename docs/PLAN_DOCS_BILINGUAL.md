@@ -9,7 +9,7 @@
 | Phase | 내용 | 상태 |
 |---|---|---|
 | 0 | 기반: 플러그인, 짝 점검, 번역 대기 목록, 운영 규칙 | ✅ 완료 (2026-10-13, fig-atlas `8ab6194`): `mkdocs-static-i18n`(영어 `/`, 한국어 `/ko/`, 메뉴 제목 번역), `tests/test_docs_i18n.py`(짝 점검·대기 목록), `docs/i18n_pending.txt` 38쪽, AGENTS.md 규칙. CI·사이트 배포 통과 |
-| 1 | 첫 화면 + 가이드 00–02 + 용어 대조표 → **연구자 검토(게이트 G1)** | 🔄 번역 완료 (2026-10-13, `fced5a2`), 연구자 검토 대기. 대기 목록 34쪽 |
+| 1 | 첫 화면 + 가이드 00–02 + 용어 대조표 → **연구자 검토(게이트 G1)** | ✅ 완료 (2026-10-14): 번역 `fced5a2`, 검토 반영 — "Has this ever happened to you?", "Guide for researchers". 대기 목록 34쪽 |
 | 2 | 가이드 03–13 + 부록 4 | ⬜ 대기 |
 | 3 | 튜토리얼 5 + How-to 3 | ⬜ 대기 |
 | 4 | 데이터 번들 계약서 4 + 설계 결정(ADR) 6 + 언어 정책 ADR 0006 | ⬜ 대기 |
@@ -68,10 +68,12 @@
 
 **그대로 두는 것**: 명령, 코드, 파일 이름, config 키, 출력 예시, 예시 데이터, 링크 대상.
 
-**용어 대조표 (초안 — Phase 1에서 확정)**: 원고(`docs/paper/manuscript.md`)의 용어와 맞춘다.
+**용어 대조표 (Phase 1 검토 반영, 2026-10-14)**: 원고(`docs/paper/manuscript.md`)의 용어와 맞춘다.
 
 | 한국어 | 영어 |
 |---|---|
+| 이런 적 있으시죠? / 핵심: | Has this ever happened to you? / The key idea: |
+| 연구자 안내서 | Guide for researchers |
 | 데이터 번들 / 번들 | data bundle / bundle |
 | 렌더러 | renderer |
 | 설정(config) 파일 | config (project config) |
