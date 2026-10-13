@@ -27,7 +27,7 @@ Every command of the `fa` tool. `fa <command> --help` shows the same. Commands t
 | [`fa param`](#fa-param) | renderer parameters: scaffold \| explain \| sync |
 | [`fa preflight`](#fa-preflight) | overlap, clipping and panel-intrusion checks (--projects ...) |
 | [`fa promote`](#fa-promote) | promote an exploratory project to a paper figure (AGENTS.md 5.2) |
-| [`fa reference`](#fa-reference) | regenerate (or --check) docs/reference/{cli,config,gallery}.md |
+| [`fa reference`](#fa-reference) | regenerate (or --check) docs/reference/{cli,api,config,gallery}.md |
 | [`fa renderers`](#fa-renderers) | plot names fig_atlas.render() can draw: core, packs and recipes |
 | [`fa retire`](#fa-retire) | move a project to <domain>/archive/ (AGENTS.md 5.3) and build it once |
 | [`fa status`](#fa-status) | which published figures are stale (inputs/code/config changed) |
@@ -319,7 +319,7 @@ fa promote [-h] --figure FIGURE --slug SLUG [--supp] [--no-build] [--dry-run] [-
 
 ## fa reference
 
-regenerate (or --check) docs/reference/{cli,config,gallery}.md
+regenerate (or --check) docs/reference/{cli,api,config,gallery}.md
 
 Runs `scripts/make_reference.py`; its own options: `fa reference --help`.
 

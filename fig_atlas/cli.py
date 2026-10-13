@@ -737,7 +737,7 @@ PASSTHROUGH = {
     "preflight": ("fig_atlas.tools.preflight", "overlap, clipping and panel-intrusion checks (--projects ...)"),
     "storyline": ("fig_atlas.tools.storyline", "storyline tools: new | compile [--plan|--all] | init | registry | check | revisions | snapshots | diff | requests | evidence"),
     "manifest": ("fig_atlas.tools.consolidate_manifest", "consolidate outputs/clean_atlas_manifest.csv"),
-    "reference": ("scripts/make_reference.py", "regenerate (or --check) docs/reference/{cli,config,gallery}.md"),
+    "reference": ("scripts/make_reference.py", "regenerate (or --check) docs/reference/{cli,api,config,gallery}.md"),
 }
 
 
