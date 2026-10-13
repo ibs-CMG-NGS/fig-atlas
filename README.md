@@ -39,8 +39,8 @@ pip install -e .            # add [docs] for the documentation site
 fa --help
 ```
 
-With conda: `conda env create -f environment.yml -p ./fig-atlas`, then `conda activate ./fig-atlas`
-and `pip install -e .`.
+With conda: `conda env create -f environment.yml` creates the environment `fig-atlas` with this
+package installed editable; then `conda activate fig-atlas`, from any folder.
 
 ## Quick start
 

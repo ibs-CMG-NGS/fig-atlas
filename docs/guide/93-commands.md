@@ -6,7 +6,7 @@ reviewed: 2026-10-08
 
 # 부록 C. 명령 한 장 요약
 
-AI에게 말로 시키는 일은 모두 아래 명령으로도 할 수 있습니다. 터미널(Windows의 명령 프롬프트·PowerShell, macOS·Linux의 터미널, 또는 편집기 안의 터미널)에서 저장소 폴더에 있을 때 씁니다. 환경을 먼저 켭니다(`conda activate ./fig-atlas`).
+AI에게 말로 시키는 일은 모두 아래 명령으로도 할 수 있습니다. 터미널(Windows의 명령 프롬프트·PowerShell, macOS·Linux의 터미널, 또는 편집기 안의 터미널)에서 저장소 폴더에 있을 때 씁니다. 환경을 먼저 켭니다(`conda activate fig-atlas`, 어느 폴더에서든).
 
 - 모든 명령은 `fa --help`, `fa 명령 --help`로 설명을 볼 수 있습니다.
 - 파일을 바꾸는 명령은 `--dry-run`을 붙이면 **바뀔 내용만 보여 주고 아무것도 쓰지 않습니다.**

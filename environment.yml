@@ -1,8 +1,8 @@
-# Create the in-repo environment (prefix env) with:
-#   conda env create -f environment.yml -p ./fig-atlas
-#   conda activate ./fig-atlas
-# (No `name:` on purpose so -p works without conflict. Named-env users can add
-#  -n fig-atlas instead of -p.)
+# Create the environment once, from this folder (the fig-atlas repository):
+#   conda env create -f environment.yml
+#   conda activate fig-atlas          # from any folder
+# It is a named environment (outside the repository), so its path never depends on
+# where you are. A project repository uses the same environment.
 #
 # IMPORTANT: conda-forge ONLY. Mixing conda-forge with the `defaults` channel
 # produces an ABI-incompatible BLAS build of numpy/scipy that crashes natively
@@ -11,6 +11,7 @@
 # Python is pinned to 3.12 and the scientific stack to stable majors so every
 # pip dependency (snakemake -> immutables, ...) has a prebuilt wheel (no MSVC
 # Build Tools needed) and the binaries are mutually compatible.
+name: fig-atlas
 channels:
   - conda-forge
 dependencies:

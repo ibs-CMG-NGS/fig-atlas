@@ -100,8 +100,8 @@ description: "Ingest any custom python plotting script and raw data, converting 
    * 레이아웃 배치 구조(예: `layout`, `mosaic`, `width_ratios` 등)를 수정하여 새 플롯이 서브패널로 정상 합류하도록 명시합니다.
 
 ### Phase 7: 빌드 실행 및 성공 확인
-1. `fa build <project_name> --preflight`(설치 전이면 `python -m fig_atlas build ...`)로 분석 → publish → **preflight** → verify를 실행합니다. 환경은 `conda activate ./fig-atlas`가 표준입니다. `fa build`는 conda를 활성화하지 않은 셸에서도 matplotlib DLL 경로(`fig-atlas/Library/bin`)를 스스로 넣습니다.
-2. 분석 스크립트를 `fa` 없이 직접 실행할 때만, conda 미활성 셸에서 먼저 PATH를 보정합니다. 그러지 않으면 렌더링 시점에 트레이스백 없이 프로세스가 죽습니다. git-bash: `export PATH="$PWD/fig-atlas/Library/bin:$PATH"`, PowerShell: `$env:PATH = (Resolve-Path .\fig-atlas\Library\bin).Path + ";" + $env:PATH`.
+1. `fa build <project_name> --preflight`(설치 전이면 `python -m fig_atlas build ...`)로 분석 → publish → **preflight** → verify를 실행합니다. 환경은 이름 있는 conda 환경 `fig-atlas`이고 어느 폴더에서든 `conda activate fig-atlas`로 켭니다. `fa build`는 conda를 활성화하지 않은 셸에서도 matplotlib DLL 경로(환경의 `Library/bin`)를 스스로 넣습니다.
+2. 분석 스크립트를 `fa` 없이 직접 실행할 때만, conda 미활성 셸에서 먼저 PATH를 보정합니다. 그러지 않으면 렌더링 시점에 트레이스백 없이 프로세스가 죽습니다. 가장 쉬운 방법은 `conda activate fig-atlas`입니다. 켤 수 없다면 환경 폴더(`conda env list`로 확인)의 `Library/bin`을 PATH 앞에 넣습니다. 예: PowerShell `$env:PATH = "<환경 폴더>\Library\bin;" + $env:PATH`.
 3. 빌드가 성공(`PASS`)하는지 확인합니다.
 4. **Preflight 결과를 확인하고 error부터 해소합니다** (`outputs/preflight/<project_name>/<figure>.png` 오버레이에 문제 위치가 번호와 함께 표시되고, `outputs/preflight/preflight_findings.csv`에 각 지적의 `hint`가 있습니다).
    * 글자 겹침·잘림·패널 침범·인쇄 시 최소 크기 미달 등 **error는 config(`plots`/`figures`/레이아웃 키)만 조정해 해소**하고 다시 `fa build <project_name> --preflight`로 확인합니다. 렌더러 코드 수정이 필요하면 하드코딩 없이 새 config 키로 노출합니다.

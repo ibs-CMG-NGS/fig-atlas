@@ -6,7 +6,7 @@
 
 ## 준비
 
-[README의 설치 절차](../../README.md)대로 환경을 만들고 활성화한 뒤(`conda activate ./fig-atlas`), 저장소 루트에서 시작합니다. `fa --help`가 명령 목록을 보여 주면 준비가 된 것입니다.
+[README의 설치 절차](../../README.md)대로 환경을 만들고 활성화한 뒤(`conda activate fig-atlas`), 저장소 루트에서 시작합니다. `fa --help`가 명령 목록을 보여 주면 준비가 된 것입니다.
 
 예제 데이터는 [`examples/`](../../examples/README.md)에 있습니다. 시뮬레이션으로 만든 두 번들입니다(실측값이 아님).
 

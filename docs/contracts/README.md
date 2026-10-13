@@ -1,6 +1,6 @@
 # 데이터 번들 계약서 (2차 파이프라인용)
 
-이 폴더의 문서들은 fig-atlas-template이 **그림을 그리기 위해 그대로 소비할 수 있는** 데이터 번들의 정확한 폴더/파일/컬럼 스펙입니다. 2차 분석 파이프라인(예: CMG-SeqViewer, 또는 그 뒤를 잇는 자동화 export 스텝)이 이 스펙대로 파일을 만들어 `raw_data/<study>/<project>/<bundle_name>/` 아래에 놓으면, fig-atlas 쪽에서는 **탐색·재집계·폴더 재구성 없이** config만 작성해서 바로 렌더링할 수 있습니다.
+이 폴더의 문서들은 fig-atlas가 **그림을 그리기 위해 그대로 소비할 수 있는** 데이터 번들의 정확한 폴더/파일/컬럼 스펙입니다. 2차 분석 파이프라인(예: CMG-SeqViewer, 또는 그 뒤를 잇는 자동화 export 스텝)이 이 스펙대로 파일을 만들어 `raw_data/<study>/<project>/<bundle_name>/` 아래에 놓으면, fig-atlas 쪽에서는 **탐색·재집계·폴더 재구성 없이** config만 작성해서 바로 렌더링할 수 있습니다.
 
 아래 표의 상단 3개는 오믹스 plot type의 컬럼 스펙으로, 오믹스 팩(`fig_atlas_omics/contracts/`)에 있습니다. 그 아래는 분야와 무관한 문서입니다: 이미지 번들 계약, 그리고 신규 plot type을 처음 요청할 때의 일반 번들 제출 절차.
 
