@@ -11,7 +11,7 @@ A tool that **draws paper figures from a config, checks them before print, recor
 
 | I want to | Read |
 |---|---|
-| understand what this tool is and how to use it (for researchers, no programming needed) | [Researcher guide](guide/00-how-to-read.md) |
+| understand what this tool is and how to use it (for researchers, no programming needed) | [Guide for researchers](guide/00-how-to-read.md) |
 | try it for the first time | [Tutorial: first figure (15 min)](tutorials/first_figure.md) |
 | make a figure from my data | [Data bundle contracts](contracts/README.md) → `fa ingest bundle` |
 | make a figure of microscope or blot images | [Tutorial: a microscopy figure](tutorials/imaging_figure.md) |

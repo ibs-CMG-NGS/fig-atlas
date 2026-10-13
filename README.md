@@ -65,7 +65,7 @@ bundles (`examples/`) and an imaging figure from public microscope images (`pilo
 Online: **https://ibs-cmg-ngs.github.io/fig-atlas/** — or locally: `pip install -e .[docs]`, then `mkdocs serve`
 and open http://127.0.0.1:8000.
 
-- **Researcher guide** (`docs/guide/`, Korean): what the tool does and how a figure flows from data
+- **Guide for researchers** (`docs/guide/`, English with a Korean version): what the tool does and how a figure flows from data
   to paper, for scientists with no programming background.
 - **Tutorials**: [first figure](docs/tutorials/first_figure.md) (run by CI as written),
   [imaging figure](docs/tutorials/imaging_figure.md).

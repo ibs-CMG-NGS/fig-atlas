@@ -6,7 +6,7 @@ reviewed: 2026-10-13
 
 # 1. Why a tool like this
 
-> **Sound familiar?**
+> **Has this ever happened to you?**
 >
 > - Resubmitting to another journal, you resized ten figures and their text, one by one.
 > - After reanalysing the data, the text said "1,240" but a figure legend still said "1,212".

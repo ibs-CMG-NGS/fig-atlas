@@ -6,7 +6,7 @@ reviewed: 2026-10-13
 
 # 2. Overview
 
-> **Sound familiar?** Figure files, spreadsheets and analysis scripts scattered as "final", "final_revised" and "really_final", so it was hard to match each figure with the data that made it.
+> **Has this ever happened to you?** Figure files, spreadsheets and analysis scripts scattered as "final", "final_revised" and "really_final", so it was hard to match each figure with the data that made it.
 
 **The key idea:** in fig-atlas a figure runs along one line, **data bundle → project → build → results**, and the files of each step have a fixed place.
 

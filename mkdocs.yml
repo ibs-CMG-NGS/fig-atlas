@@ -55,7 +55,7 @@ plugins:
           build: true
           nav_translations:
             "Home": "홈"
-            "Researcher guide": "연구자 안내서"
+            "Guide for researchers": "연구자 안내서"
             "Appendix": "부록"
             "Tutorials": "튜토리얼"
             "First figure (15 min)": "첫 그림 (15분)"
@@ -107,7 +107,7 @@ validation:
 
 nav:
   - Home: index.md
-  - Researcher guide:
+  - Guide for researchers:
       - guide/00-how-to-read.md
       - guide/01-why.md
       - guide/02-overview.md
