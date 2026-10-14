@@ -83,6 +83,7 @@ plugins:
             "0003 Renderers are shapes": "0003 렌더러는 모양"
             "0004 Procedures are commands, served over MCP": "0004 절차는 명령 + MCP"
             "0005 One source for the rules": "0005 규칙의 단일 정본"
+            "0006 Documentation in two languages": "0006 문서는 영어 정본 + 한국어판"
 
 # Links to repository files outside docs/ (AGENTS.md, examples/, configs/, ...) become links
 # to the file on GitHub; tests/test_docs_site.py checks that every such link resolves.
@@ -155,3 +156,4 @@ nav:
           - 0003 Renderers are shapes: decisions/0003-renderers-are-shapes.md
           - 0004 Procedures are commands, served over MCP: decisions/0004-procedures-are-commands.md
           - 0005 One source for the rules: decisions/0005-agents-md-single-source.md
+          - 0006 Documentation in two languages: decisions/0006-documentation-in-two-languages.md

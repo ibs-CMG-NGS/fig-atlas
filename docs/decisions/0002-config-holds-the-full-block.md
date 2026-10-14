@@ -1,25 +1,25 @@
-# 0002. 프로젝트 config가 정본: 렌더러가 읽는 파라미터 전부를 주석과 함께 둔다
+# 0002. The project config is the source of truth: it holds every parameter a renderer reads, with comments
 
-- 상태: 채택 (재검토: 로드맵 게이트 G0)
-- 날짜: 2026-08-13 (정리 2026-10-08)
+- Status: accepted (to be reviewed: roadmap gate G0)
+- Date: 2026-08-13 (tidied 2026-10-08)
 
-## 배경
+## Context
 
-번들의 `metadata/metadata.yaml`에는 이미 `plot_params`가 들어 있는 경우가 많다. 그래서 config에는 바꾸고 싶은 키(예: 제목)만 적고 나머지는 번들 값에 맡기고 싶어진다. 그러나 그러면 그림을 조정할 때 `raw_data/` 아래 잊기 쉬운 파일을 봐야 하고, config만 읽어서는 그림이 어떤 값으로 그려지는지 알 수 없다. 사용자는 Case B 반입(DE + GO 번들 프로젝트)에서 이 방식을 바로잡았다. 연구자는 Python을 읽지 않고 config만으로 그림을 이해하고 조정해야 한다(config = 연구자 UI).
+A bundle's `metadata/metadata.yaml` often already has `plot_params`. So it is tempting to write in the config only the keys you want to change (e.g. the title) and leave the rest to the bundle's values. But then adjusting a figure means looking at an easily forgotten file under `raw_data/`, and reading the config alone does not tell you which values the figure is drawn with. The user corrected this in a Case B ingest (a DE + GO bundle project): a researcher must understand and adjust a figure from its config alone, without reading Python (the config is the researcher's interface).
 
-## 결정
+## Decision
 
-- 반입하는 모든 그림의 `plots.<name>` 블록에는 **렌더러가 읽는 키 전부**를 쓴다(색, 임계값, 축 범위, 컬러맵, 크기, top_n, 정렬·주석 방식 ...). 번들 값과 같아도 쓴다.
-- 각 키에는 역할·단위·조정 방향 주석을 단다(AGENTS.md §1.6).
-- 병합 순서 `bundle < style preset < config`는 유지하지만, 사용자가 조정할 만한 값을 번들 값에 맡기지 않는다.
+- Every ingested figure's `plots.<name>` block holds **every key the renderer reads** (colours, thresholds, axis ranges, colormaps, sizes, top_n, sorting and annotation modes, ...), even when equal to the bundle's value.
+- Each key has a comment with its role, unit and which way to adjust it (AGENTS.md §1.6).
+- The merge order `bundle < style preset < config` stays, but no value a user might want to adjust is left to the bundle.
 
-## 결과
+## Consequences
 
-- config 하나로 그림의 모든 값을 보고 바꿀 수 있다. 대가로 config가 길어진다(paper config 158–737줄).
-- 손으로 복사하지 않게 도구가 대신한다.
-  - `fa ingest bundle`: 번들 값과 스키마 기본값으로 블록 전체를 주석과 함께 쓴다.
-  - `fa param scaffold`: 렌더러의 전체 블록을 출력한다.
-  - `fa param sync --apply`: 빌드가 기본값으로 대신한 키를 채운다.
-  - `fa lint`: 빠진 키, 안 읽힌 키, 오타를 찾는다.
-- 렌더러 `SCHEMA`가 키의 기본값과 설명을 한 곳에 둔다. `tests/test_renderer_schemas.py`가 스키마와 코드가 일치하는지 확인한다.
-- 게이트 G0: 도구가 안정되면 "기본값과 다른 키만 config에"(정책 A)로 바꿀지 다시 정한다. 바꾸면 이 기록을 대체한다.
+- One config shows and changes every value of a figure. The price is longer configs (paper configs of 158–737 lines).
+- Tools do the copying instead of people:
+  - `fa ingest bundle`: writes the whole block, with comments, from the bundle's values and the schema defaults.
+  - `fa param scaffold`: prints a renderer's whole block.
+  - `fa param sync --apply`: fills in keys the build took from defaults.
+  - `fa lint`: finds missing keys, keys never read and typos.
+- A renderer's `SCHEMA` keeps its keys' defaults and descriptions in one place. `tests/test_renderer_schemas.py` checks that schema and code agree.
+- Gate G0: once the tools are stable, decide again whether to switch to "only keys that differ from the defaults in the config" (policy A). If so, a new record replaces this one.

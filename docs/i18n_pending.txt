@@ -2,14 +2,3 @@
 # Each stays Korean in its page.md until its English version is written; then the
 # Korean text moves to page.ko.md and the page leaves this list.
 # tests/test_docs_i18n.py keeps this list exact.
-
-contracts/image_bundle_contract.md
-contracts/new_plot_type_contract.md
-contracts/README.md
-contracts/table_bundle_contract.md
-decisions/0001-final-size-rendering.md
-decisions/0002-config-holds-the-full-block.md
-decisions/0003-renderers-are-shapes.md
-decisions/0004-procedures-are-commands.md
-decisions/0005-agents-md-single-source.md
-decisions/README.md

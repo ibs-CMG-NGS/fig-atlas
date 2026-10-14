@@ -1,31 +1,33 @@
-# 설계 결정 기록 (ADR)
+# Design decisions (ADR)
 
-이 폴더는 fig-atlas의 주요 설계 결정과 그 이유를 남깁니다. 규칙 자체는 [`AGENTS.md`](../../AGENTS.md)에 있고, 여기에는 **왜 그 규칙인가**가 있습니다. 대화 기록이나 개인 AI 메모리에만 있던 결정을 저장소로 옮겨, 다른 사람과 다른 에이전트도 같은 근거를 볼 수 있게 합니다.
+This folder records fig-atlas's main design decisions and their reasons. The rules themselves are in [`AGENTS.md`](../../AGENTS.md); here is **why each rule is so**. Decisions that lived only in conversations or a personal AI memory are moved into the repository, so other people and other agents see the same reasons.
 
-| # | 결정 | 상태 |
+| # | Decision | Status |
 |---|---|---|
-| [0001](0001-final-size-rendering.md) | 그림은 최종 인쇄 크기(A4 페이지 프리셋)로 1:1 그린다 | 채택 (2026-09-30) |
-| [0002](0002-config-holds-the-full-block.md) | 프로젝트 config가 정본: 렌더러가 읽는 파라미터 전부를 주석과 함께 둔다 | 채택 (2026-08), 재검토 게이트 G0 |
-| [0003](0003-renderers-are-shapes.md) | 렌더러는 모양 단위로 코어에, 분야 지식은 팩에 | 채택 (2026-10-07) |
-| [0004](0004-procedures-are-commands.md) | 절차는 결정적 명령으로, AI는 같은 명령을 MCP로 부른다 | 채택 (2026-10-08) |
-| [0005](0005-agents-md-single-source.md) | 규칙의 단일 정본은 루트 `AGENTS.md` | 채택 (2026-10-08) |
+| [0001](0001-final-size-rendering.md) | Figures are drawn 1:1 at their final printed size (an A4 page preset) | Accepted (2026-09-30) |
+| [0002](0002-config-holds-the-full-block.md) | The project config is the source of truth: every parameter a renderer reads, with comments | Accepted (2026-08), review gate G0 |
+| [0003](0003-renderers-are-shapes.md) | Renderers are shapes, in the core; a field's knowledge goes into packs | Accepted (2026-10-07) |
+| [0004](0004-procedures-are-commands.md) | Procedures are deterministic commands; AI calls the same commands over MCP | Accepted (2026-10-08) |
+| [0005](0005-agents-md-single-source.md) | The single source of the rules is the root `AGENTS.md` | Accepted (2026-10-08) |
+| [0006](0006-documentation-in-two-languages.md) | The documentation is English, the source of truth, with a Korean version beside it | Accepted (2026-10-14) |
 
-## 새 결정 쓰기
+## Writing a new decision
 
-다음 번호로 `NNNN-짧은-이름.md`를 만들고 아래 형식을 따릅니다. 결정이 바뀌면 옛 기록을 지우지 않고 상태를 "대체됨 (→ NNNN)"으로 바꿉니다.
+Create `NNNN-short-name.md` with the next number (and its Korean version, `NNNN-short-name.ko.md`), in the form below. When a decision changes, the old record is not deleted; its status becomes "superseded (→ NNNN)".
 
+<!-- i18n: prose -->
 ```markdown
-# NNNN. 결정 한 줄
+# NNNN. The decision in one line
 
-- 상태: 채택 | 제안 | 대체됨 (→ NNNN)
-- 날짜: YYYY-MM-DD
+- Status: accepted | proposed | superseded (→ NNNN)
+- Date: YYYY-MM-DD
 
-## 배경
-무엇이 문제였나, 어떤 사실이 결정을 강제했나.
+## Context
+What was the problem; which facts forced the decision.
 
-## 결정
-무엇을 하기로 했나.
+## Decision
+What was decided.
 
-## 결과
-좋아지는 것, 대가, 이 결정을 지키는 장치(테스트·명령·검사).
+## Consequences
+What gets better, the price, and what keeps the decision (tests, commands, checks).
 ```

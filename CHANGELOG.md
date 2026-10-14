@@ -29,5 +29,7 @@ of one manuscript before being published as a package. This first public tree co
 - **Domain-neutral core and packs**: plug-in entry points for renderers, contracts, ingest maps,
   recipes and commands; an omics pack; an image panel; generic line-with-band and
   effect-vs-significance shapes.
-- **Documentation**: a researcher guide (Korean), tutorials run as tests, how-to guides, generated
-  reference pages and a renderer gallery, design decision records, a documentation site (MkDocs).
+- **Documentation**: a guide for researchers, tutorials run as tests (Case A, B and C worked
+  examples among them), how-to guides, generated reference pages and a renderer gallery, design
+  decision records, a documentation site (MkDocs) in English with a Korean version of every page
+  (`/ko/`; docs/decisions/0006, kept in step by tests/test_docs_i18n.py).

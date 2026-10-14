@@ -1,29 +1,29 @@
-# 0003. 렌더러는 모양 단위로 코어에, 분야 지식은 팩에
+# 0003. Renderers are shapes, in the core; a field's knowledge goes into packs
 
-- 상태: 채택
-- 날짜: 2026-10-07
+- Status: accepted
+- Date: 2026-10-07
 
-## 배경
+## Context
 
-fig-atlas는 NGS 논문에서 시작했지만, 다른 분야(이미징, 전기생리, 임상)의 그림 관리에도 쓰여야 한다. 처음에는 렌더러를 "범용 / NGS"로 나누려 했다. 그러나 막대, 선, 산점도, 히트맵은 어느 분야에서나 같은 모양이고, 분야에 따라 달라지는 것은 열 이름, 용어, 기본값, 데이터 읽기다. 이 분류를 사용자에게 맡기면 같은 모양이 분야마다 중복된다.
+fig-atlas started with an NGS paper, but it must also manage figures in other fields (imaging, electrophysiology, clinical). The first idea was to split renderers into "generic / NGS". But bars, lines, scatter plots and heatmaps are the same shape in every field; what changes from field to field are column names, vocabulary, defaults and how data are read. Leaving this split to users would duplicate the same shape in every field.
 
-## 결정
+## Decision
 
-- **렌더러는 모양**이다. 처음 쓴 데이터가 오믹스여도 막대·선·산점도·히트맵·점 행렬은 코어(`fig_atlas/renderers/`)에 둔다.
-- **분야 팩**(예: `fig_atlas_omics`)에는 그 분야에 고유한 것만 둔다.
-  - 데이터 읽기·반입 어댑터
-  - 번들 계약
-  - 레시피: 코어 모양 + 분야의 열 역할·용어·기본값
-  - 분석 도우미
-- 그 분야 밖에서 의미가 없는 모양(서열 로고, 유전체 트랙)만 팩 렌더러로 둔다.
-- 코어는 팩을 import하지 않는다. 팩은 entry point로 렌더러·레시피·계약·반입 매핑·CLI 명령을 등록한다.
-- 스크립트는 `fig_atlas.render("<이름>", ...)`로 그린다. 렌더러가 어느 패키지에 있는지 몰라도 되므로, 렌더러를 옮겨도 스크립트가 깨지지 않는다.
+- **A renderer is a shape.** Bars, lines, scatter plots, heatmaps and dot matrices go in the core (`fig_atlas/renderers/`) even if the first data they drew were omics.
+- **A domain pack** (e.g. `fig_atlas_omics`) holds only what is specific to its field:
+  - data readers and ingest adapters
+  - bundle contracts
+  - recipes: a core shape + the field's column roles, vocabulary and defaults
+  - analysis helpers
+- Only shapes that mean nothing outside their field (a sequence logo, genome tracks) are pack renderers.
+- The core never imports a pack. A pack registers its renderers, recipes, contracts, ingest mappings and CLI commands through entry points.
+- Scripts draw with `fig_atlas.render("<name>", ...)`. They need not know which package a renderer is in, so moving a renderer does not break them.
 
-## 결과
+## Consequences
 
-- 새 분야는 코어를 고치지 않고 팩을 더해 시작한다(`docs/howto/new_domain_pack.md`, 예제 팩은 테스트가 실제로 만든다).
-- 기존 오믹스 렌더러는 한 번에 하나씩 코어 모양 + 레시피로 옮긴다(로드맵 6a.3). volcano·ma_plot이 첫 사례다.
-- 지키는 장치:
-  - `tests/test_core_boundary.py`: 코어가 팩을 import하지 않는지
-  - `fa renderers`: 어디에 무엇이 있는지 목록
-  - `fa new renderer`: 기본 위치가 코어이고, 팩을 고르면 이 원칙을 안내한다
+- A new field starts by adding a pack, without changing the core (`docs/howto/new_domain_pack.md`; the tests actually build the example pack).
+- The existing omics renderers move, one at a time, to core shapes + recipes (roadmap 6a.3). volcano and ma_plot are the first.
+- What keeps it:
+  - `tests/test_core_boundary.py`: the core does not import a pack
+  - `fa renderers`: lists what is where
+  - `fa new renderer`: the core is the default place, and choosing a pack explains this principle

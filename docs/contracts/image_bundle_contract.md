@@ -1,42 +1,42 @@
-# 계약서: 이미지 번들 (현미경 이미지·블롯·젤)
+# Contract: image bundles (microscope images, blots, gels)
 
-분야와 무관한 이미지 데이터 번들의 폴더·파일·메타데이터 스펙입니다. 이 형식으로 받은 이미지는 코어 렌더러 `render_image_panel`(`plot_type: image_panel`)이 바로 그리고, 크롭·표시 범위·감마 같은 조정 내역은 원본 해시와 함께 provenance와 README에 기록됩니다(AGENTS.md §4.7). 표 형식 번들의 일반 규칙은 [`new_plot_type_contract.md`](new_plot_type_contract.md)를 따릅니다.
+The folder, file and metadata specification of image data bundles, for any field. Images received in this format are drawn directly by the core renderer `render_image_panel` (`plot_type: image_panel`), and adjustments such as crop, display range and gamma are recorded with the originals' hashes in the provenance record and the README (AGENTS.md §4.7). General rules for tabular bundles follow [`new_plot_type_contract.md`](new_plot_type_contract.md).
 
-> 이 계약서는 이미징 시범(로드맵 6a.4, 공개 BBBC013)에서 나왔습니다. 그 데이터는 픽셀 크기를 공개하지 않아 스케일바를 그릴 수 없었고, 그래서 아래의 `pixel_size`는 필수입니다.
+> This contract came out of the imaging pilot (roadmap 6a.4, public BBBC013). Those data do not publish the pixel size, so no scale bar could be drawn — which is why `pixel_size` below is required.
 
-## 폴더 구조
+## Folder structure
 
 ```
 <bundle_name>/
   inputs/
-    <채널 파일 1>.tif        # 채널마다 흑백 파일 하나 (또는 컬러 사진 한 장)
-    <채널 파일 2>.tif
+    <channel-file-1>.tif     # one greyscale file per channel (or one colour photograph)
+    <channel-file-2>.tif
   metadata/
-    metadata.yaml            # 필수 — 아래 키
+    metadata.yaml            # required — the keys below
 ```
 
-## `inputs/` 이미지 파일 규칙
+## Rules for the image files in `inputs/`
 
-| 규칙 | 내용 |
+| Rule | Content |
 |---|---|
-| **원본 그대로** | 밝기·대비를 조정하거나 잘라 낸 사본을 넣지 않습니다. 조정은 그림을 그릴 때 config로 하고, 그 내역이 기록됩니다. |
-| **채널마다 파일 하나** | 다채널 현미경 이미지는 채널별 흑백 파일로 냅니다(8비트 또는 16비트). 렌더러가 채널 색을 입혀 합성합니다. 컬러 사진(예: 블롯 촬영본)은 한 파일로 냅니다. |
-| **무손실 형식** | TIFF 또는 PNG를 씁니다. JPEG는 압축 손실이 있어 정량에 쓰지 않습니다. 형식은 Pillow가 읽을 수 있어야 합니다(PNG, JPEG, 8/16비트 TIFF). |
-| **같은 크기** | 한 번들의 채널 파일은 가로·세로 픽셀 수가 같아야 합니다. |
+| **Originals only** | No copies with adjusted brightness or contrast, and no cropped copies. Adjustments are made in the config when the figure is drawn, and they are recorded. |
+| **One file per channel** | A multichannel microscope image comes as one greyscale file per channel (8- or 16-bit). The renderer tints and combines the channels. A colour photograph (e.g. of a blot) comes as one file. |
+| **Lossless formats** | Use TIFF or PNG. JPEG loses information in compression and is not used for quantification. The format must be readable by Pillow (PNG, JPEG, 8/16-bit TIFF). |
+| **The same size** | The channel files of one bundle must have the same width and height in pixels. |
 
 ## `metadata/metadata.yaml`
 
 ```yaml
 plot_type: image_panel
 
-# 필수: 픽셀 하나의 물리 크기. 스케일바에 쓰입니다.
-# 출처가 공개하지 않으면 null로 적고 사유를 남깁니다 (빠뜨린 것과 구분하기 위해).
+# Required: the physical size of one pixel, used for the scale bar.
+# If the source does not publish it, write null and give the reason (to tell it apart from an omission).
 pixel_size: 0.325
 pixel_unit: "µm"
 # pixel_size: null
 # pixel_size_note: "BBBC013 does not publish the pixel size"
 
-# 필수: 채널 목록 (inputs/ 안의 파일 이름). label·color는 그림의 기본값입니다.
+# Required: the channels (file names in inputs/). label and color are the figure's defaults.
 channels:
   - file: "dna.tif"
     label: "DNA"
@@ -45,35 +45,35 @@ channels:
     label: "FKHR-GFP"
     color: "#22c55e"
 
-# 권장: 획득 조건과 출처
+# Recommended: acquisition and source
 acquisition:
   instrument: "IN Cell Analyzer 3000"
   objective: "40x / 0.6 NA"
-  exposure_ms: [100, 250]          # 채널 순서
+  exposure_ms: [100, 250]          # in channel order
 source:
   license: "CC BY 3.0"
   citation: "Ljosa et al., Nature Methods, 2012"
   url: "https://bbbc.broadinstitute.org/BBBC013"
 ```
 
-| 키 | 필수 | 설명 |
+| Key | Required | Description |
 |---|---|---|
-| `plot_type` | 필수 | `image_panel` |
-| `pixel_size` | 필수 (값은 `null` 가능) | 픽셀 하나의 크기, `pixel_unit` 단위. `null`이면 `pixel_size_note`에 사유 |
-| `pixel_unit` | 권장 | 기본 `µm` |
-| `channels` | 필수 | 채널마다 `file`(필수), `label`, `color` |
-| `acquisition` | 권장 | 장비, 대물렌즈, 노출 등 — 범례 작성에 씁니다 |
-| `source` | 공개 데이터는 필수 | 라이선스, 인용, URL — 범례의 출처 문구에 기록값으로 들어갑니다 |
+| `plot_type` | Required | `image_panel` |
+| `pixel_size` | Required (the value may be `null`) | The size of one pixel, in `pixel_unit`. If `null`, the reason goes in `pixel_size_note` |
+| `pixel_unit` | Recommended | Default `µm` |
+| `channels` | Required | Per channel `file` (required), `label`, `color` |
+| `acquisition` | Recommended | Instrument, objective, exposure and so on — used for writing the legend |
+| `source` | Required for public data | Licence, citation, URL — they go into the legend's source sentence as recorded values |
 
-크롭 위치, 표시 범위, 감마는 번들에 넣지 않습니다. 그림마다 다를 수 있으므로 프로젝트 config(`plots.<name>`)에 둡니다.
+Crop position, display range and gamma are not put in the bundle. They can differ from figure to figure, so they belong in the project config (`plots.<name>`).
 
-## 검사
+## Checks
 
 ```bash
 fa bundle check raw_data/<study>/<project>/<bundle_name>
 ```
 
-- **오류:** 이미지 파일이 없음, `metadata.yaml`에 `pixel_size`나 `channels` 키가 없음, `channels`가 가리키는 파일이 `inputs/`에 없음
-- **통과하면:** 그릴 렌더러로 `fig_atlas.renderers:render_image_panel`이 표시됩니다.
+- **Errors:** no image files; no `pixel_size` or `channels` key in `metadata.yaml`; a file named in `channels` is not in `inputs/`
+- **When it passes:** `fig_atlas.renderers:render_image_panel` is shown as the renderer that draws it.
 
-기계 검사 정의는 `fig_atlas/contracts.py`의 `core.image`입니다.
+The machine-checkable definition is `core.image` in `fig_atlas/contracts.py`.
