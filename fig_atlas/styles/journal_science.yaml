@@ -15,6 +15,7 @@ page:
   name: "journal_science_double"
   content_width_mm: 184      # mm; 2 columns = 18.4 cm (1 column 90 mm = width_frac 0.489)
   content_height_mm: 240     # mm; not stated beyond "fits one letter or A4 page" -- a page-fitting limit
+  columns_mm: {"1": 89, "1.5": 127, "2": 184}   # mm; a figure spanning N columns (figures.page_columns: N)
 
 figures:
   font_family: "sans-serif"  # the first installed of rcparams font.sans-serif below: Myriad, else Arial

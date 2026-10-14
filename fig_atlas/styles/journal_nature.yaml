@@ -15,6 +15,7 @@ page:
   name: "journal_nature_double"
   content_width_mm: 183      # mm; double-column width (single column 89 mm = width_frac 0.486)
   content_height_mm: 247     # mm; full page depth
+  columns_mm: {"1": 89, "1.5": 120, "2": 183}   # mm; a figure spanning N columns (figures.page_columns: N); 1.5 columns may also be 136
 
 figures:
   font_family: "sans-serif"  # the first installed of rcparams font.sans-serif below: Arial, else Helvetica

@@ -29,20 +29,31 @@ fa build <project> --preflight
 
 config에 직접 적은 값은 프리셋보다 우선합니다(병합 순서: 번들 < 프리셋 < config). 그래서 config에 글자 크기를 직접 정해 둔 패널은 프리셋을 바꿔도 그대로이고, preflight가 그 저널 기준에 맞지 않는 곳을 알려 줍니다.
 
-## 3. preflight가 짚는 것
+## 3. 그림이 차지하는 단 수
+
+저널 프리셋은 단 폭에 이름을 붙여 둡니다(`page.columns_mm`, 예: Nature 1단 89, 1.5단 120, 2단 183 mm). 그림은 몇 단을 차지하는지만 적고, 폭은 프리셋이 정합니다.
+
+```yaml
+figures:
+  page_columns: 1      # 1, 1.5 또는 2; 적지 않으면 전체(2단) 폭
+```
+
+저널을 바꿔도 단 수는 그대로라서, 1단 그림은 폭을 고치지 않아도 Nature에서는 89 mm, 일반 규격에서는 85 mm로 그려집니다. 그림에 몇 단이 필요한지는 사람이 정합니다. 2단 그림을 1단으로 옮기면 보통 배치도 바꿔야 하고(예: 2×2 칸을 4×1로 쌓기), 그것도 config 키입니다. `--preflight`로 빌드하면 좁아진 폭에서 붐비거나 잘린 글자를 검사가 알려 줍니다.
+
+## 4. preflight가 짚는 것
 
 | 검사 | 저널 프리셋의 키 |
 |---|---|
 | 너무 작은 글자, 너무 가는 선 | `print_check.min_font_pt`, `min_line_pt` |
 | 너무 큰 글자 (패널 태그 제외) | `preflight.max_font_pt` |
-| 저널 컬럼 폭이 아닌 그림 | `preflight.allowed_widths_mm`, `width_tol_mm` |
+| 저널 컬럼 폭이 아닌 그림 | `preflight.allowed_widths_mm`, `width_tol_mm` (`figures.page_columns`로 하나를 고름) |
 | 페이지보다 긴 그림 | `page.content_height_mm` |
 | 태그 대소문자·크기 | `preflight.panel_tag_case`, `panel_tag_size_pt` |
 | PDF에 허용되지 않은 글꼴, 설치되지 않은 글꼴 | `preflight.allowed_fonts` |
 
 고칠 때는 지적된 값을 config에서 바꿉니다. 키마다 단위와 조정 방향이 주석으로 적혀 있고, 값이 어디서 왔는지는 `fa param explain <project> <키>`로 봅니다.
 
-## 4. 알아 둘 것
+## 5. 알아 둘 것
 
 - **글꼴.** 프리셋은 글꼴 하나가 아니라 순서 있는 목록을 씁니다(`rcparams: font.sans-serif`). 첫 글꼴이 설치되어 있지 않으면 다음 글꼴을 씁니다. Myriad처럼 상용 글꼴을 쓰려면 설치하면 됩니다.
 - **수식 글자.** matplotlib은 지수(10²)나 아래 첨자(H₂O₂)를 기본으로 DejaVu 글꼴로 그립니다. 저널 프리셋은 `rcparams`의 `mathtext.*`로 이것도 같은 글꼴로 맞춥니다. `rcparams:` 블록은 config를 불러올 때 matplotlib에 적용되므로, config에 직접 써도 됩니다.

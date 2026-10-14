@@ -108,7 +108,7 @@ A config may reference reusable named style presets via ``project.style``
 the config always wins and shared styling accumulates as a named asset.
 
 - **`ProjectConfig.settings`** -- The whole config as a dict, merged with its style presets: the ``figures``, ``plots``, ``paths`` and any other blocks a script reads (``CONFIG.settings["plots"]["volcano"]``).
-- **`ProjectConfig.page`** -- Final-print page geometry (``fig_atlas.page.PageSpec``) from a ``page:`` block (usually supplied by a ``styles/page_*.yaml`` preset), or None for configs not yet migrated to final-size rendering.
+- **`ProjectConfig.page`** -- Final-print page geometry (``fig_atlas.page.PageSpec``) from a ``page:`` block (usually supplied by a ``styles/page_*.yaml`` preset), or None for configs not yet migrated to final-size rendering. With ``figures.page_columns`` (1, 1.5, 2, ...) the page is narrowed to that many of its named columns (``page.columns_mm``), so the figure is drawn at the journal's column width.
 - **`ProjectConfig.raw_root`** -- Absolute path to the raw-data root. Order: RAW_ROOT env var > paths.raw_root in config. Relative values are anchored at the project root, so callers can use this directly without a further ``project_root /`` join.
 - **`ProjectConfig.figures_root`** -- Where the script saves its figures: ``paths.figures_root``, else ``outputs/<domain>/<category>/<project>/figures``.
 - **`ProjectConfig.formats`** -- ``figures.formats`` (default png, pdf, svg): the files to save.
@@ -172,7 +172,7 @@ Figures are drawn at the size they print, so point sizes in the config are the p
 `from fig_atlas import PageSpec`
 
 ```python
-PageSpec(name, content_width_mm, content_height_mm)
+PageSpec(name, content_width_mm, content_height_mm, columns_mm=())
 ```
 
 The printed area a figure is drawn at 1:1 (mm), from the config's

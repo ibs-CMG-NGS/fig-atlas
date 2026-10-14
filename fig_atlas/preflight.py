@@ -1029,7 +1029,7 @@ def _check_journal_limits(fig, texts: list[_Text], saved_mm, renderer, p: dict) 
                                f"figure is {w_mm:.1f} mm wide; the journal's widths are "
                                f"{', '.join(f'{w:g}' for w in widths)} mm", _no_box(),
                                measured=round(w_mm, 1), threshold=nearest,
-                               hint="use the journal preset's page width (page: content_width_mm / width_frac)"))
+                               hint="set figures.page_columns (1, 1.5, 2) so the journal preset gives the width"))
     return out
 
 

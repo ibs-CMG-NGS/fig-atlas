@@ -33,7 +33,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | [`motif_architecture_table`](#motif_architecture_table) | fig_atlas_omics.renderers | 5 |
 | [`motif_dotplot`](#motif_dotplot) | fig_atlas_omics.renderers | 44 |
 | [`multi_group_heatmap`](#multi_group_heatmap) | core | 32 |
-| [`paired_dumbbell`](#paired_dumbbell) | core | 38 |
+| [`paired_dumbbell`](#paired_dumbbell) | core | 39 |
 | [`pathway_evidence_dotplot`](#pathway_evidence_dotplot) | fig_atlas_omics.renderers | 28 |
 | [`pathway_test_matrix`](#pathway_test_matrix) | fig_atlas_omics.renderers | 42 |
 | [`pca`](#pca) | core | 16 |
@@ -1106,6 +1106,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `xlabel_fontsize` | number | `9.5` | pt | x title size |
 | `hide_inner_yticklabels` | true / false | `False` |  | Show condition labels only on the left column |
 | `show_right_row_label` | true / false | `True` |  | Repeat the row title, rotated, right of the right column |
+| `facet_layout` | one of `2x2`, `4x1` | `2x2` |  | Facet arrangement: 2x2 = directions in rows, assays in columns; 4x1 = all four stacked in one column (assay by assay), for a single journal column — 4x1 when the figure spans one column and the 2x2 facets crowd |
 | `legend_fontsize` | number | `9.5` | pt | Legend text size |
 | `legend_markersize` | number | `9` | pt | Legend marker size |
 | `legend_edgecolor` | colour | `#cbd5e1` | hex color | Legend frame colour |

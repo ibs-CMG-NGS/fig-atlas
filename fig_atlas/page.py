@@ -10,7 +10,10 @@ sizes that actually print. Two equivalent YAML shapes are accepted:
       margin_mm: 12.7                content_height_mm: 247
 
 The first (paper + uniform margin) suits generic paper sizes; the second
-(explicit content box) suits journal column widths.
+(explicit content box) suits journal column widths. A journal preset also
+names its column widths (``columns_mm: {"1": 89, "1.5": 120, "2": 183}``), so a
+figure states how many columns it spans (``figures.page_columns: 1``) and
+gets that journal's width for it; switching journal keeps the span.
 """
 from __future__ import annotations
 
@@ -28,15 +31,35 @@ class PageSpec:
     name: str
     content_width_mm: float
     content_height_mm: float
+    columns_mm: tuple = ()                 # ((span, width_mm), ...) named column widths, e.g. (("1", 89.0), ...)
 
     @classmethod
     def from_dict(cls, d: dict) -> "PageSpec":
         name = str(d.get("name", "page"))
+        cols = tuple((_span(k), float(v)) for k, v in (d.get("columns_mm") or {}).items())
         if "content_width_mm" in d:
-            return cls(name, float(d["content_width_mm"]), float(d["content_height_mm"]))
+            return cls(name, float(d["content_width_mm"]), float(d["content_height_mm"]), cols)
         paper_w, paper_h = (float(v) for v in d["paper_mm"])
         margin = float(d.get("margin_mm", 0.0))
-        return cls(name, paper_w - 2 * margin, paper_h - 2 * margin)
+        return cls(name, paper_w - 2 * margin, paper_h - 2 * margin, cols)
+
+    def column_width_mm(self, span) -> float:
+        """Width in mm of a figure spanning ``span`` columns (1, 1.5, 2, ...)
+        on this page, from its ``columns_mm``."""
+        widths = dict(self.columns_mm)
+        key = _span(span)
+        if key not in widths:
+            named = ", ".join(widths) or "none"
+            raise ValueError(f"page '{self.name}' names no {key}-column width (it names: {named}); "
+                             f"set figures.page_columns to one of them, or give width_mm instead")
+        return widths[key]
+
+    def spanning(self, span) -> "PageSpec":
+        """This page narrowed to ``span`` columns: the content width becomes
+        that column width, so code sizing a figure to the page's full width
+        draws it at the column width instead."""
+        return PageSpec(f"{self.name}/{_span(span)}col", self.column_width_mm(span), self.content_height_mm,
+                        self.columns_mm)
 
     @property
     def content_width_in(self) -> float:
@@ -73,6 +96,11 @@ class PageSpec:
                 f"pages or reduce its content."
             )
         return width_mm / MM_PER_INCH, height_mm / MM_PER_INCH
+
+
+def _span(v) -> str:
+    """A column span as a key: 1, 1.0 and "1" -> "1"; 1.5 -> "1.5"."""
+    return f"{float(v):g}"
 
 
 def save_page_figure(fig, path, pad_mm: float = 0.5, **kwargs) -> None:

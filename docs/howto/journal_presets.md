@@ -29,20 +29,31 @@ fa build <project> --preflight
 
 Values written in the config itself come before the preset (merge order: bundle < preset < config). So a panel whose text sizes are set in the config keeps them when the preset changes, and preflight points out where they do not meet that journal's limits.
 
-## 3. What preflight points out
+## 3. How many columns a figure spans
+
+A journal preset names its column widths (`page.columns_mm`, e.g. Nature 1: 89, 1.5: 120, 2: 183 mm). A figure says how many columns it spans, and the preset gives the width:
+
+```yaml
+figures:
+  page_columns: 1      # 1, 1.5 or 2; leave it out for the full (double-column) width
+```
+
+The span stays when the journal changes, so a single-column figure is drawn at Nature's 89 mm or the generic 85 mm without editing its width. Which span a figure needs is your decision: a figure moved from two columns to one usually needs its layout changed as well (for example a 2x2 grid of facets stacked as 4x1), and those are config keys too. Build it with `--preflight`; crowded or clipped text at the narrower width is what the checks report.
+
+## 4. What preflight points out
 
 | Check | Key in the journal preset |
 |---|---|
 | Text too small, lines too thin | `print_check.min_font_pt`, `min_line_pt` |
 | Text too large (panel tags aside) | `preflight.max_font_pt` |
-| A figure not at a journal column width | `preflight.allowed_widths_mm`, `width_tol_mm` |
+| A figure not at a journal column width | `preflight.allowed_widths_mm`, `width_tol_mm` (choose one with `figures.page_columns`) |
 | A figure taller than the page | `page.content_height_mm` |
 | Tag case and size | `preflight.panel_tag_case`, `panel_tag_size_pt` |
 | Fonts the PDF may not use, fonts not installed | `preflight.allowed_fonts` |
 
 To fix them, change the values pointed out in the config. Each key's comment gives its unit and which way to adjust it, and `fa param explain <project> <key>` shows where a value came from.
 
-## 4. Good to know
+## 5. Good to know
 
 - **Fonts.** A preset gives not one font but an ordered list (`rcparams: font.sans-serif`). If the first is not installed, the next is used. To use a commercial font such as Myriad, install it.
 - **Maths text.** matplotlib draws exponents (10²) and subscripts (H₂O₂) in the DejaVu font by default. The journal presets set these to the same font too, with `mathtext.*` in `rcparams`. The `rcparams:` block is applied to matplotlib when the config is loaded, so you can also write it in the config itself.

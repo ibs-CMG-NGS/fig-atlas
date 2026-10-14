@@ -11,7 +11,8 @@ of one manuscript before being published as a package. This first public tree co
 
 - **Projects and builds**: commented YAML configs as the single source of every visual value
   (parameter schemas for all renderers, `fa param scaffold / explain / sync`, `fa lint`),
-  final-size rendering on page presets, `fa build` (analysis → publish → pre-print checks →
+  final-size rendering on page presets, figures sized by the journal columns they span
+  (`figures.page_columns`, column widths named in the journal presets), `fa build` (analysis → publish → pre-print checks →
   verify), byte-identical rebuilds.
 - **Pre-print checks** (`fa build --preflight`, `fa preflight`): 24 checks for overlaps, clipping,
   panel intrusion, print sizes, fonts, resolution, panel tags and colour (colour-vision deficiency,

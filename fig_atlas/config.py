@@ -212,12 +212,17 @@ class ProjectConfig:
     def page(self):
         """Final-print page geometry (``fig_atlas.page.PageSpec``) from a
         ``page:`` block (usually supplied by a ``styles/page_*.yaml`` preset),
-        or None for configs not yet migrated to final-size rendering."""
+        or None for configs not yet migrated to final-size rendering. With
+        ``figures.page_columns`` (1, 1.5, 2, ...) the page is narrowed to that
+        many of its named columns (``page.columns_mm``), so the figure is drawn
+        at the journal's column width."""
         block = self._raw.get("page")
         if not block:
             return None
         from .page import PageSpec
-        return PageSpec.from_dict(block)
+        page = PageSpec.from_dict(block)
+        span = (self._raw.get("figures") or {}).get("page_columns")
+        return page.spanning(span) if span is not None else page
 
     @property
     def print_check(self) -> dict:

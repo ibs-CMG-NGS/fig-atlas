@@ -13,6 +13,7 @@ page:
   name: "journal_generic_double"
   content_width_mm: 180      # mm; double-column figure width (single column = 85 mm)
   content_height_mm: 240     # mm; tallest figure allowed (legend printed separately)
+  columns_mm: {"1": 85, "2": 180}   # mm; a figure spanning N columns (figures.page_columns: N)
 
 figures:
   font_family: "Arial"       # Arial/Helvetica are accepted everywhere; falls back with a preflight warning if absent

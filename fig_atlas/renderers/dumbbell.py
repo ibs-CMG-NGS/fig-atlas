@@ -48,6 +48,10 @@ SCHEMA = Schema("dumbbell", params=[
     Param("hide_inner_yticklabels", bool, False, role="Show condition labels only on the left column"),
     Param("show_right_row_label", bool, True, role="Repeat the row title, rotated, right of the right column"),
     # [Legend and layout]
+    Param("facet_layout", ("2x2", "4x1"), "2x2",
+          role="Facet arrangement: 2x2 = directions in rows, assays in columns; 4x1 = all four stacked in "
+               "one column (assay by assay), for a single journal column",
+          tune="4x1 when the figure spans one column and the 2x2 facets crowd"),
     Param("legend_fontsize", float, 9.5, unit="pt", range=(0, None), role="Legend text size"),
     Param("legend_markersize", float, 9, unit="pt", range=(0, None), role="Legend marker size"),
     Param("legend_edgecolor", "color", "#cbd5e1", unit="hex color", role="Legend frame colour"),
@@ -156,6 +160,7 @@ def render_paired_dumbbell(
     extend_right = float(params.get("extend_right", 0.0))
 
     n_cols = len(facets)
+    stacked = params.get("facet_layout", "2x2") == "4x1"
     # Reserve a label slot inside the target column so the left facets' tick
     # labels and row titles stay within the panel's own bounds (its outer box
     # then starts at the column edge, where the panel tag sits) instead of
@@ -163,12 +168,21 @@ def render_paired_dumbbell(
     left_inset = float(params.get("left_inset", 0.0))
     if left_inset > 0:
         gs_target = gs_target.subgridspec(1, 2, width_ratios=[left_inset, 1.0 - left_inset], wspace=0.0)[0, 1]
-    gs_sub = gs_target.subgridspec(3, n_cols, height_ratios=[1.0, 1.0, db_leg_row], hspace=db_hspace, wspace=db_wspace)
-    axes = {}
+    # Grid cell of each facet: 2x2 puts direction in rows and assay in columns;
+    # 4x1 stacks them in one column, assay by assay (UP above DOWN).
+    if stacked:
+        n_rows = 2 * n_cols
+        gs_sub = gs_target.subgridspec(n_rows + 1, 1, height_ratios=[1.0] * n_rows + [db_leg_row], hspace=db_hspace)
+    else:
+        gs_sub = gs_target.subgridspec(3, n_cols, height_ratios=[1.0, 1.0, db_leg_row], hspace=db_hspace,
+                                       wspace=db_wspace)
+    axes = {}                                     # keyed (direction row, assay column) in either layout
 
     for col_idx, (assay_label, h_key, m_key) in enumerate(facets):
         for row_idx, direction in enumerate(["UP", "DOWN"]):
-            ax = fig.add_subplot(gs_sub[row_idx, col_idx])
+            cell = gs_sub[2 * col_idx + row_idx, 0] if stacked else gs_sub[row_idx, col_idx]
+            grid_col = 0 if stacked else col_idx
+            ax = fig.add_subplot(cell)
             axes[(row_idx, col_idx)] = ax
 
             for yi, cond in enumerate(conditions):
@@ -202,7 +216,7 @@ def render_paired_dumbbell(
 
             ax.set_yticks(range(len(conditions)))
             ax.set_yticklabels([cond_rename.get(c, c) for c in conditions], fontsize=db_ytick_fs, fontweight="bold")
-            if hide_inner_ylabels and col_idx > 0:
+            if hide_inner_ylabels and grid_col > 0:
                 ax.tick_params(axis="y", labelleft=False)
             if y_margin is not None:
                 ax.set_ylim(-float(y_margin), len(conditions) - 1 + float(y_margin))
@@ -221,7 +235,7 @@ def render_paired_dumbbell(
             # Headers & Labels
             if row_idx == 0:
                 ax.set_title(assay_label, fontsize=db_hdr_fs, fontweight="bold", pad=db_hdr_pad)
-            if col_idx == 0:
+            if grid_col == 0:
                 ax.set_ylabel(f"{direction}-regulated", fontsize=db_ylabel_fs, fontweight="bold", labelpad=db_labelpad)
             elif not show_right_row_label:
                 ax.set_ylabel("")
@@ -231,7 +245,8 @@ def render_paired_dumbbell(
                             fontsize=db_ylabel_fs - 0.5, fontweight="bold", color="#334155", rotation=-90,
                             va="center", ha="left")
 
-            if row_idx == 1 and not shared_xlabel:
+            last_row = (col_idx == n_cols - 1) if stacked else True     # stacked: one x title, under the bottom facet
+            if row_idx == 1 and last_row and not (shared_xlabel and not stacked):
                 ax.set_xlabel(xlabel_text, fontsize=db_xlabel_fs, fontweight="bold")
             else:
                 ax.set_xlabel("")
@@ -252,7 +267,7 @@ def render_paired_dumbbell(
     else:
         ext_right = None
 
-    if shared_xlabel:
+    if shared_xlabel and not stacked:
         ax_l, ax_r = axes[(1, 0)], axes[(1, n_cols - 1)]
         pos_l, pos_r = ax_l.get_position(), ax_r.get_position()
         x_mid = ((pos_l.x0 + pos_r.x1) / 2 - pos_l.x0) / pos_l.width  # in ax_l axes coords
@@ -260,7 +275,7 @@ def render_paired_dumbbell(
         ax_l.xaxis.set_label_coords(x_mid, shared_xlabel_y)
 
     # Legend dedicated bottom row
-    ax_leg = fig.add_subplot(gs_sub[2, :])
+    ax_leg = fig.add_subplot(gs_sub[-1, :])
     if ext_right is not None:
         p = ax_leg.get_position()
         ax_leg.set_position([p.x0, p.y0, ext_right - p.x0, p.height])
