@@ -1,50 +1,50 @@
-# 튜토리얼: 첫 그림 (15분)
+# Tutorial: first figure (15 min)
 
-> **어느 길인가:** 정리된 데이터 번들(표 + `metadata.yaml`)에서 시작하는 길, **Case B**입니다. 직접 짠 그림 코드가 있으면 [Case A](case_a_port_script.md), 원하는 그림의 캡처나 설명만 있으면 Case C([가이드 5장](../guide/05-entry-paths.md))를 보세요.
+> **Which entry point:** this starts from an arranged data bundle (a table + `metadata.yaml`): **Case B**. If you have plotting code you wrote, see [Case A](case_a_port_script.md); if you only have a capture or description of the figure you want, see Case C ([guide, chapter 5](../guide/05-entry-paths.md)).
 
-저장소에 들어 있는 예제 데이터로 2패널 그림 하나를 처음부터 끝까지 만듭니다. 코드는 한 줄도 쓰지 않습니다. 명령으로 프로젝트를 만들고, 데이터 번들을 붙이고, 빌드하고, 인쇄 검사(preflight)가 알려 준 문제를 **config만 고쳐서** 해결합니다.
+You make one two-panel figure from start to finish with the example data in the repository, without writing a line of code. With commands you create a project, attach data bundles, build, and fix the problem the print check (preflight) reports **by changing only the config**.
 
-이 문서의 명령과 config 수정은 `tests/test_tutorials.py`가 CI에서 그대로 실행합니다. 그래서 이 문서대로 하면 같은 결과가 나옵니다.
+`tests/test_tutorials.py` runs this page's commands and config edits as written, in CI. So following this page gives the same result.
 
-## 준비
+## Before you start
 
-[README의 설치 절차](../../README.md)대로 환경을 만들고 활성화한 뒤(`conda activate fig-atlas`), 저장소 루트에서 시작합니다. `fa --help`가 명령 목록을 보여 주면 준비가 된 것입니다.
+Create and activate the environment as in [the README's installation section](../../README.md) (`conda activate fig-atlas`), and start at the repository root. When `fa --help` lists the commands, you are ready.
 
-예제 데이터는 [`examples/`](../../examples/README.md)에 있습니다. 시뮬레이션으로 만든 두 번들입니다(실측값이 아님).
+The example data are in [`examples/`](../../examples/README.md): two bundles made by simulation (not measurements).
 
-| 번들 | 내용 | 그림 모양 (`plot_type`) |
+| Bundle | Content | Shape of figure (`plot_type`) |
 |---|---|---|
-| `examples/dose_response` | 화합물 3종 × 용량 7단계 × 반복 4회의 세포 생존율 | 선 + 오차 띠 (`line_band`) |
-| `examples/screen_hits` | 400개 항목의 효과 크기와 보정 P | 효과 대 유의성 산점도 (`threshold_scatter`) |
+| `examples/dose_response` | Cell viability for 3 compounds × 7 doses × 4 replicates | line with error band (`line_band`) |
+| `examples/screen_hits` | Effect size and adjusted P for 400 items | effect versus significance scatter (`threshold_scatter`) |
 
-## 1. 프로젝트 만들기
+## 1. Create the project
 
-먼저 무엇이 생길지 봅니다(`--dry-run`은 아무것도 쓰지 않습니다).
+First see what would be created (`--dry-run` writes nothing).
 
 <!-- run -->
 ```bash
 fa new project first-figure --dry-run
 ```
 
-config, 분석 스크립트, figure spec 세 파일이 생긴다고 나옵니다(VS Code 빌드 목록 `.vscode/tasks.json`이 있는 저장소라면 그 목록의 한 줄도). 이제 실제로 만듭니다.
+It says three files will be created: the config, the analysis script and the figure spec (plus a line of the VS Code build list, in a repository that has `.vscode/tasks.json`). Now create them.
 
 <!-- run -->
 ```bash
 fa new project first-figure
 ```
 
-`--domain lab --category exploratory`처럼 연구 단위를 주면 `configs/lab/exploratory/` 아래에 만들어집니다. 이 튜토리얼은 연습용이라 루트에 둡니다.
+Give a research unit, as in `--domain lab --category exploratory`, and the project goes under `configs/lab/exploratory/`. This tutorial is practice, so it stays at the root.
 
-## 2. 데이터 번들 검사
+## 2. Check the data bundles
 
-번들은 `inputs/data.csv`(표)와 `metadata/metadata.yaml`(어떤 그림인지, `plot_params`)로 이루어진 폴더입니다. 그리기 전에 계약(필요한 열이 있는지)을 검사합니다.
+A bundle is a folder of `inputs/data.csv` (the table) and `metadata/metadata.yaml` (which figure it is, and its `plot_params`). Before drawing, check its contract (that the columns it needs are there).
 
 <!-- run -->
 ```bash
 fa bundle check examples/dose_response examples/screen_hits
 ```
 
-번들마다 결과와 함께 어떤 그림인지(`plot_type`), 맞는 계약, 그릴 렌더러, 행 수가 나옵니다.
+For each bundle you get the result, which figure it is (`plot_type`), the contract it matches, the renderer that draws it and its number of rows.
 
 ```text
 ok           examples/dose_response
@@ -53,9 +53,9 @@ ok           examples/screen_hits
     plot_type threshold_scatter -> contract core.threshold_scatter, renderer fig_atlas.renderers:render_threshold_scatter, 400 rows
 ```
 
-두 번들 모두 `ok`이고 계약 `core.line_band`, `core.threshold_scatter`에 맞습니다. 문제가 있으면 `ok` 자리에 오류·경고 수가, 그 아래에 무엇이 빠졌는지가 나옵니다. 범용 그림은 열 이름을 `plot_params`에서 지정합니다(예: `x_col: dose_uM`). 검사기는 지정된 열이 실제로 있는지 봅니다([표 번들 계약서](../contracts/table_bundle_contract.md)).
+Both bundles are `ok` and match the contracts `core.line_band` and `core.threshold_scatter`. If something is wrong, the numbers of errors or warnings replace `ok`, with what is missing below. Generic figures name their columns in `plot_params` (e.g. `x_col: dose_uM`), and the checker sees whether the named columns exist ([table bundle contract](../contracts/table_bundle_contract.md)).
 
-## 3. 번들을 패널로 붙이기
+## 3. Attach the bundles as panels
 
 <!-- run -->
 ```bash
@@ -63,21 +63,21 @@ fa ingest bundle examples/dose_response --project first-figure
 fa ingest bundle examples/screen_hits --project first-figure
 ```
 
-각 명령은 `configs/config_first-figure.yaml`의 `plots:` 아래에 블록 하나를 쓰고 빌드합니다. 블록에는 렌더러가 읽는 **모든** 파라미터가 설명 주석과 함께 들어갑니다. 번들에서 온 값에는 "(from the bundle)" 표시가 붙습니다. 이제 이 파일이 그림을 조정하는 곳입니다. 파이썬 코드는 열 필요가 없습니다.
+Each command writes one block under `plots:` in `configs/config_first-figure.yaml` and builds. The block holds **every** parameter the renderer reads, each with an explaining comment; values from the bundle are marked "(from the bundle)". From now on this file is where you adjust the figure. You do not need to open any Python code.
 
-## 4. 빌드하고 확인하기
+## 4. Build and check
 
 <!-- run -->
 ```bash
 fa build first-figure --preflight
 ```
 
-그림은 `outputs/first-figure/figures/figure_01_main/figure_01.png`(PDF·SVG도)에 있습니다. A4 본문 폭(184.6 mm)에 **실제 인쇄 크기로** 그려졌고, 패널 a·b의 태그는 각 패널의 바깥 경계(눈금 글자·축 제목 포함)에 맞춰져 있습니다.
+The figure is at `outputs/first-figure/figures/figure_01_main/figure_01.png` (and PDF and SVG). It is drawn **at its printed size**, on the A4 text width (184.6 mm), and the tags of panels a and b sit on each panel's outer edge (tick labels and axis titles included).
 
 <!-- img/: drawn by `fa reference` from this page's own steps; do not edit by hand -->
-![첫 빌드 결과: 패널 a는 세 처리군의 용량-반응 곡선(파랑, 주황, 초록), 패널 b는 스크리닝 결과의 효과 크기-유의도 산점도](img/first_figure_build.png)
+![The first build: panel a shows the dose-response curves of three treatments (blue, orange, green), panel b the screen's effect size against significance](img/first_figure_build.png)
 
-`--preflight`는 인쇄 전 검사입니다. 출력은 이렇습니다.
+`--preflight` is the print check. The output reads:
 
 ```text
 ==== first-figure ====
@@ -94,28 +94,28 @@ PASS: 4/5 checks passed, 1 warning(s) - outputs/first-figure/manifests/clean_atl
 ALL 1 PROJECT(S) PASSED
 ```
 
-한 줄씩 읽으면 이렇습니다.
+Line by line:
 
-- `[provenance] 1 figure record(s) written`: 이 그림이 어떤 데이터·코드·설정으로 만들어졌는지 기록했습니다.
-- `Published Figure 1: Title of figure 1 ...`: 그림을 `figure_01_main/`에 게시했습니다. 제목은 아직 틀에 있던 문장이고, 6단계에서 씁니다.
-- `[ok] first-figure: 0 error(s), 1 warning(s)`: 인쇄 전 검사 결과입니다. **error**(겹침, 잘림, 너무 작은 글자 등)가 있으면 빌드가 실패합니다. **warning**은 고칠 것을 권하지만 빌드를 막지 않고, **info**는 참고 사항입니다.
-- `warn cvd_indistinct 1`: 경고의 종류와 개수입니다. 자세한 내용은 `outputs/first-figure/manifests/preflight.csv`에 있습니다.
-- `PASS: 4/5 checks passed, 1 warning(s)`: 게시된 결과 점검입니다. 그림 파일 세 개(PNG·PDF·SVG), README, preflight 결과 다섯 항목 가운데 preflight 결과에 경고가 있어 4/5입니다.
-- `ALL 1 PROJECT(S) PASSED`: 빌드 전체가 성공했습니다.
+- `[provenance] 1 figure record(s) written`: a record of which data, code and settings made the figure.
+- `Published Figure 1: Title of figure 1 ...`: the figure is published to `figure_01_main/`. The title is still the template's sentence; you write it in step 6.
+- `[ok] first-figure: 0 error(s), 1 warning(s)`: the print check's result. An **error** (overlap, clipping, text too small, ...) makes the build fail. A **warning** recommends a fix but does not stop the build, and an **info** is for reference.
+- `warn cvd_indistinct 1`: the kind and number of warnings. The details are in `outputs/first-figure/manifests/preflight.csv`.
+- `PASS: 4/5 checks passed, 1 warning(s)`: the check of what was published. Of five items — three figure files (PNG, PDF, SVG), the README and the preflight result — the preflight result has a warning, hence 4/5.
+- `ALL 1 PROJECT(S) PASSED`: the build as a whole succeeded.
 
-경고의 내용은 `preflight.csv`에 이렇게 적혀 있습니다.
+`preflight.csv` describes the warning like this:
 
 ```
 warn  cvd_indistinct  legend of axes[0] 'Viability after 48 h': #ff7f0e and #2ca02c look alike with protanomaly
 ```
 
-패널 a의 주황과 초록이 적색약 독자에게는 거의 같은 색으로 보인다는 뜻입니다. 문제 위치는 `outputs/preflight/first-figure/`의 오버레이 그림에 번호로 표시됩니다. 이 경고의 1번 상자는 패널 a의 범례를 가리킵니다.
+It means panel a's orange and green look almost the same to readers with red weakness. Where the problem is, a numbered mark on the overlay picture in `outputs/preflight/first-figure/` shows: box 1 of this warning points to panel a's legend.
 
-![preflight 오버레이: 패널 a의 범례에 주황 상자와 번호 1](img/first_figure_preflight.png)
+![The preflight overlay: an orange box numbered 1 on panel a's legend](img/first_figure_preflight.png)
 
-## 5. config로 고치기
+## 5. Fix it in the config
 
-`configs/config_first-figure.yaml`에서 `dose_response` 블록의 `group_colors` 줄을 찾습니다. 주석이 이 키의 역할을 알려 줍니다("Colour per group"). 색각이상에 안전한 Okabe–Ito 팔레트로 바꿉니다.
+In `configs/config_first-figure.yaml`, find the `group_colors` line of the `dose_response` block. Its comment says what the key does ("Colour per group"). Change it to the Okabe–Ito palette, safe for colour-blind readers.
 
 <!-- replace: configs/config_first-figure.yaml | group_colors: {} -->
 ```yaml
@@ -125,22 +125,22 @@ warn  cvd_indistinct  legend of axes[0] 'Viability after 48 h': #ff7f0e and #2ca
       vehicle: "#999999"
 ```
 
-다시 빌드합니다.
+Build again.
 
 <!-- run -->
 ```bash
 fa build first-figure --preflight
 ```
 
-이번에는 경고 없이 통과합니다(`0 error(s), 0 warning(s)`). 패널 a의 세 색이 색각이상 독자도 구분할 수 있는 파랑, 주황, 회색으로 바뀌었습니다. 파이썬 코드는 건드리지 않았고 config 한 블록만 바꿨습니다.
+This time it passes without warnings (`0 error(s), 0 warning(s)`). The three colours of panel a are now blue, orange and grey, which colour-blind readers can tell apart. No Python code was touched; one block of the config changed.
 
-![config를 고친 뒤: 패널 a가 Okabe-Ito 팔레트(파랑, 주황, 회색)로 바뀜](img/first_figure_fixed.png)
+![After the config change: panel a in the Okabe-Ito palette (blue, orange, grey)](img/first_figure_fixed.png)
 
-글자 크기, 축 범위, 임계값, 라벨 개수 같은 다른 값도 같은 방법으로 바꿉니다. 키마다 단위와 조정 방향이 주석으로 적혀 있습니다. 어떤 값이 어디서 왔는지는 `fa param explain first-figure plots.dose_response.band_alpha`처럼 확인합니다.
+Other values — text sizes, axis ranges, thresholds, the number of labels — change the same way. Each key's comment gives its unit and which way to adjust it. To see where a value came from, use `fa param explain first-figure plots.dose_response.band_alpha` and the like.
 
-## 6. 그림 설명 쓰기
+## 6. Write the figure's description
 
-figure spec(`figure_specs/figure_01_first-figure.py`)에는 그림 제목, 패널 설명, 이 그림이 주장할 수 있는 범위가 들어갑니다. 빌드가 이 내용을 그림 폴더의 `README.md`로 내보냅니다. 제목을 바꿔 봅니다.
+The figure spec (`figure_specs/figure_01_first-figure.py`) holds the figure's title, the panel notes and what the figure may claim. The build writes them into the figure folder's `README.md`. Change the title:
 
 <!-- replace: figure_specs/figure_01_first-figure.py | title="Title of figure 1 -->
 ```python
@@ -152,14 +152,14 @@ figure spec(`figure_specs/figure_01_first-figure.py`)에는 그림 제목, 패�
 fa build first-figure --preflight
 ```
 
-그림 폴더의 `README.md` 제목이 바뀌고, 검사는 그대로 `0 error(s), 0 warning(s)`입니다. `--preflight`를 빼고 빌드하면 마지막 검사가 그림보다 오래되었다는 경고(`preflight results are older than the published figures`)가 나옵니다. 그림을 바꿨으면 검사도 다시 하라는 뜻입니다.
+The title in the figure folder's `README.md` changes, and the check stays at `0 error(s), 0 warning(s)`. Build without `--preflight` and you get a warning that the last check is older than the figure (`preflight results are older than the published figures`): once the figure changes, check it again.
 
-> 실제 그림에서는 "51" 같은 결과 숫자를 손으로 쓰지 않습니다. 분석 스크립트에서 `claims.record("n_hits", n)`으로 기록하고 텍스트에는 `{n_hits}`라고 씁니다. 데이터가 바뀌면 설명도 따라 바뀝니다(AGENTS.md §4.5).
+> In a real figure, a result number such as "51" is not typed by hand. The analysis script records it with `claims.record("n_hits", n)` and the text says `{n_hits}`, so the description follows the data when they change (AGENTS.md §4.5).
 
-## 다음으로
+## Next
 
-- **내 데이터로**: 같은 형식의 번들을 `raw_data/<study>/<project>/` 아래에 두고 같은 명령을 씁니다. 지원하는 그림과 열 규칙은 `fa bundle contracts`와 [계약서 목록](../contracts/README.md)에 있습니다.
-- **논문 그림으로**: 탐색 프로젝트를 `fa promote <project> --figure 1 --slug <slug>`로 논문 Figure로 승격합니다.
-- **이미지 그림**: [현미경 이미지 튜토리얼](imaging_figure.md)
-- **AI 에이전트와 함께**: 같은 과정을 에이전트가 MCP 도구로 할 수 있습니다([연결 방법](../howto/ai_agents.md)). 파일을 바꾸는 단계마다 먼저 diff를 보여 줍니다.
-- **정리**: 연습 프로젝트를 지우려면 생성된 세 파일(`configs/config_first-figure.yaml`, `analysis/first-figure_analysis.py`, `figure_specs/figure_01_first-figure.py`), `outputs/first-figure/`를 지웁니다. VS Code 빌드 목록이 있는 저장소라면 `.vscode/tasks.json`에서 그 이름도 지웁니다.
+- **With your data**: put bundles of the same shape under `raw_data/<study>/<project>/` and use the same commands. The supported figures and their column rules are in `fa bundle contracts` and [the contracts](../contracts/README.md).
+- **Into the paper**: promote an exploratory project to a paper Figure with `fa promote <project> --figure 1 --slug <slug>`.
+- **Image figures**: [the microscopy tutorial](imaging_figure.md)
+- **With an AI agent**: an agent can do the same with MCP tools ([how to connect](../howto/ai_agents.md)). At each step that changes files, it shows the diff first.
+- **Cleaning up**: to remove the practice project, delete the three files it created (`configs/config_first-figure.yaml`, `analysis/first-figure_analysis.py`, `figure_specs/figure_01_first-figure.py`) and `outputs/first-figure/`. In a repository with a VS Code build list, also remove its name from `.vscode/tasks.json`.

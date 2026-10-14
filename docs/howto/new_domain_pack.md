@@ -1,41 +1,41 @@
-# How-to: 새 분야 팩 만들기
+# How-to: write a domain pack
 
-fig-atlas의 코어(`fig_atlas`)는 분야와 무관합니다. 전기생리, 이미징, 임상처럼 특정 분야의 지식은 **분야 팩**이라는 별도 패키지에 담고, 코어는 진입점(entry point)으로만 팩을 찾습니다. 오믹스 팩 `fig_atlas_omics`가 첫 번째 예입니다.
+The core of fig-atlas (`fig_atlas`) is independent of any field. Knowledge of a particular field — electrophysiology, imaging, clinical — goes into a separate package, a **domain pack**, and the core finds packs only through entry points. The omics pack `fig_atlas_omics` is the first example.
 
-이 문서는 전기생리 팩 `fig_atlas_ephys`를 예로, 팩을 처음부터 만드는 과정을 보여 줍니다. 아래 코드 블록 중 `<!-- file: ... -->` 표시가 붙은 것은 `tests/test_example_pack.py`가 그대로 꺼내 실제 팩을 만들고 인식되는지 확인합니다. 그래서 이 문서의 예제는 항상 동작합니다.
+This page shows how to make a pack from scratch, with an electrophysiology pack `fig_atlas_ephys` as the example. `tests/test_example_pack.py` takes the code blocks marked `<!-- file: ... -->` below as they are, builds a real pack from them and checks that it is recognised. So this page's example always works.
 
-## 1. 무엇을 팩에 넣나
+## 1. What goes into a pack
 
-| 팩에 넣는 것 | 예 |
+| What goes into a pack | Examples |
 |---|---|
-| 데이터 읽기·반입 어댑터 | ABF/NWB 파일 읽기, 장비 내보내기 형식 변환 |
-| 번들 계약 | 어떤 열·파일·메타데이터가 있어야 하는가 |
-| 레시피 | 코어 렌더러(모양) + 이 분야의 열 역할·용어·기본값 |
-| 분석 도우미 | 스파이크 검출, 입력 저항 계산 |
-| 이 분야에서만 의미 있는 모양 | (드묾) 서열 로고, 유전체 트랙 |
+| Data readers and ingest adapters | Reading ABF/NWB files, converting an instrument's export format |
+| Bundle contracts | Which columns, files and metadata must be there |
+| Recipes | A core renderer (a shape) + this field's column roles, vocabulary and defaults |
+| Analysis helpers | Spike detection, computing input resistance |
+| Shapes that mean something only in this field | (rare) a sequence logo, genome tracks |
 
-**렌더러는 모양 단위입니다.** 선, 막대, 산점도, 히트맵은 처음 쓰는 데이터가 전기생리여도 코어에 둡니다(AGENTS.md §3). 대부분의 분야 그림은 코어 모양에 레시피를 얹는 것으로 충분합니다. 쓸 수 있는 모양은 `fa renderers`로 봅니다.
+**Renderers are shapes.** Lines, bars, scatter plots and heatmaps go in the core even if the first data they draw are electrophysiology (AGENTS.md §3). For most of a field's figures, a recipe on a core shape is enough. `fa renderers` lists the shapes you can use.
 
-## 2. 패키지 구조
+## 2. Package layout
 
 ```
 fig_atlas_ephys/
   __init__.py
-  contracts.py        # 번들 계약 + plot_type -> 렌더러 매핑
-  recipes.py          # 레시피
-  cli.py              # (선택) `fa ephys ...` 명령
+  contracts.py        # bundle contracts + plot_type -> renderer mapping
+  recipes.py          # recipes
+  cli.py              # (optional) `fa ephys ...` commands
 ```
 
-팩은 코어를 import해도 되지만, 코어는 팩을 import하지 않습니다.
+A pack may import the core, but the core never imports a pack.
 
 <!-- file: fig_atlas_ephys/__init__.py -->
 ```python
 """Electrophysiology pack for fig-atlas (example from docs/howto/new_domain_pack.md)."""
 ```
 
-## 3. 계약
+## 3. Contracts
 
-번들의 `metadata.yaml`에 적힌 `plot_type`으로 계약이 정해집니다. `required`는 그리는 데 꼭 필요한 열(없으면 오류), `expected`는 문서가 요구하는 나머지 열(없으면 경고)입니다. `INGEST`는 `plot_type`을 그릴 함수(또는 레시피 이름)로 잇습니다.
+A bundle's contract is chosen by the `plot_type` in its `metadata.yaml`. `required` are the columns drawing cannot do without (missing: an error), `expected` the other columns the documentation asks for (missing: a warning). `INGEST` links a `plot_type` to the function (or recipe name) that draws it.
 
 <!-- file: fig_atlas_ephys/contracts.py -->
 ```python
@@ -53,9 +53,9 @@ CONTRACTS = [
 INGEST = {"iv_curve": "fig_atlas_ephys.recipes:render_iv_curve"}
 ```
 
-## 4. 레시피
+## 4. Recipes
 
-레시피는 코어 렌더러 하나와, 이 분야에서의 열 역할·기본값을 묶은 데이터입니다. 아래는 I-V 곡선을 코어의 `line_band`(선 + 오차 띠)로 그리는 레시피입니다. `surface`는 프로젝트 config에서 쓸 파라미터 이름, `aliases`는 그 이름과 범용 이름의 대응입니다.
+A recipe is data that ties one core renderer to this field's column roles and defaults. Below, a recipe draws an I-V curve with the core's `line_band` (a line with an error band). `surface` names the parameters a project config uses, and `aliases` maps those names to the generic ones.
 
 <!-- file: fig_atlas_ephys/recipes.py -->
 ```python
@@ -77,9 +77,9 @@ def render_iv_curve(ax, df, params=None):
     return render(IV_CURVE, ax, df, params=params)
 ```
 
-## 5. (선택) 명령
+## 5. (Optional) commands
 
-팩은 `fa` 아래에 자기 명령을 붙일 수 있습니다. `register`는 하위 명령을 만들고 `{이름: 처리 함수}`를 돌려줍니다. 코어 명령과 이름이 같으면 코어가 우선합니다.
+A pack can add its own commands under `fa`. `register` creates the subcommands and returns `{name: handler}`. If a name is the same as a core command, the core wins.
 
 <!-- file: fig_atlas_ephys/cli.py -->
 ```python
@@ -99,9 +99,9 @@ def run(args, root):
     return 0
 ```
 
-## 6. 진입점 등록
+## 6. Registering the entry points
 
-팩의 `pyproject.toml`에 진입점을 적습니다. 그룹은 다섯 가지이고, 필요한 것만 씁니다.
+Write the entry points in the pack's `pyproject.toml`. There are five groups; use only those you need.
 
 <!-- file: entry_points.toml -->
 ```toml
@@ -118,42 +118,42 @@ ephys = "fig_atlas_ephys.recipes:RECIPES"
 ephys = "fig_atlas_ephys.cli:register"
 ```
 
-| 그룹 | 값 | 쓰임 |
+| Group | Value | Used by |
 |---|---|---|
-| `fig_atlas.renderers` | 렌더러 패키지 (`"pack.renderers"`) | 이 분야 고유 모양이 있을 때만 |
-| `fig_atlas.contracts` | `Contract` 목록 | `fa bundle check` |
-| `fig_atlas.ingest` | `{plot_type: "module:function"}` | `fa bundle check`가 그릴 렌더러를 보여 줌 |
-| `fig_atlas.recipes` | `Recipe` 목록 | `fig_atlas.render("이름", ...)`, `fa renderers` |
-| `fig_atlas.commands` | `register(subparsers)` 함수 | `fa <팩 명령>` |
+| `fig_atlas.renderers` | A renderer package (`"pack.renderers"`) | Only when the field has shapes of its own |
+| `fig_atlas.contracts` | A list of `Contract` | `fa bundle check` |
+| `fig_atlas.ingest` | `{plot_type: "module:function"}` | `fa bundle check` shows the renderer that draws it |
+| `fig_atlas.recipes` | A list of `Recipe` | `fig_atlas.render("name", ...)`, `fa renderers` |
+| `fig_atlas.commands` | A `register(subparsers)` function | `fa <pack command>` |
 
-그다음 설치합니다. 진입점은 설치할 때 등록되므로, 바꿀 때마다 다시 실행합니다.
+Then install it. Entry points are registered at installation, so run it again after each change to them.
 
 ```bash
 pip install -e .
 ```
 
-## 7. 확인
+## 7. Checking
 
 ```bash
-fa renderers                    # iv_curve가 recipe로 보여야 합니다
-fa bundle contracts             # ephys.iv가 보여야 합니다
-fa bundle check <번들 폴더>      # plot_type: iv_curve 번들을 계약으로 검사
-fa ephys list                   # 팩의 명령
+fa renderers                    # iv_curve should appear as a recipe
+fa bundle contracts             # ephys.iv should appear
+fa bundle check <bundle-folder>  # checks a plot_type: iv_curve bundle against its contract
+fa ephys list                   # the pack's command
 ```
 
-분석 스크립트에서는 이름으로 그립니다. 레시피가 어느 팩에 있는지 몰라도 됩니다.
+In an analysis script you draw by name, without knowing which pack the recipe is in.
 
 ```python
 import fig_atlas
 fig_atlas.render("iv_curve", ax, df, params={"error": "sem"})
 ```
 
-팩에 렌더러를 넣었다면 각 렌더러에 `SCHEMA`가 있어야 하고(`tests/test_renderer_schemas.py`가 모든 등록 패키지를 검사합니다), 하드코딩된 스타일 값이 없어야 합니다(`fa lint --hardcoded`).
+If the pack has renderers, each must have a `SCHEMA` (`tests/test_renderer_schemas.py` checks every registered package) and no hardcoded style values (`fa lint --hardcoded`).
 
-## 체크리스트
+## Checklist
 
-- [ ] 모양은 코어 렌더러를 쓰고, 분야 지식은 레시피·계약·도우미로 담았다
-- [ ] 계약마다 사람이 읽는 문서(`doc`)가 있다
-- [ ] 레시피의 `defaults`와 `aliases`는 코어 렌더러의 파라미터 이름만 쓴다
-- [ ] `pyproject.toml`에 진입점을 적고 `pip install -e .`를 다시 실행했다
-- [ ] `fa renderers`, `fa bundle contracts`에 팩의 항목이 보인다
+- [ ] Shapes use core renderers; the field's knowledge is in recipes, contracts and helpers
+- [ ] Each contract has a human-readable document (`doc`)
+- [ ] Recipes' `defaults` and `aliases` use only the core renderer's parameter names
+- [ ] The entry points are in `pyproject.toml`, and `pip install -e .` was run again
+- [ ] The pack's entries appear in `fa renderers` and `fa bundle contracts`

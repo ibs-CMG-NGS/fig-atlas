@@ -13,11 +13,3 @@ decisions/0003-renderers-are-shapes.md
 decisions/0004-procedures-are-commands.md
 decisions/0005-agents-md-single-source.md
 decisions/README.md
-howto/ai_agents.md
-howto/journal_presets.md
-howto/new_domain_pack.md
-tutorials/case_a_port_script.md
-tutorials/case_c_from_sketch.md
-tutorials/data_change.md
-tutorials/first_figure.md
-tutorials/imaging_figure.md

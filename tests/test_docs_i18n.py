@@ -22,7 +22,8 @@ MARKER = re.compile(r"<!-- (?:run|replace: .+?|file: \S+) -->")
 IMAGE = re.compile(r"!\[[^\]]*\]\(([^)\s]+)")
 LINK = re.compile(r"(?<!!)\[[^\]]*\]\(([^)\s]+)")
 # Comments in these blocks are prose and are translated; the rest must match.
-COMMENTED = {"bash": "#", "sh": "#", "powershell": "#", "python": "#", "yaml": "#", "toml": "#"}
+COMMENTED = {"bash": "#", "sh": "#", "powershell": "#", "python": "#", "yaml": "#", "toml": "#",
+             "": "#"}                     # an unlabelled block: a folder tree with "# what it is" notes
 
 
 def _prose(text: str) -> str:
@@ -103,4 +104,4 @@ def test_structure_reads_what_it_should():
     s = structure(text)
     assert s["headings"] == [1, 2] and s["markers"] == ["<!-- run -->"] and s["images"] == ["img/x.png"]
     assert s["tables"] == 1 and s["links"] == ["guide/01.md"]
-    assert s["code"] == [("bash", "fa build x"), ("", "d/\n"), ("mermaid", "(diagram)")]
+    assert s["code"] == [("bash", "fa build x"), ("", "d/"), ("mermaid", "(diagram)")]

@@ -1,50 +1,50 @@
-# How-to: 저널 규격으로 바꾸기
+# How-to: switch to a journal's format
 
-그림은 처음부터 인쇄될 크기로 그립니다. 그래서 투고할 저널이 바뀌면 그림을 다시 그리는 것이 아니라 **저널 프리셋을 바꾸고 검사를 다시 돌립니다.** 프리셋은 그 저널의 그림 폭, 최대 높이, 글꼴, 글자 크기, 선 굵기, 패널 태그 표기와, preflight가 그 기준으로 검사할 값을 담은 YAML 파일입니다.
+Figures are drawn at their printed size from the start. So when the journal changes, you do not redraw the figures: **you switch the journal preset and run the checks again.** A preset is a YAML file with that journal's figure widths, maximum height, font, text sizes, line widths and panel tag style, and the values preflight checks against.
 
-## 1. 들어 있는 프리셋
+## 1. The presets included
 
-| 프리셋 | 폭 | 글꼴 | 글자 | 패널 태그 | 출처 |
+| Preset | Width | Font | Text | Panel tags | Source |
 |---|---|---|---|---|---|
-| `journal_generic` | 180 mm | Arial | 6–8 pt | a, b, c | 대부분의 생명과학 저널이 받아 주는 공통 범위 (저널을 정하기 전 초안용) |
-| `journal_nature` | 183 mm (1단 89, 1.5단 120·136) | Arial, 없으면 Helvetica | 5–7 pt | a, b, c · 8 pt 굵게 | Nature 최종 원고 안내 |
-| `journal_science` | 184 mm (1단 89, 1.5단 127) | Myriad, 없으면 Arial | 최소 6 pt | A, B, C · 9 pt 굵게 | Science 수정 원고 안내 |
+| `journal_generic` | 180 mm | Arial | 6–8 pt | a, b, c | The range most life-science journals accept (for drafts before a journal is chosen) |
+| `journal_nature` | 183 mm (single column 89; 1.5 columns 120, 136) | Arial, else Helvetica | 5–7 pt | a, b, c · 8 pt bold | Nature's guide for final submissions |
+| `journal_science` | 184 mm (single column 89; 1.5 columns 127) | Myriad, else Arial | at least 6 pt | A, B, C · 9 pt bold | Science's guide for revised manuscripts |
 
-각 파일 머리말에 안내문 주소와 확인한 날짜가 있고, 안내문에 없는 값에는 "not stated"라고 적혀 있습니다. 저널 안내는 바뀌므로 투고 전에 머리말의 날짜와 주소를 확인하세요.
+Each file's header gives the guide's address and the date it was checked, and values the guide does not give are marked "not stated". Journal guides change, so check the header's date and address before submitting.
 
-## 2. 바꾸기
+## 2. Switching
 
-config의 `project.style`에서 페이지 프리셋을 저널 프리셋으로 바꿉니다. 이 한 줄이 전부입니다.
+In the config's `project.style`, replace the page preset with the journal preset. This one line is all.
 
 ```yaml
 project:
-  style: ["default", "print", "journal_nature"]   # 전: page_a4_portrait_narrow
+  style: ["default", "print", "journal_nature"]   # before: page_a4_portrait_narrow
 ```
 
-그리고 검사와 함께 빌드합니다.
+Then build with the checks.
 
 ```bash
 fa build <project> --preflight
 ```
 
-config에 직접 적은 값은 프리셋보다 우선합니다(병합 순서: 번들 < 프리셋 < config). 그래서 config에 글자 크기를 직접 정해 둔 패널은 프리셋을 바꿔도 그대로이고, preflight가 그 저널 기준에 맞지 않는 곳을 알려 줍니다.
+Values written in the config itself come before the preset (merge order: bundle < preset < config). So a panel whose text sizes are set in the config keeps them when the preset changes, and preflight points out where they do not meet that journal's limits.
 
-## 3. preflight가 짚는 것
+## 3. What preflight points out
 
-| 검사 | 저널 프리셋의 키 |
+| Check | Key in the journal preset |
 |---|---|
-| 너무 작은 글자, 너무 가는 선 | `print_check.min_font_pt`, `min_line_pt` |
-| 너무 큰 글자 (패널 태그 제외) | `preflight.max_font_pt` |
-| 저널 컬럼 폭이 아닌 그림 | `preflight.allowed_widths_mm`, `width_tol_mm` |
-| 페이지보다 긴 그림 | `page.content_height_mm` |
-| 태그 대소문자·크기 | `preflight.panel_tag_case`, `panel_tag_size_pt` |
-| PDF에 허용되지 않은 글꼴, 설치되지 않은 글꼴 | `preflight.allowed_fonts` |
+| Text too small, lines too thin | `print_check.min_font_pt`, `min_line_pt` |
+| Text too large (panel tags aside) | `preflight.max_font_pt` |
+| A figure not at a journal column width | `preflight.allowed_widths_mm`, `width_tol_mm` |
+| A figure taller than the page | `page.content_height_mm` |
+| Tag case and size | `preflight.panel_tag_case`, `panel_tag_size_pt` |
+| Fonts the PDF may not use, fonts not installed | `preflight.allowed_fonts` |
 
-고칠 때는 지적된 값을 config에서 바꿉니다. 키마다 단위와 조정 방향이 주석으로 적혀 있고, 값이 어디서 왔는지는 `fa param explain <project> <키>`로 봅니다.
+To fix them, change the values pointed out in the config. Each key's comment gives its unit and which way to adjust it, and `fa param explain <project> <key>` shows where a value came from.
 
-## 4. 알아 둘 것
+## 4. Good to know
 
-- **글꼴.** 프리셋은 글꼴 하나가 아니라 순서 있는 목록을 씁니다(`rcparams: font.sans-serif`). 첫 글꼴이 설치되어 있지 않으면 다음 글꼴을 씁니다. Myriad처럼 상용 글꼴을 쓰려면 설치하면 됩니다.
-- **수식 글자.** matplotlib은 지수(10²)나 아래 첨자(H₂O₂)를 기본으로 DejaVu 글꼴로 그립니다. 저널 프리셋은 `rcparams`의 `mathtext.*`로 이것도 같은 글꼴로 맞춥니다. `rcparams:` 블록은 config를 불러올 때 matplotlib에 적용되므로, config에 직접 써도 됩니다.
-- **태그를 직접 그리는 스크립트.** `place_panel_tags`를 쓰는 그림은 태그가 프리셋을 따릅니다. 태그 글자를 스크립트가 직접 쓰는 경우에는 `figures.panel_tag_case`("lower" 또는 "upper")를 읽어 대소문자를 정하고, 태그에 `gid=PANEL_TAG_GID`를 붙여 preflight가 태그로 알아보게 합니다.
-- **검사하지 않는 규칙.** 예를 들어 Science는 빨강과 초록을 함께 쓰지 말라고 합니다. preflight의 색 검사는 색각이상 시뮬레이션에서 두 색이 구별되는지를 재므로, 구별되는 빨강·초록 쌍은 통과합니다. 안내문의 글로 된 규칙은 직접 확인하세요.
+- **Fonts.** A preset gives not one font but an ordered list (`rcparams: font.sans-serif`). If the first is not installed, the next is used. To use a commercial font such as Myriad, install it.
+- **Maths text.** matplotlib draws exponents (10²) and subscripts (H₂O₂) in the DejaVu font by default. The journal presets set these to the same font too, with `mathtext.*` in `rcparams`. The `rcparams:` block is applied to matplotlib when the config is loaded, so you can also write it in the config itself.
+- **Scripts that draw their own tags.** In figures that use `place_panel_tags`, the tags follow the preset. A script that writes the tag letters itself reads `figures.panel_tag_case` ("lower" or "upper") for their case, and gives the tags `gid=PANEL_TAG_GID` so preflight recognises them as tags.
+- **Rules that are not checked.** Science, for example, asks you not to use red and green together. Preflight's colour check measures whether two colours can be told apart under simulated colour-vision deficiency, so a red-green pair that can be told apart passes. Check the guide's written rules yourself.

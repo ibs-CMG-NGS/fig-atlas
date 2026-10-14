@@ -1,17 +1,17 @@
-# Tutorial: 데이터가 바뀐 뒤 — 낡은 그림 찾기, 다시 그리기, 스토리라인 개편
+# Tutorial: after the data change — finding stale figures, redrawing, revising the storyline
 
-> **어느 길인가:** 그림이 들어온 **뒤**의 일입니다. 어느 길(Case A·B·C)로 들어왔든 같습니다. 여기서는 예제 번들(Case B)로 시작합니다.
+> **Which entry point:** this is what happens **after** a figure has come in, whichever entry point (Case A, B, C) it took. Here it starts from an example bundle (Case B).
 
-논문 그림은 한 번 그리고 끝나지 않습니다. 데이터가 다시 전달되고, 그림이 논문 Figure로 올라가고, 스토리라인이 바뀝니다. 이 튜토리얼은 그 흐름을 명령만으로 따라 합니다.
+A paper figure is not drawn once and done. Data are delivered again, figures move up to paper Figures, the storyline changes. This tutorial follows that course with commands alone.
 
-- 같은 데이터를 읽는 그림 두 개를 만들고, 하나를 논문 Figure 1로 **승격**합니다.
-- **스토리라인**을 시작하고 첫 컴펜디움(R000)을 만듭니다.
-- 데이터가 **다시 전달**되면, 어떤 그림이 낡았는지(`fa status`)와 그 파일을 읽는 그림이 무엇인지(`fa impact`)를 찾습니다.
-- 다시 그리고, 무엇이 바뀌었는지 스토리라인 **개편 기록**으로 남깁니다(R001).
+- Make two figures that read the same data, and **promote** one to paper Figure 1.
+- Start a **storyline** and make the first compendium (R000).
+- When data are **delivered again**, find which figures are stale (`fa status`) and which figures read that file (`fa impact`).
+- Redraw, and record what changed as a storyline **revision record** (R001).
 
-준비물: `fa`가 설치된 Python 환경, 그리고 `fa init`으로 만든 프로젝트 저장소(또는 이 저장소). 예제 번들은 `examples/gallery/`에 있습니다. 아래 명령은 POSIX 셸 기준입니다.
+You need: a Python environment with `fa` installed, and a project repository made with `fa init` (or this repository). The example bundles are in `examples/gallery/`. The commands below are for a POSIX shell.
 
-## 1. 같은 데이터를 읽는 그림 두 개
+## 1. Two figures that read the same data
 
 <!-- run -->
 ```bash
@@ -24,25 +24,25 @@ fa ingest bundle raw_data/dose-study/dose_response --project lab-dose-qc
 fa build lab-dose lab-dose-qc --preflight
 ```
 
-두 프로젝트가 같은 번들을 읽습니다. 하나는 논문에 들어갈 그림, 하나는 품질 확인용 그림이라고 생각하면 됩니다.
+The two projects read the same bundle. Think of one as the figure for the paper and the other as a quality-control figure.
 
-## 2. 논문 Figure 1로 승격
+## 2. Promote to paper Figure 1
 
 <!-- run -->
 ```bash
 fa promote lab-dose --figure 1 --slug viability
 ```
 
-설정, 분석 스크립트, figure spec이 `lab/paper/`로 옮겨지고 이름이 `lab-paper-main-fig1-viability`가 됩니다. 파일 안의 경로도 함께 고쳐지고, 승격된 프로젝트가 한 번 빌드됩니다.
+The config, the analysis script and the figure spec move to `lab/paper/`, and the name becomes `lab-paper-main-fig1-viability`. The paths inside the files are updated too, and the promoted project is built once.
 
-## 3. 스토리라인 시작
+## 3. Start the storyline
 
 <!-- run -->
 ```bash
 fa storyline new dose --title "Dose study"
 ```
 
-`docs/storylines/dose/storyline.yaml`(어느 프로젝트가 어느 Figure인지)과 `docs/storylines/figure_plan_dose.md`(서술과 개편 기록)가 생깁니다. `storyline.yaml`에 Figure 1을 적습니다.
+This creates `docs/storylines/dose/storyline.yaml` (which project is which Figure) and `docs/storylines/figure_plan_dose.md` (the narrative and the revision records). Write Figure 1 into `storyline.yaml`.
 
 <!-- replace: docs/storylines/dose/storyline.yaml | figures: [] -->
 ```yaml
@@ -60,11 +60,11 @@ fa storyline check
 fa storyline compile --strict
 ```
 
-`registry`가 계획 문서의 표를 다시 쓰고, `check`가 프로젝트와 맞는지 확인하고, `compile`이 컴펜디움 PDF를 만들어 **R000**으로 보관합니다(`outputs/storylines/figure_plan_dose/R000/`). `--strict`는 낡은 그림이나 preflight 오류가 있으면 만들지 않습니다.
+`registry` rewrites the table of the plan document, `check` checks it against the projects, and `compile` makes the compendium PDF and keeps it as **R000** (`outputs/storylines/figure_plan_dose/R000/`). With `--strict` it refuses when a figure is stale or has preflight errors.
 
-## 4. 데이터가 다시 전달되면
+## 4. When the data are delivered again
 
-실험실이 compound B의 값을 고친 데이터를 다시 보냈다고 합시다. 원본은 우리가 고치지 않습니다. 새로 받은 파일이 그 자리를 대신합니다(여기서는 한 줄을 바꿔 흉내 냅니다).
+Say the lab sent the data again with compound B's values corrected. We do not edit the original; the newly received file takes its place (here, simulated by changing one line).
 
 <!-- replace: raw_data/dose-study/dose_response/inputs/data.csv | compound B,0.01,1,100.99 -->
 ```text
@@ -77,9 +77,9 @@ fa status
 fa impact raw_data/dose-study/dose_response
 ```
 
-`fa status`는 그 파일을 읽은 두 그림을 **STALE**로, 이유(`input changed: .../data.csv`)와 함께 보여 줍니다. 내용 해시로 비교하므로 파일을 열었다 닫기만 한 경우는 낡은 것으로 치지 않습니다. `fa impact`는 그 번들을 읽은 그림을 프로젝트에 상관없이 모두 찾습니다. 승격 전의 옛 출력 폴더는 "더 이상 없는 프로젝트의 옛 출력"으로 따로 표시됩니다.
+`fa status` shows the two figures that read the file as **STALE**, with the reason (`input changed: .../data.csv`). It compares content hashes, so a file only opened and closed does not count as changed. `fa impact` finds every figure that read the bundle, across projects. The old output folder from before the promotion is listed separately, as "old output of a project that no longer exists".
 
-이 상태에서 컴펜디움을 만들면 거절됩니다.
+In this state, making the compendium is refused:
 
 ```bash
 fa storyline compile --strict
@@ -87,7 +87,7 @@ fa storyline compile --strict
 #   [x] --strict: not compiling with stale figures or preflight errors
 ```
 
-다시 그리고, 지난 컴펜디움 이후 무엇이 바뀌었는지 봅니다.
+Redraw, and see what changed since the last compendium.
 
 <!-- run -->
 ```bash
@@ -95,11 +95,11 @@ fa build lab-paper-main-fig1-viability lab-dose-qc --preflight
 fa storyline diff --draft
 ```
 
-`diff --draft`는 R000 이후 바뀐 것(그림과 그 이유: data / config / code)을 모아 개편 기록의 초안 한 줄을 제안합니다. 숫자를 손으로 옮겨 적지 않아도 됩니다.
+`diff --draft` gathers what changed since R000 (figures and the reason: data / config / code) and proposes a draft line for the revision record. No numbers need copying by hand.
 
-## 5. 개편 기록 남기기
+## 5. Write the revision record
 
-제안된 줄에 제목과 이유를 채워 계획 문서의 `## Revisions` 아래에 넣습니다.
+Complete the proposed line with a title and the reason, and put it under `## Revisions` in the plan document.
 
 <!-- replace: docs/storylines/figure_plan_dose.md | ## Revisions -->
 ```markdown
@@ -116,6 +116,6 @@ fa storyline snapshots
 fa storyline diff
 ```
 
-`revisions --sync`가 개편 기록을 `docs/storylines/dose/revisions/R001.md`로 옮겨 적고(이후 그 파일의 `kind`, `evidence` 머리말을 채웁니다), `compile`이 새 컴펜디움을 **R001**로 보관합니다. R000은 그대로 남습니다. `fa storyline diff`는 두 컴펜디움 사이의 차이, 즉 어느 Figure의 어떤 입력이 바뀌었는지를 보고서로 씁니다.
+`revisions --sync` copies the revision record to `docs/storylines/dose/revisions/R001.md` (then fill in that file's `kind` and `evidence` front matter), and `compile` keeps the new compendium as **R001**. R000 stays as it was. `fa storyline diff` writes a report of the difference between the two compendiums: which inputs of which Figure changed.
 
-데이터 요청 문서(`docs/data_contracts/*_request.md`)에 전달 정보를 적어 두면 `fa storyline evidence "Main Figure 1"`이 그림에서 그 요청과 개편 기록까지 거슬러 올라갑니다.
+Note the delivery in the data request document (`docs/data_contracts/*_request.md`), and `fa storyline evidence "Main Figure 1"` traces the figure back to that request and the revision record.
