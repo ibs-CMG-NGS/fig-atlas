@@ -74,16 +74,17 @@
 |---|---|
 | 이런 적 있으시죠? / 핵심: | Has this ever happened to you? / The key idea: |
 | 연구자 안내서 | Guide for researchers |
+| 숫자·통계·이미지의 정직성 | Transparency in numbers, statistics and images |
 | 데이터 번들 / 번들 | data bundle / bundle |
 | 렌더러 | renderer |
 | 설정(config) 파일 | config (project config) |
-| 그림 명세 | figure spec |
+| 그림 명세 / 그림 설명 파일 | figure spec |
 | 인쇄 전 검사 | preflight |
 | 출처 기록 | provenance record |
 | 살아있는 숫자 | live numbers |
 | 최종 크기 렌더링 | final-size rendering |
 | 패널 태그 | panel tag |
-| 들여오는 세 가지 길 (Case A·B·C) | three ways in (Case A, B, C) |
+| 들여오는 세 가지 길 (Case A·B·C) | three entry points (Case A, B, C) |
 | 계약(서) | (bundle) contract |
 | 레시피 / 분야 팩 | recipe / domain pack |
 | 스토리라인 / 개편 | storyline / revision |
