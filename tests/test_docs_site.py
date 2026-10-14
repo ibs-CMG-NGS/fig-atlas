@@ -61,3 +61,29 @@ def test_site_builds_strict(tmp_path):
                          cwd=ROOT, capture_output=True, text=True, encoding="utf-8", errors="replace")
     assert res.returncode == 0, res.stderr[-3000:]
     assert (tmp_path / "site" / "tutorials" / "first_figure" / "index.html").is_file()
+
+
+def test_search_is_split_by_language(tmp_path):
+    """One index for both languages becomes one per language: the Korean site
+    searches its own pages and, for pages it has no version of (the generated
+    reference), the English ones; the English site sees no Korean."""
+    hooks = _hooks()
+    index = {"config": {"lang": ["en", "ko"]}, "docs": [
+        {"location": "", "title": "Home", "text": "a tool"},
+        {"location": "guide/01-why/", "title": "Why", "text": "why"},
+        {"location": "reference/cli/", "title": "Commands", "text": "fa build"},
+        {"location": "ko/", "title": "홈", "text": "도구"},
+        {"location": "ko/guide/01-why/", "title": "왜", "text": "이유"},
+        {"location": "ko/reference/cli/", "title": "Commands", "text": ""},     # the plugin's stub for an untranslated page
+    ]}
+    en, ko = hooks.split_index(index, "ko")
+    assert [d["location"] for d in en["docs"]] == ["", "guide/01-why/", "reference/cli/"]
+    assert [d["location"] for d in ko["docs"]] == ["", "guide/01-why/", "reference/cli/"]
+    assert [d["title"] for d in ko["docs"]] == ["홈", "왜", "Commands"] and ko["docs"][2]["text"] == "fa build"
+
+    site = tmp_path / "site"
+    page = site / "ko" / "guide" / "01-why"
+    page.mkdir(parents=True)
+    html = '<script id="__config" type="application/json">{"base": "../../..", "search": "x"}</script>'
+    once = hooks.rebase(html, page, site, site / "ko")
+    assert '"base": "../.."' in once and hooks.rebase(once, page, site, site / "ko") == once    # idempotent

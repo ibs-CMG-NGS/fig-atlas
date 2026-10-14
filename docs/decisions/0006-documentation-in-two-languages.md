@@ -18,6 +18,7 @@ The documentation site (guide for researchers, tutorials, how-to guides, contrac
 ## Consequences
 
 - A reader from the paper lands on English pages; the lab keeps its Korean pages.
+- Search is per language: the plugin writes one index for both, and the site hook (`scripts/mkdocs_hooks.py`) splits it after the build, so the English site finds English pages and the Korean site Korean pages (plus the English reference pages it has no version of).
 - Two versions can drift apart. What keeps them together:
   - `tests/test_docs_i18n.py`: a Korean page needs its English page, with the same heading levels, code blocks (prose comments, diagrams and blocks marked `<!-- i18n: prose -->` aside), tutorial step markers, images, tables and link targets.
   - `tests/test_tutorials.py` runs the English tutorials; their steps are the same bytes in the Korean pages, so both promise the same result.
