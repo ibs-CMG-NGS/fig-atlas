@@ -83,4 +83,4 @@ The rules tell the AI to fix errors in the config but to **ask first before a ch
 - **Where the overlays are:** `outputs/preflight/project-name/`. The full list of findings is in `outputs/preflight/preflight_findings.csv`.
 
 ---
-Previous: [7. Checking the results](07-results.md) · Next: [9. Honest numbers, statistics and images](09-integrity.md)
+Previous: [7. Checking the results](07-results.md) · Next: [9. Transparency in numbers, statistics and images](09-integrity.md)

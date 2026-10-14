@@ -14,7 +14,7 @@ reviewed: 2026-10-14
 
 | Step | What the tool does |
 |---|---|
-| **Create a project** | Makes the config, the analysis script and the figure description, in the places the naming rules give. |
+| **Create a project** | Makes the config, the analysis script and the figure spec, in the places the naming rules give. |
 | **Attach a bundle** | Checks the bundle and writes **every setting** that kind of figure uses into the config, with an explaining comment. Values from the bundle's note are copied as they are and marked "(from the bundle)". Each bundle becomes one panel (a, b, c, ...). |
 | **Build** | Draws the figure from the config (at printed size), arranges the results folder, checks it and records its sources. |
 
@@ -56,4 +56,4 @@ This build ends with **one warning**: the orange and green of panel a look alike
 - **To learn by doing:** [Tutorial: first figure](../tutorials/first_figure.md) goes through the same process step by step with commands.
 
 ---
-Previous: [3. Preparing data: bundles](03-data-bundles.md) · Next: [5. Three ways in](05-entry-paths.md)
+Previous: [3. Preparing data: bundles](03-data-bundles.md) · Next: [5. Three entry points](05-entry-paths.md)

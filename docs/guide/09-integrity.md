@@ -1,10 +1,10 @@
 ---
-title: 9. Honest numbers, statistics and images
+title: 9. Transparency in numbers, statistics and images
 audience: researchers (no programming experience needed)
 reviewed: 2026-10-14
 ---
 
-# 9. Honest numbers, statistics and images
+# 9. Transparency in numbers, statistics and images
 
 > **Has this ever happened to you?**
 > - After a reanalysis the figure showed the new data, but the legend's "n = 1,212" was still the old number.

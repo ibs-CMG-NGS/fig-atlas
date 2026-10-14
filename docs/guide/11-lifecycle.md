@@ -38,7 +38,7 @@ The paper's figure plan and story are under `docs/storylines/`.
 |---|---|---|
 | `storyline.yaml` | **The assignment.** Pairs such as "Main Figure 1 = which project". The compendium PDF, the checks and the mapping table all read it. | The researcher (asking the AI) |
 | `figure_plan_topic.md` | **The story.** What each Figure shows and why in that order, plus the revision records | The researcher (asking the AI) |
-| The mapping table at the top | Figure number ↔ links to the config, analysis script and figure description | **Generated.** Never edited by hand. |
+| The mapping table at the top | Figure number ↔ links to the config, analysis script and figure spec | **Generated.** Never edited by hand. |
 
 **Figure numbers and project names match one to one.** Main Figure 3 in the storyline always points to a paper project with `fig3` in its name. If they disagree, the checks tell you.
 

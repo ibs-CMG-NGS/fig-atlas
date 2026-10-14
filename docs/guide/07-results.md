@@ -25,7 +25,7 @@ figure_01_main/
   figure_01_statistics/        ← the statistical test tables (figures with stars)
 ```
 
-**Do not edit the files of this folder by hand.** They are made anew at the next build, so your edits would be lost and the figure and its record would disagree. What you want to change, change in the config (chapter 6) or in the figure description.
+**Do not edit the files of this folder by hand.** They are made anew at the next build, so your edits would be lost and the figure and its record would disagree. What you want to change, change in the config (chapter 6) or in the figure spec.
 
 ## Reading the figure's README
 
@@ -33,15 +33,15 @@ The README is a human-readable summary the build writes. This is how a real one 
 
 | Part | Content | Where it comes from |
 |---|---|---|
-| Title | `Figure 1: Wortmannin drives FKHR-GFP into the nucleus…` | `title` in the figure description |
-| Panel-level analysis notes | What each panel shows, n, error bars, tests | `panel_notes` in the figure description |
+| Title | `Figure 1: Wortmannin drives FKHR-GFP into the nucleus…` | `title` in the figure spec |
+| Panel-level analysis notes | What each panel shows, n, error bars, tests | `panel_notes` in the figure spec |
 | Statistics | The statistics table files and which tests they are | The tables the analysis recorded (chapter 9) |
 | Source data | A table of the values each panel shows | The values the analysis recorded |
 | Images | A microscope image's original files, the cropped region, the brightness range | Recorded by the image panel (chapter 9) |
-| Claim boundary | What the figure can and cannot claim | `claim_boundary` in the figure description |
+| Claim boundary | What the figure can and cannot claim | `claim_boundary` in the figure spec |
 | Provenance | When it was built, software versions, fingerprints of the config and of the data files read | Recorded automatically (chapter 10) |
 
-The title, panel notes and claim boundary are written by the researcher in the figure description (under `figure_specs/`). The build fills in the rest.
+The title, panel notes and claim boundary are written by the researcher in the figure spec (under `figure_specs/`). The build fills in the rest.
 
 ## At printed size
 

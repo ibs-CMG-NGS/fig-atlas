@@ -26,7 +26,7 @@ How to connect an AI assistant the first time is in [Connect AI agents](../howto
 | Word | Meaning | In lab terms |
 |---|---|---|
 | **bundle** | The data for one panel of a figure: a folder with one table file and one note saying "what figure this is". | A labelled sample |
-| **project** | The unit that makes one figure (with several panels). It has three files: a config, an analysis script and a figure description. | One experiment |
+| **project** | The unit that makes one figure (with several panels). It has three files: a config, an analysis script and a figure spec. | One experiment |
 | **config** | A text file with every colour, size, axis range and layout of a figure. **This is where you change a figure.** | The protocol |
 | **build** | One run that redraws the figure from its config, checks it and keeps a record. | Running the experiment |
 | **provenance record** | A record, kept automatically, of which data, settings and software made a figure. | The lab notebook |

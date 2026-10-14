@@ -43,4 +43,4 @@ Then build the stale figures again (💬 "rebuild all stale figures", or ⌨ che
 - **Provenance left by the analysis pipeline carries on.** If a bundle's note names the tool and version that made the data, they go into the figure's provenance record too. The chain of sources does not break at the bundle.
 
 ---
-Previous: [9. Honest numbers, statistics and images](09-integrity.md) · Next: [11. Into the paper: a figure's life](11-lifecycle.md)
+Previous: [9. Transparency in numbers, statistics and images](09-integrity.md) · Next: [11. Into the paper: a figure's life](11-lifecycle.md)

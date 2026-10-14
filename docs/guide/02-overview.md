@@ -18,7 +18,7 @@ flowchart LR
     subgraph P["Project (one figure)"]
         C["Config<br/>colours, sizes, layout — where you edit"]
         A["Analysis script<br/>reads data, places panels — usually left alone"]
-        S["Figure description<br/>title, panel notes, what it may claim"]
+        S["Figure spec<br/>title, panel notes, what it may claim"]
     end
     P -->|build| R["Results<br/>figure (PNG, PDF, SVG)<br/>README with the legend<br/>provenance record"]
     R --> K["Check results<br/>overlaps, clipping, text size, colour"]
@@ -29,7 +29,7 @@ flowchart LR
 | **Data bundle** | The table for one panel (`data.csv`) and a note saying "what figure this is" (`metadata.yaml`) | Real research data under `raw_data/`, examples under `examples/` | An analysis pipeline or the researcher. Once in place, it is not changed |
 | **Config** | Every value of the figure, each line with an explaining comment | `config_project-name.yaml` under `configs/` | The tool makes it first; the researcher edits it after that |
 | **Analysis script** | The program that reads the data and places the panels | Under `analysis/` | The tool makes a starting version. Changed only when a special calculation is needed |
-| **Figure description** | The figure's title, a note per panel, and what the figure may claim | Under `figure_specs/` | The researcher writes it |
+| **Figure spec** | The figure's title, a note per panel, and what the figure may claim | Under `figure_specs/` | The researcher writes it |
 | **Results** | The figure files, a README, the provenance record | `outputs/project-name/` | Made anew at every build. Never edited by hand |
 
 ## In lab terms

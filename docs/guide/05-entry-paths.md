@@ -1,16 +1,16 @@
 ---
-title: "5. Three ways in (Case A, B, C)"
+title: "5. Three entry points (Case A, B, C)"
 audience: researchers (no programming experience needed)
 reviewed: 2026-10-14
 ---
 
-# 5. Three ways in (Case A, B, C)
+# 5. Three entry points (Case A, B, C)
 
 > **Has this ever happened to you?** A student drew a figure in a Jupyter notebook that you wanted for the paper, but you had no idea how to tidy that code. Or all you could do was show a figure from another paper and say "we want our data to look like this".
 
-**The key idea:** there are three ways for a new figure to come in, depending on **what you have**. Every way ends in the same place: data arranged as a bundle, a config with every value written out, and a figure like the one in chapter 4.
+**The key idea:** a new figure has three entry points, depending on **what you have**. Each ends in the same place: data arranged as a bundle, a config with every value written out, and a figure like the one in chapter 4.
 
-## Which way?
+## Which entry point?
 
 ```mermaid
 flowchart TD
@@ -99,7 +99,7 @@ The names you can use for `plot_type`, and the columns each kind of figure needs
 
 ## Good to know
 
-- **On every way, the raw data stay as they are.** In Case A too, the table is only moved, never edited (chapter 3).
+- **Whichever entry point, the raw data stay as they are.** In Case A too, the table is only moved, never edited (chapter 3).
 - **New kinds of figure become assets.** A component made in Case A or C stays in the repository, so the next time data of that kind come in directly, like Case B.
 - **Figure shapes are made independent of the field.** For example, the "effect versus significance scatter" is the same component for an omics volcano plot and for a drug screen. Field-specific names and defaults are kept separately ([design decision 0003](../decisions/0003-renderers-are-shapes.md)).
 
