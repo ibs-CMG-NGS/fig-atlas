@@ -349,9 +349,28 @@ def test_promote_refuses_non_exploratory_and_sandbox(repo):
     plan_new_project(repo, "sandbox-y").apply()
     with pytest.raises(ProjectError, match="sandbox"):
         plan_retire(repo, "sandbox-y")
-    plan_new_project(repo, "lab-paper-main-fig1-done", "lab", "paper").apply()
+    retired = _exploratory(repo, "lab-gone")
+    plan_retire(repo, retired).apply()
     with pytest.raises(ProjectError, match="only exploratory"):
-        plan_promote(repo, "lab-paper-main-fig1-done", 2, "again")
+        plan_promote(repo, retired, 2, "again")                     # an archived project is not promoted
+
+
+def test_promote_renumbers_a_paper_figure(repo):
+    """A figure merged or dropped moves the ones after it: a paper project is
+    renamed to its new number and stays in <domain>/paper/."""
+    from fig_atlas.repo_commands import plan_promote
+    old = _exploratory(repo)
+    plan_promote(repo, old, 4, "atlas").apply()
+    plan_promote(repo, "lab-paper-main-fig4-atlas", 3, "atlas").apply()
+    new = "lab-paper-main-fig3-atlas"
+    import yaml
+    cfg = yaml.safe_load((repo / f"configs/lab/paper/config_{new}.yaml").read_text())
+    assert cfg["project"]["name"] == new and cfg["project"]["analysis_script"] == f"analysis/lab/paper/{new}_analysis.py"
+    spec = (repo / f"figure_specs/lab/paper/figure_01_{new}.py").read_text()
+    assert f'source_stem="lab/paper/{new}/figures/figure1_trial"' in spec
+    assert not (repo / "configs/lab/paper/config_lab-paper-main-fig4-atlas.yaml").exists()
+    opts = json.loads((repo / ".vscode/tasks.json").read_text())["inputs"][0]["options"]
+    assert new in opts and "lab-paper-main-fig4-atlas" not in opts
 
 
 def test_references_match_whole_names_only(tmp_path):

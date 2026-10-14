@@ -234,7 +234,8 @@ def plan_promote(root: Path, name: str, figure: int, slug: str, supp: bool = Fal
     name <domain>-paper-main-fig<N>-<slug>, files moved to <domain>/paper/ and
     renamed, project.name / spec_pattern / analysis_script, the script's
     CONFIG_PATH fallback, the specs' source_stem / primary_code, and the build
-    list updated."""
+    list updated. A paper project is renumbered the same way (a figure merged
+    or dropped moves the ones after it): it stays in <domain>/paper/."""
     if not NAME.fullmatch(slug):
         raise ProjectError(f"slug {slug!r}: use lower-case letters, digits and '-'")
     try:
@@ -248,8 +249,9 @@ def plan_promote(root: Path, name: str, figure: int, slug: str, supp: bool = Fal
     cs = ChangeSet(root)
     if name == new:
         return cs
-    if category != "exploratory":
-        raise ProjectError(f"{name} is in {p.namespace}; only exploratory projects are promoted")
+    if category not in ("exploratory", "paper"):
+        raise ProjectError(f"{name} is in {p.namespace}; only exploratory projects are promoted "
+                           "(and paper projects renumbered)")
     if any(x.name == new for x in list_projects(root)):
         raise ProjectError(f"a project called {new} already exists")
     old_ns, new_ns = p.namespace, f"{domain}/paper"

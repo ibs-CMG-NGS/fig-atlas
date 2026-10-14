@@ -26,7 +26,7 @@ Every command of the `fa` tool. `fa <command> --help` shows the same. Commands t
 | [`fa omics`](#fa-omics) | omics pack: list its modules, renderers, contracts and plot types |
 | [`fa param`](#fa-param) | renderer parameters: scaffold \| explain \| sync |
 | [`fa preflight`](#fa-preflight) | overlap, clipping and panel-intrusion checks (--projects ...) |
-| [`fa promote`](#fa-promote) | promote an exploratory project to a paper figure (AGENTS.md 5.2) |
+| [`fa promote`](#fa-promote) | promote an exploratory project to a paper figure, or renumber a paper figure (AGENTS.md 5.2) |
 | [`fa reference`](#fa-reference) | regenerate (or --check) docs/reference/{cli,api,config,gallery}.md |
 | [`fa renderers`](#fa-renderers) | plot names fig_atlas.render() can draw: core, packs and recipes |
 | [`fa retire`](#fa-retire) | move a project to <domain>/archive/ (AGENTS.md 5.3) and build it once |
@@ -301,7 +301,7 @@ Runs `fig_atlas.tools.preflight`; its own options: `fa preflight --help`.
 
 ## fa promote
 
-promote an exploratory project to a paper figure (AGENTS.md 5.2)
+promote an exploratory project to a paper figure, or renumber a paper figure (AGENTS.md 5.2)
 
 ```
 fa promote [-h] --figure FIGURE --slug SLUG [--supp] [--no-build] [--dry-run] [--json] PROJECT

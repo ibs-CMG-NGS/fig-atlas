@@ -89,7 +89,7 @@ When the user asks for paper storylines, figure candidate screening, or assembli
    * Agents and researchers must never leave a mismatch where Main Figure 3 in the storyline points to an exploratory project name or an obsolete figure numbering.
 
 2. **Promotion Protocol (Exploratory $\rightarrow$ Paper)**:
-   * **Use `fa promote <project> --figure <N> --slug <slug>`** (`--supp` for a supplementary figure): run it with `--dry-run` first, then without. It performs the steps below and builds the promoted project once; it lists other files that still name the old project and leaves the storyline to you (record the figure in `storyline.yaml`, then `fa storyline registry` and `fa storyline check`).
+   * **Use `fa promote <project> --figure <N> --slug <slug>`** (`--supp` for a supplementary figure): run it with `--dry-run` first, then without. The same command renumbers a paper figure when one before it is merged or dropped. It performs the steps below and builds the promoted project once; it lists other files that still name the old project and leaves the storyline to you (record the figure in `storyline.yaml`, then `fa storyline registry` and `fa storyline check`).
    * When an exploratory project is promoted to a manuscript Main Figure:
      * **Config**: Relocate to `configs/<domain>/paper/config_<domain>-paper-main-fig{N}-<slug>.yaml`. Update `project.name`, `project.spec_pattern`, and `project.analysis_script`.
      * **Analysis Script**: Relocate to `analysis/<domain>/paper/<domain>-paper-main-fig{N}-<slug>_analysis.py`. Update fallback `CONFIG_PATH` to point to the new config.

@@ -868,7 +868,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--dry-run", action="store_true", help="show the moves and diffs; write nothing")
     p.add_argument("--json", action="store_true", help="machine-readable output")
 
-    p = sub.add_parser("promote", help="promote an exploratory project to a paper figure (AGENTS.md 5.2)")
+    p = sub.add_parser("promote", help="promote an exploratory project to a paper figure, or renumber a paper figure (AGENTS.md 5.2)")
     p.add_argument("project", metavar="PROJECT")
     p.add_argument("--figure", type=int, required=True, help="figure number in the storyline")
     p.add_argument("--slug", required=True, help="short name: <domain>-paper-main-fig<N>-<slug>")
