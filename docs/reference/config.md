@@ -9,15 +9,18 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | [`bar_scatter`](#bar_scatter) | core | 50 |
 | [`binary_motif_heatmap`](#binary_motif_heatmap) | fig_atlas_omics.renderers | 62 |
 | [`boxplot`](#boxplot) | core | 13 |
+| [`chromosome_ideogram`](#chromosome_ideogram) | fig_atlas_omics.renderers | 42 |
 | [`cis_linkage_panel`](#cis_linkage_panel) | fig_atlas_omics.renderers | 20 |
 | [`clustered_go_heatmap`](#clustered_go_heatmap) | fig_atlas_omics.renderers | 21 |
 | [`count_summary`](#count_summary) | fig_atlas_omics.renderers | 20 |
 | [`cross_condition_dotplot`](#cross_condition_dotplot) | fig_atlas_omics.renderers | 62 |
 | [`cross_condition_heatmap`](#cross_condition_heatmap) | fig_atlas_omics.renderers | 42 |
 | [`dose_response`](#dose_response) | core | 37 |
+| [`dot_matrix`](#dot_matrix) | core | 40 |
 | [`effect_dots`](#effect_dots) | core | 38 |
 | [`flow_diagram`](#flow_diagram) | core | 44 |
 | [`funnel`](#funnel) | core | 16 |
+| [`gene_model_track`](#gene_model_track) | fig_atlas_omics.renderers | 25 |
 | [`go_bar`](#go_bar) | fig_atlas_omics.renderers | 25 |
 | [`go_cluster_dot`](#go_cluster_dot) | fig_atlas_omics.renderers | 37 |
 | [`go_dot`](#go_dot) | fig_atlas_omics.renderers | 11 |
@@ -27,6 +30,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | [`heatmap`](#heatmap) | core | 23 |
 | [`histogram`](#histogram) | core | 33 |
 | [`image_panel`](#image_panel) | core | 27 |
+| [`interval_track`](#interval_track) | fig_atlas_omics.renderers | 30 |
 | [`jaccard_heatmap`](#jaccard_heatmap) | core | 25 |
 | [`line_band`](#line_band) | core | 44 |
 | [`ma_plot`](#ma_plot) | fig_atlas_omics.renderers | 24 |
@@ -40,6 +44,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | [`peak_feature_composition`](#peak_feature_composition) | fig_atlas_omics.renderers | 32 |
 | [`peak_feature_enrichment`](#peak_feature_enrichment) | fig_atlas_omics.renderers | 32 |
 | [`sample_metric_bars`](#sample_metric_bars) | core | 22 |
+| [`segment_array`](#segment_array) | fig_atlas_omics.renderers | 66 |
 | [`signed_heatmap`](#signed_heatmap) | core | 34 |
 | [`single_tf_expression_scatter_bar`](#single_tf_expression_scatter_bar) | fig_atlas_omics.renderers | 36 |
 | [`species_response_scatter`](#species_response_scatter) | fig_atlas_omics.renderers | 30 |
@@ -201,6 +206,55 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `show_xticklabels` | true / false | `True` |  | Show x tick labels |
 | `show_yticklabels` | true / false | `True` |  | Show y tick labels |
 | `show_legend` | true / false | `False` |  | Show a legend of the groups |
+
+## chromosome_ideogram
+
+`fig_atlas_omics.renderers:render_chromosome_ideogram`
+
+| Key | Type | Default | Unit | What it does |
+|---|---|---|---|---|
+| `start_col` | text | `start` |  | Column with the band start (bp, 1-based) |
+| `end_col` | text | `end` |  | Column with the band end (bp) |
+| `band_col` | text | `band` |  | Column with the band name |
+| `stain_col` | text | `gie_stain` |  | Column with the Giemsa stain class |
+| `marker_pos_col` | text | `pos` |  | Marker table: column with the position (bp) |
+| `marker_label_col` | text | `label` |  | Marker table: column with the marker text (none: no text) |
+| `x_min` | number | auto | bp | Left end of a zoomed window (both x_min and x_max; none: whole chromosome) |
+| `x_max` | number | auto | bp | Right end of a zoomed window |
+| `stain_colors` | mapping | computed | hex color | Fill per stain class (default: grey scale from white gneg to near-black gpos100; module STAINS) |
+| `body_y` | number | `0.4` | axes data units (0-1) | Height of the chromosome centre |
+| `body_height` | number | `0.3` | axes data units (0-1) | Chromosome thickness |
+| `rounded` | true / false | `True` |  | Round the chromosome ends (whole-chromosome view) |
+| `round_frac` | number | `0.012` | fraction of the chromosome length | Radius of the rounded ends — raise for rounder ends |
+| `outline_color` | colour | `#1f2937` | hex color | Outline colour |
+| `outline_width` | number | `0.5` | pt | Outline width |
+| `show_band_labels` | true / false | `True` |  | Write band names |
+| `band_label_size` | number | `5.0` | pt | Band name size |
+| `band_label_rotation` | number | `90.0` | degrees | Band name rotation |
+| `band_label_pad` | number | `0.03` | axes data units | Gap between body and band names |
+| `band_label_position` | one of `above`, `inside` | `above` |  | Band names above the body, or centred inside it (zoomed strip) |
+| `band_label_color` | colour | `#111827` | hex color | Band name colour (above the body) |
+| `band_label_inside_color` | colour | `#ffffff` | hex color | Band name colour inside a dark band (inside position) |
+| `dark_stains` | list | `['gpos66', 'gpos75', 'gpos100']` |  | Stains on which inside text uses band_label_inside_color |
+| `band_label_clear_frac` | number | `0.0` | fraction of the shown width | Band names centred this close to a marker are left out (0: keep all) — raise if a marker arrow covers a band name |
+| `band_label_min_frac` | number | `0.0` | fraction of the shown width | Bands narrower than this get no name — raise if names collide |
+| `show_ruler` | true / false | `False` |  | Draw a position axis (zoomed view) |
+| `ruler_position` | one of `top`, `bottom` | `top` |  | Side of the position axis |
+| `ruler_unit_bp` | number | `1000000.0` | bp per tick unit | Tick unit (1e6: Mb, 1e3: kb) |
+| `ruler_suffix` | text | ` Mb` |  | Text after each tick value |
+| `ruler_decimals` | integer | `2` | digits | Decimals in tick values |
+| `ruler_nbins` | integer | `5` | ticks | Approximate number of ruler ticks |
+| `marker_color` | colour | `#111827` | hex color | Marker arrow and text colour |
+| `marker_style` | one of `arrow`, `line` | `arrow` |  | Arrow from above, or a vertical line through the body |
+| `marker_length` | number | `0.25` | axes data units | Length of a marker arrow |
+| `marker_width` | number | `1.0` | pt | Marker line width |
+| `marker_head` | number | `6.0` | pt | Marker arrow head size (head is 0.4 x this long) |
+| `marker_label_size` | number | `6.0` | pt | Marker text size |
+| `labels_title` | text | auto |  | Name under the chromosome, e.g. 'Chromosome 2' (none: no name) |
+| `title_size` | number | style `typography.title_size` (else `8.0`) | pt | Panel title font size — lower if the title wraps or crowds the panel |
+| `tick_label_size` | number | auto | pt | Ruler tick label size (default: rcParams) |
+| `title_y` | number | `0.0` | axes data units (0-1) | Height of the name's top edge |
+| `text_color` | colour | `#111827` | hex color | Colour of the name |
 
 ## cis_linkage_panel
 
@@ -446,6 +500,53 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `show_ec50` | true / false | `False` |  | Mark each fitted EC50 with a dashed vertical line |
 | `ec50_line_width` | number | `0.6` | pt | EC50 line width |
 
+## dot_matrix
+
+`fig_atlas.renderers:render_dot_matrix`
+
+| Key | Type | Default | Unit | What it does |
+|---|---|---|---|---|
+| `row_col` | text | `row` |  | Column with the row names |
+| `col_col` | text | `column` |  | Column with the column names |
+| `size_col` | text | auto |  | Column with the count that sets dot area (absent: one size) |
+| `color_col` | text | auto |  | Column with the category that sets dot colour (absent: one colour) |
+| `row_group_col` | text | auto |  | Column grouping rows into blocks with a line between them |
+| `row_order` | list | auto |  | Row order, top to bottom (default: order in the data) |
+| `col_order` | list | auto |  | Column order, left to right (default: order in the data) |
+| `col_labels` | mapping | `{}` |  | Shown name per column |
+| `color_order` | list | auto |  | Category priority and legend order (default: order in the data) |
+| `color_map` | mapping | `{}` | hex color | Colour per category |
+| `color_labels` | mapping | `{}` |  | Legend text per category |
+| `default_color` | colour | `#4b5563` | hex color | Dot colour without a category |
+| `size_per_unit` | number | `12.0` | pt^2 per count | Dot area per count |
+| `size_min` | number | `10.0` | pt^2 | Smallest dot area |
+| `size_max` | number | `120.0` | pt^2 | Largest dot area — lower if dots touch |
+| `edge_color` | colour | `#ffffff` | hex color | Dot outline colour |
+| `edge_width` | number | `0.4` | pt | Dot outline width |
+| `show_counts` | true / false | `False` |  | Write the count beside each dot |
+| `count_size` | number | `5.0` | pt | Size of those counts |
+| `count_offset` | number | `0.28` | column units | Horizontal offset of the counts from the dot centre |
+| `grid` | true / false | `True` |  | Draw faint lines through the cells |
+| `grid_color` | colour | `#e5e7eb` | hex color | Grid line colour |
+| `grid_width` | number | `0.4` | pt | Grid line width |
+| `group_line_color` | colour | `#9ca3af` | hex color | Line between row groups |
+| `group_line_width` | number | `0.6` | pt | Width of that line |
+| `row_label_style` | text | `normal` |  | Font style of the row names (italic for genes) |
+| `tick_length` | number | `0.0` | pt | Tick mark length (0: names only) |
+| `x_tick_rotation` | number | `0.0` | degrees | Rotation of the column names |
+| `show_legend` | true / false | `True` |  | Show the colour and size legends |
+| `legend_anchor` | list | `[1.02, 1.0]` | axes fraction [x, y] | Upper-left corner of the legend |
+| `legend_edge_width` | number | `0.0` | pt | Outline width of the legend dots |
+| `size_legend_counts` | list | `[1, 5]` |  | Counts shown in the size legend (empty: none) |
+| `size_legend_label` | text | `{n}` |  | Text of each size legend entry ({n}: the count) |
+| `labels_title` | text | auto |  | Panel title |
+| `labels_xlabel` | text | auto |  | x-axis title |
+| `labels_ylabel` | text | auto |  | y-axis title |
+| `title_size` | number | style `typography.title_size` (else `8.0`) | pt | Panel title font size — lower if the title wraps or crowds the panel |
+| `axes_label_size` | number | auto | pt | Axis title size (default: rcParams) |
+| `tick_label_size` | number | auto | pt | Row and column name size (default: rcParams) |
+| `legend_fontsize` | number | auto | pt | Legend text size (default: rcParams) |
+
 ## effect_dots
 
 `fig_atlas.renderers:render_effect_dots`
@@ -564,6 +665,38 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `subtitle_size` | number | `9` | pt | Subtitle font size |
 | `axes_label_size` | number | `11` | pt | Axis title font size |
 | `tick_label_size` | number | `8` | pt | Tick label font size |
+
+## gene_model_track
+
+`fig_atlas_omics.renderers:render_gene_model_track`
+
+| Key | Type | Default | Unit | What it does |
+|---|---|---|---|---|
+| `gene_col` | text | `gene_name` |  | Column with the gene name |
+| `transcript_col` | text | `transcript_id` |  | Column with the transcript id |
+| `strand_col` | text | `strand` |  | Column with + / - |
+| `exon_start_col` | text | `exon_start` |  | Column with the exon start (bp, 1-based) |
+| `exon_end_col` | text | `exon_end` |  | Column with the exon end (bp) |
+| `collapse` | one of `longest`, `all` | `longest` |  | One transcript per gene (the longest), or all |
+| `hide_pattern` | text | auto |  | Regular expression; genes whose name matches are left out (none: keep all) — e.g. '^(ENSMUSG\|Gm\d)' hides unnamed and predicted genes |
+| `x_min` | number | auto | bp | Left end of the window (both x_min and x_max; none: the data extent) |
+| `x_max` | number | auto | bp | Right end of the window |
+| `max_rows` | integer | `3` | rows | Most rows of genes — raise if names are dropped onto busy rows |
+| `row_gap_frac` | number | `0.01` | fraction of the window | Smallest gap between two genes (with their names) on one row |
+| `gene_color` | colour | `#1e3a8a` | hex color | Colour of exons, introns and chevrons |
+| `highlight_colors` | mapping | `{}` | hex color | Colour per gene name to pick out |
+| `exon_height` | number | `0.5` | fraction of a row | Exon box height |
+| `intron_width` | number | `0.6` | pt | Intron line width |
+| `chevron_spacing_frac` | number | `0.025` | fraction of the window | Distance between strand chevrons (0: none) — raise for fewer chevrons |
+| `chevron_edge_width` | number | `0.0` | pt | Chevron outline width (0: filled only) |
+| `chevron_size` | number | `2.5` | pt | Chevron marker size |
+| `show_labels` | true / false | `True` |  | Write gene names |
+| `label_size` | number | `6.0` | pt | Gene name size |
+| `label_style` | text | `italic` |  | Gene name font style |
+| `label_position` | one of `below`, `left` | `below` |  | Names under the model, or left of it |
+| `label_pad` | number | `0.08` | fraction of a row | Gap between a model and its name |
+| `label_char_em` | number | `0.6` | em per character | Estimated text width per character (packing only) — raise if names on one row touch |
+| `text_color` | colour | `#111827` | hex color | Gene name colour |
 
 ## go_bar
 
@@ -853,6 +986,43 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `frame` | true / false | `False` |  | Draw a frame around the image |
 | `frame_color` | colour | `black` | color | Frame colour |
 | `frame_width` | number | `0.5` | pt | Frame line width |
+
+## interval_track
+
+`fig_atlas_omics.renderers:render_interval_track`
+
+| Key | Type | Default | Unit | What it does |
+|---|---|---|---|---|
+| `start_col` | text | `start` |  | Column with the interval start (bp, 1-based) |
+| `end_col` | text | `end` |  | Column with the interval end (bp) |
+| `kind_col` | text | `kind` |  | Column with the kind (sets colour and legend entry) |
+| `label_col` | text | `label` |  | Column with the text beside an interval (none: no text) |
+| `kind_order` | list | auto |  | Kinds in legend order (default: order in the data) |
+| `x_min` | number | auto | bp | Left end of the window (both x_min and x_max; none: the data extent) |
+| `x_max` | number | auto | bp | Right end of the window |
+| `max_rows` | integer | `3` | rows | Most rows — raise if labels overlap on one row |
+| `row_gap_frac` | number | `0.01` | fraction of the window | Smallest gap between two intervals (with their labels) on one row |
+| `kind_colors` | mapping | `{}` | hex color | Colour per kind |
+| `kind_labels` | mapping | `{}` |  | Legend text per kind |
+| `default_color` | colour | `#6b7280` | hex color | Colour of kinds without one |
+| `bar_height` | number | `0.45` | fraction of a row | Box height |
+| `bar_alpha` | number | `0.85` | [0-1] opacity | Box opacity |
+| `bracket_kinds` | list | `[]` |  | Kinds drawn as a bracket (a line with end ticks) instead of a box |
+| `bracket_width` | number | `0.8` | pt | Bracket line width |
+| `point_frac` | number | `0.002` | fraction of the window | Intervals shorter than this are drawn as a triangle |
+| `point_edge_width` | number | `0.0` | pt | Triangle outline width (0: filled only) |
+| `point_size` | number | `4.0` | pt | Triangle marker size |
+| `label_size` | number | `5.5` | pt | Label size |
+| `label_pad_frac` | number | `0.005` | fraction of the window | Gap between an interval and its label (label right of it) |
+| `label_char_em` | number | `0.6` | em per character | Estimated text width per character (packing only) — raise if labels on one row touch |
+| `text_color` | colour | `#111827` | hex color | Label colour |
+| `show_legend` | true / false | `True` |  | Show a legend of the kinds drawn |
+| `legend_loc` | text | `upper left` |  | Legend location (matplotlib loc) |
+| `legend_anchor` | list | `[1.0, 1.0]` | axes fraction [x, y] | Legend anchor point |
+| `legend_frameon` | true / false | `False` |  | Draw a frame around the legend |
+| `legend_fontsize` | number | style `typography.legend_fontsize` (else `CODE_DEFAULT`) | pt | Legend text font size — lower if the legend covers data |
+| `labels_ylabel` | text | auto |  | Track name left of the track (none: no name) |
+| `axes_label_size` | number | auto | pt | Track name size (default: rcParams) |
 
 ## jaccard_heatmap
 
@@ -1329,6 +1499,79 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `axes_label_size` | number | `6.0` | pt | Axis title font size |
 | `tick_label_size` | number | `5.5` | pt | y tick label font size |
 | `group_label_fontsize` | number | `5.5` | pt | Group label font size |
+
+## segment_array
+
+`fig_atlas_omics.renderers:render_segment_array`
+
+| Key | Type | Default | Unit | What it does |
+|---|---|---|---|---|
+| `length_col` | text | `length_bp` |  | Column with each segment's length (bp) |
+| `kind_col` | text | `kind` |  | Column with each segment's kind (sets its colour) |
+| `label_col` | text | `label` |  | Column with the text above a segment (none: no labels) |
+| `sublabel_col` | text | auto |  | Column with the text below a segment, e.g. source coordinates |
+| `strand_col` | text | `strand` |  | Column with + / - (an arrow pointing right / left); other values: a box |
+| `group_col` | text | auto |  | Column grouping consecutive segments under one bracket and label |
+| `inner_label_col` | text | auto |  | Column with the name written inside a segment (under it if it does not fit) |
+| `span_col` | text | auto |  | Column grouping consecutive segments under one direction arrow |
+| `span_label_col` | text | auto |  | Column with the text over a span arrow, e.g. source coordinates |
+| `span_strand_col` | text | auto |  | Column with + / - for the span arrow direction (default: strand_col) |
+| `scale` | one of `linear`, `sqrt`, `log` | `linear` |  | How length maps to width — sqrt or log when one segment is far longer than the rest (e.g. a BAC next to a linker) |
+| `min_frac` | number | `0.012` | fraction of the row width | Smallest width a segment is drawn at — raise if short pieces disappear |
+| `flank_kinds` | list | `['host']` |  | Kinds drawn as host flanks at a fixed width (length ignored) |
+| `flank_frac` | number | `0.12` | fraction of the row width | Width of each host flank |
+| `gap_kinds` | list | `['copy_gap']` |  | Kinds drawn as a thin line instead of a box (unmapped linkers) |
+| `x_pad_frac` | number | `0.01` | fraction of the row width | Blank margin left and right of the row |
+| `kind_colors` | mapping | `{}` | hex color | Fill colour per kind |
+| `default_color` | colour | `#9ca3af` | hex color | Fill of kinds without a colour |
+| `edge_color` | colour | `#1f2937` | hex color | Segment outline colour |
+| `edge_width` | number | `0.4` | pt | Segment outline width (0: none) |
+| `bar_height` | number | `0.28` | axes data units (row is 0-1 high) | Height of a segment box — raise for a bolder row |
+| `bar_y` | number | `0.45` | axes data units (0-1) | Height of the row centre |
+| `arrow_head_frac` | number | `0.3` | fraction of the segment width | Length of an arrow head on stranded segments |
+| `arrow_head_max_frac` | number | `0.025` | fraction of the row width | Longest an arrow head may be — lower for blunter arrows on long segments |
+| `gap_color` | colour | `#6b7280` | hex color | Colour of gap lines |
+| `gap_width` | number | `0.8` | pt | Width of gap lines |
+| `gap_style` | text | `:` |  | Line style of gap lines (matplotlib) |
+| `separator_width` | number | `0.6` | pt | Width of the tick drawn between adjacent segments (0: none) |
+| `separator_color` | colour | `#111827` | hex color | Colour of the ticks between segments |
+| `inner_label_size` | number | `6.0` | pt | Size of the names inside segments |
+| `inner_label_weight` | text | `normal` |  | Font weight of the names inside segments |
+| `inner_text_dark` | colour | `#111827` | hex color | Name colour on light fills |
+| `inner_text_light` | colour | `#ffffff` | hex color | Name colour on dark fills |
+| `inner_luminance_cut` | number | `0.5` | relative luminance [0-1] | Fills darker than this get the light name colour |
+| `inner_label_margin` | number | `0.9` | fraction of the segment width | Share of a segment's width a name may use before it moves under the segment |
+| `inner_fallback` | one of `above`, `below` | `below` |  | Where a name too wide for its segment goes: above the bar, or under it (after any label there) |
+| `label_char_em` | number | `0.6` | em per character | Estimated text width per character (fit test only) — raise if names spill over their segment |
+| `span_pad` | number | `0.07` | axes data units | Gap between the bar and the span arrows |
+| `span_inset_frac` | number | `0.003` | fraction of the row width | Gap left at each end of a span arrow so neighbouring arrows do not touch |
+| `span_color` | colour | `#111827` | hex color | Span arrow colour |
+| `span_line_width` | number | `0.6` | pt | Span arrow line width |
+| `span_head` | number | `5.0` | pt | Span arrow head size |
+| `span_label_size` | number | `5.0` | pt | Size of the text over span arrows |
+| `span_label_pad` | number | `0.02` | axes data units | Gap between a span arrow and its text |
+| `label_size` | number | `6.0` | pt | Size of the labels above segments |
+| `label_pad` | number | `0.04` | axes data units | Gap between a bar and its label |
+| `label_min_frac` | number | `0.0` | fraction of the row width | Segments narrower than this get no label above — raise to thin out crowded labels |
+| `sublabel_size` | number | `5.0` | pt | Size of the labels below segments |
+| `sublabel_rotation` | number | `0.0` | degrees | Rotation of the labels below segments |
+| `sublabel_stagger` | number | `0.0` | axes data units | Drop every second label below the bar by this much (0: one line) — raise when labels of neighbouring narrow segments touch |
+| `sublabel_min_frac` | number | `0.0` | fraction of the row width | Segments narrower than this get no label below |
+| `flank_label_size` | number | `6.0` | pt | Size of the host flank labels |
+| `flank_label_style` | text | `italic` |  | Font style of the host flank labels |
+| `flank_label_pad` | number | `0.04` | axes data units | Gap between a host flank and its label |
+| `group_bracket` | true / false | `True` |  | Draw a bracket over each group |
+| `group_bracket_pad` | number | `0.06` | axes data units | Gap between the bars and a group bracket |
+| `group_bracket_height` | number | `0.05` | axes data units | Height of the bracket ends |
+| `group_bracket_width` | number | `0.5` | pt | Bracket line width |
+| `group_bracket_color` | colour | `#374151` | hex color | Bracket colour |
+| `group_label_size` | number | `6.0` | pt | Size of the group labels |
+| `group_label_weight` | text | `bold` |  | Font weight of the group labels |
+| `text_color` | colour | `#111827` | hex color | Colour of all labels |
+| `labels_title` | text | auto |  | Row title, at the top left (none: no title) |
+| `title_size` | number | style `typography.title_size` (else `8.0`) | pt | Panel title font size — lower if the title wraps or crowds the panel |
+| `title_loc` | text | `left` |  | Title alignment (matplotlib loc) |
+| `title_pad` | number | `2.0` | pt | Gap between the title and the row |
 
 ## signed_heatmap
 
