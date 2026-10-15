@@ -76,7 +76,11 @@ def test_renderer_aliases_match_the_pack():
     import fig_atlas.renderers as core
     import fig_atlas_omics.renderers as pack
     assert core._MOVED_MODULES == MOVED_RENDERERS
-    assert core._MOVED_NAMES == set(pack.__all__)
+    # Every name moved out of the core is aliased; names born in the pack
+    # (a renderer module the core never had) need no alias.
+    born_in_pack = {n for n in pack.__all__
+                    if getattr(pack, n).__module__.rsplit(".", 1)[-1] not in MOVED_RENDERERS}
+    assert core._MOVED_NAMES == set(pack.__all__) - born_in_pack
 
 
 def test_core_never_imports_the_pack():
