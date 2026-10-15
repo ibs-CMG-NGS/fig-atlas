@@ -32,3 +32,13 @@ def test_orders_drop_unlisted_cells():
                                          "col_order": ["CDS"], "show_legend": False})
     assert set(cells["gene"]) == {"A", "C"}
     plt.close(fig)
+
+
+def test_split_cells_show_one_dot_per_category():
+    fig, ax = plt.subplots()
+    cells = render_dot_matrix(ax, DATA, {"row_col": "gene", "col_col": "feature", "size_col": "n",
+                                         "color_col": "origin", "multi": "split", "split_offset": 0.3})
+    a = cells[(cells["gene"] == "A") & (cells["feature"] == "CDS")].sort_values("x")
+    assert list(a["kind"]) == ["x", "y"] and list(a["n"]) == [2, 1]
+    assert abs((a["x"].iloc[1] - a["x"].iloc[0]) - 0.3) < 1e-9
+    plt.close(fig)

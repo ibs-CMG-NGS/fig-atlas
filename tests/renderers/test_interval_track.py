@@ -21,3 +21,14 @@ def test_overlaps_go_to_separate_rows_and_points_are_markers():
     assert len(ax.patches) == 1                       # sv box; del is a bracket, junction a triangle
     assert ax.get_legend() is not None
     plt.close(fig)
+
+
+def test_open_intervals_extend_past_both_ends():
+    df = pd.DataFrame({"start": [4000], "end": [6000], "kind": ["seg"], "label": [""]})
+    fig, ax = plt.subplots()
+    render_interval_track(ax, df, {"x_min": 0, "x_max": 10000, "bracket_kinds": ["seg"], "open_kinds": ["seg"],
+                                   "open_extend_frac": 0.1, "show_legend": False})
+    dotted = [ln for ln in ax.lines if ln.get_linestyle() == ":"]
+    spans = sorted(tuple(ln.get_xdata()) for ln in dotted)
+    assert spans == [(2999.0, 3999.0), (6000.0, 7000.0)]
+    plt.close(fig)

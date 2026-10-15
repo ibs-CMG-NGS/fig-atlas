@@ -1,7 +1,10 @@
 """interval_track: genomic intervals and point events over a window --
 deletions, SV calls, junctions -- packed into rows, coloured by kind.
 
-An interval is drawn as a box, or as a bracket for kinds in ``bracket_kinds``;
+An interval is drawn as a box, or as a bracket for kinds in ``bracket_kinds``.
+Kinds in ``open_kinds`` have edges that are not known to be the real ends, e.g.
+a segment bounded only by its last informative site. They lose their end
+ticks and continue past both ends as a dotted line.
 anything shorter than ``point_frac`` of the window is drawn as a triangle.
 
 Data: one row per interval with the columns named by start_col, end_col and
@@ -40,6 +43,10 @@ SCHEMA = Schema("interval_track", params=[
     Param("bar_alpha", float, 0.85, unit="[0-1] opacity", range=(0, 1), role="Box opacity"),
     Param("bracket_kinds", list, [], role="Kinds drawn as a bracket (a line with end ticks) instead of a box"),
     Param("bracket_width", float, 0.8, unit="pt", range=(0, None), role="Bracket line width"),
+    Param("open_kinds", list, [], role="Kinds whose edges are open: no end ticks, a dotted line past both ends"),
+    Param("open_extend_frac", float, 0.04, unit="fraction of the window", range=(0, None),
+          role="Length of that dotted line past each end", tune="raise to stress that the edge is uncertain"),
+    Param("open_style", str, ":", role="Line style of that dotted line (matplotlib)"),
     Param("point_frac", float, 0.002, unit="fraction of the window", range=(0, None),
           role="Intervals shorter than this are drawn as a triangle"),
     Param("point_edge_width", float, 0.0, unit="pt", range=(0, None), role="Triangle outline width (0: filled only)"),
@@ -87,6 +94,7 @@ def render_interval_track(ax, df, params):
 
     colors = params.get("kind_colors", {})
     brackets = set(params.get("bracket_kinds", []))
+    opens = set(params.get("open_kinds", []))
     bh = float(params.get("bar_height", 0.45))
     point_w = float(params.get("point_frac", 0.002)) * span
     for _, r in data.iterrows():
@@ -97,12 +105,20 @@ def render_interval_track(ax, df, params):
         if b - a < point_w:
             ax.plot([(a + b) / 2], [y], linestyle="none", marker="v", color=c,
                     markersize=float(params.get("point_size", 4.0)), markeredgewidth=float(params.get("point_edge_width", 0.0)))
+        elif kind in brackets and kind in opens:
+            ax.plot([a, b], [y, y], color=c, linewidth=float(params.get("bracket_width", 0.8)))
         elif kind in brackets:
             ax.plot([a, a, b, b], [y + bh / 2, y, y, y + bh / 2], color=c,
                     linewidth=float(params.get("bracket_width", 0.8)))
         else:
             ax.add_patch(Rectangle((a, y - bh / 2), b - a, bh, facecolor=c, edgecolor="none",
                                    alpha=float(params.get("bar_alpha", 0.85))))
+        if kind in opens and b - a >= point_w:
+            ext = float(params.get("open_extend_frac", 0.04)) * span
+            for lo_, hi_ in ((max(a - ext, x0), a), (b, min(b + ext, x1))):
+                if hi_ > lo_:
+                    ax.plot([lo_, hi_], [y, y], color=c, linestyle=params.get("open_style", ":"),
+                            linewidth=float(params.get("bracket_width", 0.8)))
         if has_label and str(r[l_col]) not in ("", "nan"):
             ax.text(b + pad, y, str(r[l_col]), ha="left", va="center", fontsize=size,
                     color=params.get("text_color", "#111827"))

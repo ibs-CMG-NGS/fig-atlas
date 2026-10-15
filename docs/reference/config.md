@@ -16,7 +16,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | [`cross_condition_dotplot`](#cross_condition_dotplot) | fig_atlas_omics.renderers | 62 |
 | [`cross_condition_heatmap`](#cross_condition_heatmap) | fig_atlas_omics.renderers | 42 |
 | [`dose_response`](#dose_response) | core | 37 |
-| [`dot_matrix`](#dot_matrix) | core | 40 |
+| [`dot_matrix`](#dot_matrix) | core | 42 |
 | [`effect_dots`](#effect_dots) | core | 38 |
 | [`flow_diagram`](#flow_diagram) | core | 44 |
 | [`funnel`](#funnel) | core | 16 |
@@ -30,7 +30,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | [`heatmap`](#heatmap) | core | 23 |
 | [`histogram`](#histogram) | core | 33 |
 | [`image_panel`](#image_panel) | core | 27 |
-| [`interval_track`](#interval_track) | fig_atlas_omics.renderers | 30 |
+| [`interval_track`](#interval_track) | fig_atlas_omics.renderers | 33 |
 | [`jaccard_heatmap`](#jaccard_heatmap) | core | 25 |
 | [`line_band`](#line_band) | core | 44 |
 | [`ma_plot`](#ma_plot) | fig_atlas_omics.renderers | 24 |
@@ -514,6 +514,8 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `row_order` | list | auto |  | Row order, top to bottom (default: order in the data) |
 | `col_order` | list | auto |  | Column order, left to right (default: order in the data) |
 | `col_labels` | mapping | `{}` |  | Shown name per column |
+| `multi` | one of `first`, `split` | `first` |  | A cell with several categories: one dot coloured by the first in color_order, or one dot per category |
+| `split_offset` | number | `0.22` | column units | Distance between the dots of a split cell — raise if they touch |
 | `color_order` | list | auto |  | Category priority and legend order (default: order in the data) |
 | `color_map` | mapping | `{}` | hex color | Colour per category |
 | `color_labels` | mapping | `{}` |  | Legend text per category |
@@ -1009,6 +1011,9 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `bar_alpha` | number | `0.85` | [0-1] opacity | Box opacity |
 | `bracket_kinds` | list | `[]` |  | Kinds drawn as a bracket (a line with end ticks) instead of a box |
 | `bracket_width` | number | `0.8` | pt | Bracket line width |
+| `open_kinds` | list | `[]` |  | Kinds whose edges are open: no end ticks, a dotted line past both ends |
+| `open_extend_frac` | number | `0.04` | fraction of the window | Length of that dotted line past each end — raise to stress that the edge is uncertain |
+| `open_style` | text | `:` |  | Line style of that dotted line (matplotlib) |
 | `point_frac` | number | `0.002` | fraction of the window | Intervals shorter than this are drawn as a triangle |
 | `point_edge_width` | number | `0.0` | pt | Triangle outline width (0: filled only) |
 | `point_size` | number | `4.0` | pt | Triangle marker size |

@@ -6,8 +6,9 @@ sparse table.
 Data: one row per (row, column) cell with the columns named by row_col and
 col_col; size_col (a count; absent: every dot one size) and color_col
 (a category; absent: one colour). Rows that repeat a cell are added
-together, and a cell with more than one category takes the first in
-``color_order``. A ``row_group_col`` draws a thin line between row groups
+together. A cell with more than one category takes the first in
+``color_order``, or, with ``multi: split``, shows one dot per category side by
+side. A ``row_group_col`` draws a thin line between row groups
 (e.g. one block of genes per sample). Returns the cells drawn, ready for
 fig_atlas.source_data.add.
 """
@@ -30,6 +31,10 @@ SCHEMA = Schema("dot_matrix", params=[
     Param("col_order", list, None, role="Column order, left to right (default: order in the data)"),
     Param("col_labels", dict, {}, open_keys=True, role="Shown name per column"),
     # [Dots]
+    Param("multi", ("first", "split"), "first",
+          role="A cell with several categories: one dot coloured by the first in color_order, or one dot per category"),
+    Param("split_offset", float, 0.22, unit="column units", range=(0, None),
+          role="Distance between the dots of a split cell", tune="raise if they touch"),
     Param("color_order", list, None, role="Category priority and legend order (default: order in the data)"),
     Param("color_map", dict, {}, open_keys=True, unit="hex color", role="Colour per category"),
     Param("color_labels", dict, {}, open_keys=True, role="Legend text per category"),
@@ -77,14 +82,24 @@ def render_dot_matrix(ax, df, params):
     kinds = params.get("color_order") or (list(dict.fromkeys(data[k_col].dropna())) if k_col else [])
     rank = {k: i for i, k in enumerate(kinds)}
     keys = [r_col, c_col] + ([g_col] if g_col and g_col != r_col else [])
-    cells = (data.assign(_rank=data[k_col].map(rank) if k_col else 0)
-             .sort_values("_rank").groupby(keys, sort=False)
-             .agg(n=("_n", "sum"), **({"kind": (k_col, "first")} if k_col else {})).reset_index())
+    split = bool(k_col) and params.get("multi", "first") == "split"
+    data = data.assign(_rank=data[k_col].map(rank) if k_col else 0).sort_values("_rank", kind="stable")
+    if split:
+        cells = (data.groupby(keys + [k_col], sort=False).agg(n=("_n", "sum")).reset_index()
+                 .rename(columns={k_col: "kind"}))
+    else:
+        cells = (data.groupby(keys, sort=False)
+                 .agg(n=("_n", "sum"), **({"kind": (k_col, "first")} if k_col else {})).reset_index())
     rows = params.get("row_order") or list(dict.fromkeys(data[r_col]))
     cols = params.get("col_order") or list(dict.fromkeys(data[c_col]))
     y = {r: i for i, r in enumerate(rows)}
     x = {c: i for i, c in enumerate(cols)}
-    cells = cells[cells[r_col].isin(y) & cells[c_col].isin(x)]
+    cells = cells[cells[r_col].isin(y) & cells[c_col].isin(x)].copy()
+    # Horizontal position: the column, shifted per category when a split cell holds several.
+    off = float(params.get("split_offset", 0.22))
+    k_in_cell = cells.groupby([r_col, c_col]).cumcount() if split else pd.Series(0, index=cells.index)
+    n_in_cell = cells.groupby([r_col, c_col])[r_col].transform("size") if split else pd.Series(1, index=cells.index)
+    cells["x"] = cells[c_col].map(x) + (k_in_cell - (n_in_cell - 1) / 2) * off
 
     if params.get("grid", True):
         gc, gw = params.get("grid_color", "#e5e7eb"), float(params.get("grid_width", 0.4))
@@ -104,13 +119,13 @@ def render_dot_matrix(ax, df, params):
     cmap = params.get("color_map", {})
     colors = [cmap.get(k, params.get("default_color", "#4b5563")) for k in cells["kind"]] if k_col else \
         params.get("default_color", "#4b5563")
-    ax.scatter(cells[c_col].map(x), cells[r_col].map(y), s=[area(n) for n in cells["n"]], c=colors,
+    ax.scatter(cells["x"], cells[r_col].map(y), s=[area(n) for n in cells["n"]], c=colors,
                edgecolors=params.get("edge_color", "#ffffff"), linewidths=float(params.get("edge_width", 0.4)),
                zorder=3)
     tick_sz = params.get("tick_label_size")
     if params.get("show_counts", False):
         for _, c in cells.iterrows():
-            ax.text(x[c[c_col]] + float(params.get("count_offset", 0.28)), y[c[r_col]], f"{c['n']:g}",
+            ax.text(c["x"] + float(params.get("count_offset", 0.28)), y[c[r_col]], f"{c['n']:g}",
                     ha="left", va="center", fontsize=float(params.get("count_size", 5.0)))
 
     ax.set_xlim(-0.5, len(cols) - 0.5)
