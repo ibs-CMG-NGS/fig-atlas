@@ -69,3 +69,14 @@ def test_violin_summary_and_order():
     assert list(s["category"]) == ["a", "b"] and list(s["n"]) == [20, 20]
     assert [x.get_text() for x in ax.get_xticklabels()] == ["a", "b"]
     plt.close(fig)
+
+
+def test_stacked_bar_keeps_an_empty_bar_from_x_order():
+    """A category listed in x_order with no rows draws an empty bar instead of failing."""
+    fig, ax = plt.subplots()
+    df = pd.DataFrame({"category": ["A", "A", "B"], "part": ["x", "y", "x"], "count": [1, 2, 3]})
+    long = render_stacked_bar(ax, df, {"x_order": ["A", "empty", "B"], "percent": False, "show_legend": False})
+    assert len(long) == 6
+    assert long.loc[long["category"] == "empty", "value"].tolist() == [0, 0]
+    assert long.loc[long["category"] == "empty", "share"].isna().all()
+    plt.close(fig)

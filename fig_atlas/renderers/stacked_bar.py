@@ -70,5 +70,5 @@ def render_stacked_bar(ax, df, params):
         ax.legend(handles[::-1], texts[::-1], frameon=params.get("legend_frameon", False),
                   fontsize=size if size is not None else params.get("tick_label_size"), **where)
     long = t.stack().rename("value").reset_index().rename(columns={x_col: "category", s_col: "part"})
-    long["share"] = share.stack().to_numpy()
+    long["share"] = share.to_numpy().ravel()     # same row-major order as t.stack(); an empty bar keeps NaN
     return long
