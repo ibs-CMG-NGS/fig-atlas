@@ -13,7 +13,7 @@ Compendium projects: none.
 
 | Tier | Renderer | Module | Projects | Compendium users | Other users |
 |---|---|---|---:|---|---|
-| 2 | `place_panel_tags` | `fig_atlas/renderers/panels.py` | 2 | — | `first-figure`, `pilot-imaging` |
+| 2 | `place_panel_tags` | `fig_atlas/renderers/panels.py` | 1 | — | `pilot-imaging` |
 | 2 | `render_bar_scatter` | `fig_atlas/renderers/bar_scatter.py` | 1 | — | `pilot-imaging` |
 | 2 | `render_image_panel` | `fig_atlas/renderers/image_panel.py` | 1 | — | `pilot-imaging` |
 | 2 | `render_line_band` | `fig_atlas/renderers/line_band.py` | 1 | — | `pilot-imaging` |
