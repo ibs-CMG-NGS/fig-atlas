@@ -19,6 +19,7 @@ import warnings
 from .bar_scatter import render_bar_scatter
 from .boxplot import render_boxplot
 from .dose_response import render_dose_response
+from .dot_matrix import render_dot_matrix
 from .dumbbell import render_paired_dumbbell
 from .effect_dots import render_effect_dots
 from .flow_diagram import render_flow_diagram
@@ -53,6 +54,7 @@ __all__ = [
     "render_bar_scatter",
     "render_boxplot",
     "render_dose_response",
+    "render_dot_matrix",
     "render_effect_dots",
     "render_flow_diagram",
     "render_funnel",

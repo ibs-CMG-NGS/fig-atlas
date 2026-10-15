@@ -13,7 +13,7 @@ Compendium projects: none.
 
 | Tier | Renderer | Module | Projects | Compendium users | Other users |
 |---|---|---|---:|---|---|
-| 2 | `place_panel_tags` | `fig_atlas/renderers/panels.py` | 1 | — | `pilot-imaging` |
+| 2 | `place_panel_tags` | `fig_atlas/renderers/panels.py` | 2 | — | `first-figure`, `pilot-imaging` |
 | 2 | `render_bar_scatter` | `fig_atlas/renderers/bar_scatter.py` | 1 | — | `pilot-imaging` |
 | 2 | `render_image_panel` | `fig_atlas/renderers/image_panel.py` | 1 | — | `pilot-imaging` |
 | 2 | `render_line_band` | `fig_atlas/renderers/line_band.py` | 1 | — | `pilot-imaging` |
@@ -23,15 +23,18 @@ Compendium projects: none.
 | 4 | `panel_label` | `fig_atlas/renderers/panels.py` | 0 | — | — |
 | 4 | `render_binary_motif_heatmap` | `fig_atlas_omics/renderers/binary_motif_heatmap.py` | 0 | — | — |
 | 4 | `render_boxplot` | `fig_atlas/renderers/boxplot.py` | 0 | — | — |
+| 4 | `render_chromosome_ideogram` | `fig_atlas_omics/renderers/chromosome_ideogram.py` | 0 | — | — |
 | 4 | `render_cis_linkage_panel` | `fig_atlas_omics/renderers/cis_linkage.py` | 0 | — | — |
 | 4 | `render_clustered_go_heatmap` | `fig_atlas_omics/renderers/clustered_go_heatmap.py` | 0 | — | — |
 | 4 | `render_count_summary` | `fig_atlas_omics/renderers/count_summary.py` | 0 | — | — |
 | 4 | `render_cross_condition_dotplot` | `fig_atlas_omics/renderers/cross_condition_dotplot.py` | 0 | — | — |
 | 4 | `render_cross_condition_heatmap` | `fig_atlas_omics/renderers/cross_condition_heatmap.py` | 0 | — | — |
 | 4 | `render_dose_response` | `fig_atlas/renderers/dose_response.py` | 0 | — | — |
+| 4 | `render_dot_matrix` | `fig_atlas/renderers/dot_matrix.py` | 0 | — | — |
 | 4 | `render_effect_dots` | `fig_atlas/renderers/effect_dots.py` | 0 | — | — |
 | 4 | `render_flow_diagram` | `fig_atlas/renderers/flow_diagram.py` | 0 | — | — |
 | 4 | `render_funnel` | `fig_atlas/renderers/funnel.py` | 0 | — | — |
+| 4 | `render_gene_model_track` | `fig_atlas_omics/renderers/gene_model_track.py` | 0 | — | — |
 | 4 | `render_go_bar` | `fig_atlas_omics/renderers/go_bar.py` | 0 | — | — |
 | 4 | `render_go_cluster_dot` | `fig_atlas_omics/renderers/go_cluster_dot.py` | 0 | — | — |
 | 4 | `render_go_dot` | `fig_atlas_omics/renderers/go_dot.py` | 0 | — | — |
@@ -40,6 +43,7 @@ Compendium projects: none.
 | 4 | `render_grouped_hbar` | `fig_atlas/renderers/grouped_hbar.py` | 0 | — | — |
 | 4 | `render_heatmap` | `fig_atlas/renderers/heatmap.py` | 0 | — | — |
 | 4 | `render_histogram` | `fig_atlas/renderers/histogram.py` | 0 | — | — |
+| 4 | `render_interval_track` | `fig_atlas_omics/renderers/interval_track.py` | 0 | — | — |
 | 4 | `render_jaccard_heatmap` | `fig_atlas/renderers/jaccard_heatmap.py` | 0 | — | — |
 | 4 | `render_ma_plot` | `fig_atlas_omics/renderers/ma_plot.py` | 0 | — | — |
 | 4 | `render_motif_architecture_table` | `fig_atlas_omics/renderers/motif_table.py` | 0 | — | — |
@@ -52,6 +56,7 @@ Compendium projects: none.
 | 4 | `render_peak_feature_composition` | `fig_atlas_omics/renderers/peak_feature_enrichment.py` | 0 | — | — |
 | 4 | `render_peak_feature_enrichment` | `fig_atlas_omics/renderers/peak_feature_enrichment.py` | 0 | — | — |
 | 4 | `render_sample_metric_bars` | `fig_atlas/renderers/sample_metric_bars.py` | 0 | — | — |
+| 4 | `render_segment_array` | `fig_atlas_omics/renderers/segment_array.py` | 0 | — | — |
 | 4 | `render_signed_heatmap` | `fig_atlas/renderers/signed_heatmap.py` | 0 | — | — |
 | 4 | `render_single_tf_expression_scatter_bar` | `fig_atlas_omics/renderers/tf_expression_bars.py` | 0 | — | — |
 | 4 | `render_species_response_scatter` | `fig_atlas_omics/renderers/species_response_scatter.py` | 0 | — | — |
@@ -68,4 +73,4 @@ Compendium projects: none.
 | 4 | `render_violin` | `fig_atlas/renderers/violin.py` | 0 | — | — |
 | 4 | `render_volcano` | `fig_atlas_omics/renderers/volcano.py` | 0 | — | — |
 
-Summary: tier 2 active — 4, tier 4 unused — 50.
+Summary: tier 2 active — 4, tier 4 unused — 55.
