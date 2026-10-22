@@ -29,7 +29,10 @@ pack (`fig_atlas_omics`: volcano, MA, GO enrichment, motifs, ...) is included.
 
 ## Install
 
-Python 3.10+.
+Python 3.10+ on Linux, macOS or Windows (CI tests all three). The journal presets use Arial:
+macOS and Windows have it; on Linux install it (for example `ttf-mscorefonts-installer`), or
+preflight reports the substituted font. Rebuilds are byte-identical on one platform with one set
+of fonts, not across platforms.
 
 ```bash
 git clone https://github.com/ibs-cmg-ngs/fig-atlas
