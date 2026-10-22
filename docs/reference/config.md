@@ -26,7 +26,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | [`go_dot`](#go_dot) | fig_atlas_omics.renderers | 11 |
 | [`go_rrvgo_treemap`](#go_rrvgo_treemap) | fig_atlas_omics.renderers | 14 |
 | [`group_scatter`](#group_scatter) | core | 37 |
-| [`grouped_hbar`](#grouped_hbar) | core | 19 |
+| [`grouped_hbar`](#grouped_hbar) | core | 21 |
 | [`heatmap`](#heatmap) | core | 23 |
 | [`histogram`](#histogram) | core | 34 |
 | [`image_panel`](#image_panel) | core | 27 |
@@ -882,6 +882,8 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `bar_height` | number | `0.36` | data units (row spacing = 1) | Height of each bar; a group of n bars spans n x this — raise for thicker bars, lower for gaps |
 | `ylabel_wrap_width` | integer | `0` | characters | Wrap row labels at this width (0 = no wrap) — lower if row labels push the plot right |
 | `xlim` | list | auto | data coords [min, max] | x-axis range; the axis starts at 0 unless min is negative (bars below zero) — default: 1.15 x the largest bar (and the most negative one, if any) |
+| `zero_line_color` | colour | `#111827` | hex color | Colour of the line at zero, drawn only when a bar goes below zero |
+| `zero_line_width` | number | `0.6` | pt | Width of that line |
 | `show_value_labels` | true / false | `True` |  | Print each bar's count at its end |
 | `value_label_fontsize` | number | computed | pt | Count label size (default: tick label size) — lower if labels overlap the next bar |
 | `value_label_offset` | number | `0.012` | fraction of x range | Gap between bar end and its count — raise if labels touch the bars |

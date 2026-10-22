@@ -29,6 +29,9 @@ SCHEMA = Schema("grouped_hbar", params=[
     Param("xlim", list, None, unit="data coords [min, max]",
           role="x-axis range; the axis starts at 0 unless min is negative (bars below zero)",
           tune="default: 1.15 x the largest bar (and the most negative one, if any)"),
+    Param("zero_line_color", "color", "#111827", unit="hex color",
+          role="Colour of the line at zero, drawn only when a bar goes below zero"),
+    Param("zero_line_width", float, 0.6, unit="pt", range=(0, None), role="Width of that line"),
     Param("show_value_labels", bool, True, role="Print each bar's count at its end"),
     Param("value_label_fontsize", float, CODE_DEFAULT, unit="pt", role="Count label size (default: tick label size)",
           tune="lower if labels overlap the next bar"),
@@ -113,7 +116,8 @@ def render_grouped_hbar(ax, df, params):
     lo = min(0.0, float(xlim[0])) if xlim else min(0.0, minv * 1.15)
     ax.set_xlim(lo, lim)
     if lo < 0:
-        ax.axvline(0, color="#111827", linewidth=0.6, zorder=3)
+        ax.axvline(0, color=params.get("zero_line_color", "#111827"),
+                   linewidth=float(params.get("zero_line_width", 0.6)), zorder=3)
 
     if params.get("show_value_labels", True):
         fs = float(params.get("value_label_fontsize", t_sz))
