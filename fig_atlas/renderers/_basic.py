@@ -44,6 +44,7 @@ TEXT = Schema("basic_text", params=[
     Param("labels_xlabel", str, CODE_DEFAULT, role="x-axis title (default: the x column's name)"),
     Param("labels_ylabel", str, CODE_DEFAULT, role="y-axis title (default: the y column's name)"),
     Param("title_size", float, 8.0, unit="pt", range=(0, None), role="Panel title size"),
+    Param("title_pad", float, None, unit="pt", range=(0, None), role="Gap between panel title and plot"),
     Param("axes_label_size", float, None, unit="pt", range=(0, None), role="Axis title size (default: rcParams)"),
     Param("tick_label_size", float, None, unit="pt", range=(0, None), role="Tick label size (default: rcParams)"),
     Param("show_legend", bool, True, role="Show the group legend (only with a group_col)"),
@@ -105,7 +106,10 @@ def finish(ax, params, xlabel: str, ylabel: str, numeric_x: bool = True) -> None
             ax.spines[side].set_visible(False)
     title = params.get("labels_title")
     if title:
-        ax.set_title(title, fontsize=params.get("title_size", 8.0))
+        title_kwargs = {"fontsize": params.get("title_size", 8.0)}
+        if params.get("title_pad") is not None:
+            title_kwargs["pad"] = params.get("title_pad")
+        ax.set_title(title, **title_kwargs)
     ax.set_xlabel(text_param(params, "labels_xlabel", xlabel), fontsize=params.get("axes_label_size"))
     ax.set_ylabel(text_param(params, "labels_ylabel", ylabel), fontsize=params.get("axes_label_size"))
     if params.get("tick_label_size") is not None:

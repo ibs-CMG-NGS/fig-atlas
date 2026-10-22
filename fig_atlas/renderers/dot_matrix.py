@@ -59,6 +59,9 @@ SCHEMA = Schema("dot_matrix", params=[
     # [Legend and text]
     Param("show_legend", bool, True, role="Show the colour and size legends"),
     Param("legend_anchor", list, [1.02, 1.0], unit="axes fraction [x, y]", role="Upper-left corner of the legend"),
+    Param("legend_loc", str, "upper left", role="Legend location (matplotlib loc)"),
+    Param("legend_ncol", int, 1, unit="columns", range=(1, None), role="Number of legend columns"),
+    Param("legend_frameon", bool, False, role="Draw a frame around the legend"),
     Param("legend_edge_width", float, 0.0, unit="pt", range=(0, None), role="Outline width of the legend dots"),
     Param("size_legend_counts", list, [1, 5], role="Counts shown in the size legend (empty: none)"),
     Param("size_legend_label", str, "{n}", role="Text of each size legend entry ({n}: the count)"),
@@ -66,6 +69,7 @@ SCHEMA = Schema("dot_matrix", params=[
     Param("labels_xlabel", str, None, role="x-axis title"),
     Param("labels_ylabel", str, None, role="y-axis title"),
     *typography(title_size=8.0),
+    Param("title_pad", float, None, unit="pt", range=(0, None), role="Gap between panel title and plot"),
     Param("axes_label_size", float, None, unit="pt", range=(0, None), role="Axis title size (default: rcParams)"),
     Param("tick_label_size", float, None, unit="pt", range=(0, None), role="Row and column name size (default: rcParams)"),
     Param("legend_fontsize", float, None, unit="pt", range=(0, None), role="Legend text size (default: rcParams)"),
@@ -152,8 +156,11 @@ def render_dot_matrix(ax, df, params):
                                   markeredgewidth=float(params.get("legend_edge_width", 0.0)),
                                   label=params.get("size_legend_label", "{n}").format(n=n)))
         if handles:
-            ax.legend(handles=handles, loc="upper left", bbox_to_anchor=tuple(params.get("legend_anchor", [1.02, 1.0])),
-                      frameon=False, **({} if fs is None else {"fontsize": fs}))
+            ax.legend(handles=handles, loc=params.get("legend_loc", "upper left"),
+                      bbox_to_anchor=tuple(params.get("legend_anchor", [1.02, 1.0])),
+                      ncol=int(params.get("legend_ncol", 1)),
+                      frameon=params.get("legend_frameon", False),
+                      **({} if fs is None else {"fontsize": fs}))
     a_sz = params.get("axes_label_size")
     for setter, key in ((ax.set_xlabel, "labels_xlabel"), (ax.set_ylabel, "labels_ylabel")):
         text = text_param(params, key, None)
@@ -161,5 +168,7 @@ def render_dot_matrix(ax, df, params):
             setter(text, **({} if a_sz is None else {"fontsize": a_sz}))
     title = text_param(params, "labels_title", None)
     if title:
-        ax.set_title(title, fontsize=params.get("title_size", 8.0))
+        pad = params.get("title_pad")
+        ax.set_title(title, fontsize=params.get("title_size", 8.0),
+                     **({} if pad is None else {"pad": float(pad)}))
     return cells

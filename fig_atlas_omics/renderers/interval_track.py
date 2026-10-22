@@ -59,6 +59,9 @@ SCHEMA = Schema("interval_track", params=[
           role="Estimated text width per character (packing only)", tune="raise if labels on one row touch"),
     Param("text_color", "color", "#111827", unit="hex color", role="Label colour"),
     Param("show_legend", bool, True, role="Show a legend of the kinds drawn"),
+    Param("legend_kinds", list, None,
+          role="Kinds listed in the legend (none: the kinds drawn in this track); e.g. the kinds of several "
+               "windows that share one legend"),
     Param("legend_loc", str, "upper left", role="Legend location (matplotlib loc)"),
     Param("legend_anchor", list, [1.0, 1.0], unit="axes fraction [x, y]", role="Legend anchor point"),
     Param("legend_frameon", bool, False, role="Draw a frame around the legend"),
@@ -134,9 +137,12 @@ def render_interval_track(ax, df, params):
     if ylabel:
         a_sz = params.get("axes_label_size")
         ax.set_ylabel(ylabel, **({} if a_sz is None else {"fontsize": a_sz}))
-    if params.get("show_legend", True) and len(data):
-        order = params.get("kind_order") or list(dict.fromkeys(data[k_col].astype(str)))
-        shown = [k for k in order if k in set(data[k_col].astype(str))]
+    listed = params.get("legend_kinds")
+    if params.get("show_legend", True) and (len(data) or listed):
+        present = set(map(str, listed)) if listed is not None else set(data[k_col].astype(str))
+        order = params.get("kind_order") or list(dict.fromkeys(
+            [*map(str, listed or []), *data[k_col].astype(str)]))
+        shown = [k for k in order if k in present]
         names = params.get("kind_labels", {})
         handles = []
         for k in shown:

@@ -15,8 +15,8 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | [`count_summary`](#count_summary) | fig_atlas_omics.renderers | 20 |
 | [`cross_condition_dotplot`](#cross_condition_dotplot) | fig_atlas_omics.renderers | 62 |
 | [`cross_condition_heatmap`](#cross_condition_heatmap) | fig_atlas_omics.renderers | 42 |
-| [`dose_response`](#dose_response) | core | 37 |
-| [`dot_matrix`](#dot_matrix) | core | 42 |
+| [`dose_response`](#dose_response) | core | 38 |
+| [`dot_matrix`](#dot_matrix) | core | 46 |
 | [`effect_dots`](#effect_dots) | core | 38 |
 | [`flow_diagram`](#flow_diagram) | core | 44 |
 | [`funnel`](#funnel) | core | 16 |
@@ -28,9 +28,9 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | [`group_scatter`](#group_scatter) | core | 37 |
 | [`grouped_hbar`](#grouped_hbar) | core | 19 |
 | [`heatmap`](#heatmap) | core | 23 |
-| [`histogram`](#histogram) | core | 33 |
+| [`histogram`](#histogram) | core | 34 |
 | [`image_panel`](#image_panel) | core | 27 |
-| [`interval_track`](#interval_track) | fig_atlas_omics.renderers | 33 |
+| [`interval_track`](#interval_track) | fig_atlas_omics.renderers | 34 |
 | [`jaccard_heatmap`](#jaccard_heatmap) | core | 25 |
 | [`line_band`](#line_band) | core | 44 |
 | [`ma_plot`](#ma_plot) | fig_atlas_omics.renderers | 24 |
@@ -48,9 +48,9 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | [`signed_heatmap`](#signed_heatmap) | core | 34 |
 | [`single_tf_expression_scatter_bar`](#single_tf_expression_scatter_bar) | fig_atlas_omics.renderers | 36 |
 | [`species_response_scatter`](#species_response_scatter) | fig_atlas_omics.renderers | 30 |
-| [`stacked_bar`](#stacked_bar) | core | 32 |
+| [`stacked_bar`](#stacked_bar) | core | 34 |
 | [`stacked_share_hbar`](#stacked_share_hbar) | core | 28 |
-| [`survival`](#survival) | core | 32 |
+| [`survival`](#survival) | core | 33 |
 | [`tf_expression_scatter_grid`](#tf_expression_scatter_grid) | fig_atlas_omics.renderers | 36 |
 | [`threshold_scatter`](#threshold_scatter) | core | 61 |
 | [`tier_hbar`](#tier_hbar) | core | 16 |
@@ -58,7 +58,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | [`ts_profile`](#ts_profile) | core | 18 |
 | [`two_set_euler`](#two_set_euler) | core | 27 |
 | [`venn`](#venn) | core | 5 |
-| [`violin`](#violin) | core | 39 |
+| [`violin`](#violin) | core | 40 |
 | [`volcano`](#volcano) | fig_atlas_omics.renderers | 28 |
 
 ## bar_scatter
@@ -481,6 +481,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `labels_xlabel` | text | computed |  | x-axis title (default: the x column's name) |
 | `labels_ylabel` | text | computed |  | y-axis title (default: the y column's name) |
 | `title_size` | number | `8.0` | pt | Panel title size |
+| `title_pad` | number | auto | pt | Gap between panel title and plot |
 | `axes_label_size` | number | auto | pt | Axis title size (default: rcParams) |
 | `tick_label_size` | number | auto | pt | Tick label size (default: rcParams) |
 | `show_legend` | true / false | `True` |  | Show the group legend (only with a group_col) |
@@ -538,6 +539,9 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `x_tick_rotation` | number | `0.0` | degrees | Rotation of the column names |
 | `show_legend` | true / false | `True` |  | Show the colour and size legends |
 | `legend_anchor` | list | `[1.02, 1.0]` | axes fraction [x, y] | Upper-left corner of the legend |
+| `legend_loc` | text | `upper left` |  | Legend location (matplotlib loc) |
+| `legend_ncol` | integer | `1` | columns | Number of legend columns |
+| `legend_frameon` | true / false | `False` |  | Draw a frame around the legend |
 | `legend_edge_width` | number | `0.0` | pt | Outline width of the legend dots |
 | `size_legend_counts` | list | `[1, 5]` |  | Counts shown in the size legend (empty: none) |
 | `size_legend_label` | text | `{n}` |  | Text of each size legend entry ({n}: the count) |
@@ -545,6 +549,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `labels_xlabel` | text | auto |  | x-axis title |
 | `labels_ylabel` | text | auto |  | y-axis title |
 | `title_size` | number | style `typography.title_size` (else `8.0`) | pt | Panel title font size — lower if the title wraps or crowds the panel |
+| `title_pad` | number | auto | pt | Gap between panel title and plot |
 | `axes_label_size` | number | auto | pt | Axis title size (default: rcParams) |
 | `tick_label_size` | number | auto | pt | Row and column name size (default: rcParams) |
 | `legend_fontsize` | number | auto | pt | Legend text size (default: rcParams) |
@@ -876,7 +881,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `category_order` | list | auto |  | Row order top to bottom; default: order of first appearance |
 | `bar_height` | number | `0.36` | data units (row spacing = 1) | Height of each bar; a group of n bars spans n x this — raise for thicker bars, lower for gaps |
 | `ylabel_wrap_width` | integer | `0` | characters | Wrap row labels at this width (0 = no wrap) — lower if row labels push the plot right |
-| `xlim` | list | auto | data coords [min, max] | x-axis range; only the max is used (min is 0) — default: 1.15 x the largest bar |
+| `xlim` | list | auto | data coords [min, max] | x-axis range; the axis starts at 0 unless min is negative (bars below zero) — default: 1.15 x the largest bar (and the most negative one, if any) |
 | `show_value_labels` | true / false | `True` |  | Print each bar's count at its end |
 | `value_label_fontsize` | number | computed | pt | Count label size (default: tick label size) — lower if labels overlap the next bar |
 | `value_label_offset` | number | `0.012` | fraction of x range | Gap between bar end and its count — raise if labels touch the bars |
@@ -940,6 +945,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `labels_xlabel` | text | computed |  | x-axis title (default: the x column's name) |
 | `labels_ylabel` | text | computed |  | y-axis title (default: the y column's name) |
 | `title_size` | number | `8.0` | pt | Panel title size |
+| `title_pad` | number | auto | pt | Gap between panel title and plot |
 | `axes_label_size` | number | auto | pt | Axis title size (default: rcParams) |
 | `tick_label_size` | number | auto | pt | Tick label size (default: rcParams) |
 | `show_legend` | true / false | `True` |  | Show the group legend (only with a group_col) |
@@ -1022,6 +1028,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `label_char_em` | number | `0.6` | em per character | Estimated text width per character (packing only) — raise if labels on one row touch |
 | `text_color` | colour | `#111827` | hex color | Label colour |
 | `show_legend` | true / false | `True` |  | Show a legend of the kinds drawn |
+| `legend_kinds` | list | auto |  | Kinds listed in the legend (none: the kinds drawn in this track); e.g. the kinds of several windows that share one legend |
 | `legend_loc` | text | `upper left` |  | Legend location (matplotlib loc) |
 | `legend_anchor` | list | `[1.0, 1.0]` | axes fraction [x, y] | Legend anchor point |
 | `legend_frameon` | true / false | `False` |  | Draw a frame around the legend |
@@ -1716,10 +1723,11 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `labels_xlabel` | text | computed |  | x-axis title (default: the x column's name) |
 | `labels_ylabel` | text | computed |  | y-axis title (default: the y column's name) |
 | `title_size` | number | `8.0` | pt | Panel title size |
+| `title_pad` | number | auto | pt | Gap between panel title and plot |
 | `axes_label_size` | number | auto | pt | Axis title size (default: rcParams) |
 | `tick_label_size` | number | auto | pt | Tick label size (default: rcParams) |
 | `show_legend` | true / false | `True` |  | Show the group legend (only with a group_col) |
-| `legend_loc` | text | `best` |  | Legend location (matplotlib loc) |
+| `legend_loc` | text | computed |  | Legend anchor (matplotlib loc); the default follows legend_outside: 'center left' outside, 'best' inside |
 | `legend_fontsize` | number | auto | pt | Legend font size (none: tick_label_size) |
 | `legend_frameon` | true / false | `False` |  | Draw a frame around the legend |
 | `x_col` | text | `category` |  | Column with the categories (one bar each) |
@@ -1737,6 +1745,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `x_tick_rotation` | number | `0.0` | degrees | Rotation of the category names — raise (e.g. 45) when long names collide |
 | `legend_outside` | true / false | `True` |  | Put the legend right of the bars (so it never covers them) |
 | `legend_anchor` | list | `[1.02, 0.5]` | axes fraction [x, y] | Where the legend's left middle sits when outside — raise x for more gap from the bars |
+| `legend_ncol` | integer | `1` | columns | Number of columns in the legend |
 
 ## stacked_share_hbar
 
@@ -1798,6 +1807,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `labels_xlabel` | text | computed |  | x-axis title (default: the x column's name) |
 | `labels_ylabel` | text | computed |  | y-axis title (default: the y column's name) |
 | `title_size` | number | `8.0` | pt | Panel title size |
+| `title_pad` | number | auto | pt | Gap between panel title and plot |
 | `axes_label_size` | number | auto | pt | Axis title size (default: rcParams) |
 | `tick_label_size` | number | auto | pt | Tick label size (default: rcParams) |
 | `show_legend` | true / false | `True` |  | Show the group legend (only with a group_col) |
@@ -2066,6 +2076,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `labels_xlabel` | text | computed |  | x-axis title (default: the x column's name) |
 | `labels_ylabel` | text | computed |  | y-axis title (default: the y column's name) |
 | `title_size` | number | `8.0` | pt | Panel title size |
+| `title_pad` | number | auto | pt | Gap between panel title and plot |
 | `axes_label_size` | number | auto | pt | Axis title size (default: rcParams) |
 | `tick_label_size` | number | auto | pt | Tick label size (default: rcParams) |
 | `show_legend` | true / false | `True` |  | Show the group legend (only with a group_col) |

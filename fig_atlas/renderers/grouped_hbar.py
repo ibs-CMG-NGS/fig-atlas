@@ -26,8 +26,9 @@ SCHEMA = Schema("grouped_hbar", params=[
           role="Height of each bar; a group of n bars spans n x this", tune="raise for thicker bars, lower for gaps"),
     Param("ylabel_wrap_width", int, 0, unit="characters", range=(0, None),
           role="Wrap row labels at this width (0 = no wrap)", tune="lower if row labels push the plot right"),
-    Param("xlim", list, None, unit="data coords [min, max]", role="x-axis range; only the max is used (min is 0)",
-          tune="default: 1.15 x the largest bar"),
+    Param("xlim", list, None, unit="data coords [min, max]",
+          role="x-axis range; the axis starts at 0 unless min is negative (bars below zero)",
+          tune="default: 1.15 x the largest bar (and the most negative one, if any)"),
     Param("show_value_labels", bool, True, role="Print each bar's count at its end"),
     Param("value_label_fontsize", float, CODE_DEFAULT, unit="pt", role="Count label size (default: tick label size)",
           tune="lower if labels overlap the next bar"),
@@ -107,16 +108,21 @@ def render_grouped_hbar(ax, df, params):
 
     xlim = params.get("xlim")
     maxv = max(all_vals) if all_vals else 1
+    minv = min(all_vals) if all_vals else 0
     lim = float(xlim[1]) if xlim else maxv * 1.15
-    ax.set_xlim(0, lim)
+    lo = min(0.0, float(xlim[0])) if xlim else min(0.0, minv * 1.15)
+    ax.set_xlim(lo, lim)
+    if lo < 0:
+        ax.axvline(0, color="#111827", linewidth=0.6, zorder=3)
 
     if params.get("show_value_labels", True):
         fs = float(params.get("value_label_fontsize", t_sz))
-        off = float(params.get("value_label_offset", 0.012))
+        off = float(params.get("value_label_offset", 0.012)) * (lim - lo)
         for s_idx, col in enumerate(series):
             ys = [yb + offsets[s_idx] for yb in y_base]
             for yi, v in zip(ys, df[col].tolist()):
-                ax.text(v + off * lim, yi, f"{int(v):,}", va="center", fontsize=fs, color="black")
+                ax.text(v + off if v >= 0 else v - off, yi, f"{int(v):,}", va="center",
+                        ha="left" if v >= 0 else "right", fontsize=fs, color="black")
 
     ax.set_xlabel(text_param(params, "xlabel", "count"), fontsize=a_sz, fontweight="bold")
     title = text_param(params, "labels_title", "")

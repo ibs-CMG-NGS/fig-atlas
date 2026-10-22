@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import pandas as pd
 
-from ..schema import Param, Schema, uses_schema
+from ..schema import CODE_DEFAULT, Param, Schema, uses_schema
 from ._basic import TEXT, Y_AXIS, finish
 
 SCHEMA = Schema("stacked_bar", extends=[Y_AXIS, TEXT], params=[
@@ -35,6 +35,9 @@ SCHEMA = Schema("stacked_bar", extends=[Y_AXIS, TEXT], params=[
     Param("legend_outside", bool, True, role="Put the legend right of the bars (so it never covers them)"),
     Param("legend_anchor", list, [1.02, 0.5], unit="axes fraction [x, y]",
           role="Where the legend's left middle sits when outside", tune="raise x for more gap from the bars"),
+    Param("legend_ncol", int, 1, unit="columns", role="Number of columns in the legend"),
+    Param("legend_loc", str, CODE_DEFAULT,
+          role="Legend anchor (matplotlib loc); the default follows legend_outside: 'center left' outside, 'best' inside"),
 ])
 
 
@@ -65,10 +68,12 @@ def render_stacked_bar(ax, df, params):
     if params.get("show_legend", True):
         size = params.get("legend_fontsize")
         handles, texts = ax.get_legend_handles_labels()
-        where = (dict(loc="center left", bbox_to_anchor=tuple(params.get("legend_anchor", [1.02, 0.5])))
-                 if params.get("legend_outside", True) else dict(loc=params.get("legend_loc", "best")))
+        ncol = params.get("legend_ncol", 1)
+        loc = params.get("legend_loc", "center left" if params.get("legend_outside", True) else "best")
+        where = (dict(loc=loc, bbox_to_anchor=tuple(params.get("legend_anchor", [1.02, 0.5])))
+                 if params.get("legend_outside", True) else dict(loc=loc))
         ax.legend(handles[::-1], texts[::-1], frameon=params.get("legend_frameon", False),
-                  fontsize=size if size is not None else params.get("tick_label_size"), **where)
+                  fontsize=size if size is not None else params.get("tick_label_size"), ncol=ncol, **where)
     long = t.stack().rename("value").reset_index().rename(columns={x_col: "category", s_col: "part"})
     long["share"] = share.to_numpy().ravel()     # same row-major order as t.stack(); an empty bar keeps NaN
     return long

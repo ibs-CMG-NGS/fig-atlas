@@ -23,6 +23,14 @@ def test_overlaps_go_to_separate_rows_and_points_are_markers():
     plt.close(fig)
 
 
+def test_legend_kinds_lists_kinds_not_drawn_here():
+    fig, ax = plt.subplots()
+    render_interval_track(ax, IV, {"x_min": 0, "x_max": 10000, "legend_kinds": ["junction", "lost"],
+                                   "kind_order": ["del", "lost", "junction"]})
+    assert [t.get_text() for t in ax.get_legend().get_texts()] == ["lost", "junction"]
+    plt.close(fig)
+
+
 def test_open_intervals_extend_past_both_ends():
     df = pd.DataFrame({"start": [4000], "end": [6000], "kind": ["seg"], "label": [""]})
     fig, ax = plt.subplots()

@@ -192,7 +192,7 @@ def render_segment_array(ax, df, params):
                         linewidth=sep_w, solid_capstyle="butt")
 
     # Names inside segments; a name too wide for its segment goes under it instead.
-    below = data[sub_col].copy() if sub_col and sub_col in data else pd.Series([None] * len(data))
+    below = data[sub_col].copy().astype(object) if sub_col and sub_col in data else pd.Series([None] * len(data), dtype=object)
     in_col = params.get("inner_label_col")
     if in_col and in_col in data:
         from matplotlib.colors import to_rgb
