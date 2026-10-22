@@ -101,6 +101,12 @@ SCHEMA = Schema("segment_array", params=[
     Param("sublabel_stagger", float, 0.0, unit="axes data units", range=(0, None),
           role="Drop every second label below the bar by this much (0: one line)",
           tune="raise when labels of neighbouring narrow segments touch"),
+    Param("sublabel_color_from_kind", bool, False,
+          role="Write each label below the bar in its own segment's fill colour, so the label reads as "
+               "belonging to that block", tune="turn on where the fills already carry the meaning"),
+    Param("sublabel_luminance_cut", float, 0.62, unit="relative luminance [0-1]", range=(0, 1),
+          role="With sublabel_color_from_kind, a fill lighter than this keeps text_color instead, so a pale "
+               "block does not get near-white text", tune="lower it if a mid-tone label still reads too faint"),
     Param("sublabel_min_frac", float, 0.0, unit="fraction of the row width", range=(0, 1),
           role="Segments narrower than this get no label below"),
     Param("flank_label_size", float, 6.0, unit="pt", range=(0, None), role="Size of the host flank labels"),
@@ -281,15 +287,25 @@ def render_segment_array(ax, df, params):
     if below.notna().any():
         rot = float(params.get("sublabel_rotation", 0.0))
         stagger = float(params.get("sublabel_stagger", 0.0))
+        from_kind = bool(params.get("sublabel_color_from_kind", False))
+        lum_cut = float(params.get("sublabel_luminance_cut", 0.62))
         n_drawn = 0
         for i in np.flatnonzero(~flank):
             if pd.isna(below[i]) or w[i] < sub_min:
                 continue
             drop = stagger * (n_drawn % 2)
             n_drawn += 1
+            ink = txt
+            if from_kind and not gaps[i]:
+                # Tie the label to its segment, but keep a pale fill readable on the page: a fill
+                # lighter than the cut keeps the default ink instead of writing in near-white.
+                from matplotlib.colors import to_rgb
+                r_, g_, b_ = to_rgb(colors.get(kinds[i], params.get("default_color", "#9ca3af")))
+                if 0.2126 * r_ + 0.7152 * g_ + 0.0722 * b_ <= lum_cut:
+                    ink = colors.get(kinds[i], params.get("default_color", "#9ca3af"))
             ax.text((x0[i] + x1[i]) / 2, y - h / 2 - float(params.get("label_pad", 0.04)) - drop,
                     str(below[i]),
-                    ha="right" if rot else "center", va="top", rotation=rot, rotation_mode="anchor", color=txt,
+                    ha="right" if rot else "center", va="top", rotation=rot, rotation_mode="anchor", color=ink,
                     fontsize=float(params.get("sublabel_size", 5.0)))
 
     pad = float(params.get("x_pad_frac", 0.01))

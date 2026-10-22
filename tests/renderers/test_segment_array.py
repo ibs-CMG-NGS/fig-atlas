@@ -58,3 +58,16 @@ def test_names_inside_or_under_and_span_arrows():
     assert texts["a rather long passenger name"].get_va() == "top"   # too narrow: moved under the bar
     assert list(texts).count("6,000-1") == 1                        # one span label for the two rows
     plt.close(fig)
+
+
+def test_sublabels_take_their_segment_colour_unless_the_fill_is_pale():
+    df = pd.DataFrame({"length_bp": [100, 100], "kind": ["dark", "pale"],
+                       "label": [None, None], "sublabel": ["one", "two"], "strand": [None, None]})
+    fig, ax = plt.subplots()
+    render_segment_array(ax, df, {"sublabel_col": "sublabel", "flank_kinds": [], "gap_kinds": [],
+                                  "kind_colors": {"dark": "#0d9488", "pale": "#f3f4f6"},
+                                  "text_color": "#111827", "sublabel_color_from_kind": True})
+    ink = {t.get_text(): t.get_color() for t in ax.texts}
+    assert ink["one"] == "#0d9488"      # dark enough to read: takes its block's colour
+    assert ink["two"] == "#111827"      # too pale: falls back to text_color
+    plt.close(fig)

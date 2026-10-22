@@ -44,7 +44,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | [`peak_feature_composition`](#peak_feature_composition) | fig_atlas_omics.renderers | 32 |
 | [`peak_feature_enrichment`](#peak_feature_enrichment) | fig_atlas_omics.renderers | 32 |
 | [`sample_metric_bars`](#sample_metric_bars) | core | 22 |
-| [`segment_array`](#segment_array) | fig_atlas_omics.renderers | 66 |
+| [`segment_array`](#segment_array) | fig_atlas_omics.renderers | 68 |
 | [`signed_heatmap`](#signed_heatmap) | core | 34 |
 | [`single_tf_expression_scatter_bar`](#single_tf_expression_scatter_bar) | fig_atlas_omics.renderers | 36 |
 | [`species_response_scatter`](#species_response_scatter) | fig_atlas_omics.renderers | 30 |
@@ -1570,6 +1570,8 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `sublabel_size` | number | `5.0` | pt | Size of the labels below segments |
 | `sublabel_rotation` | number | `0.0` | degrees | Rotation of the labels below segments |
 | `sublabel_stagger` | number | `0.0` | axes data units | Drop every second label below the bar by this much (0: one line) — raise when labels of neighbouring narrow segments touch |
+| `sublabel_color_from_kind` | true / false | `False` |  | Write each label below the bar in its own segment's fill colour, so the label reads as belonging to that block — turn on where the fills already carry the meaning |
+| `sublabel_luminance_cut` | number | `0.62` | relative luminance [0-1] | With sublabel_color_from_kind, a fill lighter than this keeps text_color instead, so a pale block does not get near-white text — lower it if a mid-tone label still reads too faint |
 | `sublabel_min_frac` | number | `0.0` | fraction of the row width | Segments narrower than this get no label below |
 | `flank_label_size` | number | `6.0` | pt | Size of the host flank labels |
 | `flank_label_style` | text | `italic` |  | Font style of the host flank labels |
