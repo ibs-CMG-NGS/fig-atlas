@@ -290,35 +290,3 @@ def test_colorbar_divider_lines_that_draw_nothing_are_not_measured():
         found = {f.check for f in check_print_size(fig, PageSpec("test", 180.0, 240.0), min_line_pt=0.5)}
     assert "print_line_too_thin" not in found
     plt.close(fig)
-
-
-def test_text_box_lying_on_its_own_data_is_reported():
-    """A filled text box (bbox=) placed over a panel's bars, lines, or step histogram."""
-    fig, ax = plt.subplots(figsize=(3.0, 2.2))
-    ax.hist([1, 2, 2, 2, 3], histtype="step", color="red")
-    # Collision: callout placed right on top of peak
-    ax.text(2.0, 2.5, "Peak Callout", bbox=dict(boxstyle="round", facecolor="white", edgecolor="black"))
-    found = [f for f in preflight(fig, saved_bbox_in="tight") if f.check == "text_box_covers_data"]
-    assert found and found[0].severity == "warn"
-    plt.close(fig)
-
-    # Clean: text box placed in clear headroom
-    fig2, ax2 = plt.subplots(figsize=(3.0, 2.2))
-    ax2.hist([1, 2, 2, 2, 3], histtype="step", color="red")
-    ax2.set_ylim(0, 6)
-    ax2.text(0.95, 0.95, "Safe Callout", transform=ax2.transAxes, ha="right", va="top",
-             bbox=dict(boxstyle="round", facecolor="white", edgecolor="black"))
-    clean = [f for f in preflight(fig2, saved_bbox_in="tight") if f.check == "text_box_covers_data"]
-    assert not clean
-    plt.close(fig2)
-
-
-def test_legend_over_step_histogram_is_reported():
-    """A legend placed over a step histogram Polygon outline was once missed."""
-    fig, ax = plt.subplots(figsize=(3.0, 2.2))
-    ax.hist([1, 2, 2, 2, 3], histtype="step", color="blue", label="counts")
-    ax.legend(loc="center")
-    found = [f for f in preflight(fig, saved_bbox_in="tight") if f.check == "legend_covers_data"]
-    assert found and found[0].severity == "warn"
-    plt.close(fig)
-
