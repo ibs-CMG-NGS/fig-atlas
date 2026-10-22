@@ -30,6 +30,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          unset SOURCE_DATE_EPOCH   # pip zips wheels; ZIP cannot hold dates before 1980 (fails on Windows)
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install -e . --no-deps
