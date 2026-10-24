@@ -1,0 +1,369 @@
+{
+ "freetype": "2.14.3",
+ "figsize_in": [
+  3.4,
+  1.0
+ ],
+ "artists": [
+  {
+   "kind": "Rectangle",
+   "fc": "#ffffffff",
+   "ec": "#ffffffff",
+   "lw": 0.0,
+   "bbox_pt": [
+    0.0,
+    0.0,
+    244.8,
+    72.0
+   ]
+  },
+  {
+   "kind": "Rectangle",
+   "fc": "#ffffffff",
+   "ec": "#00000000",
+   "lw": 0.0,
+   "bbox_pt": [
+    30.6,
+    7.92,
+    220.32,
+    63.36
+   ]
+  },
+  {
+   "kind": "Rectangle",
+   "fc": "#ffffffff",
+   "ec": "#00000000",
+   "lw": 1.0,
+   "bbox_pt": [
+    30.6,
+    21.78,
+    49.57,
+    38.41
+   ]
+  },
+  {
+   "kind": "Rectangle",
+   "fc": "#969696ff",
+   "ec": "#00000000",
+   "lw": 1.0,
+   "bbox_pt": [
+    49.57,
+    21.78,
+    68.54,
+    38.41
+   ]
+  },
+  {
+   "kind": "Rectangle",
+   "fc": "#ffffffff",
+   "ec": "#00000000",
+   "lw": 1.0,
+   "bbox_pt": [
+    68.54,
+    21.78,
+    87.52,
+    38.41
+   ]
+  },
+  {
+   "kind": "Rectangle",
+   "fc": "#262626ff",
+   "ec": "#00000000",
+   "lw": 1.0,
+   "bbox_pt": [
+    87.52,
+    21.78,
+    106.49,
+    38.41
+   ]
+  },
+  {
+   "kind": "Rectangle",
+   "fc": "#9ca3afff",
+   "ec": "#00000000",
+   "lw": 1.0,
+   "bbox_pt": [
+    106.49,
+    21.78,
+    125.46,
+    38.41
+   ]
+  },
+  {
+   "kind": "Rectangle",
+   "fc": "#9ca3afff",
+   "ec": "#00000000",
+   "lw": 1.0,
+   "bbox_pt": [
+    125.46,
+    21.78,
+    144.43,
+    38.41
+   ]
+  },
+  {
+   "kind": "Rectangle",
+   "fc": "#ffffffff",
+   "ec": "#00000000",
+   "lw": 1.0,
+   "bbox_pt": [
+    144.43,
+    21.78,
+    163.4,
+    38.41
+   ]
+  },
+  {
+   "kind": "Rectangle",
+   "fc": "#525252ff",
+   "ec": "#00000000",
+   "lw": 1.0,
+   "bbox_pt": [
+    163.4,
+    21.78,
+    182.38,
+    38.41
+   ]
+  },
+  {
+   "kind": "Rectangle",
+   "fc": "#ffffffff",
+   "ec": "#00000000",
+   "lw": 1.0,
+   "bbox_pt": [
+    182.38,
+    21.78,
+    201.35,
+    38.41
+   ]
+  },
+  {
+   "kind": "Rectangle",
+   "fc": "#d4d4d4ff",
+   "ec": "#00000000",
+   "lw": 1.0,
+   "bbox_pt": [
+    201.35,
+    21.78,
+    220.32,
+    38.41
+   ]
+  },
+  {
+   "kind": "FancyBboxPatch",
+   "fc": "#00000000",
+   "ec": "#1f2937ff",
+   "lw": 0.5,
+   "bbox_pt": [
+    30.6,
+    21.78,
+    220.32,
+    38.41
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "p1",
+   "size": 5.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 90.0,
+   "color": "#111827ff",
+   "ha": "center",
+   "va": "bottom",
+   "bbox_pt": [
+    37.67,
+    40.08,
+    42.5,
+    46.43
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "p2",
+   "size": 5.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 90.0,
+   "color": "#111827ff",
+   "ha": "center",
+   "va": "bottom",
+   "bbox_pt": [
+    56.64,
+    40.08,
+    61.47,
+    46.43
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "p3",
+   "size": 5.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 90.0,
+   "color": "#111827ff",
+   "ha": "center",
+   "va": "bottom",
+   "bbox_pt": [
+    75.62,
+    40.08,
+    80.44,
+    46.43
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "p4",
+   "size": 5.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 90.0,
+   "color": "#111827ff",
+   "ha": "center",
+   "va": "bottom",
+   "bbox_pt": [
+    94.59,
+    40.08,
+    99.42,
+    46.43
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "p5",
+   "size": 5.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 90.0,
+   "color": "#111827ff",
+   "ha": "center",
+   "va": "bottom",
+   "bbox_pt": [
+    113.56,
+    40.08,
+    118.39,
+    46.43
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "q1",
+   "size": 5.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 90.0,
+   "color": "#111827ff",
+   "ha": "center",
+   "va": "bottom",
+   "bbox_pt": [
+    132.53,
+    40.08,
+    137.36,
+    46.43
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "q2",
+   "size": 5.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 90.0,
+   "color": "#111827ff",
+   "ha": "center",
+   "va": "bottom",
+   "bbox_pt": [
+    151.5,
+    40.08,
+    156.33,
+    46.43
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "q3",
+   "size": 5.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 90.0,
+   "color": "#111827ff",
+   "ha": "center",
+   "va": "bottom",
+   "bbox_pt": [
+    170.48,
+    40.08,
+    175.3,
+    46.43
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "q4",
+   "size": 5.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 90.0,
+   "color": "#111827ff",
+   "ha": "center",
+   "va": "bottom",
+   "bbox_pt": [
+    189.45,
+    40.08,
+    194.28,
+    46.43
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "q5",
+   "size": 5.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 90.0,
+   "color": "#111827ff",
+   "ha": "center",
+   "va": "bottom",
+   "bbox_pt": [
+    208.42,
+    40.08,
+    213.25,
+    46.43
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "Tg insertion",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#111827ff",
+   "ha": "center",
+   "va": "bottom",
+   "bbox_pt": [
+    150.33,
+    52.27,
+    185.96,
+    58.08
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "Chromosome 2",
+   "size": 8.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#111827ff",
+   "ha": "center",
+   "va": "bottom",
+   "bbox_pt": [
+    95.07,
+    7.92,
+    155.85,
+    15.66
+   ]
+  }
+ ]
+}

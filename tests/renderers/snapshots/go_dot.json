@@ -1,0 +1,733 @@
+{
+ "freetype": "2.14.3",
+ "figsize_in": [
+  3.2,
+  2.4
+ ],
+ "artists": [
+  {
+   "kind": "Rectangle",
+   "fc": "#ffffffff",
+   "ec": "#ffffffff",
+   "lw": 0.0,
+   "bbox_pt": [
+    0.0,
+    0.0,
+    230.4,
+    172.8
+   ]
+  },
+  {
+   "kind": "Rectangle",
+   "fc": "#ffffffff",
+   "ec": "#00000000",
+   "lw": 0.0,
+   "bbox_pt": [
+    80.07,
+    19.01,
+    199.11,
+    152.06
+   ]
+  },
+  {
+   "kind": "PathCollection",
+   "n": 8,
+   "offsets": "d6b05eb253c9f169",
+   "paths": 1,
+   "fc": [
+    "#800026b2",
+    "#820026b2",
+    "#840026b2",
+    "#8a0026b2",
+    "#8b0026b2"
+   ],
+   "ec": [
+    "#000000b2"
+   ],
+   "lw": [
+    0.5
+   ],
+   "sizes": [
+    95.0,
+    113.0,
+    122.0,
+    144.5,
+    248.0,
+    288.5,
+    293.0,
+    297.5
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 2,
+   "data": "442001af19a9e11d",
+   "color": "#b0b0b0ff",
+   "lw": 0.8,
+   "ls": "--",
+   "marker": "",
+   "ms": 6.0,
+   "mec": null,
+   "mfc": null
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "53d6408cfc8097af",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "3",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "0.05",
+   "size": 10.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "center",
+   "va": "top",
+   "bbox_pt": [
+    100.85,
+    2.33,
+    123.13,
+    12.01
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 2,
+   "data": "2da9676476bf6947",
+   "color": "#b0b0b0ff",
+   "lw": 0.8,
+   "ls": "--",
+   "marker": "",
+   "ms": 6.0,
+   "mec": null,
+   "mfc": null
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "64748e97705ac67f",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "3",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "0.10",
+   "size": 10.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "center",
+   "va": "top",
+   "bbox_pt": [
+    145.01,
+    2.33,
+    167.29,
+    12.01
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "Gene Ratio",
+   "size": 7.0,
+   "weight": "bold",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "center",
+   "va": "top",
+   "bbox_pt": [
+    117.92,
+    -8.44,
+    161.26,
+    -1.67
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "374708fff7719dd5",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "0",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "term A process",
+   "size": 7.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "right",
+   "va": "center_baseline",
+   "bbox_pt": [
+    20.29,
+    25.51,
+    73.07,
+    32.28
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "fc62429c3e69001d",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "0",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "term F process",
+   "size": 7.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "right",
+   "va": "center_baseline",
+   "bbox_pt": [
+    21.05,
+    41.49,
+    73.07,
+    48.26
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "0827fd05442d5279",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "0",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "term G process",
+   "size": 7.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "right",
+   "va": "center_baseline",
+   "bbox_pt": [
+    19.66,
+    57.46,
+    73.07,
+    64.23
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "71f6bfa4d494ae1b",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "0",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "term H process",
+   "size": 7.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "right",
+   "va": "center_baseline",
+   "bbox_pt": [
+    19.81,
+    73.44,
+    73.07,
+    80.21
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "be4b0657519c5344",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "0",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "term C process",
+   "size": 7.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "right",
+   "va": "center_baseline",
+   "bbox_pt": [
+    20.18,
+    89.41,
+    73.07,
+    96.18
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "d26a483b52d3fc23",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "0",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "term B process",
+   "size": 7.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "right",
+   "va": "center_baseline",
+   "bbox_pt": [
+    20.27,
+    105.39,
+    73.07,
+    112.16
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "dc0b3bab2f1e2340",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "0",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "term E process",
+   "size": 7.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "right",
+   "va": "center_baseline",
+   "bbox_pt": [
+    20.66,
+    121.36,
+    73.07,
+    128.13
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "05ec2a481354ea07",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "0",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "term D process",
+   "size": 7.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "right",
+   "va": "center_baseline",
+   "bbox_pt": [
+    19.69,
+    137.34,
+    73.07,
+    144.11
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "GO/KEGG Terms",
+   "size": 7.0,
+   "weight": "bold",
+   "style": "normal",
+   "rotation": 90.0,
+   "color": "#000000ff",
+   "ha": "center",
+   "va": "bottom",
+   "bbox_pt": [
+    8.88,
+    54.57,
+    15.66,
+    116.5
+   ]
+  },
+  {
+   "kind": "Spine",
+   "fc": "#00000000",
+   "ec": "#000000ff",
+   "lw": 0.8,
+   "bbox_pt": [
+    76.57,
+    19.01,
+    80.07,
+    152.06
+   ]
+  },
+  {
+   "kind": "Spine",
+   "fc": "#00000000",
+   "ec": "#000000ff",
+   "lw": 0.8,
+   "bbox_pt": [
+    199.11,
+    19.01,
+    199.11,
+    152.06
+   ]
+  },
+  {
+   "kind": "Spine",
+   "fc": "#00000000",
+   "ec": "#000000ff",
+   "lw": 0.8,
+   "bbox_pt": [
+    80.07,
+    15.51,
+    199.11,
+    19.01
+   ]
+  },
+  {
+   "kind": "Spine",
+   "fc": "#00000000",
+   "ec": "#000000ff",
+   "lw": 0.8,
+   "bbox_pt": [
+    80.07,
+    152.06,
+    199.11,
+    152.06
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "GO/KEGG Enrichment Dot Plot",
+   "size": 8.0,
+   "weight": "bold",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "center",
+   "va": "baseline",
+   "bbox_pt": [
+    72.12,
+    156.4,
+    207.06,
+    164.14
+   ]
+  },
+  {
+   "kind": "FancyBboxPatch",
+   "fc": "#fffffff2",
+   "ec": "#bbbbbbf2",
+   "lw": 1.0,
+   "bbox_pt": [
+    204.49,
+    -68.94,
+    255.18,
+    42.62
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "Gene Count",
+   "size": 6.0,
+   "weight": "bold",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "left",
+   "va": "baseline",
+   "bbox_pt": [
+    210.15,
+    31.41,
+    249.52,
+    37.22
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 3,
+   "data": "9a5153e0f20c13f4",
+   "color": "#00000000",
+   "lw": 1.5,
+   "ls": "-",
+   "marker": "o",
+   "ms": 10.998079684646791,
+   "mec": "#333333ff",
+   "mfc": "#808080ff"
+  },
+  {
+   "kind": "Text",
+   "text": "10 genes",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "left",
+   "va": "baseline",
+   "bbox_pt": [
+    217.09,
+    -0.24,
+    244.75,
+    5.57
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 3,
+   "data": "9a5153e0f20c13f4",
+   "color": "#00000000",
+   "lw": 1.5,
+   "ls": "-",
+   "marker": "o",
+   "ms": 15.347615963921077,
+   "mec": "#333333ff",
+   "mfc": "#808080ff"
+  },
+  {
+   "kind": "Text",
+   "text": "30 genes",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "left",
+   "va": "baseline",
+   "bbox_pt": [
+    217.09,
+    -31.89,
+    244.75,
+    -26.09
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 3,
+   "data": "9a5153e0f20c13f4",
+   "color": "#00000000",
+   "lw": 1.5,
+   "ls": "-",
+   "marker": "o",
+   "ms": 22.847936741452536,
+   "mec": "#333333ff",
+   "mfc": "#808080ff"
+  },
+  {
+   "kind": "Text",
+   "text": "≥80 genes",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "left",
+   "va": "baseline",
+   "bbox_pt": [
+    217.09,
+    -63.54,
+    249.78,
+    -57.74
+   ]
+  },
+  {
+   "kind": "Rectangle",
+   "fc": "#ffffffff",
+   "ec": "#00000000",
+   "lw": 0.0,
+   "bbox_pt": [
+    201.98,
+    85.54,
+    205.3,
+    152.06
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "3239b05c38b825eb",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "1",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "0.00",
+   "size": 10.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "left",
+   "va": "center_baseline",
+   "bbox_pt": [
+    212.3,
+    79.66,
+    234.59,
+    89.33
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "99ef93ece4cec47b",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "1",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "0.02",
+   "size": 10.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "left",
+   "va": "center_baseline",
+   "bbox_pt": [
+    212.3,
+    106.27,
+    234.59,
+    115.94
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "f898f571899f202f",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "1",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "0.04",
+   "size": 10.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "left",
+   "va": "center_baseline",
+   "bbox_pt": [
+    212.3,
+    132.88,
+    234.59,
+    142.56
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "FDR",
+   "size": 8.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 90.0,
+   "color": "#000000ff",
+   "ha": "center",
+   "va": "top",
+   "bbox_pt": [
+    238.59,
+    110.64,
+    246.33,
+    126.96
+   ]
+  },
+  {
+   "kind": "LineCollection",
+   "n": 1,
+   "offsets": "374708fff7719dd5",
+   "paths": 0,
+   "fc": [],
+   "ec": [
+    "#000000ff"
+   ],
+   "lw": [
+    0.4
+   ],
+   "sizes": []
+  },
+  {
+   "kind": "_ColorbarSpine",
+   "fc": "#00000000",
+   "ec": "#000000ff",
+   "lw": 0.8,
+   "bbox_pt": [
+    201.98,
+    85.54,
+    205.3,
+    152.06
+   ]
+  }
+ ]
+}

@@ -352,8 +352,11 @@ def gallery_page(cases) -> str:
            "([config reference](config.md)). A test builds every example and checks it with preflight.\n\n"]
     out += [_example_section(b) for b in examples()]
     out.append("## Every renderer\n\n"
-               "One example per renderer, drawn from small synthetic data by the renderer snapshot tests "
-               "(`tests/renderers/cases.py`). Parameters for each are in the [config reference](config.md).\n\n")
+               "One example per renderer (and per layout where a renderer has more than one), drawn from "
+               "small synthetic data by the renderer snapshot tests (`tests/renderers/cases.py`). Every "
+               "renderer the package registers has a picture here or in the examples above "
+               "(`tests/test_gallery_coverage.py` checks it). Parameters for each are in the "
+               "[config reference](config.md).\n\n")
     for name in sorted(cases):
         out.append(f"### {name}\n\n![{name}](gallery/{name}.png)\n\n")
     return "".join(out)

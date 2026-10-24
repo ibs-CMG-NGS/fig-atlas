@@ -678,15 +678,27 @@ fa build <project> --preflight
 
 ## Every renderer
 
-One example per renderer, drawn from small synthetic data by the renderer snapshot tests (`tests/renderers/cases.py`). Parameters for each are in the [config reference](config.md).
+One example per renderer (and per layout where a renderer has more than one), drawn from small synthetic data by the renderer snapshot tests (`tests/renderers/cases.py`). Every renderer the package registers has a picture here or in the examples above (`tests/test_gallery_coverage.py` checks it). Parameters for each are in the [config reference](config.md).
 
 ### binary_motif_heatmap
 
 ![binary_motif_heatmap](gallery/binary_motif_heatmap.png)
 
+### chromosome_ideogram
+
+![chromosome_ideogram](gallery/chromosome_ideogram.png)
+
+### cis_linkage_panel
+
+![cis_linkage_panel](gallery/cis_linkage_panel.png)
+
 ### clustered_go_heatmap
 
 ![clustered_go_heatmap](gallery/clustered_go_heatmap.png)
+
+### count_summary
+
+![count_summary](gallery/count_summary.png)
 
 ### cross_condition_dotplot
 
@@ -696,6 +708,38 @@ One example per renderer, drawn from small synthetic data by the renderer snapsh
 
 ![cross_condition_heatmap](gallery/cross_condition_heatmap.png)
 
+### dot_matrix
+
+![dot_matrix](gallery/dot_matrix.png)
+
+### flow_diagram
+
+![flow_diagram](gallery/flow_diagram.png)
+
+### funnel
+
+![funnel](gallery/funnel.png)
+
+### gene_model_track
+
+![gene_model_track](gallery/gene_model_track.png)
+
+### go_bar
+
+![go_bar](gallery/go_bar.png)
+
+### go_cluster_dot
+
+![go_cluster_dot](gallery/go_cluster_dot.png)
+
+### go_dot
+
+![go_dot](gallery/go_dot.png)
+
+### go_rrvgo_treemap
+
+![go_rrvgo_treemap](gallery/go_rrvgo_treemap.png)
+
 ### grouped_hbar
 
 ![grouped_hbar](gallery/grouped_hbar.png)
@@ -703,6 +747,14 @@ One example per renderer, drawn from small synthetic data by the renderer snapsh
 ### image_panel
 
 ![image_panel](gallery/image_panel.png)
+
+### interval_track
+
+![interval_track](gallery/interval_track.png)
+
+### jaccard_heatmap
+
+![jaccard_heatmap](gallery/jaccard_heatmap.png)
 
 ### line_band
 
@@ -712,21 +764,57 @@ One example per renderer, drawn from small synthetic data by the renderer snapsh
 
 ![ma_plot](gallery/ma_plot.png)
 
+### motif_architecture_table
+
+![motif_architecture_table](gallery/motif_architecture_table.png)
+
+### motif_dotplot
+
+![motif_dotplot](gallery/motif_dotplot.png)
+
 ### paired_dumbbell
 
 ![paired_dumbbell](gallery/paired_dumbbell.png)
+
+### paired_dumbbell_4x1
+
+![paired_dumbbell_4x1](gallery/paired_dumbbell_4x1.png)
 
 ### panel_tags
 
 ![panel_tags](gallery/panel_tags.png)
 
+### pathway_evidence_dotplot
+
+![pathway_evidence_dotplot](gallery/pathway_evidence_dotplot.png)
+
 ### pathway_test_matrix
 
 ![pathway_test_matrix](gallery/pathway_test_matrix.png)
 
+### peak_feature_composition
+
+![peak_feature_composition](gallery/peak_feature_composition.png)
+
+### peak_feature_enrichment
+
+![peak_feature_enrichment](gallery/peak_feature_enrichment.png)
+
+### sample_metric_bars
+
+![sample_metric_bars](gallery/sample_metric_bars.png)
+
+### segment_array
+
+![segment_array](gallery/segment_array.png)
+
 ### signed_heatmap
 
 ![signed_heatmap](gallery/signed_heatmap.png)
+
+### single_tf_expression_scatter_bar
+
+![single_tf_expression_scatter_bar](gallery/single_tf_expression_scatter_bar.png)
 
 ### species_response_scatter
 
@@ -751,6 +839,10 @@ One example per renderer, drawn from small synthetic data by the renderer snapsh
 ### treatment_schematic
 
 ![treatment_schematic](gallery/treatment_schematic.png)
+
+### ts_profile
+
+![ts_profile](gallery/ts_profile.png)
 
 ### two_set_euler
 

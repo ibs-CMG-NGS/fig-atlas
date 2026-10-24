@@ -1,0 +1,180 @@
+{
+ "freetype": "2.14.3",
+ "figsize_in": [
+  4.2,
+  1.1
+ ],
+ "artists": [
+  {
+   "kind": "Rectangle",
+   "fc": "#ffffffff",
+   "ec": "#ffffffff",
+   "lw": 0.0,
+   "bbox_pt": [
+    0.0,
+    0.0,
+    302.4,
+    79.2
+   ]
+  },
+  {
+   "kind": "Polygon",
+   "fc": "#9ca3afff",
+   "ec": "#1f2937ff",
+   "lw": 0.4,
+   "bbox_pt": [
+    40.1,
+    27.62,
+    63.07,
+    44.69
+   ]
+  },
+  {
+   "kind": "Polygon",
+   "fc": "#9ca3afff",
+   "ec": "#1f2937ff",
+   "lw": 0.4,
+   "bbox_pt": [
+    63.07,
+    27.62,
+    130.97,
+    44.69
+   ]
+  },
+  {
+   "kind": "Polygon",
+   "fc": "#9ca3afff",
+   "ec": "#1f2937ff",
+   "lw": 0.4,
+   "bbox_pt": [
+    133.73,
+    27.62,
+    201.62,
+    44.69
+   ]
+  },
+  {
+   "kind": "Polygon",
+   "fc": "#9ca3afff",
+   "ec": "#1f2937ff",
+   "lw": 0.4,
+   "bbox_pt": [
+    201.62,
+    27.62,
+    246.89,
+    44.69
+   ]
+  },
+  {
+   "kind": "Polygon",
+   "fc": "#9ca3afff",
+   "ec": "#1f2937ff",
+   "lw": 0.4,
+   "bbox_pt": [
+    246.89,
+    27.62,
+    269.86,
+    44.69
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 2,
+   "data": "a8e696602facbd7f",
+   "color": "#6b7280ff",
+   "lw": 0.8,
+   "ls": ":",
+   "marker": "None",
+   "ms": 6.0,
+   "mec": null,
+   "mfc": null
+  },
+  {
+   "kind": "Line2D",
+   "n": 2,
+   "data": "297f164b54844086",
+   "color": "#111827ff",
+   "lw": 0.6,
+   "ls": "-",
+   "marker": "None",
+   "ms": 6.0,
+   "mec": null,
+   "mfc": null
+  },
+  {
+   "kind": "Line2D",
+   "n": 2,
+   "data": "ee951fcfc0ef7a43",
+   "color": "#111827ff",
+   "lw": 0.6,
+   "ls": "-",
+   "marker": "None",
+   "ms": 6.0,
+   "mec": null,
+   "mfc": null
+  },
+  {
+   "kind": "Line2D",
+   "n": 2,
+   "data": "4a3617174007e408",
+   "color": "#111827ff",
+   "lw": 0.6,
+   "ls": "-",
+   "marker": "None",
+   "ms": 6.0,
+   "mec": null,
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "Tg copy 1",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#111827ff",
+   "ha": "center",
+   "va": "bottom",
+   "bbox_pt": [
+    82.3,
+    47.13,
+    111.75,
+    52.94
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "Tg copy 2",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#111827ff",
+   "ha": "center",
+   "va": "bottom",
+   "bbox_pt": [
+    152.95,
+    47.13,
+    182.4,
+    52.94
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "Tg copy 3",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#111827ff",
+   "ha": "center",
+   "va": "bottom",
+   "bbox_pt": [
+    209.53,
+    47.13,
+    238.98,
+    52.94
+   ]
+  }
+ ]
+}

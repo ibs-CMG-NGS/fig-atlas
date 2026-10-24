@@ -1,0 +1,347 @@
+{
+ "freetype": "2.14.3",
+ "figsize_in": [
+  3.8,
+  2.4
+ ],
+ "artists": [
+  {
+   "kind": "Rectangle",
+   "fc": "#ffffffff",
+   "ec": "#ffffffff",
+   "lw": 0.0,
+   "bbox_pt": [
+    0.0,
+    0.0,
+    273.6,
+    172.8
+   ]
+  },
+  {
+   "kind": "Rectangle",
+   "fc": "#ffffffff",
+   "ec": "#00000000",
+   "lw": 0.0,
+   "bbox_pt": [
+    34.2,
+    19.01,
+    246.24,
+    152.06
+   ]
+  },
+  {
+   "kind": "Rectangle",
+   "fc": "#e66767ff",
+   "ec": "#000000ff",
+   "lw": 1.0,
+   "bbox_pt": [
+    34.2,
+    69.86,
+    90.59,
+    152.06
+   ]
+  },
+  {
+   "kind": "Rectangle",
+   "fc": "#e66767ff",
+   "ec": "#000000ff",
+   "lw": 1.0,
+   "bbox_pt": [
+    90.59,
+    69.86,
+    144.43,
+    152.06
+   ]
+  },
+  {
+   "kind": "Rectangle",
+   "fc": "#e66767ff",
+   "ec": "#000000ff",
+   "lw": 1.0,
+   "bbox_pt": [
+    34.2,
+    19.01,
+    120.55,
+    69.86
+   ]
+  },
+  {
+   "kind": "Rectangle",
+   "fc": "#e66767ff",
+   "ec": "#000000ff",
+   "lw": 1.0,
+   "bbox_pt": [
+    120.55,
+    19.01,
+    144.43,
+    69.86
+   ]
+  },
+  {
+   "kind": "Rectangle",
+   "fc": "#67e667ff",
+   "ec": "#000000ff",
+   "lw": 1.0,
+   "bbox_pt": [
+    144.43,
+    80.37,
+    197.86,
+    152.06
+   ]
+  },
+  {
+   "kind": "Rectangle",
+   "fc": "#67e667ff",
+   "ec": "#000000ff",
+   "lw": 1.0,
+   "bbox_pt": [
+    197.86,
+    80.37,
+    246.24,
+    152.06
+   ]
+  },
+  {
+   "kind": "Rectangle",
+   "fc": "#6767e6ff",
+   "ec": "#000000ff",
+   "lw": 1.0,
+   "bbox_pt": [
+    144.43,
+    19.01,
+    188.01,
+    80.37
+   ]
+  },
+  {
+   "kind": "Rectangle",
+   "fc": "#6767e6ff",
+   "ec": "#000000ff",
+   "lw": 1.0,
+   "bbox_pt": [
+    188.01,
+    47.49,
+    246.24,
+    80.37
+   ]
+  },
+  {
+   "kind": "Rectangle",
+   "fc": "#6767e6ff",
+   "ec": "#000000ff",
+   "lw": 1.0,
+   "bbox_pt": [
+    188.01,
+    19.01,
+    246.24,
+    47.49
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "term 2.1",
+   "size": 5.5,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#222222ff",
+   "ha": "center",
+   "va": "center",
+   "bbox_pt": [
+    105.74,
+    108.29,
+    129.29,
+    113.63
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "term 2.3",
+   "size": 5.5,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#222222ff",
+   "ha": "center",
+   "va": "center",
+   "bbox_pt": [
+    65.6,
+    41.77,
+    89.15,
+    47.1
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "term 2.2",
+   "size": 5.5,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#222222ff",
+   "ha": "center",
+   "va": "center",
+   "bbox_pt": [
+    120.71,
+    41.77,
+    144.27,
+    47.1
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "response to\noxidative\nstress",
+   "size": 5.5,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#222222ff",
+   "ha": "center",
+   "va": "center",
+   "bbox_pt": [
+    205.91,
+    107.38,
+    238.19,
+    125.05
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "cell cycle",
+   "size": 5.5,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#222222ff",
+   "ha": "center",
+   "va": "center",
+   "bbox_pt": [
+    204.41,
+    61.26,
+    229.84,
+    66.6
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "term 1.1",
+   "size": 5.5,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#222222ff",
+   "ha": "center",
+   "va": "center",
+   "bbox_pt": [
+    205.35,
+    30.58,
+    228.9,
+    35.91
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "Reduced GO BP",
+   "size": 8.0,
+   "weight": "bold",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "center",
+   "va": "baseline",
+   "bbox_pt": [
+    105.31,
+    156.4,
+    175.13,
+    164.14
+   ]
+  },
+  {
+   "kind": "Rectangle",
+   "fc": "#00000000",
+   "ec": "#000000ff",
+   "lw": 2.5,
+   "bbox_pt": [
+    34.2,
+    19.01,
+    144.43,
+    152.06
+   ]
+  },
+  {
+   "kind": "Rectangle",
+   "fc": "#00000000",
+   "ec": "#000000ff",
+   "lw": 2.5,
+   "bbox_pt": [
+    144.43,
+    80.37,
+    246.24,
+    152.06
+   ]
+  },
+  {
+   "kind": "Rectangle",
+   "fc": "#00000000",
+   "ec": "#000000ff",
+   "lw": 2.5,
+   "bbox_pt": [
+    144.43,
+    19.01,
+    246.24,
+    80.37
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "synapse\norganization",
+   "size": 6.5,
+   "weight": "bold",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#ffffffff",
+   "ha": "center",
+   "va": "center",
+   "bbox_pt": [
+    66.24,
+    78.73,
+    112.4,
+    92.35
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "term 0.1",
+   "size": 6.5,
+   "weight": "bold",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#ffffffff",
+   "ha": "center",
+   "va": "center",
+   "bbox_pt": [
+    179.7,
+    113.07,
+    210.97,
+    119.36
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "term 1.2",
+   "size": 6.5,
+   "weight": "bold",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#ffffffff",
+   "ha": "center",
+   "va": "center",
+   "bbox_pt": [
+    179.7,
+    46.55,
+    210.97,
+    52.84
+   ]
+  }
+ ]
+}

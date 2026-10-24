@@ -1,0 +1,251 @@
+{
+ "freetype": "2.14.3",
+ "figsize_in": [
+  3.8,
+  1.6
+ ],
+ "artists": [
+  {
+   "kind": "Rectangle",
+   "fc": "#ffffffff",
+   "ec": "#ffffffff",
+   "lw": 0.0,
+   "bbox_pt": [
+    0.0,
+    0.0,
+    273.6,
+    115.2
+   ]
+  },
+  {
+   "kind": "FancyBboxPatch",
+   "fc": "#00000000",
+   "ec": "#9ca3afff",
+   "lw": 0.6,
+   "bbox_pt": [
+    101.87,
+    20.93,
+    178.57,
+    97.63
+   ]
+  },
+  {
+   "kind": "FancyBboxPatch",
+   "fc": "#f3f4f6ff",
+   "ec": "#4b5563ff",
+   "lw": 0.6,
+   "bbox_pt": [
+    38.71,
+    61.54,
+    88.34,
+    93.12
+   ]
+  },
+  {
+   "kind": "FancyBboxPatch",
+   "fc": "#f3f4f6ff",
+   "ec": "#4b5563ff",
+   "lw": 0.6,
+   "bbox_pt": [
+    110.9,
+    59.28,
+    169.54,
+    81.84
+   ]
+  },
+  {
+   "kind": "FancyBboxPatch",
+   "fc": "#f3f4f6ff",
+   "ec": "#4b5563ff",
+   "lw": 0.6,
+   "bbox_pt": [
+    110.9,
+    27.7,
+    169.54,
+    50.26
+   ]
+  },
+  {
+   "kind": "FancyBboxPatch",
+   "fc": "#e0f2feff",
+   "ec": "#4b5563ff",
+   "lw": 0.6,
+   "bbox_pt": [
+    192.1,
+    61.54,
+    241.73,
+    93.12
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "fa build",
+   "size": 7.0,
+   "weight": "bold",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#111827ff",
+   "ha": "left",
+   "va": "top",
+   "bbox_pt": [
+    105.26,
+    87.47,
+    135.26,
+    94.24
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "Inputs",
+   "size": 7.0,
+   "weight": "bold",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#111827ff",
+   "ha": "center",
+   "va": "top",
+   "bbox_pt": [
+    50.98,
+    77.84,
+    76.07,
+    84.61
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "data, config",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#374151ff",
+   "ha": "center",
+   "va": "top",
+   "bbox_pt": [
+    45.67,
+    70.04,
+    81.38,
+    75.84
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "Run",
+   "size": 7.0,
+   "weight": "bold",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#111827ff",
+   "ha": "center",
+   "va": "top",
+   "bbox_pt": [
+    132.54,
+    71.07,
+    147.9,
+    77.84
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "script",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#374151ff",
+   "ha": "center",
+   "va": "top",
+   "bbox_pt": [
+    131.86,
+    63.27,
+    148.58,
+    69.08
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "Check",
+   "size": 7.0,
+   "weight": "bold",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#111827ff",
+   "ha": "center",
+   "va": "top",
+   "bbox_pt": [
+    128.38,
+    39.49,
+    152.06,
+    46.26
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "preflight",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#374151ff",
+   "ha": "center",
+   "va": "top",
+   "bbox_pt": [
+    127.58,
+    31.69,
+    152.86,
+    37.5
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "Figure",
+   "size": 7.0,
+   "weight": "bold",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#111827ff",
+   "ha": "center",
+   "va": "top",
+   "bbox_pt": [
+    204.23,
+    77.78,
+    229.6,
+    84.61
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "with its record",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#374151ff",
+   "ha": "center",
+   "va": "top",
+   "bbox_pt": [
+    195.46,
+    70.04,
+    238.37,
+    75.84
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "read",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#374151ff",
+   "ha": "center",
+   "va": "bottom",
+   "bbox_pt": [
+    92.84,
+    74.39,
+    106.39,
+    80.2
+   ]
+  }
+ ]
+}

@@ -1,0 +1,395 @@
+{
+ "freetype": "2.14.3",
+ "figsize_in": [
+  2.6,
+  1.9
+ ],
+ "artists": [
+  {
+   "kind": "Rectangle",
+   "fc": "#ffffffff",
+   "ec": "#ffffffff",
+   "lw": 0.0,
+   "bbox_pt": [
+    0.0,
+    0.0,
+    187.2,
+    136.8
+   ]
+  },
+  {
+   "kind": "Rectangle",
+   "fc": "#ffffffff",
+   "ec": "#00000000",
+   "lw": 0.0,
+   "bbox_pt": [
+    23.4,
+    15.05,
+    168.48,
+    120.38
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 2,
+   "data": "eb9d30ad1fb3b52e",
+   "color": "#dc2626ff",
+   "lw": 0.8,
+   "ls": "--",
+   "marker": "None",
+   "ms": 6.0,
+   "mec": null,
+   "mfc": null
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "3239b05c38b825eb",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "3",
+   "ms": 0.0,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "control",
+   "size": 5.5,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "center",
+   "va": "top",
+   "bbox_pt": [
+    49.29,
+    6.22,
+    68.4,
+    11.55
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "7aced5034b51589a",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "3",
+   "ms": 0.0,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "treated",
+   "size": 5.5,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "center",
+   "va": "top",
+   "bbox_pt": [
+    122.97,
+    6.22,
+    143.1,
+    11.55
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "374708fff7719dd5",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "0",
+   "ms": 2.0,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "0.0",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "right",
+   "va": "center_baseline",
+   "bbox_pt": [
+    8.36,
+    11.52,
+    17.9,
+    17.33
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "dc5d8ca6769d45f2",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "0",
+   "ms": 2.0,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "0.1",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "right",
+   "va": "center_baseline",
+   "bbox_pt": [
+    8.36,
+    35.48,
+    17.9,
+    41.29
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "e65603a1c9797cb9",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "0",
+   "ms": 2.0,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "0.2",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "right",
+   "va": "center_baseline",
+   "bbox_pt": [
+    8.36,
+    59.45,
+    17.9,
+    65.25
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "e4c8af63b25164ab",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "0",
+   "ms": 2.0,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "0.3",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "right",
+   "va": "center_baseline",
+   "bbox_pt": [
+    8.36,
+    83.41,
+    17.9,
+    89.22
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "5e29b8562e537d6e",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "0",
+   "ms": 2.0,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "0.4",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "right",
+   "va": "center_baseline",
+   "bbox_pt": [
+    8.36,
+    107.38,
+    17.9,
+    113.18
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "FRiP",
+   "size": 7.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 90.0,
+   "color": "#000000ff",
+   "ha": "center",
+   "va": "bottom",
+   "bbox_pt": [
+    -2.41,
+    60.19,
+    4.36,
+    75.24
+   ]
+  },
+  {
+   "kind": "Rectangle",
+   "fc": "#9ca3afff",
+   "ec": "#00000000",
+   "lw": 1.0,
+   "bbox_pt": [
+    29.99,
+    15.05,
+    46.48,
+    104.84
+   ]
+  },
+  {
+   "kind": "Rectangle",
+   "fc": "#9ca3afff",
+   "ec": "#00000000",
+   "lw": 1.0,
+   "bbox_pt": [
+    50.6,
+    15.05,
+    67.09,
+    76.73
+   ]
+  },
+  {
+   "kind": "Rectangle",
+   "fc": "#9ca3afff",
+   "ec": "#00000000",
+   "lw": 1.0,
+   "bbox_pt": [
+    71.21,
+    15.05,
+    87.7,
+    115.37
+   ]
+  },
+  {
+   "kind": "Rectangle",
+   "fc": "#2563ebff",
+   "ec": "#00000000",
+   "lw": 1.0,
+   "bbox_pt": [
+    104.18,
+    15.05,
+    120.67,
+    71.02
+   ]
+  },
+  {
+   "kind": "Rectangle",
+   "fc": "#2563ebff",
+   "ec": "#00000000",
+   "lw": 1.0,
+   "bbox_pt": [
+    124.79,
+    15.05,
+    141.28,
+    89.73
+   ]
+  },
+  {
+   "kind": "Rectangle",
+   "fc": "#2563ebff",
+   "ec": "#00000000",
+   "lw": 1.0,
+   "bbox_pt": [
+    145.4,
+    15.05,
+    161.89,
+    70.3
+   ]
+  },
+  {
+   "kind": "Spine",
+   "fc": "#00000000",
+   "ec": "#000000ff",
+   "lw": 0.6,
+   "bbox_pt": [
+    21.4,
+    15.05,
+    23.4,
+    120.38
+   ]
+  },
+  {
+   "kind": "Spine",
+   "fc": "#00000000",
+   "ec": "#000000ff",
+   "lw": 0.6,
+   "bbox_pt": [
+    23.4,
+    15.05,
+    168.48,
+    15.05
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": " ENCODE minimum",
+   "size": 5.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#dc2626ff",
+   "ha": "left",
+   "va": "center",
+   "bbox_pt": [
+    168.48,
+    60.56,
+    216.74,
+    65.39
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "Fraction of reads in peaks",
+   "size": 8.0,
+   "weight": "bold",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "center",
+   "va": "baseline",
+   "bbox_pt": [
+    37.32,
+    121.72,
+    154.56,
+    129.46
+   ]
+  }
+ ]
+}

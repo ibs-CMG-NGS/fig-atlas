@@ -290,6 +290,329 @@ def image_panel():
     return fig
 
 
+# ----------------------------------------------------------------------------
+# Every other registered renderer, so the gallery shows each one
+# (tests/test_gallery_coverage.py fails on a renderer with no picture).
+# ----------------------------------------------------------------------------
+def paired_dumbbell_4x1():
+    """Counts stacked for one journal column (facet_layout 4x1)."""
+    rng = _rng()
+    counts = {s: {c: (int(10 ** rng.uniform(0.7, 3.2)), int(10 ** rng.uniform(0.7, 3.2))) for c in CONDS}
+              for s in ("human_rna", "mouse_rna", "human_atac", "mouse_atac")}
+    fig = plt.figure(figsize=(3.0, 5.4))
+    render_paired_dumbbell(fig=fig, gs_target=fig.add_gridspec(1, 1)[0, 0], counts=counts, conditions=CONDS,
+                           params={"facet_layout": "4x1", "mouse_annot_below": True, "y_margin": 0.6, "header_fontsize": 7.0, "ylabel_fontsize": 6.5,
+                                   "xlabel_fontsize": 6.0, "ytick_fontsize": 6.0, "xtick_fontsize": 6.0,
+                                   "annot_fontsize": 5.5, "legend_fontsize": 6.0, "marker_size": 20,
+                                   "hspace": 0.6, "legend_row_ratio": 0.4},
+                           cond_rename={"Acute_1D": "Acute D1", "Acute_3D": "Acute D3",
+                                        "Chronic_24H": "Chronic 24h", "Chronic_48H": "Chronic 48h"})
+    return fig
+
+
+def flow_diagram():
+    """Boxes, a dashed group and labelled arrows, laid out in mm."""
+    from fig_atlas.renderers import render_flow_diagram
+    nodes = pd.DataFrame([
+        {"id": "inputs", "x": 2, "y": 2, "w": 22, "h": 14, "title": "Inputs", "body": "data, config"},
+        {"id": "build", "x": 30, "y": 0, "w": 34, "h": 34, "title": "fa build", "kind": "group"},
+        {"id": "run", "x": 34, "y": 7, "w": 26, "h": 10, "title": "Run", "body": "script"},
+        {"id": "check", "x": 34, "y": 21, "w": 26, "h": 10, "title": "Check", "body": "preflight"},
+        {"id": "out", "x": 70, "y": 2, "w": 22, "h": 14, "title": "Figure", "body": "with its record",
+         "fill": "#E0F2FE"},
+    ])
+    fig, ax = plt.subplots(figsize=(3.8, 1.6))
+    render_flow_diagram(ax, nodes, {"xlim": [0, 94], "ylim": [0, 36], "y_down": True, "units_per_mm": 1.0,
+                                    "title_size": 7.0, "body_size": 6.0, "edge_label_size": 6.0,
+                                    "edges": [{"from": "inputs", "to": "run", "label": "read"},
+                                              {"from": "run", "to": "check"},
+                                              {"from": "check", "to": "out", "from_side": "r", "to_side": "b",
+                                               "route": "elbow"}]})
+    return fig
+
+
+def dot_matrix():
+    """Genes x features: dot area from a count, colour from where the variants come from."""
+    from fig_atlas.renderers import render_dot_matrix
+    rng = _rng()
+    genes, feats = [f"Gene{i}" for i in range(6)], ["5'UTR", "CDS", "intron", "3'UTR"]
+    rows = [{"gene": g, "feature": f, "n": int(rng.integers(1, 8)), "origin": str(rng.choice(["germline", "somatic"])),
+             "sample": "S1" if i < 3 else "S2"}
+            for i, g in enumerate(genes) for f in feats if rng.random() < 0.55]
+    fig, ax = plt.subplots(figsize=(2.8, 2.4))
+    render_dot_matrix(ax, pd.DataFrame(rows), {**TYPO, "row_col": "gene", "col_col": "feature", "size_col": "n",
+                                               "color_col": "origin", "row_group_col": "sample",
+                                               "color_map": {"germline": "#2563eb", "somatic": "#dc2626"}})
+    return fig
+
+
+def funnel():
+    """A filtering cascade, largest step first."""
+    from fig_atlas.renderers import render_funnel
+    fig, ax = plt.subplots(figsize=(2.8, 2.0))
+    render_funnel(ax, [("All peaks", 48210), ("DA (FDR < 0.05)", 9120), ("Near a TSS", 3104), ("Linked gene", 812)],
+                  {**TYPO, "bar_color": "#2563eb", "value_fontsize": 6.0, "labels_title": "Peaks kept per step"})
+    return fig
+
+
+def jaccard_heatmap():
+    """Overlap between two classifications: Jaccard index (shared count) per cell."""
+    from fig_atlas.renderers import render_jaccard_heatmap
+    rng = _rng()
+    rows, cols = ["sustained", "transient", "late"], ["concordant", "RNA only", "ATAC only"]
+    df = pd.DataFrame([{"pattern_class": r, "concordance_class": c, "jaccard": float(rng.uniform(0, 0.6)),
+                        "n_shared_terms": int(rng.integers(0, 40))} for r in rows for c in cols])
+    df.loc[4, "n_shared_terms"] = 0
+    fig, ax = plt.subplots(figsize=(2.8, 2.2))
+    render_jaccard_heatmap(ax, df, {**TYPO, "row_order": rows, "col_order": cols, "cell_text_size": 5.5,
+                                    "colorbar_label": "Jaccard index", "labels_title": "Shared GO terms"})
+    return fig
+
+
+def sample_metric_bars():
+    """One bar per sample, grouped, with a reference line."""
+    from fig_atlas.renderers import render_sample_metric_bars
+    rng = _rng()
+    df = pd.DataFrame({"sample": [f"{g}{i}" for g in ("C", "T") for i in (1, 2, 3)],
+                       "group": ["control"] * 3 + ["treated"] * 3, "value": rng.uniform(0.18, 0.42, 6)})
+    fig, ax = plt.subplots(figsize=(2.6, 1.9))
+    render_sample_metric_bars(ax, df, {**TYPO, "group_order": ["control", "treated"],
+                                       "group_colors": {"control": "#9ca3af", "treated": "#2563eb"},
+                                       "ref_lines": [{"y": 0.2, "label": "ENCODE minimum", "color": "#dc2626",
+                                                      "style": "--", "width": 0.8}],
+                                       "ylabel": "FRiP", "title": "Fraction of reads in peaks"})
+    return fig
+
+
+def ts_profile():
+    """Per-gene z-score trajectories over samples, with the mean and group dividers."""
+    from fig_atlas.renderers import render_ts_profile
+    rng = _rng()
+    samples = [f"{g}_{i}" for g in ("0h", "6h", "24h") for i in (1, 2)]
+    base = np.array([0, 0, 1.2, 1.0, 0.4, 0.3])
+    z = pd.DataFrame(base + rng.normal(0, 0.35, (12, 6)), index=[f"g{i}" for i in range(12)], columns=samples)
+    z = (z.T - z.mean(axis=1)).T / z.std(axis=1).to_numpy()[:, None]
+    fig, ax = plt.subplots(figsize=(2.8, 2.0))
+    render_ts_profile(ax, z, {**TYPO, "sample_groups": {g: [s for s in samples if s.startswith(g + "_")]
+                                                       for g in ("0h", "6h", "24h")},
+                              "z_min": -2.5, "z_max": 2.5, "profile_labels_title": "Cluster 1 (12 genes)",
+                              "profile_labels_ylabel": "z-score"})
+    return fig
+
+
+def chromosome_ideogram():
+    """One chromosome from its cytobands, with a marked insertion site."""
+    from fig_atlas_omics.renderers import render_chromosome_ideogram
+    stains = ["gneg", "gpos50", "gneg", "gpos100", "acen", "acen", "gneg", "gpos75", "gneg", "gpos25"]
+    bands = pd.DataFrame({"start": [i * 10_000_000 + 1 for i in range(10)], "end": [(i + 1) * 10_000_000 for i in range(10)],
+                          "band": [f"{'p' if i < 5 else 'q'}{i % 5 + 1}" for i in range(10)], "gie_stain": stains})
+    fig, ax = plt.subplots(figsize=(3.4, 1.0))
+    render_chromosome_ideogram(ax, bands, {**TYPO, "labels_title": "Chromosome 2"},
+                               markers=pd.DataFrame({"pos": [72_500_000], "label": ["Tg insertion"]}))
+    return fig
+
+
+def cis_linkage_panel():
+    """RNA-ATAC correlation against distance to the TSS, and linked pairs per distance bin."""
+    from fig_atlas_omics.renderers import render_cis_linkage_panel
+    rng = _rng()
+    n = 300
+    dist = rng.uniform(0, 100_000, n)
+    r = np.clip(rng.normal(0.15, 0.35, n) + 0.4 * np.exp(-dist / 15_000), -1, 1)
+    bins = pd.cut(dist, [0, 2_000, 10_000, 50_000, 100_000], labels=["<2kb", "2-10kb", "10-50kb", "50-100kb"],
+                  include_lowest=True).astype(str)
+    df = pd.DataFrame({"distance_to_tss": dist, "pearson_r": r, "is_cis_linked": r > 0.5, "distance_bin": bins,
+                       "human_symbol": [f"G{i}" for i in range(n)]})
+    fig = plt.figure(figsize=(5.0, 2.2))
+    render_cis_linkage_panel(fig, df, {**TYPO, "callouts": [], "legend_size": 6.0, "bar_label_size": 5.5,
+                                       "badge_size": 6.0, "callout_size": 6.0, "wspace": 0.45})
+    return fig
+
+
+def count_summary():
+    """UP above zero, DOWN below it, one bar per comparison."""
+    from fig_atlas_omics.renderers import render_count_summary
+    rng = _rng()
+    rows = []
+    for ds in ("Acute D1", "Acute D3", "Chronic 24h"):
+        lfc = rng.normal(0, 1.4, 400)
+        rows.append(pd.DataFrame({"dataset": ds, "log2fc": lfc,
+                                  "adj_pvalue": np.where(np.abs(lfc) > 1.2, 0.001, 0.5)}))
+    fig, ax = plt.subplots(figsize=(2.6, 2.0))
+    render_count_summary(ax, pd.concat(rows), {**TYPO, "fdr_max": 0.05, "lfc_min": 1.0, "unit": "genes",
+                                               "show_legend": False,
+                                               "labels_title": "Differentially expressed genes"})
+    return fig
+
+
+def _go_table(n=8, clusters=False):
+    rng = _rng()
+    df = pd.DataFrame({"description": TERMS[:n], "fdr": 10 ** -rng.uniform(1.5, 8, n),
+                       "gene_count": rng.integers(5, 60, n), "fold_enrichment": rng.uniform(1.5, 6, n)})
+    df["gene_ratio"] = [f"{c}/400" for c in df["gene_count"]]
+    if clusters:
+        df["cluster_id"] = range(n)
+        df["ontology"] = ["BP"] * n
+    return df
+
+
+def go_bar():
+    from fig_atlas_omics.renderers import render_go_bar
+    fig, ax = plt.subplots(figsize=(3.0, 2.2))
+    render_go_bar(ax, _go_table(), {**TYPO, "top_n": 8, "x_axis": "-log10(FDR)", "bar_color": "#2563eb",
+                                    "horizontal": True, "show_threshold_line": True, "labels_title": "GO BP"})
+    return fig
+
+
+def go_dot():
+    from fig_atlas_omics.renderers import render_go_dot
+    fig = plt.figure(figsize=(3.2, 2.4))
+    render_go_dot(fig, _go_table(), {**TYPO, "top_n": 8, "x_axis": "Gene Ratio", "size_mode": "Gene Count",
+                                     "labels_title": "GO BP"})
+    return fig
+
+
+def go_cluster_dot():
+    from fig_atlas_omics.renderers import render_go_cluster_dot
+    df = _go_table(clusters=True)
+    df["_cluster_size"] = [3, 5, 2, 8, 1, 4, 6, 2]
+    fig = plt.figure(figsize=(3.2, 2.4))
+    render_go_cluster_dot(fig, df, {**TYPO, "x_axis": "-log10(FDR)", "color_by": "Fold Enrichment",
+                                    "size_by": "Cluster size", "top_n": 8, "labels_title": "GO BP clusters"})
+    return fig
+
+
+def go_rrvgo_treemap():
+    """Clusters of GO terms (rrvgo reduceSimMatrix shape), each split into its terms."""
+    from fig_atlas_omics.renderers import render_go_rrvgo_treemap
+    rng = _rng()
+    parents = ["response to oxidative stress", "cell cycle", "synapse organization"]
+    rows = []
+    for k, p in enumerate(parents):
+        for j in range(2 + k):
+            rows.append({"go": f"GO:{k}{j:05d}", "cluster": k, "parent": f"GO:{k}00000", "parentTerm": p,
+                         "score": 5.0 - k, "term": p if j == 0 else f"term {k}.{j}",
+                         "size": int(rng.integers(20, 400)), "termDispensability": 0.0 if j == 0 else 0.4})
+    fig, ax = plt.subplots(figsize=(3.8, 2.4))
+    render_go_rrvgo_treemap(ax, pd.DataFrame(rows), {"hub_label_size": 6.5, "member_label_size": 5.5,
+                                                     "title_size": 8.0, "labels_title": "Reduced GO BP"})
+    return fig
+
+
+def gene_model_track():
+    from fig_atlas_omics.renderers import render_gene_model_track
+    exons = pd.DataFrame({
+        "gene_name": ["Abc1"] * 4 + ["Def2"] * 3 + ["Gm123"],
+        "transcript_id": ["a1"] * 4 + ["d1"] * 3 + ["g1"],
+        "strand": ["+"] * 4 + ["-"] * 3 + ["+"],
+        "exon_start": [1000, 3000, 5200, 8000, 6500, 9000, 12000, 15000],
+        "exon_end": [1600, 3400, 5600, 9500, 7000, 9400, 13000, 15400],
+    })
+    fig, ax = plt.subplots(figsize=(3.4, 1.2))
+    render_gene_model_track(ax, exons, {**TYPO, "x_min": 0, "x_max": 17000})
+    return fig
+
+
+def interval_track():
+    from fig_atlas_omics.renderers import render_interval_track
+    iv = pd.DataFrame({"start": [1000, 2500, 6000, 9000, 9100], "end": [4000, 3200, 7500, 9000, 12000],
+                       "kind": ["deletion", "SV call", "deletion", "junction", "SV call"],
+                       "label": ["del 3 kb", "", "del 1.5 kb", "J1", ""]})
+    fig, ax = plt.subplots(figsize=(3.4, 1.2))
+    render_interval_track(ax, iv, {**TYPO, "x_min": 0, "x_max": 13000, "bracket_kinds": ["deletion"]})
+    return fig
+
+
+def segment_array():
+    from fig_atlas_omics.renderers import render_segment_array
+    df = pd.DataFrame({"kind": ["host", "tg", "copy_gap", "tg", "tg", "host"],
+                       "label": [None, "Tg copy 1", None, "Tg copy 2", "Tg copy 3", None],
+                       "coords": ["chr2:72.4 Mb", None, None, None, None, "chr2:72.5 Mb"],
+                       "length_bp": [0, 9000, 300, 9000, 6000, 0], "strand": ["NA", "+", "NA", "+", "-", "NA"]})
+    fig, ax = plt.subplots(figsize=(4.2, 1.1))
+    render_segment_array(ax, df, {**TYPO, "flank_frac": 0.1, "sublabel_col": "coords"})
+    return fig
+
+
+def motif_architecture_table():
+    from fig_atlas_omics.renderers import render_motif_architecture_table
+    motifs = [{"rank": i + 1, "name": n, "family": f, "consensus": c, "pvalue": p, "pct_target": t, "pct_bg": b,
+               "similar": s}
+              for i, (n, f, c, p, t, b, s) in enumerate([
+                  ("AP-1", "bZIP", "TGASTCA", "1e-42", "18.2%", "6.1%", "FOS, JUN"),
+                  ("NRF2", "bZIP", "TGCTGASTCA", "1e-25", "9.4%", "2.8%", "NFE2L2, MAFK"),
+                  ("KLF", "Zf", "GCCMCACCC", "1e-12", "21.0%", "13.5%", "KLF4, SP1")])]
+    fig, ax = plt.subplots(figsize=(6.4, 1.6))
+    render_motif_architecture_table(ax, motifs, {"title_size": 7.0, "header_size": 6.0, "text_size": 6.0,
+                                                 "table_title": "De novo motifs"})
+    return fig
+
+
+def motif_dotplot():
+    from fig_atlas_omics.renderers import render_motif_dotplot
+    rng = _rng()
+    rows = []
+    for m in ("AP-1", "NRF2", "KLF", "CTCF", "TEAD"):
+        for c in CONDS:
+            sig = rng.random() < 0.6
+            rows.append({"motif": m, "pattern_class": c, "log2fc": float(rng.normal(0, 1.2)) if sig else np.nan,
+                         "neg_log10_p": float(rng.uniform(2, 20)) if sig else np.nan})
+    fig, ax = plt.subplots(figsize=(3.0, 2.2))
+    render_motif_dotplot(ax, pd.DataFrame(rows), {**TYPO, "class_order": CONDS, "fc_min": -2, "fc_max": 2,
+                                                  "size_legend_loc": "upper left", "size_scale": 4.0,
+                                                  "labels_title": "Motif enrichment"})
+    return fig
+
+
+def pathway_evidence_dotplot():
+    from fig_atlas_omics.renderers import render_pathway_evidence_dotplot
+    rng = _rng()
+    terms = pd.DataFrame({"Description": [f"pathway {chr(65 + i)}" for i in range(6)],
+                          "p.adjust": 10 ** -rng.uniform(1.4, 6, 6),
+                          "evidence": ["ORA", "GSEA", "both", "ORA", "GSEA", "both"],
+                          "Count": rng.integers(8, 80, 6)})
+    fig, ax = plt.subplots(figsize=(3.2, 2.0))
+    render_pathway_evidence_dotplot(ax, terms, {**TYPO, "evidence_colors": {"ORA": "#2563eb", "GSEA": "#d97706",
+                                                                            "both": "#7c3aed"},
+                                                "xlabel": "-log10 adjusted P", "labels_title": "KEGG"})
+    return fig
+
+
+def _feature_table():
+    rng = _rng()
+    rows = []
+    for gs in ("total", "up", "down"):
+        da = rng.dirichlet(np.ones(4)) * 100
+        bg = rng.dirichlet(np.ones(4)) * 100
+        for f, d, b in zip(("Promoter", "Intron", "Intergenic", "Exon"), da, bg):
+            rows.append({"GeneSet": gs, "Feature": f, "DA_Pct": d, "Background_Pct": b,
+                         "OddsRatio": float(d / b), "p_adjust": float(10 ** -rng.uniform(0, 5))})
+    return pd.DataFrame(rows)
+
+
+def peak_feature_enrichment():
+    from fig_atlas_omics.renderers import render_peak_feature_enrichment
+    fig = plt.figure(figsize=(3.6, 1.8))
+    render_peak_feature_enrichment(fig, _feature_table(), {**TYPO, "labels_title": "DA peaks vs background"})
+    return fig
+
+
+def peak_feature_composition():
+    from fig_atlas_omics.renderers import render_peak_feature_composition
+    fig = plt.figure(figsize=(3.0, 2.2))
+    render_peak_feature_composition(fig, _feature_table(), {**TYPO, "labels_title": "Peak locations"})
+    return fig
+
+
+def single_tf_expression_scatter_bar():
+    from fig_atlas_omics.renderers import render_single_tf_expression_scatter_bar
+    rng = _rng()
+    conds = ["Control", "Acute 1D", "Acute 3D"]
+    fig, ax = plt.subplots(figsize=(2.0, 2.0))
+    render_single_tf_expression_scatter_bar(ax, "KLF10", conds, [list(rng.normal(m, 0.3, 3)) for m in (5.0, 6.4, 5.5)],
+                                            params={**TYPO, "ylabel": "log2 normalized counts"})
+    return fig
+
 CASES = {
     "cross_condition_dotplot": cross_condition_dotplot,
     "cross_condition_heatmap": cross_condition_heatmap,
@@ -311,4 +634,27 @@ CASES = {
     "threshold_scatter": threshold_scatter,
     "line_band": line_band,
     "image_panel": image_panel,
+    "paired_dumbbell_4x1": paired_dumbbell_4x1,
+    "flow_diagram": flow_diagram,
+    "dot_matrix": dot_matrix,
+    "funnel": funnel,
+    "jaccard_heatmap": jaccard_heatmap,
+    "sample_metric_bars": sample_metric_bars,
+    "ts_profile": ts_profile,
+    "chromosome_ideogram": chromosome_ideogram,
+    "cis_linkage_panel": cis_linkage_panel,
+    "count_summary": count_summary,
+    "go_bar": go_bar,
+    "go_dot": go_dot,
+    "go_cluster_dot": go_cluster_dot,
+    "go_rrvgo_treemap": go_rrvgo_treemap,
+    "gene_model_track": gene_model_track,
+    "interval_track": interval_track,
+    "segment_array": segment_array,
+    "motif_architecture_table": motif_architecture_table,
+    "motif_dotplot": motif_dotplot,
+    "pathway_evidence_dotplot": pathway_evidence_dotplot,
+    "peak_feature_enrichment": peak_feature_enrichment,
+    "peak_feature_composition": peak_feature_composition,
+    "single_tf_expression_scatter_bar": single_tf_expression_scatter_bar,
 }

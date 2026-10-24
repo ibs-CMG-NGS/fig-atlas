@@ -1,0 +1,786 @@
+{
+ "freetype": "2.14.3",
+ "figsize_in": [
+  3.0,
+  2.2
+ ],
+ "artists": [
+  {
+   "kind": "Rectangle",
+   "fc": "#ffffffff",
+   "ec": "#ffffffff",
+   "lw": 0.0,
+   "bbox_pt": [
+    0.0,
+    0.0,
+    216.0,
+    158.4
+   ]
+  },
+  {
+   "kind": "Rectangle",
+   "fc": "#ffffffff",
+   "ec": "#00000000",
+   "lw": 0.0,
+   "bbox_pt": [
+    38.44,
+    17.42,
+    180.44,
+    139.39
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "374708fff7719dd5",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "3",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "Acute_1D",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 45.0,
+   "color": "#000000ff",
+   "ha": "right",
+   "va": "top",
+   "bbox_pt": [
+    31.87,
+    -13.9,
+    56.19,
+    10.42
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "3239b05c38b825eb",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "3",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "Acute_3D",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 45.0,
+   "color": "#000000ff",
+   "ha": "right",
+   "va": "top",
+   "bbox_pt": [
+    67.32,
+    -13.95,
+    91.69,
+    10.42
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "d48b908d1d6ca42c",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "3",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "Chronic_24H",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 45.0,
+   "color": "#000000ff",
+   "ha": "right",
+   "va": "top",
+   "bbox_pt": [
+    96.14,
+    -20.62,
+    127.19,
+    10.42
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "453d352ce3e3806c",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "3",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "Chronic_48H",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 45.0,
+   "color": "#000000ff",
+   "ha": "right",
+   "va": "top",
+   "bbox_pt": [
+    131.64,
+    -20.62,
+    162.69,
+    10.42
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 2,
+   "data": "ee282b9a2a908de5",
+   "color": "#eeeeeeff",
+   "lw": 0.6,
+   "ls": "-",
+   "marker": "",
+   "ms": 6.0,
+   "mec": null,
+   "mfc": null
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "374708fff7719dd5",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "0",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "AP-1",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "right",
+   "va": "center_baseline",
+   "bbox_pt": [
+    17.82,
+    123.67,
+    31.44,
+    129.47
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 2,
+   "data": "124fc60dac41dc47",
+   "color": "#eeeeeeff",
+   "lw": 0.6,
+   "ls": "-",
+   "marker": "",
+   "ms": 6.0,
+   "mec": null,
+   "mfc": null
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "fc62429c3e69001d",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "0",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "NRF2",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "right",
+   "va": "center_baseline",
+   "bbox_pt": [
+    15.51,
+    99.27,
+    31.44,
+    105.08
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 2,
+   "data": "d9c47dbac3baa7de",
+   "color": "#eeeeeeff",
+   "lw": 0.6,
+   "ls": "-",
+   "marker": "",
+   "ms": 6.0,
+   "mec": null,
+   "mfc": null
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "0827fd05442d5279",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "0",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "KLF",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "right",
+   "va": "center_baseline",
+   "bbox_pt": [
+    20.71,
+    74.88,
+    31.44,
+    80.69
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 2,
+   "data": "1e189b8c80084297",
+   "color": "#eeeeeeff",
+   "lw": 0.6,
+   "ls": "-",
+   "marker": "",
+   "ms": 6.0,
+   "mec": null,
+   "mfc": null
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "71f6bfa4d494ae1b",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "0",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "CTCF",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "right",
+   "va": "center_baseline",
+   "bbox_pt": [
+    16.31,
+    50.49,
+    31.44,
+    56.29
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 2,
+   "data": "e3a0f9c5fb155885",
+   "color": "#eeeeeeff",
+   "lw": 0.6,
+   "ls": "-",
+   "marker": "",
+   "ms": 6.0,
+   "mec": null,
+   "mfc": null
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "be4b0657519c5344",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "0",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "TEAD",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "right",
+   "va": "center_baseline",
+   "bbox_pt": [
+    15.26,
+    26.09,
+    31.44,
+    31.9
+   ]
+  },
+  {
+   "kind": "PathCollection",
+   "n": 9,
+   "offsets": "98f484a7fd7b0482",
+   "paths": 1,
+   "fc": [
+    "#cccccc80"
+   ],
+   "ec": [
+    "#55555580"
+   ],
+   "lw": [
+    0.5
+   ],
+   "sizes": [
+    2.4
+   ]
+  },
+  {
+   "kind": "Spine",
+   "fc": "#00000000",
+   "ec": "#000000ff",
+   "lw": 0.8,
+   "bbox_pt": [
+    34.94,
+    17.42,
+    38.44,
+    139.39
+   ]
+  },
+  {
+   "kind": "Spine",
+   "fc": "#00000000",
+   "ec": "#000000ff",
+   "lw": 0.8,
+   "bbox_pt": [
+    180.44,
+    17.42,
+    180.44,
+    139.39
+   ]
+  },
+  {
+   "kind": "Spine",
+   "fc": "#00000000",
+   "ec": "#000000ff",
+   "lw": 0.8,
+   "bbox_pt": [
+    38.44,
+    13.92,
+    180.44,
+    17.42
+   ]
+  },
+  {
+   "kind": "Spine",
+   "fc": "#00000000",
+   "ec": "#000000ff",
+   "lw": 0.8,
+   "bbox_pt": [
+    38.44,
+    139.39,
+    180.44,
+    139.39
+   ]
+  },
+  {
+   "kind": "PathCollection",
+   "n": 11,
+   "offsets": "c555f40ac747fd4d",
+   "paths": 1,
+   "fc": [
+    "#307ab6e6",
+    "#67001fe6",
+    "#8a0b25e6",
+    "#d4e6f1e6",
+    "#dc6e57e6",
+    "#e17860e6",
+    "#e6866ae6",
+    "#ec9374e6",
+    "#fae8dee6"
+   ],
+   "ec": [
+    "#555555e6"
+   ],
+   "lw": [
+    0.5
+   ],
+   "sizes": [
+    15.9492,
+    16.1789,
+    30.0731,
+    43.0687,
+    53.4685,
+    56.4018,
+    56.48,
+    57.3789
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "Motif enrichment",
+   "size": 8.0,
+   "weight": "bold",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "center",
+   "va": "baseline",
+   "bbox_pt": [
+    70.53,
+    143.73,
+    148.35,
+    151.47
+   ]
+  },
+  {
+   "kind": "FancyBboxPatch",
+   "fc": "#ffffffe6",
+   "ec": "#cccccce6",
+   "lw": 1.0,
+   "bbox_pt": [
+    41.44,
+    92.17,
+    73.49,
+    136.39
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "-log10(P)",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "left",
+   "va": "baseline",
+   "bbox_pt": [
+    43.84,
+    128.19,
+    71.09,
+    133.99
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 3,
+   "data": "4059c922ea12f0c7",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "o",
+   "ms": 2.449489742783178,
+   "mec": "#555555ff",
+   "mfc": "#aaaaaaff"
+  },
+  {
+   "kind": "Text",
+   "text": "0",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "left",
+   "va": "baseline",
+   "bbox_pt": [
+    61.45,
+    116.98,
+    65.27,
+    122.79
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 3,
+   "data": "4059c922ea12f0c7",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "o",
+   "ms": 5.0990195135927845,
+   "mec": "#555555ff",
+   "mfc": "#aaaaaaff"
+  },
+  {
+   "kind": "Text",
+   "text": "5",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "left",
+   "va": "baseline",
+   "bbox_pt": [
+    61.45,
+    105.78,
+    65.27,
+    111.58
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 3,
+   "data": "4059c922ea12f0c7",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "o",
+   "ms": 6.782329983125268,
+   "mec": "#555555ff",
+   "mfc": "#aaaaaaff"
+  },
+  {
+   "kind": "Text",
+   "text": "10",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "left",
+   "va": "baseline",
+   "bbox_pt": [
+    61.45,
+    94.57,
+    69.08,
+    100.38
+   ]
+  },
+  {
+   "kind": "Rectangle",
+   "fc": "#ffffffff",
+   "ec": "#00000000",
+   "lw": 0.0,
+   "bbox_pt": [
+    183.86,
+    41.82,
+    187.52,
+    115.0
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "7886fe67ba4484d8",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "1",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "−2",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "left",
+   "va": "center_baseline",
+   "bbox_pt": [
+    194.52,
+    38.29,
+    203.36,
+    44.1
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "b74fce6cd8bcafd0",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "1",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "−1",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "left",
+   "va": "center_baseline",
+   "bbox_pt": [
+    194.52,
+    56.59,
+    203.36,
+    62.39
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "3239b05c38b825eb",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "1",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "0",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "left",
+   "va": "center_baseline",
+   "bbox_pt": [
+    194.52,
+    74.88,
+    198.33,
+    80.69
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "5f07eef034c5a21f",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "1",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "1",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "left",
+   "va": "center_baseline",
+   "bbox_pt": [
+    194.52,
+    93.18,
+    198.33,
+    98.98
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "dc91ce9a50ddc828",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "1",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "2",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "left",
+   "va": "center_baseline",
+   "bbox_pt": [
+    194.52,
+    111.47,
+    198.33,
+    117.28
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "log2 fold enrichment",
+   "size": 7.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 90.0,
+   "color": "#000000ff",
+   "ha": "center",
+   "va": "top",
+   "bbox_pt": [
+    207.36,
+    41.97,
+    214.13,
+    114.85
+   ]
+  },
+  {
+   "kind": "LineCollection",
+   "n": 1,
+   "offsets": "374708fff7719dd5",
+   "paths": 0,
+   "fc": [],
+   "ec": [
+    "#000000ff"
+   ],
+   "lw": [
+    0.4
+   ],
+   "sizes": []
+  },
+  {
+   "kind": "_ColorbarSpine",
+   "fc": "#00000000",
+   "ec": "#000000ff",
+   "lw": 0.8,
+   "bbox_pt": [
+    183.86,
+    41.82,
+    187.52,
+    115.0
+   ]
+  }
+ ]
+}
