@@ -271,6 +271,19 @@ def test_legend_lying_on_its_own_data_is_reported():
     assert not clean
 
 
+def test_background_bands_under_a_legend_are_not_data():
+    """Row or column bands across the whole axes (axhspan, axvspan) are a
+    background tint, like an axhline; a legend over them covers no data."""
+    fig, ax = plt.subplots(figsize=(3.0, 2.2))
+    ax.barh([0, 1, 2], [1, 2, 3], color="C0", label="odds")
+    for y in (0, 1, 2):
+        ax.axhspan(y - 0.45, y + 0.45, color="C1", alpha=0.08)
+    ax.set_xlim(-4, 4)
+    ax.legend(loc="upper left")
+    assert not [f for f in preflight(fig, saved_bbox_in="tight") if f.check == "legend_covers_data"]
+    plt.close(fig)
+
+
 def test_legend_check_tolerates_missing_points():
     """Scatter offsets with masked or NaN values (missing data) once crashed it."""
     fig, ax = plt.subplots(figsize=(3.0, 2.2))

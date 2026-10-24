@@ -1,0 +1,15 @@
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per tested gene -- gene_id, symbol, base_mean, log2FC, pvalue, padj
+# (omics pack contract de_go.volcano: fig_atlas_omics/contracts/de_go_bundle_contract.md).
+plot_type: volcano
+plot_params:
+  log2fc_threshold: 1.0
+  padj_threshold: 0.05
+  annotation_mode: top_n
+  annotation_top_n: 5
+  labels_title: "Treated vs control"
+  title_size: 8                 # pt; the recipe's own sizes are for a larger canvas
+  axes_label_size: 7            # pt
+  tick_label_size: 6            # pt
+  annotation_label_size: 6      # pt
+  dot_size: 6                   # pt^2

@@ -1,0 +1,13 @@
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per peak -- baseMean (x, shown as log10), log2FoldChange (y), padj
+# (omics pack contract de_go.ma_plot).
+plot_type: ma_plot
+plot_params:
+  effect_threshold: 1.0
+  labels_title: "Treated vs control"
+  labels_xlabel: "log10 mean accessibility"
+  labels_ylabel: "log2 fold change"
+  title_size: 8                 # pt; the recipe's own sizes are for a larger canvas
+  axes_label_size: 7            # pt
+  tick_label_size: 6            # pt
+  dot_size: 6                   # pt^2

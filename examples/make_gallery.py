@@ -202,6 +202,108 @@ def image_files(rng):
     return {"dapi.tif": saver(nuc), "tubulin.tif": saver(cyto)}
 
 
+# --- field-pack (omics) plot types: one example each -----------------------------------------
+def _de_table(rng, n=400):
+    from scipy import stats
+    lfc = rng.normal(0, 0.35, n)
+    idx = rng.choice(n, 40, replace=False)
+    lfc[idx] += rng.choice([-1, 1], 40) * rng.uniform(1.0, 3.5, 40)
+    se = rng.uniform(0.2, 0.4, n)
+    p = 2 * stats.norm.sf(np.abs(lfc / se))
+    order = np.argsort(p)
+    adj = np.minimum.accumulate((p[order] * n / np.arange(1, n + 1))[::-1])[::-1].clip(max=1)
+    padj = np.empty(n)
+    padj[order] = adj
+    return lfc, p, padj
+
+
+def volcano(rng):
+    lfc, p, padj = _de_table(rng)
+    n = len(lfc)
+    return pd.DataFrame({"gene_id": [f"ENSG{i:011d}" for i in range(1, n + 1)],
+                         "symbol": [f"GENE{i}" for i in range(1, n + 1)],
+                         "base_mean": (10 ** rng.uniform(1, 4, n)).round(1), "log2FC": lfc.round(3),
+                         "pvalue": [float(f"{x:.3g}") for x in p], "padj": [float(f"{x:.3g}") for x in padj]})
+
+
+def ma_plot(rng):
+    lfc, _, padj = _de_table(rng)
+    n = len(lfc)
+    return pd.DataFrame({"peak": [f"peak{i}" for i in range(1, n + 1)], "baseMean": (10 ** rng.uniform(1, 3.5, n)).round(1),
+                         "log2FoldChange": lfc.round(3), "padj": [float(f"{x:.3g}") for x in padj]})
+
+
+_TERMS = ["response to oxidative stress", "regulation of cell cycle", "DNA repair", "apoptotic process",
+          "synapse organization", "axon guidance", "inflammatory response", "autophagy"]
+
+
+def go_bar(rng):
+    n = len(_TERMS)
+    counts = rng.integers(8, 60, n)
+    return pd.DataFrame({"term_id": [f"GO:00{i:05d}" for i in range(n)], "description": _TERMS,
+                         "gene_ratio": [f"{c}/350" for c in counts], "gene_count": counts,
+                         "fdr": [float(f"{x:.3g}") for x in 10 ** -rng.uniform(1.5, 9, n)],
+                         "fold_enrichment": rng.uniform(1.5, 5, n).round(2)})
+
+
+def go_cluster_dot(rng):
+    df = go_bar(rng)
+    df.insert(0, "cluster_id", range(len(df)))
+    df["_cluster_size"] = rng.integers(1, 12, len(df))
+    return df
+
+
+def count_summary(rng):
+    rows = []
+    for ds, spread in (("Acute D1", 1.3), ("Acute D3", 1.0), ("Chronic 24h", 1.6)):
+        lfc = rng.normal(0, spread, 500)
+        rows += [{"dataset": ds, "gene": f"G{i}", "log2fc": round(float(v), 3),
+                  "adj_pvalue": 0.001 if abs(v) > 1.4 else 0.4} for i, v in enumerate(lfc)]
+    return pd.DataFrame(rows)
+
+
+def _cross_condition(rng):
+    rows = []
+    for t in _TERMS[:6]:
+        for c in ("Acute D1", "Acute D3", "Chronic 24h", "Chronic 48h"):
+            if rng.random() < 0.75:
+                rows.append({"GO Term": t, "Condition": c,
+                             "Signed -log10(FDR)": round(float(rng.choice([-1, 1]) * rng.uniform(1.4, 6)), 2),
+                             "Gene Ratio": round(float(rng.uniform(0.02, 0.3)), 3)})
+    return pd.DataFrame(rows)
+
+
+def cross_condition_heatmap(rng):
+    return _cross_condition(rng)
+
+
+def cross_condition_dotplot(rng):
+    return _cross_condition(rng)
+
+
+def motif_dotplot(rng):
+    rows = []
+    for m in ("AP-1", "NRF2", "KLF", "CTCF", "TEAD", "CEBP"):
+        for c in ("Acute D1", "Acute D3", "Chronic 24h", "Chronic 48h"):
+            sig = rng.random() < 0.55
+            rows.append({"motif": m, "pattern_class": c,
+                         "log2fc": round(float(rng.normal(0, 1.1)), 2) if sig else None,
+                         "neg_log10_p": round(float(rng.uniform(2, 15)), 1) if sig else None})
+    return pd.DataFrame(rows)
+
+
+def peak_feature_enrichment(rng):
+    # Fixed shares, so the legend (upper left of the last panel) sits where its bars leave room.
+    bg = np.array([25.0, 35.0, 30.0, 10.0])
+    shares = {"total": [35.0, 30.0, 25.0, 10.0], "up": [45.0, 25.0, 20.0, 10.0], "down": [25.0, 40.0, 28.0, 7.0]}
+    rows = []
+    for gs, da in shares.items():
+        for f, d, b in zip(("Promoter", "Intron", "Intergenic", "Exon"), da, bg):
+            rows.append({"GeneSet": gs, "Feature": f, "DA_Pct": round(float(d), 2), "Background_Pct": b,
+                         "OddsRatio": round(float((d / (100 - d)) / (b / (100 - b))), 3),
+                         "p_adjust": float(f"{10 ** -rng.uniform(0, 6):.3g}")})
+    return pd.DataFrame(rows)
+
 HEAD = "# Gallery example (examples/make_gallery.py): synthetic data, not measurements.\n"
 META = {
     "line_band": HEAD + """# inputs/data.csv: one row per replicate measurement -- strain (line), hour (x), od600 (y).
@@ -389,6 +491,121 @@ plot_params:
   pixel_size: 0.25
   scale_bar: 10
 """,
+    "volcano": HEAD + """# inputs/data.csv: one row per tested gene -- gene_id, symbol, base_mean, log2FC, pvalue, padj
+# (omics pack contract de_go.volcano: fig_atlas_omics/contracts/de_go_bundle_contract.md).
+plot_type: volcano
+plot_params:
+  log2fc_threshold: 1.0
+  padj_threshold: 0.05
+  annotation_mode: top_n
+  annotation_top_n: 5
+  labels_title: "Treated vs control"
+  title_size: 8                 # pt; the recipe's own sizes are for a larger canvas
+  axes_label_size: 7            # pt
+  tick_label_size: 6            # pt
+  annotation_label_size: 6      # pt
+  dot_size: 6                   # pt^2
+""",
+    "ma_plot": HEAD + """# inputs/data.csv: one row per peak -- baseMean (x, shown as log10), log2FoldChange (y), padj
+# (omics pack contract de_go.ma_plot).
+plot_type: ma_plot
+plot_params:
+  effect_threshold: 1.0
+  labels_title: "Treated vs control"
+  labels_xlabel: "log10 mean accessibility"
+  labels_ylabel: "log2 fold change"
+  title_size: 8                 # pt; the recipe's own sizes are for a larger canvas
+  axes_label_size: 7            # pt
+  tick_label_size: 6            # pt
+  dot_size: 6                   # pt^2
+""",
+    "go_bar": HEAD + """# inputs/data.csv: one row per enriched term -- description, gene_ratio, gene_count, fdr, fold_enrichment
+# (omics pack contract de_go.go_bar).
+plot_type: go_bar
+plot_params:
+  top_n: 8
+  x_axis: "-log10(FDR)"
+  horizontal: true
+  bar_color: "#2563eb"
+  show_threshold_line: true
+  labels_title: "GO biological process"
+  title_size: 8                 # pt
+  axes_label_size: 7            # pt
+  tick_label_size: 6            # pt
+""",
+    "go_cluster_dot": HEAD + """# inputs/data.csv: one row per cluster representative term -- cluster_id, description, fdr, gene_ratio,
+# fold_enrichment, _cluster_size (omics pack contract de_go.go_cluster_dot).
+plot_type: go_cluster_dot
+plot_params:
+  x_axis: "-log10(FDR)"
+  color_by: "Fold Enrichment"
+  size_by: "Cluster size"
+  top_n: 8
+  labels_title: "GO BP clusters"
+  title_size: 8                 # pt
+  axes_label_size: 7            # pt
+  tick_label_size: 6            # pt
+""",
+    "count_summary": HEAD + """# inputs/data.csv: one row per (dataset, gene) -- dataset, log2fc, adj_pvalue
+# (omics pack contract integrated.count_summary).
+plot_type: count_summary
+plot_params:
+  fdr_max: 0.05
+  lfc_min: 1.0
+  unit: "genes"
+  show_legend: false
+  labels_title: "Differentially expressed genes"
+  title_size: 8                 # pt
+  axes_label_size: 7            # pt
+  tick_label_size: 6            # pt
+  value_label_fontsize: 6       # pt
+""",
+    "cross_condition_heatmap": HEAD + """# inputs/data.csv: long format, one row per significant (term, condition) -- GO Term, Condition,
+# Signed -log10(FDR), Gene Ratio (omics pack contract cross_condition.enrichment).
+plot_type: cross_condition_heatmap
+plot_params:
+  condition_order: ["Acute D1", "Acute D3", "Chronic 24h", "Chronic 48h"]
+  show_legend: false            # the seven-bin key needs more width than one column leaves; true in a wider figure
+  title_size: 8                 # pt
+  axes_label_size: 7            # pt
+  tick_label_size: 6            # pt
+""",
+    "cross_condition_dotplot": HEAD + """# inputs/data.csv: the same long format as cross_condition_heatmap
+# (omics pack contract cross_condition.enrichment).
+plot_type: cross_condition_dotplot
+plot_params:
+  condition_order: ["Acute D1", "Acute D3", "Chronic 24h", "Chronic 48h"]
+  size_legend_below: true       # the dot-size key under the plot, clear of the dots
+  size_legend_below_offset_pts: 48   # pt below the axes; clears the rotated condition labels
+  title_size: 8                 # pt
+  axes_label_size: 7            # pt
+  tick_label_size: 6            # pt
+""",
+    "motif_dotplot": HEAD + """# inputs/data.csv: long format, one row per (motif, condition) -- motif, pattern_class, log2fc,
+# neg_log10_p; empty where not significant (omics pack contract atac_feature.motif_enrichment).
+plot_type: motif_dotplot
+plot_params:
+  class_order: ["Acute D1", "Acute D3", "Chronic 24h", "Chronic 48h"]
+  fc_min: -2
+  fc_max: 2
+  size_scale: 4.0               # pt^2 per -log10(P) unit
+  labels_title: "Motif enrichment"
+  title_size: 8                 # pt
+  axes_label_size: 7            # pt
+  tick_label_size: 6            # pt
+""",
+    "peak_feature_enrichment": HEAD + """# inputs/data.csv: one row per (peak set, genomic feature) -- GeneSet, Feature, OddsRatio, p_adjust,
+# DA_Pct, Background_Pct (omics pack contract atac_feature.peak_features).
+plot_type: peak_feature_enrichment
+plot_params:
+  geneset_order: ["total", "up", "down"]
+  fdr_max: 0.05
+  legend_loc: "upper left"      # of the last panel; move it where that panel's bars leave room
+  labels_title: ""              # the panel titles (total, up, down) say it; a figure title would sit on them
+  title_size: 8                 # pt
+  axes_label_size: 7            # pt
+  tick_label_size: 6            # pt
+""",
 }
 
 
@@ -398,7 +615,12 @@ def main() -> None:
               "histogram": histogram, "dose_response": dose_response, "survival": survival,
               "stacked_bar": stacked_bar, "boxplot": boxplot, "multi_group_heatmap": multi_group_heatmap,
               "group_scatter": group_scatter, "effect_dots": effect_dots, "bar_scatter": bar_scatter,
-              "heatmap": heatmap, "pca": pca}
+              "heatmap": heatmap, "pca": pca,
+              # field-pack plot types, after the core ones so their data do not change
+              "volcano": volcano, "ma_plot": ma_plot, "go_bar": go_bar, "go_cluster_dot": go_cluster_dot,
+              "count_summary": count_summary, "cross_condition_heatmap": cross_condition_heatmap,
+              "cross_condition_dotplot": cross_condition_dotplot, "motif_dotplot": motif_dotplot,
+              "peak_feature_enrichment": peak_feature_enrichment}
     for name, make in makers.items():
         _write(name, make(rng), META[name])
     # The images get their own random stream, so adding a table example never changes their pixels.

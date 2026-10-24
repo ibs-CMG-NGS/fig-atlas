@@ -1,0 +1,14 @@
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per enriched term -- description, gene_ratio, gene_count, fdr, fold_enrichment
+# (omics pack contract de_go.go_bar).
+plot_type: go_bar
+plot_params:
+  top_n: 8
+  x_axis: "-log10(FDR)"
+  horizontal: true
+  bar_color: "#2563eb"
+  show_threshold_line: true
+  labels_title: "GO biological process"
+  title_size: 8                 # pt
+  axes_label_size: 7            # pt
+  tick_label_size: 6            # pt

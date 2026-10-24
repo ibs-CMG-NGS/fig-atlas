@@ -1,0 +1,13 @@
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per cluster representative term -- cluster_id, description, fdr, gene_ratio,
+# fold_enrichment, _cluster_size (omics pack contract de_go.go_cluster_dot).
+plot_type: go_cluster_dot
+plot_params:
+  x_axis: "-log10(FDR)"
+  color_by: "Fold Enrichment"
+  size_by: "Cluster size"
+  top_n: 8
+  labels_title: "GO BP clusters"
+  title_size: 8                 # pt
+  axes_label_size: 7            # pt
+  tick_label_size: 6            # pt

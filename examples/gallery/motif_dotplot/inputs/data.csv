@@ -1,0 +1,25 @@
+motif,pattern_class,log2fc,neg_log10_p
+AP-1,Acute D1,-1.97,5.7
+AP-1,Acute D3,1.56,3.0
+AP-1,Chronic 24h,,
+AP-1,Chronic 48h,1.16,2.5
+NRF2,Acute D1,-0.24,14.6
+NRF2,Acute D3,,
+NRF2,Chronic 24h,-0.56,14.8
+NRF2,Chronic 48h,-1.5,12.5
+KLF,Acute D1,0.94,11.4
+KLF,Acute D3,0.79,6.2
+KLF,Chronic 24h,,
+KLF,Chronic 48h,-1.24,2.7
+CTCF,Acute D1,-0.01,10.6
+CTCF,Acute D3,-0.54,2.5
+CTCF,Chronic 24h,-0.8,6.5
+CTCF,Chronic 48h,,
+TEAD,Acute D1,0.41,5.5
+TEAD,Acute D3,,
+TEAD,Chronic 24h,,
+TEAD,Chronic 48h,,
+CEBP,Acute D1,1.79,7.9
+CEBP,Acute D3,-1.35,13.7
+CEBP,Chronic 24h,,
+CEBP,Chronic 48h,1.65,8.0

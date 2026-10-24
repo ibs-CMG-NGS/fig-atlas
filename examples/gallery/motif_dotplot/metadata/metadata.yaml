@@ -1,0 +1,13 @@
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: long format, one row per (motif, condition) -- motif, pattern_class, log2fc,
+# neg_log10_p; empty where not significant (omics pack contract atac_feature.motif_enrichment).
+plot_type: motif_dotplot
+plot_params:
+  class_order: ["Acute D1", "Acute D3", "Chronic 24h", "Chronic 48h"]
+  fc_min: -2
+  fc_max: 2
+  size_scale: 4.0               # pt^2 per -log10(P) unit
+  labels_title: "Motif enrichment"
+  title_size: 8                 # pt
+  axes_label_size: 7            # pt
+  tick_label_size: 6            # pt

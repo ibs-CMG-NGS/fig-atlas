@@ -102,7 +102,7 @@ def draw_plots(fig, plots: dict, root: Path, layout: dict | None = None, load=No
         else:
             ax = sf.add_subplot(1, 1, 1)
             fn(ax, data, block)
-            fitted.append((sf, ax))
+            fitted.append((sf, list(sf.axes)))    # with any colourbar it added (fig.colorbar(ax=ax)): moved together
         axes = list(sf.axes)
         columns.setdefault(i % cols, []).append((string.ascii_lowercase[i], axes))
     tags = layout.get("tags", {}) or {}

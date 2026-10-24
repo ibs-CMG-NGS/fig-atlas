@@ -1,0 +1,11 @@
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: the same long format as cross_condition_heatmap
+# (omics pack contract cross_condition.enrichment).
+plot_type: cross_condition_dotplot
+plot_params:
+  condition_order: ["Acute D1", "Acute D3", "Chronic 24h", "Chronic 48h"]
+  size_legend_below: true       # the dot-size key under the plot, clear of the dots
+  size_legend_below_offset_pts: 48   # pt below the axes; clears the rotated condition labels
+  title_size: 8                 # pt
+  axes_label_size: 7            # pt
+  tick_label_size: 6            # pt

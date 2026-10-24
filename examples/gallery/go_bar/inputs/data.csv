@@ -1,0 +1,9 @@
+term_id,description,gene_ratio,gene_count,fdr,fold_enrichment
+GO:0000000,response to oxidative stress,36/350,36,5.26e-06,3.9
+GO:0000001,regulation of cell cycle,27/350,27,7.5e-09,3.52
+GO:0000002,DNA repair,14/350,14,0.0038,3.03
+GO:0000003,apoptotic process,40/350,40,1.63e-07,3.99
+GO:0000004,synapse organization,12/350,12,0.0271,3.23
+GO:0000005,axon guidance,53/350,53,6.19e-06,2.5
+GO:0000006,inflammatory response,59/350,59,3.71e-07,1.56
+GO:0000007,autophagy,40/350,40,1.29e-07,4.06

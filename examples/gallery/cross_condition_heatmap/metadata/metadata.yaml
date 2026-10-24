@@ -1,0 +1,10 @@
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: long format, one row per significant (term, condition) -- GO Term, Condition,
+# Signed -log10(FDR), Gene Ratio (omics pack contract cross_condition.enrichment).
+plot_type: cross_condition_heatmap
+plot_params:
+  condition_order: ["Acute D1", "Acute D3", "Chronic 24h", "Chronic 48h"]
+  show_legend: false            # the seven-bin key needs more width than one column leaves; true in a wider figure
+  title_size: 8                 # pt
+  axes_label_size: 7            # pt
+  tick_label_size: 6            # pt

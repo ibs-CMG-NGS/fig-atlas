@@ -1,0 +1,13 @@
+GeneSet,Feature,DA_Pct,Background_Pct,OddsRatio,p_adjust
+total,Promoter,35.0,25.0,1.615,0.911
+total,Intron,30.0,35.0,0.796,0.000666
+total,Intergenic,25.0,30.0,0.778,0.00141
+total,Exon,10.0,10.0,1.0,0.000622
+up,Promoter,45.0,25.0,2.455,2.41e-06
+up,Intron,25.0,35.0,0.619,0.00037
+up,Intergenic,20.0,30.0,0.583,0.0457
+up,Exon,10.0,10.0,1.0,0.139
+down,Promoter,25.0,25.0,1.0,2.95e-05
+down,Intron,40.0,35.0,1.238,5.79e-05
+down,Intergenic,28.0,30.0,0.907,4.55e-05
+down,Exon,7.0,10.0,0.677,5.65e-06

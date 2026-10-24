@@ -47,6 +47,21 @@ CONTRACTS = [
              optional=("Direction Flip",),
              doc=f"{_DOC}/cross_condition_bundle_contract.md",
              title="Long format: one row per significant (term, condition)"),
+    Contract("de_go.ma_plot", ("ma_plot",),
+             role_columns=(("x_col", "baseMean"), ("y_col", "log2FoldChange"), ("sig_col", "padj")),
+             doc=f"{_DOC}/de_go_bundle_contract.md",
+             title="One row per tested gene or peak: mean signal, log2FC and adjusted P"),
+    Contract("atac_feature.motif_enrichment", ("motif_dotplot",),
+             role_columns=(("term_col", "motif"), ("class_col", "pattern_class"), ("value_col", "log2fc"),
+                           ("p_col", "neg_log10_p")),
+             doc=f"{_DOC}/atac_feature_bundle_contract.md",
+             title="Long format: one row per (motif, condition); empty value and P where not significant"),
+    Contract("atac_feature.peak_features", ("peak_feature_enrichment",),
+             role_columns=(("geneset_col", "GeneSet"), ("feature_col", "Feature"), ("odds_ratio_col", "OddsRatio"),
+                           ("fdr_col", "p_adjust")),
+             optional=("DA_Count", "DA_Pct", "Background_Count", "Background_Pct", "p_value"),
+             doc=f"{_DOC}/atac_feature_bundle_contract.md",
+             title="One row per (peak set, genomic feature): odds ratio against background and adjusted P"),
 ]
 
 # plot_type -> renderer that draws it ("module:function").

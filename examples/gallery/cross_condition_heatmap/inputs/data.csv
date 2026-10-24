@@ -1,0 +1,21 @@
+GO Term,Condition,Signed -log10(FDR),Gene Ratio
+response to oxidative stress,Acute D1,1.57,0.223
+response to oxidative stress,Chronic 24h,2.1,0.243
+regulation of cell cycle,Acute D1,-1.61,0.04
+regulation of cell cycle,Acute D3,1.51,0.184
+regulation of cell cycle,Chronic 24h,5.53,0.06
+regulation of cell cycle,Chronic 48h,-2.98,0.206
+DNA repair,Acute D1,5.81,0.233
+DNA repair,Acute D3,2.85,0.213
+DNA repair,Chronic 24h,-4.67,0.208
+DNA repair,Chronic 48h,-4.3,0.129
+apoptotic process,Acute D1,-2.19,0.111
+apoptotic process,Acute D3,-1.46,0.158
+apoptotic process,Chronic 48h,-1.55,0.161
+synapse organization,Acute D1,-2.77,0.197
+synapse organization,Acute D3,5.39,0.162
+synapse organization,Chronic 48h,5.57,0.121
+axon guidance,Acute D1,-5.84,0.07
+axon guidance,Acute D3,-4.03,0.206
+axon guidance,Chronic 24h,-3.32,0.222
+axon guidance,Chronic 48h,-4.03,0.1

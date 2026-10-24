@@ -472,6 +472,8 @@ def _legend_on_data(fig, own, lb, la, renderer, p) -> Finding | None:
             continue
         for a in ax.patches:
             if isinstance(a, Rectangle) and a.get_visible() and a.get_fill():
+                if not all(a.get_transform().contains_branch_seperately(ax.transData)):
+                    continue                     # a band across the axes (axhspan, axvspan): background, not data
                 ov = _box_overlap(lb, _bbox_mm(a.get_window_extent(renderer), renderer.dpi))
                 covered += _box_area(ov) if ov else 0.0
         for c in ax.collections:

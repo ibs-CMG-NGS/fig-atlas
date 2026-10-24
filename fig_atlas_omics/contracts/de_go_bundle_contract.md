@@ -56,6 +56,10 @@ plot_params:
   labels_ylabel: "-Log10(Padj)"
 ```
 
+### MA plot (`plot_type: ma_plot`)
+
+같은 표(DESeq2 결과처럼 유전자·피크 한 줄)를 평균 신호 대 log2FC로 그립니다. 열 이름은 `plot_params`의 `x_col`(기본 `baseMean`), `y_col`(기본 `log2FoldChange`), `sig_col`(기본 `padj`)로 정하며, 위 volcano 번들의 이름을 쓰려면 `x_col: base_mean`, `y_col: log2FC`라고 적습니다. 예제: `examples/gallery/ma_plot/`.
+
 ---
 
 ## 2) GO BP 클러스터 대표 dot plot 번들 — `go_bp_{up,down}_cluster_dot_bundle/`

@@ -1,0 +1,12 @@
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per (peak set, genomic feature) -- GeneSet, Feature, OddsRatio, p_adjust,
+# DA_Pct, Background_Pct (omics pack contract atac_feature.peak_features).
+plot_type: peak_feature_enrichment
+plot_params:
+  geneset_order: ["total", "up", "down"]
+  fdr_max: 0.05
+  legend_loc: "upper left"      # of the last panel; move it where that panel's bars leave room
+  labels_title: ""              # the panel titles (total, up, down) say it; a figure title would sit on them
+  title_size: 8                 # pt
+  axes_label_size: 7            # pt
+  tick_label_size: 6            # pt

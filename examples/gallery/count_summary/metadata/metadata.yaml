@@ -1,0 +1,14 @@
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per (dataset, gene) -- dataset, log2fc, adj_pvalue
+# (omics pack contract integrated.count_summary).
+plot_type: count_summary
+plot_params:
+  fdr_max: 0.05
+  lfc_min: 1.0
+  unit: "genes"
+  show_legend: false
+  labels_title: "Differentially expressed genes"
+  title_size: 8                 # pt
+  axes_label_size: 7            # pt
+  tick_label_size: 6            # pt
+  value_label_fontsize: 6       # pt

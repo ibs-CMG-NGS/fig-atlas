@@ -89,6 +89,134 @@ fa ingest bundle raw_data/<project>/boxplot --project <project>
 fa build <project> --preflight
 ```
 
+### count_summary
+
+One row per (dataset, gene): log2FC and adjusted P
+
+![count_summary](gallery/examples/count_summary.png)
+
+`inputs/data.csv`, first 5 of 1,500 rows (4 columns):
+
+```text
+dataset,gene,log2fc,adj_pvalue
+Acute D1,G0,0.44,0.4
+Acute D1,G1,2.191,0.001
+Acute D1,G2,0.857,0.4
+Acute D1,G3,0.867,0.4
+Acute D1,G4,2.183,0.001
+```
+
+Inputs: `data.csv`. `metadata/metadata.yaml`:
+
+```yaml
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per (dataset, gene) -- dataset, log2fc, adj_pvalue
+# (omics pack contract integrated.count_summary).
+plot_type: count_summary
+plot_params:
+  fdr_max: 0.05
+  lfc_min: 1.0
+  unit: "genes"
+  show_legend: false
+  labels_title: "Differentially expressed genes"
+  title_size: 8                 # pt
+  axes_label_size: 7            # pt
+  tick_label_size: 6            # pt
+  value_label_fontsize: 6       # pt
+```
+
+Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
+
+```bash
+cp -r <fig-atlas>/examples/gallery/count_summary raw_data/<project>/
+fa bundle check raw_data/<project>/count_summary
+fa ingest bundle raw_data/<project>/count_summary --project <project>
+fa build <project> --preflight
+```
+
+### cross_condition_dotplot
+
+Long format: one row per significant (term, condition)
+
+![cross_condition_dotplot](gallery/examples/cross_condition_dotplot.png)
+
+`inputs/data.csv`, first 5 of 18 rows (4 columns):
+
+```text
+GO Term,Condition,Signed -log10(FDR),Gene Ratio
+response to oxidative stress,Acute D1,-3.55,0.08
+response to oxidative stress,Chronic 24h,3.19,0.12
+regulation of cell cycle,Acute D1,3.22,0.3
+regulation of cell cycle,Acute D3,3.81,0.265
+regulation of cell cycle,Chronic 24h,3.64,0.287
+```
+
+Inputs: `data.csv`. `metadata/metadata.yaml`:
+
+```yaml
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: the same long format as cross_condition_heatmap
+# (omics pack contract cross_condition.enrichment).
+plot_type: cross_condition_dotplot
+plot_params:
+  condition_order: ["Acute D1", "Acute D3", "Chronic 24h", "Chronic 48h"]
+  size_legend_below: true       # the dot-size key under the plot, clear of the dots
+  size_legend_below_offset_pts: 48   # pt below the axes; clears the rotated condition labels
+  title_size: 8                 # pt
+  axes_label_size: 7            # pt
+  tick_label_size: 6            # pt
+```
+
+Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
+
+```bash
+cp -r <fig-atlas>/examples/gallery/cross_condition_dotplot raw_data/<project>/
+fa bundle check raw_data/<project>/cross_condition_dotplot
+fa ingest bundle raw_data/<project>/cross_condition_dotplot --project <project>
+fa build <project> --preflight
+```
+
+### cross_condition_heatmap
+
+Long format: one row per significant (term, condition)
+
+![cross_condition_heatmap](gallery/examples/cross_condition_heatmap.png)
+
+`inputs/data.csv`, first 5 of 20 rows (4 columns):
+
+```text
+GO Term,Condition,Signed -log10(FDR),Gene Ratio
+response to oxidative stress,Acute D1,1.57,0.223
+response to oxidative stress,Chronic 24h,2.1,0.243
+regulation of cell cycle,Acute D1,-1.61,0.04
+regulation of cell cycle,Acute D3,1.51,0.184
+regulation of cell cycle,Chronic 24h,5.53,0.06
+```
+
+Inputs: `data.csv`. `metadata/metadata.yaml`:
+
+```yaml
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: long format, one row per significant (term, condition) -- GO Term, Condition,
+# Signed -log10(FDR), Gene Ratio (omics pack contract cross_condition.enrichment).
+plot_type: cross_condition_heatmap
+plot_params:
+  condition_order: ["Acute D1", "Acute D3", "Chronic 24h", "Chronic 48h"]
+  show_legend: false            # the seven-bin key needs more width than one column leaves; true in a wider figure
+  title_size: 8                 # pt
+  axes_label_size: 7            # pt
+  tick_label_size: 6            # pt
+```
+
+Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
+
+```bash
+cp -r <fig-atlas>/examples/gallery/cross_condition_heatmap raw_data/<project>/
+fa bundle check raw_data/<project>/cross_condition_heatmap
+fa ingest bundle raw_data/<project>/cross_condition_heatmap --project <project>
+fa build <project> --preflight
+```
+
 ### dose_response
 
 Dose series: one row per replicate (dose > 0, response), optional group
@@ -170,6 +298,95 @@ Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
 cp -r <fig-atlas>/examples/gallery/effect_dots raw_data/<project>/
 fa bundle check raw_data/<project>/effect_dots
 fa ingest bundle raw_data/<project>/effect_dots --project <project>
+fa build <project> --preflight
+```
+
+### go_bar
+
+One row per enriched GO / KEGG term
+
+![go_bar](gallery/examples/go_bar.png)
+
+`inputs/data.csv`, first 5 of 8 rows (6 columns):
+
+```text
+term_id,description,gene_ratio,gene_count,fdr,fold_enrichment
+GO:0000000,response to oxidative stress,36/350,36,5.26e-06,3.9
+GO:0000001,regulation of cell cycle,27/350,27,7.5e-09,3.52
+GO:0000002,DNA repair,14/350,14,0.0038,3.03
+GO:0000003,apoptotic process,40/350,40,1.63e-07,3.99
+GO:0000004,synapse organization,12/350,12,0.0271,3.23
+```
+
+Inputs: `data.csv`. `metadata/metadata.yaml`:
+
+```yaml
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per enriched term -- description, gene_ratio, gene_count, fdr, fold_enrichment
+# (omics pack contract de_go.go_bar).
+plot_type: go_bar
+plot_params:
+  top_n: 8
+  x_axis: "-log10(FDR)"
+  horizontal: true
+  bar_color: "#2563eb"
+  show_threshold_line: true
+  labels_title: "GO biological process"
+  title_size: 8                 # pt
+  axes_label_size: 7            # pt
+  tick_label_size: 6            # pt
+```
+
+Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
+
+```bash
+cp -r <fig-atlas>/examples/gallery/go_bar raw_data/<project>/
+fa bundle check raw_data/<project>/go_bar
+fa ingest bundle raw_data/<project>/go_bar --project <project>
+fa build <project> --preflight
+```
+
+### go_cluster_dot
+
+One row per GO cluster representative, with cluster size and median fold enrichment
+
+![go_cluster_dot](gallery/examples/go_cluster_dot.png)
+
+`inputs/data.csv`, first 5 of 8 rows (8 columns):
+
+```text
+cluster_id,term_id,description,gene_ratio,gene_count,fdr,fold_enrichment,_cluster_size
+0,GO:0000000,response to oxidative stress,47/350,47,0.00821,4.03,3
+1,GO:0000001,regulation of cell cycle,48/350,48,2.87e-05,3.63,5
+2,GO:0000002,DNA repair,20/350,20,4.83e-06,3.45,10
+3,GO:0000003,apoptotic process,42/350,42,1.45e-07,4.87,11
+4,GO:0000004,synapse organization,36/350,36,0.000672,3.6,2
+```
+
+Inputs: `data.csv`. `metadata/metadata.yaml`:
+
+```yaml
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per cluster representative term -- cluster_id, description, fdr, gene_ratio,
+# fold_enrichment, _cluster_size (omics pack contract de_go.go_cluster_dot).
+plot_type: go_cluster_dot
+plot_params:
+  x_axis: "-log10(FDR)"
+  color_by: "Fold Enrichment"
+  size_by: "Cluster size"
+  top_n: 8
+  labels_title: "GO BP clusters"
+  title_size: 8                 # pt
+  axes_label_size: 7            # pt
+  tick_label_size: 6            # pt
+```
+
+Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
+
+```bash
+cp -r <fig-atlas>/examples/gallery/go_cluster_dot raw_data/<project>/
+fa bundle check raw_data/<project>/go_cluster_dot
+fa ingest bundle raw_data/<project>/go_cluster_dot --project <project>
 fa build <project> --preflight
 ```
 
@@ -375,6 +592,94 @@ fa ingest bundle raw_data/<project>/line_band --project <project>
 fa build <project> --preflight
 ```
 
+### ma_plot
+
+One row per tested gene or peak: mean signal, log2FC and adjusted P
+
+![ma_plot](gallery/examples/ma_plot.png)
+
+`inputs/data.csv`, first 5 of 400 rows (4 columns):
+
+```text
+peak,baseMean,log2FoldChange,padj
+peak1,279.7,-2.82,1.63e-39
+peak2,84.6,-0.322,0.58
+peak3,104.2,0.143,0.831
+peak4,200.0,-0.006,0.99
+peak5,22.3,-0.234,0.677
+```
+
+Inputs: `data.csv`. `metadata/metadata.yaml`:
+
+```yaml
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per peak -- baseMean (x, shown as log10), log2FoldChange (y), padj
+# (omics pack contract de_go.ma_plot).
+plot_type: ma_plot
+plot_params:
+  effect_threshold: 1.0
+  labels_title: "Treated vs control"
+  labels_xlabel: "log10 mean accessibility"
+  labels_ylabel: "log2 fold change"
+  title_size: 8                 # pt; the recipe's own sizes are for a larger canvas
+  axes_label_size: 7            # pt
+  tick_label_size: 6            # pt
+  dot_size: 6                   # pt^2
+```
+
+Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
+
+```bash
+cp -r <fig-atlas>/examples/gallery/ma_plot raw_data/<project>/
+fa bundle check raw_data/<project>/ma_plot
+fa ingest bundle raw_data/<project>/ma_plot --project <project>
+fa build <project> --preflight
+```
+
+### motif_dotplot
+
+Long format: one row per (motif, condition); empty value and P where not significant
+
+![motif_dotplot](gallery/examples/motif_dotplot.png)
+
+`inputs/data.csv`, first 5 of 24 rows (4 columns):
+
+```text
+motif,pattern_class,log2fc,neg_log10_p
+AP-1,Acute D1,-1.97,5.7
+AP-1,Acute D3,1.56,3.0
+AP-1,Chronic 24h,,
+AP-1,Chronic 48h,1.16,2.5
+NRF2,Acute D1,-0.24,14.6
+```
+
+Inputs: `data.csv`. `metadata/metadata.yaml`:
+
+```yaml
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: long format, one row per (motif, condition) -- motif, pattern_class, log2fc,
+# neg_log10_p; empty where not significant (omics pack contract atac_feature.motif_enrichment).
+plot_type: motif_dotplot
+plot_params:
+  class_order: ["Acute D1", "Acute D3", "Chronic 24h", "Chronic 48h"]
+  fc_min: -2
+  fc_max: 2
+  size_scale: 4.0               # pt^2 per -log10(P) unit
+  labels_title: "Motif enrichment"
+  title_size: 8                 # pt
+  axes_label_size: 7            # pt
+  tick_label_size: 6            # pt
+```
+
+Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
+
+```bash
+cp -r <fig-atlas>/examples/gallery/motif_dotplot raw_data/<project>/
+fa bundle check raw_data/<project>/motif_dotplot
+fa ingest bundle raw_data/<project>/motif_dotplot --project <project>
+fa build <project> --preflight
+```
+
 ### multi_group_heatmap
 
 One row per gene: label plus normalised expression for every sample of every condition
@@ -466,6 +771,49 @@ Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
 cp -r <fig-atlas>/examples/gallery/pca raw_data/<project>/
 fa bundle check raw_data/<project>/pca
 fa ingest bundle raw_data/<project>/pca --project <project>
+fa build <project> --preflight
+```
+
+### peak_feature_enrichment
+
+One row per (peak set, genomic feature): odds ratio against background and adjusted P
+
+![peak_feature_enrichment](gallery/examples/peak_feature_enrichment.png)
+
+`inputs/data.csv`, first 5 of 12 rows (6 columns):
+
+```text
+GeneSet,Feature,DA_Pct,Background_Pct,OddsRatio,p_adjust
+total,Promoter,35.0,25.0,1.615,0.911
+total,Intron,30.0,35.0,0.796,0.000666
+total,Intergenic,25.0,30.0,0.778,0.00141
+total,Exon,10.0,10.0,1.0,0.000622
+up,Promoter,45.0,25.0,2.455,2.41e-06
+```
+
+Inputs: `data.csv`. `metadata/metadata.yaml`:
+
+```yaml
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per (peak set, genomic feature) -- GeneSet, Feature, OddsRatio, p_adjust,
+# DA_Pct, Background_Pct (omics pack contract atac_feature.peak_features).
+plot_type: peak_feature_enrichment
+plot_params:
+  geneset_order: ["total", "up", "down"]
+  fdr_max: 0.05
+  legend_loc: "upper left"      # of the last panel; move it where that panel's bars leave room
+  labels_title: ""              # the panel titles (total, up, down) say it; a figure title would sit on them
+  title_size: 8                 # pt
+  axes_label_size: 7            # pt
+  tick_label_size: 6            # pt
+```
+
+Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
+
+```bash
+cp -r <fig-atlas>/examples/gallery/peak_feature_enrichment raw_data/<project>/
+fa bundle check raw_data/<project>/peak_feature_enrichment
+fa ingest bundle raw_data/<project>/peak_feature_enrichment --project <project>
 fa build <project> --preflight
 ```
 
@@ -673,6 +1021,52 @@ Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
 cp -r <fig-atlas>/examples/gallery/violin raw_data/<project>/
 fa bundle check raw_data/<project>/violin
 fa ingest bundle raw_data/<project>/violin --project <project>
+fa build <project> --preflight
+```
+
+### volcano
+
+One row per tested gene: log2FC, padj, ids, normalised counts per sample
+
+![volcano](gallery/examples/volcano.png)
+
+`inputs/data.csv`, first 5 of 400 rows (6 columns):
+
+```text
+gene_id,symbol,base_mean,log2FC,pvalue,padj
+ENSG00000000001,GENE1,259.9,-0.206,0.462,0.768
+ENSG00000000002,GENE2,5202.9,0.147,0.707,0.908
+ENSG00000000003,GENE3,2375.7,0.107,0.775,0.933
+ENSG00000000004,GENE4,4669.9,-0.314,0.397,0.734
+ENSG00000000005,GENE5,759.0,0.272,0.331,0.702
+```
+
+Inputs: `data.csv`. `metadata/metadata.yaml`:
+
+```yaml
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per tested gene -- gene_id, symbol, base_mean, log2FC, pvalue, padj
+# (omics pack contract de_go.volcano: fig_atlas_omics/contracts/de_go_bundle_contract.md).
+plot_type: volcano
+plot_params:
+  log2fc_threshold: 1.0
+  padj_threshold: 0.05
+  annotation_mode: top_n
+  annotation_top_n: 5
+  labels_title: "Treated vs control"
+  title_size: 8                 # pt; the recipe's own sizes are for a larger canvas
+  axes_label_size: 7            # pt
+  tick_label_size: 6            # pt
+  annotation_label_size: 6      # pt
+  dot_size: 6                   # pt^2
+```
+
+Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
+
+```bash
+cp -r <fig-atlas>/examples/gallery/volcano raw_data/<project>/
+fa bundle check raw_data/<project>/volcano
+fa ingest bundle raw_data/<project>/volcano --project <project>
 fa build <project> --preflight
 ```
 
