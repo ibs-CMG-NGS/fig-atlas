@@ -23,16 +23,16 @@ cards:
     kind: infra
     phase: 0
     priority: P1
-    status: claimed
+    status: done
     depends_on: []
     plot_type: null
     data: null
     owner: "claude-code 2026-10-24"
     branch: null
-    commits: []
-    version: null
+    commits: ["cmg-figures 261f558"]
+    version: "plan v1"
     review: null
-    notes: ""
+    notes: "plan, status file and checker written together"
   - id: I-02
     title: "gallery grouped by family (column, xy, ...)"
     kind: infra
