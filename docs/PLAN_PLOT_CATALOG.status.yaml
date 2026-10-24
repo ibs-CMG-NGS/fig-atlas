@@ -1,0 +1,560 @@
+# Status of the plot-catalog plan (docs/PLAN_PLOT_CATALOG.md) -- the single source of task state.
+# One card per task; field meanings in the plan, section 4. Change a card when you claim, hand in or
+# finish a task (section 8.1); check the file against the package with
+#   python scripts/check_plan_plot_catalog.py
+plan_version: 1
+package_version: "0.1.0.dev0 (fig-atlas d114848, checked 2026-10-24)"
+baseline:                       # what existed when the plan started (not tasks)
+  plot_types: 25                # plot types fa ingest bundle draws, each with an example bundle and a contract
+  renderers: 54                 # registered renderer names (two omics recipes share a pack renderer's name), each with a gallery picture
+gates:                          # researcher decisions (plan section 11): pending | passed | <date and note>
+  G1: pending                   # candidate list, priorities, scope; reference-value tool (R)
+  G3: pending                   # new required dependencies (only when a task needs one)
+  G4: pending                   # release 0.2.0 after Phase 2
+phase_gates:                    # a phase's cards can start only after these gates have passed
+  1: [G1]
+  2: [G1]
+  3: [G1]
+  4: [G1]
+  5: [G1]
+cards:
+  - id: I-01
+    title: "status file and checker script"
+    kind: infra
+    phase: 0
+    priority: P1
+    status: claimed
+    depends_on: []
+    plot_type: null
+    data: null
+    owner: "claude-code 2026-10-24"
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: ""
+  - id: I-02
+    title: "gallery grouped by family (column, xy, ...)"
+    kind: infra
+    phase: 0
+    priority: P1
+    status: todo
+    depends_on: []
+    plot_type: null
+    data: null
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: ""
+  - id: S-01
+    title: "paired tests: paired t, Wilcoxon signed-rank"
+    kind: stats
+    phase: 1
+    priority: P1
+    status: todo
+    depends_on: []
+    plot_type: null
+    data: null
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: ""
+  - id: S-02
+    title: "post-hoc comparisons: Tukey HSD, Dunnett, Kruskal-Wallis + Dunn"
+    kind: stats
+    phase: 1
+    priority: P1
+    status: todo
+    depends_on: []
+    plot_type: null
+    data: null
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: ""
+  - id: S-03
+    title: "correlation (Pearson, Spearman) and linear regression with bands"
+    kind: stats
+    phase: 1
+    priority: P1
+    status: todo
+    depends_on: []
+    plot_type: null
+    data: null
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: ""
+  - id: S-04
+    title: "ROC curve and AUC with confidence interval"
+    kind: stats
+    phase: 1
+    priority: P1
+    status: todo
+    depends_on: []
+    plot_type: null
+    data: null
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: ""
+  - id: S-05
+    title: "curve fitting framework (linear, exponential, Michaelis-Menten, 4PL)"
+    kind: stats
+    phase: 1
+    priority: P2
+    status: todo
+    depends_on: []
+    plot_type: null
+    data: null
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: ""
+  - id: S-06
+    title: "contingency: chi-square, Fisher exact, proportion CI"
+    kind: stats
+    phase: 1
+    priority: P2
+    status: todo
+    depends_on: []
+    plot_type: null
+    data: null
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: ""
+  - id: PC-01
+    title: "before-after (paired) plot"
+    kind: plot
+    phase: 2
+    priority: P1
+    status: todo
+    depends_on: [S-01]
+    plot_type: paired_plot
+    data: "subject, condition, value"
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: ""
+  - id: PC-02
+    title: "grouped bar (two factors, mean +/- error, points)"
+    kind: plot
+    phase: 2
+    priority: P1
+    status: todo
+    depends_on: [S-02]
+    plot_type: grouped_bar
+    data: "factor_a, factor_b, value"
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: ""
+  - id: PC-03
+    title: "correlation scatter with regression line and band"
+    kind: plot
+    phase: 2
+    priority: P1
+    status: todo
+    depends_on: [S-03]
+    plot_type: correlation_scatter
+    data: "x, y, optional group"
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: ""
+  - id: PC-04
+    title: "raincloud (half violin + box + points)"
+    kind: plot
+    phase: 2
+    priority: P1
+    status: todo
+    depends_on: []
+    plot_type: raincloud
+    data: "group, value"
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: ""
+  - id: PC-05
+    title: "column scatter (points + mean/median line + error)"
+    kind: plot
+    phase: 2
+    priority: P1
+    status: todo
+    depends_on: []
+    plot_type: column_scatter
+    data: "group, value"
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: ""
+  - id: PC-06
+    title: "ROC curve with AUC"
+    kind: plot
+    phase: 2
+    priority: P1
+    status: todo
+    depends_on: [S-04]
+    plot_type: roc_curve
+    data: "label, score, optional marker"
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: ""
+  - id: PC-07
+    title: "Bland-Altman plot"
+    kind: plot
+    phase: 2
+    priority: P1
+    status: todo
+    depends_on: [S-03]
+    plot_type: bland_altman
+    data: "method_a, method_b"
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: ""
+  - id: PC-08
+    title: "correlation matrix (triangle, values, significance)"
+    kind: plot
+    phase: 2
+    priority: P1
+    status: todo
+    depends_on: [S-03]
+    plot_type: correlation_matrix
+    data: "wide table: one column per variable"
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: ""
+  - id: E-01
+    title: "statistical brackets and stars on column graphs"
+    kind: enhance
+    phase: 3
+    priority: P1
+    status: todo
+    depends_on: [S-02]
+    plot_type: null
+    data: null
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: ""
+  - id: E-02
+    title: "common axis options: log, broken axis, ranges"
+    kind: enhance
+    phase: 3
+    priority: P1
+    status: todo
+    depends_on: []
+    plot_type: null
+    data: null
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: ""
+  - id: E-03
+    title: "mean +/- SD/SEM/CI overlays, jitter and beeswarm points"
+    kind: enhance
+    phase: 3
+    priority: P1
+    status: todo
+    depends_on: []
+    plot_type: null
+    data: null
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: ""
+  - id: E-04
+    title: "dose_response moved onto the S-05 fitting framework (same results)"
+    kind: enhance
+    phase: 3
+    priority: P2
+    status: todo
+    depends_on: [S-05]
+    plot_type: null
+    data: null
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: ""
+  - id: E-05
+    title: "line_band error-bar mode"
+    kind: enhance
+    phase: 3
+    priority: P2
+    status: todo
+    depends_on: []
+    plot_type: null
+    data: null
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: ""
+  - id: E-06
+    title: "survival: number-at-risk table and log-rank test table"
+    kind: enhance
+    phase: 3
+    priority: P2
+    status: todo
+    depends_on: []
+    plot_type: null
+    data: null
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: ""
+  - id: PC-09
+    title: "QQ plot"
+    kind: plot
+    phase: 4
+    priority: P2
+    status: todo
+    depends_on: []
+    plot_type: qq_plot
+    data: "value, optional group"
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: ""
+  - id: PC-10
+    title: "XY curve fit (model choice, error bars)"
+    kind: plot
+    phase: 4
+    priority: P2
+    status: todo
+    depends_on: [S-05]
+    plot_type: curve_fit
+    data: "x, y, optional group"
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: ""
+  - id: PC-11
+    title: "dual y-axis line plot"
+    kind: plot
+    phase: 4
+    priority: P2
+    status: todo
+    depends_on: []
+    plot_type: dual_axis_line
+    data: "x, y1, y2"
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: ""
+  - id: PC-12
+    title: "bubble chart"
+    kind: plot
+    phase: 4
+    priority: P2
+    status: todo
+    depends_on: []
+    plot_type: bubble
+    data: "x, y, size, optional color"
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: ""
+  - id: PC-13
+    title: "2D density (hexbin / contour)"
+    kind: plot
+    phase: 4
+    priority: P2
+    status: todo
+    depends_on: []
+    plot_type: density_2d
+    data: "x, y"
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: ""
+  - id: PC-14
+    title: "waterfall (ranked bars)"
+    kind: plot
+    phase: 4
+    priority: P2
+    status: todo
+    depends_on: []
+    plot_type: waterfall
+    data: "item, value, optional group"
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: ""
+  - id: PC-15
+    title: "UpSet (set intersections)"
+    kind: plot
+    phase: 4
+    priority: P2
+    status: todo
+    depends_on: []
+    plot_type: upset
+    data: "dataset, item"
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: ""
+  - id: PC-16
+    title: "stacked area"
+    kind: plot
+    phase: 4
+    priority: P2
+    status: todo
+    depends_on: []
+    plot_type: stacked_area
+    data: "x, part, value"
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: ""
+  - id: PC-17
+    title: "donut / pie (if approved at gate G1)"
+    kind: plot
+    phase: 4
+    priority: P2
+    status: todo
+    depends_on: []
+    plot_type: donut
+    data: "part, value"
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: ""
+  - id: PC-18
+    title: "contingency plot (proportion bars + test)"
+    kind: plot
+    phase: 4
+    priority: P2
+    status: todo
+    depends_on: [S-06]
+    plot_type: contingency_bar
+    data: "group, outcome, count"
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: ""
+  - id: PC-19
+    title: "radar chart"
+    kind: plot
+    phase: 5
+    priority: P3
+    status: todo
+    depends_on: []
+    plot_type: radar
+    data: "item, axis, value"
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: ""
+  - id: PC-20
+    title: "polar / rose plot"
+    kind: plot
+    phase: 5
+    priority: P3
+    status: todo
+    depends_on: []
+    plot_type: polar
+    data: "angle, value"
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: ""
+  - id: PC-21
+    title: "sankey / alluvial"
+    kind: plot
+    phase: 5
+    priority: P3
+    status: todo
+    depends_on: []
+    plot_type: sankey
+    data: "source, target, value"
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: ""
+  - id: PC-22
+    title: "ternary plot"
+    kind: plot
+    phase: 5
+    priority: P3
+    status: todo
+    depends_on: []
+    plot_type: ternary
+    data: "a, b, c"
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: ""
