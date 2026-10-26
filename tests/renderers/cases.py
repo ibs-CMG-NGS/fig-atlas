@@ -658,3 +658,10 @@ CASES = {
     "peak_feature_composition": peak_feature_composition,
     "single_tf_expression_scatter_bar": single_tf_expression_scatter_bar,
 }
+
+# Gallery families (fig_atlas.family) for pictures that are not a renderer
+# themselves: every other case resolves through its renderer or plot type.
+# A layout helper (panel tags) sits with the schematics.
+EXTRA_FAMILIES = {
+    "panel_tags": "schematic",
+}

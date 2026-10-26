@@ -11,6 +11,8 @@ circles is printed in the frame.
 
 from __future__ import annotations
 
+FAMILY = "parts_of_whole"    # gallery family (fig_atlas/family.py): the shape this module draws
+
 import math
 
 import numpy as np

@@ -8,6 +8,8 @@ dropping below it (not grouped side-by-side).
 
 from __future__ import annotations
 
+FAMILY = "column"    # gallery family (fig_atlas/family.py): the shape this module draws
+
 import ast
 
 import pandas as pd

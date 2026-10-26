@@ -291,7 +291,7 @@ def _cases():
     spec = importlib.util.spec_from_file_location("gallery_cases", ROOT / "tests" / "renderers" / "cases.py")
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
-    return mod.CASES
+    return mod.CASES, dict(getattr(mod, "EXTRA_FAMILIES", {}))
 
 
 def examples() -> list[Path]:
@@ -328,7 +328,7 @@ def _example_section(bundle: Path) -> str:
     name = bundle.name
     inputs = sorted(f.name for f in (bundle / "inputs").iterdir())
     data = bundle / "inputs" / "data.csv"
-    return (f"### {name}\n\n{c.title if c else ''}\n\n![{name}](gallery/examples/{name}.png)\n\n"
+    return (f"#### {name}\n\n{c.title if c else ''}\n\n![{name}](gallery/examples/{name}.png)\n\n"
             + (_data_preview(data) if data.is_file() else "")
             + f"Inputs: {', '.join(f'`{f}`' for f in inputs)}. `metadata/metadata.yaml`:\n\n"
             f"```yaml\n{meta_text.rstrip()}\n```\n\n"
@@ -341,7 +341,32 @@ def _example_section(bundle: Path) -> str:
             "```\n\n")
 
 
-def gallery_page(cases) -> str:
+def _anchor(key: str) -> str:
+    """The page anchor of a family heading (MkDocs: the heading text, lower case,
+    spaces to hyphens)."""
+    from fig_atlas import family
+    return "#" + family.title(key).lower().replace(" ", "-")
+
+
+def _family_nav(keys) -> str:
+    """A jump list, so a family is two clicks away on a long page."""
+    from fig_atlas import family
+    links = " | ".join(f"[{family.title(k)}]({_anchor(k)})" for k in keys)
+    return f"Jump to: {links}.\n\n"
+
+
+def gallery_page(cases, extra=None) -> str:
+    import yaml
+    from fig_atlas import family
+    extra = extra or {}
+    bundles = {b.name: (yaml.safe_load((b / "metadata" / "metadata.yaml").read_text(encoding="utf-8")) or {})
+               for b in examples()}
+    example_groups = family.group(
+        lambda name: family.family_of_plot(bundles[name].get("plot_type") or name), bundles)
+    case_groups = family.group(
+        lambda name: family.family_of_plot(name) or extra.get(name, family.OTHER), cases)
+    present = [key for key, _, _ in family.FAMILIES
+               if key in dict(example_groups) or key in dict(case_groups)]
     out = [HEADER, "# Renderer gallery\n\n",
            "## Start from an example (no code)\n\n",
            "Each picture below is drawn from a small synthetic data bundle in `examples/gallery/`, exactly "
@@ -349,16 +374,22 @@ def gallery_page(cases) -> str:
            "the figure you need, copy its folder, replace `inputs/data.csv` with your table -- same column "
            "names, or name yours in `plot_params` -- and run the commands under it. The config block "
            "`fa ingest bundle` writes lists every setting with its unit and what it changes "
-           "([config reference](config.md)). A test builds every example and checks it with preflight.\n\n"]
-    out += [_example_section(b) for b in examples()]
+           "([config reference](config.md)). A test builds every example and checks it with preflight. "
+           "Pictures are grouped by what the plot *does*, not by the field or the package it came from "
+           "(`fig_atlas/family.py`).\n\n",
+           _family_nav(present)]
+    for key, names in example_groups:
+        out.append(f"### {family.title(key)}\n\n{family.describe(key)}\n\n")
+        out += [_example_section(EXAMPLES / name) for name in names]
     out.append("## Every renderer\n\n"
                "One example per renderer (and per layout where a renderer has more than one), drawn from "
                "small synthetic data by the renderer snapshot tests (`tests/renderers/cases.py`). Every "
                "renderer the package registers has a picture here or in the examples above "
                "(`tests/test_gallery_coverage.py` checks it). Parameters for each are in the "
                "[config reference](config.md).\n\n")
-    for name in sorted(cases):
-        out.append(f"### {name}\n\n![{name}](gallery/{name}.png)\n\n")
+    for key, names in case_groups:
+        out.append(f"### {family.title(key)}\n\n")
+        out += [f"#### {name}\n\n![{name}](gallery/{name}.png)\n\n" for name in names]
     return "".join(out)
 
 
@@ -530,9 +561,9 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--check", action="store_true", help="exit 1 if a page is out of date")
     args = ap.parse_args()
-    cases = _cases()
+    cases, extra = _cases()
     pages = {REF / "cli.md": cli_page(), REF / "api.md": api_page(), REF / "config.md": config_page(),
-             REF / "gallery.md": gallery_page(cases)}
+             REF / "gallery.md": gallery_page(cases, extra)}
     if args.check:
         stale = [p.relative_to(ROOT).as_posix() for p, text in pages.items()
                  if not p.is_file() or p.read_text(encoding="utf-8") != text]

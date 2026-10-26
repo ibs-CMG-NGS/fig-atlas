@@ -30,6 +30,11 @@ of one manuscript before being published as a package. This first public tree co
 - **Domain-neutral core and packs**: plug-in entry points for renderers, contracts, ingest maps,
   recipes and commands; an omics pack; an image panel; generic line-with-band and
   effect-vs-significance shapes.
+- **Plot families**: every renderer declares the family its shape belongs to (`FAMILY` next to its
+  `SCHEMA`; `fig_atlas/family.py` -- column, xy, grouped, survival, parts of a whole, multiple
+  variables, diagnostic, image, schematic, field), a plot type inherits the family of the renderer
+  that draws it, the gallery groups its examples and renderer pictures by family, and
+  `fa renderers` / `fa new renderer --family` show and set it.
 - **Documentation**: a guide for researchers, tutorials run as tests (Case A, B and C worked
   examples among them), how-to guides, generated reference pages and a renderer gallery, design
   decision records, a documentation site (MkDocs) in English with a Korean version of every page

@@ -7,6 +7,8 @@ visual attributes come from ``params``.
 
 from __future__ import annotations
 
+FAMILY = "grouped"    # gallery family (fig_atlas/family.py): the shape this module draws
+
 import pandas as pd
 
 from ..params import text_param

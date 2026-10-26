@@ -10,6 +10,8 @@ separate legend/color-matching needed.
 
 from __future__ import annotations
 
+FAMILY = "xy"    # gallery family (fig_atlas/family.py): the shape this module draws
+
 import ast
 
 import numpy as np

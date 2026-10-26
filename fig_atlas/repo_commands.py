@@ -16,6 +16,7 @@ from pathlib import Path
 from string import Template
 
 from .changeset import TASKS, ChangeConflict, ChangeSet, tasks_with
+from .family import FAMILY_KEYS
 from .projects import ProjectError, list_projects
 
 NAME = re.compile(r"^[a-z0-9][a-z0-9-]*[a-z0-9]$")
@@ -494,10 +495,12 @@ def _with_ingest(text: str, attr: str, plot_type: str, target: str) -> str:
     return nl.join(lines)
 
 
-def _from_existing(source: str, name: str, date: str) -> str:
+def _from_existing(source: str, name: str, date: str, family: str = "column") -> str:
     """The module of an existing renderer, renamed for ``name``: render_<src> and
     its SCHEMA name become the new name, relative imports become absolute (the
-    copy may live in another package), and the docstring says where it started."""
+    copy may live in another package), the gallery family is the one asked for
+    (a copy of another shape's module must not inherit it), and the docstring
+    says where it started."""
     import inspect
     from .renderer_registry import find
     where, fn = find(source)
@@ -514,6 +517,11 @@ def _from_existing(source: str, name: str, date: str) -> str:
     text = re.sub(r"^from \.(\w)", lambda m: f"from {pkg}.{m.group(1)}", text, flags=re.M)
     text = re.sub(rf"\brender_{src_name}\b", f"render_{name}", text)
     text = re.sub(rf'Schema\("{re.escape(src_name)}"', f'Schema("{name}"', text)
+    text = re.sub(r'^FAMILY = ".*?"', f'FAMILY = "{family}"', text, flags=re.M)
+    if not re.search(r"^FAMILY = ", text, flags=re.M):
+        text = text.replace("from __future__ import annotations\n",
+                            f'from __future__ import annotations\n\nFAMILY = "{family}"'
+                            "    # gallery family (fig_atlas/family.py): the shape this module draws\n", 1)
     note = (f'"""{name}: started from render_{src_name} (`fa new renderer {name} --from {src_name}`, {date}).\n'
             f"Change the drawing and its SCHEMA to the new shape; the copy keeps every Param of the original.\n\n")
     if text.startswith('"""'):
@@ -522,9 +530,11 @@ def _from_existing(source: str, name: str, date: str) -> str:
 
 
 def plan_new_renderer(root: Path, name: str, package: str = "fig_atlas.renderers", plot_type: str | None = None,
-                      doc: str | None = None, today: str | None = None, start_from: str | None = None) -> ChangeSet:
-    """A renderer skeleton with its SCHEMA, its test, the package export and,
-    with ``plot_type``, the bundle mapping that lets `fa ingest bundle` find it."""
+                      doc: str | None = None, today: str | None = None, start_from: str | None = None,
+                      family: str = "column") -> ChangeSet:
+    """A renderer skeleton with its SCHEMA, its gallery family, its test, the
+    package export and, with ``plot_type``, the bundle mapping that lets
+    `fa ingest bundle` find it."""
     from .plugins import PROJECT_PACKAGE
     from .renderer_registry import CORE, available, modules
     if not RENDERER_NAME.fullmatch(name):
@@ -542,11 +552,13 @@ def plan_new_renderer(root: Path, name: str, package: str = "fig_atlas.renderers
     rerun = (pkg_dir / f"{name}.py").is_file()       # a second run: the files below must match
     if not rerun and name in {r["name"] for r in available()} | set(modules()):
         raise ChangeConflict(f"a renderer, module or recipe called {name!r} already exists (`fa renderers`)")
-    values = dict(name=name, package=package, date=today or _dt.date.today().isoformat(),
+    if family not in FAMILY_KEYS:
+        raise ProjectError(f"family {family!r}: one of {', '.join(FAMILY_KEYS)} (fig_atlas/family.py)")
+    values = dict(name=name, package=package, date=today or _dt.date.today().isoformat(), family=family,
                   doc=doc or "describe what this plot shows and which data it takes.")
     cs = ChangeSet(root)
     if start_from:
-        cs.create(pkg_dir / f"{name}.py", _from_existing(start_from, name, values["date"]))
+        cs.create(pkg_dir / f"{name}.py", _from_existing(start_from, name, values["date"], family))
         cs.create(Path("tests") / "renderers" / f"test_{name}.py",
                   _template("renderer_from_test.py.tmpl", **values, source=start_from.removeprefix("render_")))
     else:

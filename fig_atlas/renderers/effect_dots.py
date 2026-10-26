@@ -8,6 +8,8 @@ threshold``, from each estimate's direction and a significance column: up
 < 0) or not significant -- e.g. log2 fold changes coloured by adjusted P."""
 from __future__ import annotations
 
+FAMILY = "column"    # gallery family (fig_atlas/family.py): the shape this module draws
+
 import pandas as pd
 
 

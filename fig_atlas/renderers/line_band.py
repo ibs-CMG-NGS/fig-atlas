@@ -15,6 +15,8 @@ ready for ``fig_atlas.source_data.add``.
 """
 from __future__ import annotations
 
+FAMILY = "xy"    # gallery family (fig_atlas/family.py): the shape this module draws
+
 import numpy as np
 import pandas as pd
 

@@ -4,9 +4,15 @@
 
 ## Start from an example (no code)
 
-Each picture below is drawn from a small synthetic data bundle in `examples/gallery/`, exactly as `fa ingest bundle` would draw it, at single-column size (85 mm). Pick the picture closest to the figure you need, copy its folder, replace `inputs/data.csv` with your table -- same column names, or name yours in `plot_params` -- and run the commands under it. The config block `fa ingest bundle` writes lists every setting with its unit and what it changes ([config reference](config.md)). A test builds every example and checks it with preflight.
+Each picture below is drawn from a small synthetic data bundle in `examples/gallery/`, exactly as `fa ingest bundle` would draw it, at single-column size (85 mm). Pick the picture closest to the figure you need, copy its folder, replace `inputs/data.csv` with your table -- same column names, or name yours in `plot_params` -- and run the commands under it. The config block `fa ingest bundle` writes lists every setting with its unit and what it changes ([config reference](config.md)). A test builds every example and checks it with preflight. Pictures are grouped by what the plot *does*, not by the field or the package it came from (`fig_atlas/family.py`).
 
-### bar_scatter
+Jump to: [Column](#column) | [XY](#xy) | [Grouped](#grouped) | [Survival](#survival) | [Parts of a whole](#parts-of-a-whole) | [Multiple variables](#multiple-variables) | [Image](#image) | [Schematic](#schematic) | [Field-specific](#field-specific).
+
+### Column
+
+One value per category: bars, boxes, violins, histograms, dots with error bars.
+
+#### bar_scatter
 
 Bars (mean +/- error) with replicate dots: one row per replicate (category, group, value), or one row per category with replicate columns
 
@@ -50,7 +56,7 @@ fa ingest bundle raw_data/<project>/bar_scatter --project <project>
 fa build <project> --preflight
 ```
 
-### boxplot
+#### boxplot
 
 Values per category: one row per observation (category, value)
 
@@ -89,7 +95,7 @@ fa ingest bundle raw_data/<project>/boxplot --project <project>
 fa build <project> --preflight
 ```
 
-### count_summary
+#### count_summary
 
 One row per (dataset, gene): log2FC and adjusted P
 
@@ -134,132 +140,7 @@ fa ingest bundle raw_data/<project>/count_summary --project <project>
 fa build <project> --preflight
 ```
 
-### cross_condition_dotplot
-
-Long format: one row per significant (term, condition)
-
-![cross_condition_dotplot](gallery/examples/cross_condition_dotplot.png)
-
-`inputs/data.csv`, first 5 of 18 rows (4 columns):
-
-```text
-GO Term,Condition,Signed -log10(FDR),Gene Ratio
-response to oxidative stress,Acute D1,-3.55,0.08
-response to oxidative stress,Chronic 24h,3.19,0.12
-regulation of cell cycle,Acute D1,3.22,0.3
-regulation of cell cycle,Acute D3,3.81,0.265
-regulation of cell cycle,Chronic 24h,3.64,0.287
-```
-
-Inputs: `data.csv`. `metadata/metadata.yaml`:
-
-```yaml
-# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
-# inputs/data.csv: the same long format as cross_condition_heatmap
-# (omics pack contract cross_condition.enrichment).
-plot_type: cross_condition_dotplot
-plot_params:
-  condition_order: ["Acute D1", "Acute D3", "Chronic 24h", "Chronic 48h"]
-  size_legend_below: true       # the dot-size key under the plot, clear of the dots
-  size_legend_below_offset_pts: 48   # pt below the axes; clears the rotated condition labels
-  title_size: 8                 # pt
-  axes_label_size: 7            # pt
-  tick_label_size: 6            # pt
-```
-
-Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
-
-```bash
-cp -r <fig-atlas>/examples/gallery/cross_condition_dotplot raw_data/<project>/
-fa bundle check raw_data/<project>/cross_condition_dotplot
-fa ingest bundle raw_data/<project>/cross_condition_dotplot --project <project>
-fa build <project> --preflight
-```
-
-### cross_condition_heatmap
-
-Long format: one row per significant (term, condition)
-
-![cross_condition_heatmap](gallery/examples/cross_condition_heatmap.png)
-
-`inputs/data.csv`, first 5 of 20 rows (4 columns):
-
-```text
-GO Term,Condition,Signed -log10(FDR),Gene Ratio
-response to oxidative stress,Acute D1,1.57,0.223
-response to oxidative stress,Chronic 24h,2.1,0.243
-regulation of cell cycle,Acute D1,-1.61,0.04
-regulation of cell cycle,Acute D3,1.51,0.184
-regulation of cell cycle,Chronic 24h,5.53,0.06
-```
-
-Inputs: `data.csv`. `metadata/metadata.yaml`:
-
-```yaml
-# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
-# inputs/data.csv: long format, one row per significant (term, condition) -- GO Term, Condition,
-# Signed -log10(FDR), Gene Ratio (omics pack contract cross_condition.enrichment).
-plot_type: cross_condition_heatmap
-plot_params:
-  condition_order: ["Acute D1", "Acute D3", "Chronic 24h", "Chronic 48h"]
-  show_legend: false            # the seven-bin key needs more width than one column leaves; true in a wider figure
-  title_size: 8                 # pt
-  axes_label_size: 7            # pt
-  tick_label_size: 6            # pt
-```
-
-Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
-
-```bash
-cp -r <fig-atlas>/examples/gallery/cross_condition_heatmap raw_data/<project>/
-fa bundle check raw_data/<project>/cross_condition_heatmap
-fa ingest bundle raw_data/<project>/cross_condition_heatmap --project <project>
-fa build <project> --preflight
-```
-
-### dose_response
-
-Dose series: one row per replicate (dose > 0, response), optional group
-
-![dose_response](gallery/examples/dose_response.png)
-
-`inputs/data.csv`, first 5 of 54 rows (4 columns):
-
-```text
-compound,dose_uM,replicate,viability
-compound A,0.01,1,90.89
-compound A,0.01,2,99.93
-compound A,0.01,3,102.86
-compound A,0.0316,1,102.07
-compound A,0.0316,2,99.64
-```
-
-Inputs: `data.csv`. `metadata/metadata.yaml`:
-
-```yaml
-# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
-# inputs/data.csv: one row per replicate -- compound (group), dose_uM (x, > 0), viability (y).
-# The fitted EC50 per compound is in the figure's source data (four-parameter logistic).
-plot_type: dose_response
-plot_params:
-  x_col: dose_uM
-  y_col: viability
-  group_col: compound
-  show_ec50: true
-  labels_xlabel: "Dose (uM)"
-  labels_ylabel: "Viability (% of control)"
-```
-
-Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
-
-```bash
-cp -r <fig-atlas>/examples/gallery/dose_response raw_data/<project>/
-fa bundle check raw_data/<project>/dose_response
-fa ingest bundle raw_data/<project>/dose_response --project <project>
-fa build <project> --preflight
-```
-
-### effect_dots
+#### effect_dots
 
 Estimates with confidence intervals (forest plot): one row per item and series
 
@@ -301,7 +182,7 @@ fa ingest bundle raw_data/<project>/effect_dots --project <project>
 fa build <project> --preflight
 ```
 
-### go_bar
+#### go_bar
 
 One row per enriched GO / KEGG term
 
@@ -346,51 +227,134 @@ fa ingest bundle raw_data/<project>/go_bar --project <project>
 fa build <project> --preflight
 ```
 
-### go_cluster_dot
+#### histogram
 
-One row per GO cluster representative, with cluster size and median fold enrichment
+Distribution of a value: one row per observation, optional group
 
-![go_cluster_dot](gallery/examples/go_cluster_dot.png)
+![histogram](gallery/examples/histogram.png)
 
-`inputs/data.csv`, first 5 of 8 rows (8 columns):
+`inputs/data.csv`, first 5 of 600 rows (2 columns):
 
 ```text
-cluster_id,term_id,description,gene_ratio,gene_count,fdr,fold_enrichment,_cluster_size
-0,GO:0000000,response to oxidative stress,47/350,47,0.00821,4.03,3
-1,GO:0000001,regulation of cell cycle,48/350,48,2.87e-05,3.63,5
-2,GO:0000002,DNA repair,20/350,20,4.83e-06,3.45,10
-3,GO:0000003,apoptotic process,42/350,42,1.45e-07,4.87,11
-4,GO:0000004,synapse organization,36/350,36,0.000672,3.6,2
+condition,cell_diameter_um
+control,7.75
+control,10.6
+control,12.46
+control,12.0
+control,10.09
 ```
 
 Inputs: `data.csv`. `metadata/metadata.yaml`:
 
 ```yaml
 # Gallery example (examples/make_gallery.py): synthetic data, not measurements.
-# inputs/data.csv: one row per cluster representative term -- cluster_id, description, fdr, gene_ratio,
-# fold_enrichment, _cluster_size (omics pack contract de_go.go_cluster_dot).
-plot_type: go_cluster_dot
+# inputs/data.csv: one row per cell -- condition (group), cell_diameter_um (value).
+plot_type: histogram
 plot_params:
-  x_axis: "-log10(FDR)"
-  color_by: "Fold Enrichment"
-  size_by: "Cluster size"
-  top_n: 8
-  labels_title: "GO BP clusters"
-  title_size: 8                 # pt
-  axes_label_size: 7            # pt
-  tick_label_size: 6            # pt
+  x_col: cell_diameter_um
+  group_col: condition
+  bins: 25
+  density: true
+  labels_xlabel: "Cell diameter (um)"
 ```
 
 Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
 
 ```bash
-cp -r <fig-atlas>/examples/gallery/go_cluster_dot raw_data/<project>/
-fa bundle check raw_data/<project>/go_cluster_dot
-fa ingest bundle raw_data/<project>/go_cluster_dot --project <project>
+cp -r <fig-atlas>/examples/gallery/histogram raw_data/<project>/
+fa bundle check raw_data/<project>/histogram
+fa ingest bundle raw_data/<project>/histogram --project <project>
 fa build <project> --preflight
 ```
 
-### group_scatter
+#### violin
+
+Distribution per category: one row per observation (category, value)
+
+![violin](gallery/examples/violin.png)
+
+`inputs/data.csv`, first 5 of 120 rows (2 columns):
+
+```text
+genotype,spines_per_um
+wild type,2.053
+wild type,1.655
+wild type,1.586
+wild type,1.961
+wild type,1.36
+```
+
+Inputs: `data.csv`. `metadata/metadata.yaml`:
+
+```yaml
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per measurement -- genotype (category), spines_per_um (value).
+plot_type: violin
+plot_params:
+  x_col: genotype
+  y_col: spines_per_um
+  x_order: ["wild type", "heterozygous", "knockout"]
+  show_points: true
+  labels_ylabel: "Spine density (per um)"
+  labels_xlabel: ""
+```
+
+Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
+
+```bash
+cp -r <fig-atlas>/examples/gallery/violin raw_data/<project>/
+fa bundle check raw_data/<project>/violin
+fa ingest bundle raw_data/<project>/violin --project <project>
+fa build <project> --preflight
+```
+
+### XY
+
+y against x, with a fit, band or threshold: dose-response, correlation, volcano.
+
+#### dose_response
+
+Dose series: one row per replicate (dose > 0, response), optional group
+
+![dose_response](gallery/examples/dose_response.png)
+
+`inputs/data.csv`, first 5 of 54 rows (4 columns):
+
+```text
+compound,dose_uM,replicate,viability
+compound A,0.01,1,90.89
+compound A,0.01,2,99.93
+compound A,0.01,3,102.86
+compound A,0.0316,1,102.07
+compound A,0.0316,2,99.64
+```
+
+Inputs: `data.csv`. `metadata/metadata.yaml`:
+
+```yaml
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per replicate -- compound (group), dose_uM (x, > 0), viability (y).
+# The fitted EC50 per compound is in the figure's source data (four-parameter logistic).
+plot_type: dose_response
+plot_params:
+  x_col: dose_uM
+  y_col: viability
+  group_col: compound
+  show_ec50: true
+  labels_xlabel: "Dose (uM)"
+  labels_ylabel: "Viability (% of control)"
+```
+
+Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
+
+```bash
+cp -r <fig-atlas>/examples/gallery/dose_response raw_data/<project>/
+fa bundle check raw_data/<project>/dose_response
+fa ingest bundle raw_data/<project>/dose_response --project <project>
+fa build <project> --preflight
+```
+
+#### group_scatter
 
 Two measurements per item, coloured by group, with a fitted line and Pearson r
 
@@ -432,124 +396,7 @@ fa ingest bundle raw_data/<project>/group_scatter --project <project>
 fa build <project> --preflight
 ```
 
-### heatmap
-
-A matrix: one row per feature, one numeric column per sample
-
-![heatmap](gallery/examples/heatmap.png)
-
-`inputs/data.csv`, first 5 of 25 rows (7 columns):
-
-```text
-gene,ctrl_1,ctrl_2,ctrl_3,trt_1,trt_2,trt_3
-G001,5.042,4.961,5.106,3.814,3.918,3.7
-G002,4.25,5.44,4.698,5.388,5.402,5.728
-G003,5.098,4.652,5.613,2.987,3.461,3.001
-G004,6.118,5.096,5.224,3.379,3.573,3.892
-G005,4.828,4.542,5.719,3.244,3.478,3.394
-```
-
-Inputs: `data.csv`. `metadata/metadata.yaml`:
-
-```yaml
-# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
-# inputs/data.csv: one row per gene -- gene (label), then one column per sample (values).
-plot_type: heatmap
-plot_params:
-  label_col: gene
-  sample_columns: ["ctrl_1", "ctrl_2", "ctrl_3", "trt_1", "trt_2", "trt_3"]
-  sorting: clustering
-  n_genes: 20                   # rows shown; up to max_gene_labels (20) are named
-  tick_label_size: 6            # pt; this renderer's own defaults are for a larger canvas
-  axes_label_size: 7            # pt
-```
-
-Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
-
-```bash
-cp -r <fig-atlas>/examples/gallery/heatmap raw_data/<project>/
-fa bundle check raw_data/<project>/heatmap
-fa ingest bundle raw_data/<project>/heatmap --project <project>
-fa build <project> --preflight
-```
-
-### histogram
-
-Distribution of a value: one row per observation, optional group
-
-![histogram](gallery/examples/histogram.png)
-
-`inputs/data.csv`, first 5 of 600 rows (2 columns):
-
-```text
-condition,cell_diameter_um
-control,7.75
-control,10.6
-control,12.46
-control,12.0
-control,10.09
-```
-
-Inputs: `data.csv`. `metadata/metadata.yaml`:
-
-```yaml
-# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
-# inputs/data.csv: one row per cell -- condition (group), cell_diameter_um (value).
-plot_type: histogram
-plot_params:
-  x_col: cell_diameter_um
-  group_col: condition
-  bins: 25
-  density: true
-  labels_xlabel: "Cell diameter (um)"
-```
-
-Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
-
-```bash
-cp -r <fig-atlas>/examples/gallery/histogram raw_data/<project>/
-fa bundle check raw_data/<project>/histogram
-fa ingest bundle raw_data/<project>/histogram --project <project>
-fa build <project> --preflight
-```
-
-### image_panel
-
-Image files (one per channel) with pixel size and channel list in metadata.yaml
-
-![image_panel](gallery/examples/image_panel.png)
-
-Inputs: `dapi.tif`, `tubulin.tif`. `metadata/metadata.yaml`:
-
-```yaml
-# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
-# inputs/: one image file per channel (16-bit TIFF here). Images are shown from these files,
-# never from an adjusted copy; the display range per channel is set below.
-plot_type: image_panel
-pixel_size: 0.25
-pixel_unit: "µm"
-channels:
-  - file: "dapi.tif"
-  - file: "tubulin.tif"
-plot_params:
-  channel_colors: ["#3b82f6", "#22c55e"]
-  channel_labels: ["DAPI", "tubulin"]
-  display_ranges: [[100, 3000], [100, 1600]]
-  show_channel_labels: true
-  pixel_size: 0.25
-  scale_bar: 10
-```
-
-Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
-
-```bash
-cp -r <fig-atlas>/examples/gallery/image_panel raw_data/<project>/
-fa bundle check raw_data/<project>/image_panel
-fa ingest bundle raw_data/<project>/image_panel --project <project>
-fa build <project> --preflight
-```
-
-### line_band
+#### line_band
 
 Lines with error bands: replicate rows (x, value, optional group), or summarised rows
 
@@ -592,7 +439,7 @@ fa ingest bundle raw_data/<project>/line_band --project <project>
 fa build <project> --preflight
 ```
 
-### ma_plot
+#### ma_plot
 
 One row per tested gene or peak: mean signal, log2FC and adjusted P
 
@@ -636,7 +483,399 @@ fa ingest bundle raw_data/<project>/ma_plot --project <project>
 fa build <project> --preflight
 ```
 
-### motif_dotplot
+#### threshold_scatter
+
+Effect vs significance points: one row per item, columns named in plot_params
+
+![threshold_scatter](gallery/examples/threshold_scatter.png)
+
+`inputs/data.csv`, first 5 of 300 rows (3 columns):
+
+```text
+gene,log2_fold_change,padj
+G001,-0.667,0.25
+G002,0.058,0.987
+G003,0.213,0.94
+G004,-0.177,0.967
+G005,0.261,0.711
+```
+
+Inputs: `data.csv`. `metadata/metadata.yaml`:
+
+```yaml
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per gene -- log2_fold_change (x), padj (y, shown as -log10).
+plot_type: threshold_scatter
+plot_params:
+  x_col: log2_fold_change
+  y_col: padj
+  effect_col: log2_fold_change
+  sig_col: padj
+  y_transform: neg_log10
+  effect_threshold: 1.0
+  sig_threshold: 0.05
+  label_mode: top_n
+  label_cols: ["gene"]
+  label_top_n: 5
+  labels_title: "Treated vs control"
+  labels_xlabel: "log2 fold change"
+  labels_ylabel: "-log10 adjusted P"
+```
+
+Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
+
+```bash
+cp -r <fig-atlas>/examples/gallery/threshold_scatter raw_data/<project>/
+fa bundle check raw_data/<project>/threshold_scatter
+fa ingest bundle raw_data/<project>/threshold_scatter --project <project>
+fa build <project> --preflight
+```
+
+#### volcano
+
+One row per tested gene: log2FC, padj, ids, normalised counts per sample
+
+![volcano](gallery/examples/volcano.png)
+
+`inputs/data.csv`, first 5 of 400 rows (6 columns):
+
+```text
+gene_id,symbol,base_mean,log2FC,pvalue,padj
+ENSG00000000001,GENE1,259.9,-0.206,0.462,0.768
+ENSG00000000002,GENE2,5202.9,0.147,0.707,0.908
+ENSG00000000003,GENE3,2375.7,0.107,0.775,0.933
+ENSG00000000004,GENE4,4669.9,-0.314,0.397,0.734
+ENSG00000000005,GENE5,759.0,0.272,0.331,0.702
+```
+
+Inputs: `data.csv`. `metadata/metadata.yaml`:
+
+```yaml
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per tested gene -- gene_id, symbol, base_mean, log2FC, pvalue, padj
+# (omics pack contract de_go.volcano: fig_atlas_omics/contracts/de_go_bundle_contract.md).
+plot_type: volcano
+plot_params:
+  log2fc_threshold: 1.0
+  padj_threshold: 0.05
+  annotation_mode: top_n
+  annotation_top_n: 5
+  labels_title: "Treated vs control"
+  title_size: 8                 # pt; the recipe's own sizes are for a larger canvas
+  axes_label_size: 7            # pt
+  tick_label_size: 6            # pt
+  annotation_label_size: 6      # pt
+  dot_size: 6                   # pt^2
+```
+
+Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
+
+```bash
+cp -r <fig-atlas>/examples/gallery/volcano raw_data/<project>/
+fa bundle check raw_data/<project>/volcano
+fa ingest bundle raw_data/<project>/volcano --project <project>
+fa build <project> --preflight
+```
+
+### Survival
+
+Time to an event: Kaplan-Meier curves.
+
+#### survival
+
+Time to event: one row per subject (time, event 1/0), optional group
+
+![survival](gallery/examples/survival.png)
+
+`inputs/data.csv`, first 5 of 50 rows (4 columns):
+
+```text
+group,mouse,days,died
+vehicle,V01,28.4,1
+vehicle,V02,27.9,1
+vehicle,V03,35.3,1
+vehicle,V04,15.1,1
+vehicle,V05,3.0,1
+```
+
+Inputs: `data.csv`. `metadata/metadata.yaml`:
+
+```yaml
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per animal -- group, days (to death or last follow-up), died (1) or censored (0).
+# No test is drawn; compare groups with a log-rank test through fig_atlas.stats.
+plot_type: survival
+plot_params:
+  time_col: days
+  event_col: died
+  group_col: group
+  labels_xlabel: "Days"
+```
+
+Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
+
+```bash
+cp -r <fig-atlas>/examples/gallery/survival raw_data/<project>/
+fa bundle check raw_data/<project>/survival
+fa ingest bundle raw_data/<project>/survival --project <project>
+fa build <project> --preflight
+```
+
+### Parts of a whole
+
+Composition: stacked bars, set diagrams, a narrowing funnel.
+
+#### stacked_bar
+
+Composition: one row per (category, part) with a count
+
+![stacked_bar](gallery/examples/stacked_bar.png)
+
+`inputs/data.csv`, first 5 of 16 rows (3 columns):
+
+```text
+sample,cell_type,cells
+control 1,neurons,226
+control 1,astrocytes,143
+control 1,microglia,84
+control 1,oligodendrocytes,47
+control 2,neurons,230
+```
+
+Inputs: `data.csv`. `metadata/metadata.yaml`:
+
+```yaml
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per (sample, cell type) -- sample (bar), cell_type (part), cells (count).
+plot_type: stacked_bar
+plot_params:
+  x_col: sample
+  stack_col: cell_type
+  value_col: cells
+  stack_colors: {neurons: "#0072B2", astrocytes: "#E69F00", microglia: "#009E73", oligodendrocytes: "#CC79A7"}   # Okabe-Ito: safe for colour-blind readers
+  labels_xlabel: ""
+```
+
+Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
+
+```bash
+cp -r <fig-atlas>/examples/gallery/stacked_bar raw_data/<project>/
+fa bundle check raw_data/<project>/stacked_bar
+fa ingest bundle raw_data/<project>/stacked_bar --project <project>
+fa build <project> --preflight
+```
+
+#### venn
+
+Set membership: one row per (set, item); 2-3 sets
+
+![venn](gallery/examples/venn.png)
+
+`inputs/data.csv`, first 5 of 115 rows (2 columns):
+
+```text
+dataset,item
+drug A,G002
+drug A,G003
+drug A,G004
+drug A,G005
+drug A,G006
+```
+
+Inputs: `data.csv`. `metadata/metadata.yaml`:
+
+```yaml
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per (list, item) -- dataset (which list), item (e.g. a gene); 2 or 3 lists.
+plot_type: venn
+plot_params:
+  set_labels: ["drug A", "drug B"]
+  filter_name: "Genes changed"
+  title_size: 7                 # pt; the title and its count line (the renderer's own default is for a larger canvas)
+```
+
+Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
+
+```bash
+cp -r <fig-atlas>/examples/gallery/venn raw_data/<project>/
+fa bundle check raw_data/<project>/venn
+fa ingest bundle raw_data/<project>/venn --project <project>
+fa build <project> --preflight
+```
+
+### Multiple variables
+
+A matrix or many variables at once: heatmaps, dot matrices, PCA.
+
+#### cross_condition_dotplot
+
+Long format: one row per significant (term, condition)
+
+![cross_condition_dotplot](gallery/examples/cross_condition_dotplot.png)
+
+`inputs/data.csv`, first 5 of 18 rows (4 columns):
+
+```text
+GO Term,Condition,Signed -log10(FDR),Gene Ratio
+response to oxidative stress,Acute D1,-3.55,0.08
+response to oxidative stress,Chronic 24h,3.19,0.12
+regulation of cell cycle,Acute D1,3.22,0.3
+regulation of cell cycle,Acute D3,3.81,0.265
+regulation of cell cycle,Chronic 24h,3.64,0.287
+```
+
+Inputs: `data.csv`. `metadata/metadata.yaml`:
+
+```yaml
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: the same long format as cross_condition_heatmap
+# (omics pack contract cross_condition.enrichment).
+plot_type: cross_condition_dotplot
+plot_params:
+  condition_order: ["Acute D1", "Acute D3", "Chronic 24h", "Chronic 48h"]
+  size_legend_below: true       # the dot-size key under the plot, clear of the dots
+  size_legend_below_offset_pts: 48   # pt below the axes; clears the rotated condition labels
+  title_size: 8                 # pt
+  axes_label_size: 7            # pt
+  tick_label_size: 6            # pt
+```
+
+Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
+
+```bash
+cp -r <fig-atlas>/examples/gallery/cross_condition_dotplot raw_data/<project>/
+fa bundle check raw_data/<project>/cross_condition_dotplot
+fa ingest bundle raw_data/<project>/cross_condition_dotplot --project <project>
+fa build <project> --preflight
+```
+
+#### cross_condition_heatmap
+
+Long format: one row per significant (term, condition)
+
+![cross_condition_heatmap](gallery/examples/cross_condition_heatmap.png)
+
+`inputs/data.csv`, first 5 of 20 rows (4 columns):
+
+```text
+GO Term,Condition,Signed -log10(FDR),Gene Ratio
+response to oxidative stress,Acute D1,1.57,0.223
+response to oxidative stress,Chronic 24h,2.1,0.243
+regulation of cell cycle,Acute D1,-1.61,0.04
+regulation of cell cycle,Acute D3,1.51,0.184
+regulation of cell cycle,Chronic 24h,5.53,0.06
+```
+
+Inputs: `data.csv`. `metadata/metadata.yaml`:
+
+```yaml
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: long format, one row per significant (term, condition) -- GO Term, Condition,
+# Signed -log10(FDR), Gene Ratio (omics pack contract cross_condition.enrichment).
+plot_type: cross_condition_heatmap
+plot_params:
+  condition_order: ["Acute D1", "Acute D3", "Chronic 24h", "Chronic 48h"]
+  show_legend: false            # the seven-bin key needs more width than one column leaves; true in a wider figure
+  title_size: 8                 # pt
+  axes_label_size: 7            # pt
+  tick_label_size: 6            # pt
+```
+
+Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
+
+```bash
+cp -r <fig-atlas>/examples/gallery/cross_condition_heatmap raw_data/<project>/
+fa bundle check raw_data/<project>/cross_condition_heatmap
+fa ingest bundle raw_data/<project>/cross_condition_heatmap --project <project>
+fa build <project> --preflight
+```
+
+#### go_cluster_dot
+
+One row per GO cluster representative, with cluster size and median fold enrichment
+
+![go_cluster_dot](gallery/examples/go_cluster_dot.png)
+
+`inputs/data.csv`, first 5 of 8 rows (8 columns):
+
+```text
+cluster_id,term_id,description,gene_ratio,gene_count,fdr,fold_enrichment,_cluster_size
+0,GO:0000000,response to oxidative stress,47/350,47,0.00821,4.03,3
+1,GO:0000001,regulation of cell cycle,48/350,48,2.87e-05,3.63,5
+2,GO:0000002,DNA repair,20/350,20,4.83e-06,3.45,10
+3,GO:0000003,apoptotic process,42/350,42,1.45e-07,4.87,11
+4,GO:0000004,synapse organization,36/350,36,0.000672,3.6,2
+```
+
+Inputs: `data.csv`. `metadata/metadata.yaml`:
+
+```yaml
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per cluster representative term -- cluster_id, description, fdr, gene_ratio,
+# fold_enrichment, _cluster_size (omics pack contract de_go.go_cluster_dot).
+plot_type: go_cluster_dot
+plot_params:
+  x_axis: "-log10(FDR)"
+  color_by: "Fold Enrichment"
+  size_by: "Cluster size"
+  top_n: 8
+  labels_title: "GO BP clusters"
+  title_size: 8                 # pt
+  axes_label_size: 7            # pt
+  tick_label_size: 6            # pt
+```
+
+Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
+
+```bash
+cp -r <fig-atlas>/examples/gallery/go_cluster_dot raw_data/<project>/
+fa bundle check raw_data/<project>/go_cluster_dot
+fa ingest bundle raw_data/<project>/go_cluster_dot --project <project>
+fa build <project> --preflight
+```
+
+#### heatmap
+
+A matrix: one row per feature, one numeric column per sample
+
+![heatmap](gallery/examples/heatmap.png)
+
+`inputs/data.csv`, first 5 of 25 rows (7 columns):
+
+```text
+gene,ctrl_1,ctrl_2,ctrl_3,trt_1,trt_2,trt_3
+G001,5.042,4.961,5.106,3.814,3.918,3.7
+G002,4.25,5.44,4.698,5.388,5.402,5.728
+G003,5.098,4.652,5.613,2.987,3.461,3.001
+G004,6.118,5.096,5.224,3.379,3.573,3.892
+G005,4.828,4.542,5.719,3.244,3.478,3.394
+```
+
+Inputs: `data.csv`. `metadata/metadata.yaml`:
+
+```yaml
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per gene -- gene (label), then one column per sample (values).
+plot_type: heatmap
+plot_params:
+  label_col: gene
+  sample_columns: ["ctrl_1", "ctrl_2", "ctrl_3", "trt_1", "trt_2", "trt_3"]
+  sorting: clustering
+  n_genes: 20                   # rows shown; up to max_gene_labels (20) are named
+  tick_label_size: 6            # pt; this renderer's own defaults are for a larger canvas
+  axes_label_size: 7            # pt
+```
+
+Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
+
+```bash
+cp -r <fig-atlas>/examples/gallery/heatmap raw_data/<project>/
+fa bundle check raw_data/<project>/heatmap
+fa ingest bundle raw_data/<project>/heatmap --project <project>
+fa build <project> --preflight
+```
+
+#### motif_dotplot
 
 Long format: one row per (motif, condition); empty value and P where not significant
 
@@ -680,7 +919,7 @@ fa ingest bundle raw_data/<project>/motif_dotplot --project <project>
 fa build <project> --preflight
 ```
 
-### multi_group_heatmap
+#### multi_group_heatmap
 
 One row per gene: label plus normalised expression for every sample of every condition
 
@@ -729,7 +968,7 @@ fa ingest bundle raw_data/<project>/multi_group_heatmap --project <project>
 fa build <project> --preflight
 ```
 
-### pca
+#### pca
 
 Samples by principal components: one row per feature, one numeric column per sample
 
@@ -774,7 +1013,7 @@ fa ingest bundle raw_data/<project>/pca --project <project>
 fa build <project> --preflight
 ```
 
-### peak_feature_enrichment
+#### peak_feature_enrichment
 
 One row per (peak set, genomic feature): odds ratio against background and adjusted P
 
@@ -817,256 +1056,43 @@ fa ingest bundle raw_data/<project>/peak_feature_enrichment --project <project>
 fa build <project> --preflight
 ```
 
-### stacked_bar
+### Image
 
-Composition: one row per (category, part) with a count
+A microscope image, blot or gel, drawn with its scale bar.
 
-![stacked_bar](gallery/examples/stacked_bar.png)
+#### image_panel
 
-`inputs/data.csv`, first 5 of 16 rows (3 columns):
+Image files (one per channel) with pixel size and channel list in metadata.yaml
 
-```text
-sample,cell_type,cells
-control 1,neurons,226
-control 1,astrocytes,143
-control 1,microglia,84
-control 1,oligodendrocytes,47
-control 2,neurons,230
-```
+![image_panel](gallery/examples/image_panel.png)
 
-Inputs: `data.csv`. `metadata/metadata.yaml`:
+Inputs: `dapi.tif`, `tubulin.tif`. `metadata/metadata.yaml`:
 
 ```yaml
 # Gallery example (examples/make_gallery.py): synthetic data, not measurements.
-# inputs/data.csv: one row per (sample, cell type) -- sample (bar), cell_type (part), cells (count).
-plot_type: stacked_bar
+# inputs/: one image file per channel (16-bit TIFF here). Images are shown from these files,
+# never from an adjusted copy; the display range per channel is set below.
+plot_type: image_panel
+pixel_size: 0.25
+pixel_unit: "µm"
+channels:
+  - file: "dapi.tif"
+  - file: "tubulin.tif"
 plot_params:
-  x_col: sample
-  stack_col: cell_type
-  value_col: cells
-  stack_colors: {neurons: "#0072B2", astrocytes: "#E69F00", microglia: "#009E73", oligodendrocytes: "#CC79A7"}   # Okabe-Ito: safe for colour-blind readers
-  labels_xlabel: ""
+  channel_colors: ["#3b82f6", "#22c55e"]
+  channel_labels: ["DAPI", "tubulin"]
+  display_ranges: [[100, 3000], [100, 1600]]
+  show_channel_labels: true
+  pixel_size: 0.25
+  scale_bar: 10
 ```
 
 Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
 
 ```bash
-cp -r <fig-atlas>/examples/gallery/stacked_bar raw_data/<project>/
-fa bundle check raw_data/<project>/stacked_bar
-fa ingest bundle raw_data/<project>/stacked_bar --project <project>
-fa build <project> --preflight
-```
-
-### survival
-
-Time to event: one row per subject (time, event 1/0), optional group
-
-![survival](gallery/examples/survival.png)
-
-`inputs/data.csv`, first 5 of 50 rows (4 columns):
-
-```text
-group,mouse,days,died
-vehicle,V01,28.4,1
-vehicle,V02,27.9,1
-vehicle,V03,35.3,1
-vehicle,V04,15.1,1
-vehicle,V05,3.0,1
-```
-
-Inputs: `data.csv`. `metadata/metadata.yaml`:
-
-```yaml
-# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
-# inputs/data.csv: one row per animal -- group, days (to death or last follow-up), died (1) or censored (0).
-# No test is drawn; compare groups with a log-rank test through fig_atlas.stats.
-plot_type: survival
-plot_params:
-  time_col: days
-  event_col: died
-  group_col: group
-  labels_xlabel: "Days"
-```
-
-Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
-
-```bash
-cp -r <fig-atlas>/examples/gallery/survival raw_data/<project>/
-fa bundle check raw_data/<project>/survival
-fa ingest bundle raw_data/<project>/survival --project <project>
-fa build <project> --preflight
-```
-
-### threshold_scatter
-
-Effect vs significance points: one row per item, columns named in plot_params
-
-![threshold_scatter](gallery/examples/threshold_scatter.png)
-
-`inputs/data.csv`, first 5 of 300 rows (3 columns):
-
-```text
-gene,log2_fold_change,padj
-G001,-0.667,0.25
-G002,0.058,0.987
-G003,0.213,0.94
-G004,-0.177,0.967
-G005,0.261,0.711
-```
-
-Inputs: `data.csv`. `metadata/metadata.yaml`:
-
-```yaml
-# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
-# inputs/data.csv: one row per gene -- log2_fold_change (x), padj (y, shown as -log10).
-plot_type: threshold_scatter
-plot_params:
-  x_col: log2_fold_change
-  y_col: padj
-  effect_col: log2_fold_change
-  sig_col: padj
-  y_transform: neg_log10
-  effect_threshold: 1.0
-  sig_threshold: 0.05
-  label_mode: top_n
-  label_cols: ["gene"]
-  label_top_n: 5
-  labels_title: "Treated vs control"
-  labels_xlabel: "log2 fold change"
-  labels_ylabel: "-log10 adjusted P"
-```
-
-Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
-
-```bash
-cp -r <fig-atlas>/examples/gallery/threshold_scatter raw_data/<project>/
-fa bundle check raw_data/<project>/threshold_scatter
-fa ingest bundle raw_data/<project>/threshold_scatter --project <project>
-fa build <project> --preflight
-```
-
-### venn
-
-Set membership: one row per (set, item); 2-3 sets
-
-![venn](gallery/examples/venn.png)
-
-`inputs/data.csv`, first 5 of 115 rows (2 columns):
-
-```text
-dataset,item
-drug A,G002
-drug A,G003
-drug A,G004
-drug A,G005
-drug A,G006
-```
-
-Inputs: `data.csv`. `metadata/metadata.yaml`:
-
-```yaml
-# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
-# inputs/data.csv: one row per (list, item) -- dataset (which list), item (e.g. a gene); 2 or 3 lists.
-plot_type: venn
-plot_params:
-  set_labels: ["drug A", "drug B"]
-  filter_name: "Genes changed"
-  title_size: 7                 # pt; the title and its count line (the renderer's own default is for a larger canvas)
-```
-
-Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
-
-```bash
-cp -r <fig-atlas>/examples/gallery/venn raw_data/<project>/
-fa bundle check raw_data/<project>/venn
-fa ingest bundle raw_data/<project>/venn --project <project>
-fa build <project> --preflight
-```
-
-### violin
-
-Distribution per category: one row per observation (category, value)
-
-![violin](gallery/examples/violin.png)
-
-`inputs/data.csv`, first 5 of 120 rows (2 columns):
-
-```text
-genotype,spines_per_um
-wild type,2.053
-wild type,1.655
-wild type,1.586
-wild type,1.961
-wild type,1.36
-```
-
-Inputs: `data.csv`. `metadata/metadata.yaml`:
-
-```yaml
-# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
-# inputs/data.csv: one row per measurement -- genotype (category), spines_per_um (value).
-plot_type: violin
-plot_params:
-  x_col: genotype
-  y_col: spines_per_um
-  x_order: ["wild type", "heterozygous", "knockout"]
-  show_points: true
-  labels_ylabel: "Spine density (per um)"
-  labels_xlabel: ""
-```
-
-Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
-
-```bash
-cp -r <fig-atlas>/examples/gallery/violin raw_data/<project>/
-fa bundle check raw_data/<project>/violin
-fa ingest bundle raw_data/<project>/violin --project <project>
-fa build <project> --preflight
-```
-
-### volcano
-
-One row per tested gene: log2FC, padj, ids, normalised counts per sample
-
-![volcano](gallery/examples/volcano.png)
-
-`inputs/data.csv`, first 5 of 400 rows (6 columns):
-
-```text
-gene_id,symbol,base_mean,log2FC,pvalue,padj
-ENSG00000000001,GENE1,259.9,-0.206,0.462,0.768
-ENSG00000000002,GENE2,5202.9,0.147,0.707,0.908
-ENSG00000000003,GENE3,2375.7,0.107,0.775,0.933
-ENSG00000000004,GENE4,4669.9,-0.314,0.397,0.734
-ENSG00000000005,GENE5,759.0,0.272,0.331,0.702
-```
-
-Inputs: `data.csv`. `metadata/metadata.yaml`:
-
-```yaml
-# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
-# inputs/data.csv: one row per tested gene -- gene_id, symbol, base_mean, log2FC, pvalue, padj
-# (omics pack contract de_go.volcano: fig_atlas_omics/contracts/de_go_bundle_contract.md).
-plot_type: volcano
-plot_params:
-  log2fc_threshold: 1.0
-  padj_threshold: 0.05
-  annotation_mode: top_n
-  annotation_top_n: 5
-  labels_title: "Treated vs control"
-  title_size: 8                 # pt; the recipe's own sizes are for a larger canvas
-  axes_label_size: 7            # pt
-  tick_label_size: 6            # pt
-  annotation_label_size: 6      # pt
-  dot_size: 6                   # pt^2
-```
-
-Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
-
-```bash
-cp -r <fig-atlas>/examples/gallery/volcano raw_data/<project>/
-fa bundle check raw_data/<project>/volcano
-fa ingest bundle raw_data/<project>/volcano --project <project>
+cp -r <fig-atlas>/examples/gallery/image_panel raw_data/<project>/
+fa bundle check raw_data/<project>/image_panel
+fa ingest bundle raw_data/<project>/image_panel --project <project>
 fa build <project> --preflight
 ```
 
@@ -1074,175 +1100,191 @@ fa build <project> --preflight
 
 One example per renderer (and per layout where a renderer has more than one), drawn from small synthetic data by the renderer snapshot tests (`tests/renderers/cases.py`). Every renderer the package registers has a picture here or in the examples above (`tests/test_gallery_coverage.py` checks it). Parameters for each are in the [config reference](config.md).
 
-### binary_motif_heatmap
+### Column
 
-![binary_motif_heatmap](gallery/binary_motif_heatmap.png)
-
-### chromosome_ideogram
-
-![chromosome_ideogram](gallery/chromosome_ideogram.png)
-
-### cis_linkage_panel
-
-![cis_linkage_panel](gallery/cis_linkage_panel.png)
-
-### clustered_go_heatmap
-
-![clustered_go_heatmap](gallery/clustered_go_heatmap.png)
-
-### count_summary
+#### count_summary
 
 ![count_summary](gallery/count_summary.png)
 
-### cross_condition_dotplot
-
-![cross_condition_dotplot](gallery/cross_condition_dotplot.png)
-
-### cross_condition_heatmap
-
-![cross_condition_heatmap](gallery/cross_condition_heatmap.png)
-
-### dot_matrix
-
-![dot_matrix](gallery/dot_matrix.png)
-
-### flow_diagram
-
-![flow_diagram](gallery/flow_diagram.png)
-
-### funnel
-
-![funnel](gallery/funnel.png)
-
-### gene_model_track
-
-![gene_model_track](gallery/gene_model_track.png)
-
-### go_bar
+#### go_bar
 
 ![go_bar](gallery/go_bar.png)
 
-### go_cluster_dot
-
-![go_cluster_dot](gallery/go_cluster_dot.png)
-
-### go_dot
-
-![go_dot](gallery/go_dot.png)
-
-### go_rrvgo_treemap
-
-![go_rrvgo_treemap](gallery/go_rrvgo_treemap.png)
-
-### grouped_hbar
-
-![grouped_hbar](gallery/grouped_hbar.png)
-
-### image_panel
-
-![image_panel](gallery/image_panel.png)
-
-### interval_track
-
-![interval_track](gallery/interval_track.png)
-
-### jaccard_heatmap
-
-![jaccard_heatmap](gallery/jaccard_heatmap.png)
-
-### line_band
-
-![line_band](gallery/line_band.png)
-
-### ma_plot
-
-![ma_plot](gallery/ma_plot.png)
-
-### motif_architecture_table
-
-![motif_architecture_table](gallery/motif_architecture_table.png)
-
-### motif_dotplot
-
-![motif_dotplot](gallery/motif_dotplot.png)
-
-### paired_dumbbell
-
-![paired_dumbbell](gallery/paired_dumbbell.png)
-
-### paired_dumbbell_4x1
-
-![paired_dumbbell_4x1](gallery/paired_dumbbell_4x1.png)
-
-### panel_tags
-
-![panel_tags](gallery/panel_tags.png)
-
-### pathway_evidence_dotplot
-
-![pathway_evidence_dotplot](gallery/pathway_evidence_dotplot.png)
-
-### pathway_test_matrix
-
-![pathway_test_matrix](gallery/pathway_test_matrix.png)
-
-### peak_feature_composition
-
-![peak_feature_composition](gallery/peak_feature_composition.png)
-
-### peak_feature_enrichment
-
-![peak_feature_enrichment](gallery/peak_feature_enrichment.png)
-
-### sample_metric_bars
+#### sample_metric_bars
 
 ![sample_metric_bars](gallery/sample_metric_bars.png)
 
-### segment_array
-
-![segment_array](gallery/segment_array.png)
-
-### signed_heatmap
-
-![signed_heatmap](gallery/signed_heatmap.png)
-
-### single_tf_expression_scatter_bar
+#### single_tf_expression_scatter_bar
 
 ![single_tf_expression_scatter_bar](gallery/single_tf_expression_scatter_bar.png)
 
-### species_response_scatter
-
-![species_response_scatter](gallery/species_response_scatter.png)
-
-### stacked_share_hbar
-
-![stacked_share_hbar](gallery/stacked_share_hbar.png)
-
-### tf_expression_scatter_grid
+#### tf_expression_scatter_grid
 
 ![tf_expression_scatter_grid](gallery/tf_expression_scatter_grid.png)
 
-### threshold_scatter
+### XY
+
+#### line_band
+
+![line_band](gallery/line_band.png)
+
+#### ma_plot
+
+![ma_plot](gallery/ma_plot.png)
+
+#### species_response_scatter
+
+![species_response_scatter](gallery/species_response_scatter.png)
+
+#### threshold_scatter
 
 ![threshold_scatter](gallery/threshold_scatter.png)
 
-### tier_hbar
-
-![tier_hbar](gallery/tier_hbar.png)
-
-### treatment_schematic
-
-![treatment_schematic](gallery/treatment_schematic.png)
-
-### ts_profile
+#### ts_profile
 
 ![ts_profile](gallery/ts_profile.png)
 
-### two_set_euler
+#### volcano
+
+![volcano](gallery/volcano.png)
+
+### Grouped
+
+#### grouped_hbar
+
+![grouped_hbar](gallery/grouped_hbar.png)
+
+#### paired_dumbbell
+
+![paired_dumbbell](gallery/paired_dumbbell.png)
+
+#### paired_dumbbell_4x1
+
+![paired_dumbbell_4x1](gallery/paired_dumbbell_4x1.png)
+
+#### tier_hbar
+
+![tier_hbar](gallery/tier_hbar.png)
+
+### Parts of a whole
+
+#### funnel
+
+![funnel](gallery/funnel.png)
+
+#### stacked_share_hbar
+
+![stacked_share_hbar](gallery/stacked_share_hbar.png)
+
+#### two_set_euler
 
 ![two_set_euler](gallery/two_set_euler.png)
 
-### volcano
+### Multiple variables
 
-![volcano](gallery/volcano.png)
+#### binary_motif_heatmap
+
+![binary_motif_heatmap](gallery/binary_motif_heatmap.png)
+
+#### clustered_go_heatmap
+
+![clustered_go_heatmap](gallery/clustered_go_heatmap.png)
+
+#### cross_condition_dotplot
+
+![cross_condition_dotplot](gallery/cross_condition_dotplot.png)
+
+#### cross_condition_heatmap
+
+![cross_condition_heatmap](gallery/cross_condition_heatmap.png)
+
+#### dot_matrix
+
+![dot_matrix](gallery/dot_matrix.png)
+
+#### go_cluster_dot
+
+![go_cluster_dot](gallery/go_cluster_dot.png)
+
+#### go_dot
+
+![go_dot](gallery/go_dot.png)
+
+#### go_rrvgo_treemap
+
+![go_rrvgo_treemap](gallery/go_rrvgo_treemap.png)
+
+#### jaccard_heatmap
+
+![jaccard_heatmap](gallery/jaccard_heatmap.png)
+
+#### motif_dotplot
+
+![motif_dotplot](gallery/motif_dotplot.png)
+
+#### pathway_evidence_dotplot
+
+![pathway_evidence_dotplot](gallery/pathway_evidence_dotplot.png)
+
+#### pathway_test_matrix
+
+![pathway_test_matrix](gallery/pathway_test_matrix.png)
+
+#### peak_feature_composition
+
+![peak_feature_composition](gallery/peak_feature_composition.png)
+
+#### peak_feature_enrichment
+
+![peak_feature_enrichment](gallery/peak_feature_enrichment.png)
+
+#### signed_heatmap
+
+![signed_heatmap](gallery/signed_heatmap.png)
+
+### Image
+
+#### image_panel
+
+![image_panel](gallery/image_panel.png)
+
+### Schematic
+
+#### flow_diagram
+
+![flow_diagram](gallery/flow_diagram.png)
+
+#### panel_tags
+
+![panel_tags](gallery/panel_tags.png)
+
+#### treatment_schematic
+
+![treatment_schematic](gallery/treatment_schematic.png)
+
+### Field-specific
+
+#### chromosome_ideogram
+
+![chromosome_ideogram](gallery/chromosome_ideogram.png)
+
+#### cis_linkage_panel
+
+![cis_linkage_panel](gallery/cis_linkage_panel.png)
+
+#### gene_model_track
+
+![gene_model_track](gallery/gene_model_track.png)
+
+#### interval_track
+
+![interval_track](gallery/interval_track.png)
+
+#### motif_architecture_table
+
+![motif_architecture_table](gallery/motif_architecture_table.png)
+
+#### segment_array
+
+![segment_array](gallery/segment_array.png)
 

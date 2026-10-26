@@ -8,6 +8,8 @@ B only / neither). Values beyond +/-lim are drawn on the edge. All styling from
 """
 from __future__ import annotations
 
+FAMILY = "xy"    # gallery family (fig_atlas/family.py): the shape this module draws
+
 import numpy as np
 import pandas as pd
 

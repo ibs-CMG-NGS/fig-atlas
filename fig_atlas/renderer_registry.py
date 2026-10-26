@@ -116,16 +116,21 @@ def find(name: str):
 
 
 def available() -> list[dict]:
-    """Every plot name that ``fig_atlas.render`` can draw, with where it lives."""
+    """Every plot name that ``fig_atlas.render`` can draw, with where it lives
+    and its gallery family (fig_atlas.family)."""
+    import inspect
+    from . import family
     rows = []
     for pkg in package_modules():
         where = "core" if pkg.__name__ == CORE else pkg.__name__
-        rows += [{"name": n, "source": where, "function": f"{pkg.__name__}:render_{n}"} for n in _exported(pkg)]
+        rows += [{"name": n, "source": where, "function": f"{pkg.__name__}:render_{n}",
+                  "family": family.family_of(inspect.getmodule(fn))}
+                 for n, fn in _exported(pkg).items()]
     seen = {r["name"] for r in rows}
     from . import recipes
     for n, r in sorted(recipes.all_recipes().items()):
         rows.append({"name": n, "source": "recipe" if n not in seen else "recipe (also a pack renderer)",
-                     "function": r.renderer})
+                     "function": r.renderer, "family": family.family_of_plot(n)})
     return sorted(rows, key=lambda r: (r["name"], r["source"]))
 
 

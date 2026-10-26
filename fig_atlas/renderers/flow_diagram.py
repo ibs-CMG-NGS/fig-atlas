@@ -32,6 +32,8 @@ Returns the node rows drawn, ready for fig_atlas.source_data.add.
 """
 from __future__ import annotations
 
+FAMILY = "schematic"    # gallery family (fig_atlas/family.py): the shape this module draws
+
 import pandas as pd
 from matplotlib.patches import FancyArrowPatch, FancyBboxPatch, Polygon
 from matplotlib.path import Path as MplPath

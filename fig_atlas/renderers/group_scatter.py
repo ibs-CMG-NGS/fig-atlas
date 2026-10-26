@@ -2,6 +2,8 @@
 coloured by group, with a least-squares line and Pearson r. Styling from ``params``."""
 from __future__ import annotations
 
+FAMILY = "xy"    # gallery family (fig_atlas/family.py): the shape this module draws
+
 import numpy as np
 import pandas as pd
 from scipy.stats import pearsonr

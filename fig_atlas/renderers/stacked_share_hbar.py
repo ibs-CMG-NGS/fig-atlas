@@ -6,6 +6,8 @@ beside the bar. All styling from ``params``.
 """
 from __future__ import annotations
 
+FAMILY = "parts_of_whole"    # gallery family (fig_atlas/family.py): the shape this module draws
+
 import pandas as pd
 
 from ..schema import Param, Schema, uses_schema

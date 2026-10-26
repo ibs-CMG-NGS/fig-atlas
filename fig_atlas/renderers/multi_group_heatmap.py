@@ -9,6 +9,8 @@ hierarchical clustering rather than by padj/log2FC.
 
 from __future__ import annotations
 
+FAMILY = "multivariate"    # gallery family (fig_atlas/family.py): the shape this module draws
+
 import ast
 
 import numpy as np

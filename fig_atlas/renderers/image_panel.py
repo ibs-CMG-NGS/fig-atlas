@@ -8,6 +8,8 @@ figure's provenance and README disclose them (verify warns on gamma != 1).
 """
 from __future__ import annotations
 
+FAMILY = "image"    # gallery family (fig_atlas/family.py): the shape this module draws
+
 from pathlib import Path
 
 from ..schema import Param, Schema, uses_schema

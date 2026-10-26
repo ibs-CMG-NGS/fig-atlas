@@ -21,6 +21,8 @@ reference's blocky staircase -- so it was reverted in favor of squarify.
 
 from __future__ import annotations
 
+FAMILY = "multivariate"    # gallery family (fig_atlas/family.py): the shape this module draws
+
 import textwrap
 
 import numpy as np

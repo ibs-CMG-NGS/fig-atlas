@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+FAMILY = "field"    # gallery family (fig_atlas/family.py): the shape this module draws
+
 import matplotlib.pyplot as plt
 from matplotlib.font_manager import FontProperties
 from matplotlib.textpath import TextPath

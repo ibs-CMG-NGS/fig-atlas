@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+FAMILY = "field"    # gallery family (fig_atlas/family.py): the shape this module draws
+
 from typing import Any, Mapping
 import matplotlib.pyplot as plt
 import numpy as np

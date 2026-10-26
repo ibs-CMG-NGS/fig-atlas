@@ -8,6 +8,8 @@ biased toward low- or high-abundance features.
 
 from __future__ import annotations
 
+FAMILY = "xy"    # gallery family (fig_atlas/family.py): the shape this module draws
+
 from fig_atlas.recipes import recipe
 from fig_atlas.recipes import render as render_recipe
 from fig_atlas.schema import Param, Schema, uses_schema

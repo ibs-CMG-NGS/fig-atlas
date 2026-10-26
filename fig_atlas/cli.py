@@ -33,6 +33,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+from .family import FAMILY_KEYS
 from .projects import ProjectError, build_env, build_project, build_steps, find_project, find_root, list_projects
 
 EXIT_OK, EXIT_FAILED, EXIT_USAGE = 0, 1, 2
@@ -620,7 +621,7 @@ def cmd_new(args, root: Path) -> int:
     from .repo_commands import plan_new_project, plan_new_renderer
     if args.kind == "renderer":
         cs, err = _plan_or_fail(lambda: plan_new_renderer(root, args.name, args.package, args.plot_type, args.doc,
-                                                          start_from=args.start_from))
+                                                          start_from=args.start_from, family=args.family))
         return err if err else _run_changeset(cs, args)
     try:
         cs = plan_new_project(root, args.name, args.domain, args.category, args.raw_root, args.slug)
@@ -695,16 +696,18 @@ def cmd_mcp(args, root: Path) -> int:
 
 
 def cmd_renderers(args, root: Path) -> int:
-    """`fa renderers`: every plot name fig_atlas.render() can draw, and where it lives."""
+    """`fa renderers`: every plot name fig_atlas.render() can draw, its family and where it lives."""
     from .renderer_registry import available
     rows = available()
     if args.json:
         print(json.dumps(rows, indent=1))
         return EXIT_OK
     width = max(len(r["name"]) for r in rows)
+    families = max(len(r["family"]) for r in rows)
     for r in rows:
-        print(f"{r['name']:<{width}}  {r['source']:<34} {r['function']}")
-    print(f"\n{len({r['name'] for r in rows})} plot names. Draw one with fig_atlas.render(name, ax, data, params).")
+        print(f"{r['name']:<{width}}  {r['family']:<{families}}  {r['source']:<34} {r['function']}")
+    print(f"\n{len({r['name'] for r in rows})} plot names. Draw one with fig_atlas.render(name, ax, data, params). "
+          f"families: {', '.join(sorted({r['family'] for r in rows if r['family']}))}")
     return EXIT_OK
 
 
@@ -843,6 +846,8 @@ def build_parser() -> argparse.ArgumentParser:
                    help="renderer: the package it goes in (default the core; a pack only for a field-specific shape)")
     p.add_argument("--plot-type", help="renderer: bundles with this plot_type are drawn by it (fa ingest bundle)")
     p.add_argument("--doc", help="renderer: one line on what the plot shows (module docstring)")
+    p.add_argument("--family", default="column", choices=list(FAMILY_KEYS),
+                   help="renderer: the gallery family it belongs to (default: column; fig_atlas/family.py)")
     p.add_argument("--from", dest="start_from", metavar="RENDERER",
                    help="renderer: start from a copy of this existing renderer (`fa renderers`; the gallery shows "
                         "each) instead of the placeholder scatter plot")

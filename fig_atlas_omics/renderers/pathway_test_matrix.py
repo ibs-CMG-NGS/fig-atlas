@@ -11,6 +11,8 @@ columns -- a test that finds nothing -- read as a result, not a gap.
 
 from __future__ import annotations
 
+FAMILY = "multivariate"    # gallery family (fig_atlas/family.py): the shape this module draws
+
 import textwrap
 
 import numpy as np

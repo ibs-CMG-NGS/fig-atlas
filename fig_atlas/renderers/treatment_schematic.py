@@ -7,6 +7,8 @@ regimen labels with bracket indicators.
 
 from __future__ import annotations
 
+FAMILY = "schematic"    # gallery family (fig_atlas/family.py): the shape this module draws
+
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 

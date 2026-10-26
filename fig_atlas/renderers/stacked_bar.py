@@ -9,6 +9,8 @@ the table drawn (category, part, value, share), ready for
 """
 from __future__ import annotations
 
+FAMILY = "parts_of_whole"    # gallery family (fig_atlas/family.py): the shape this module draws
+
 import pandas as pd
 
 from ..schema import CODE_DEFAULT, Param, Schema, uses_schema

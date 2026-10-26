@@ -9,6 +9,8 @@ long-format with NaN value/p for the non-significant cells.
 
 from __future__ import annotations
 
+FAMILY = "multivariate"    # gallery family (fig_atlas/family.py): the shape this module draws
+
 import numpy as np
 import pandas as pd
 
