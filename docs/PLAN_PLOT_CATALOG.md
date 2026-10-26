@@ -1,6 +1,6 @@
 # fig-atlas 그림 종류(plot catalog) 확장 계획
 
-> 작성일: 2026-10-24 · 계획 판: **v1** (개정 기록은 맨 아래)
+> 작성일: 2026-10-24 (개정 2026-10-27) · 계획 판: **v2** (개정 기록은 맨 아래)
 > 대상: 패키지 저장소 `fig-atlas`의 `fig_atlas/renderers/`, `fig_atlas/stats.py`, `fig_atlas/contracts.py`, `examples/gallery/`, `tests/`, 문서 갤러리(`docs/reference/gallery.md`)
 > 관련 문서: [ROADMAP_ECOSYSTEM_STRATEGY.md](ROADMAP_ECOSYSTEM_STRATEGY.md) (Phase 6a 범용 렌더러), fig-atlas `docs/decisions/0003-renderers-are-shapes.md`, `AGENTS.md` §3 (asset accumulation)
 > **상태의 정본**: [PLAN_PLOT_CATALOG.status.yaml](PLAN_PLOT_CATALOG.status.yaml) — 작업 하나하나의 상태·담당·커밋은 이 파일에만 적는다. 아래 표는 Phase 단위 요약이다.
@@ -10,7 +10,7 @@
 
 | Phase | 내용 | 상태 |
 |---|---|---|
-| 0 | 기반: 상태 파일·점검 스크립트, 갤러리 분류(family), 작업 카드 틀 | 🔄 진행 중: I-01 ✅ (계획 v1, `261f558`), I-02 ⬜ |
+| 0 | 기반: 상태 파일·점검 스크립트, 갤러리 분류(family), 작업 카드 틀 | 🔄 진행 중: I-01 ✅ (계획 v1, `261f558`), I-02 🔄 |
 | 1 | 통계 층 확장 S-01–S-06 (짝지은 검정, 사후 검정, 상관·회귀, ROC, 곡선 맞춤, 분할표) | ⬜ 대기 (게이트 G1 뒤) |
 | 2 | 우선순위 1 그림 8종 (PC-01–PC-08) | ⬜ 대기 |
 | 3 | 기존 그림 고도화 E-01–E-06 (통계 괄호, 축 옵션 등) | ⬜ 대기 |
@@ -138,7 +138,8 @@ Prism의 그래프 분류(XY, 열, 그룹, 분할표, 생존, 부분과 전체, 
 
 ### 5.1 그림(PC) 하나
 
-- [ ] **렌더러**: `fa new renderer <name> --plot-type <type>`으로 시작한 코어 모듈. 모양은 `(ax, df, params)`(여러 축이 필요하면 `(fig, df, params)`). 그린 데이터 표를 반환한다(Source Data용).
+- [ ] **렌더러**: `fa new renderer <name> --plot-type <type> --family <family>`으로 시작한 코어 모듈. 모양은 `(ax, df, params)`(여러 축이 필요하면 `(fig, df, params)`). 그린 데이터 표를 반환한다(Source Data용).
+- [ ] **분류**: 렌더러 모듈에 `FAMILY`(갤러리 분류, `fig_atlas/family.py`); `tests/test_gallery_coverage.py`가 모든 렌더러에 하나를 요구한다.
 - [ ] **스키마**: 모든 매개변수에 역할·단위·조정 안내. 열 이름은 `*_col` 매개변수로(역할 열).
 - [ ] **계약**: 코어 계약(`fig_atlas/contracts.py`, `role_columns`)과 ingest 연결(`plot_type`).
 - [ ] **예제 번들**: `examples/make_gallery.py`에 합성 데이터 생성 함수를 **맨 뒤에** 추가(기존 예제 데이터 불변), 설명 주석이 달린 `metadata.yaml`.
@@ -183,7 +184,7 @@ Prism의 그래프 분류(XY, 열, 그룹, 분할표, 생존, 부분과 전체, 
 
 ### Phase 0 — 기반
 - I-01: 상태 파일과 점검 스크립트(이 문서와 함께 작성).
-- I-02: 갤러리 분류: 계약 또는 렌더러에 `family`(column, xy, grouped, survival, parts_of_whole, multivariate, diagnostic, image, field) 표시를 더하고, 갤러리 페이지를 분류별로 묶는다.
+- I-02: 갤러리 분류: 렌더러 모듈에 `FAMILY`(column, xy, grouped, survival, parts_of_whole, multivariate, diagnostic, image, schematic, field)를 선언하고(정본은 `fig_atlas/family.py`), plot_type은 그 렌더러의 분류를 물려받으며, 갤러리 페이지를 분류별로 묶는다.
 - 작업 카드 틀과 서브에이전트 지시문 틀(§8.4).
 - **완료 기준**: 점검 스크립트가 현재 상태(25 plot_type)를 정확히 보고, 갤러리가 분류별로 나뉜다.
 
@@ -284,3 +285,4 @@ fig-atlas 그림 종류 확장 계획의 작업 <ID>를 맡아라.
 | 판 | 날짜 | 내용 |
 |---|---|---|
 | v1 | 2026-10-24 | 첫 작성: 후보 S 6·PC 22·E 6, 완성 정의, 검증 층 V1–V10, 에이전트 규약, 상태 파일·점검 스크립트 |
+| v2 | 2026-10-27 | I-02에서 family 목록에 `schematic`(도식·패널 태그 같은 레이아웃 도우미)을 더하고, family의 정본을 계약이 아니라 렌더러 모듈의 `FAMILY`로 확정(plot_type은 ingest_map으로 상속). §5.1 완성 정의에 분류 항목 추가 |

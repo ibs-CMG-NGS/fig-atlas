@@ -2,8 +2,8 @@
 # One card per task; field meanings in the plan, section 4. Change a card when you claim, hand in or
 # finish a task (section 8.1); check the file against the package with
 #   python scripts/check_plan_plot_catalog.py
-plan_version: 1
-package_version: "0.1.0.dev0 (fig-atlas d114848, checked 2026-10-24)"
+plan_version: 2
+package_version: "0.1.0.dev0 (fig-atlas d114848 + plot/I-02-gallery-families 50ab6eb, checked 2026-10-27)"
 baseline:                       # what existed when the plan started (not tasks)
   plot_types: 25                # plot types fa ingest bundle draws, each with an example bundle and a contract
   renderers: 54                 # registered renderer names (two omics recipes share a pack renderer's name), each with a gallery picture
@@ -38,16 +38,16 @@ cards:
     kind: infra
     phase: 0
     priority: P1
-    status: claimed
+    status: in_review
     depends_on: []
     plot_type: null
     data: null
     owner: "opencode@KimYG 2026-10-27"
     branch: "plot/I-02-gallery-families"
-    commits: []
+    commits: ["fig-atlas 50ab6eb"]
     version: null
     review: null
-    notes: "design: family declared on the renderer module (FAMILY = '<family>'), resolved by plot_type through ingest_map; gallery.md groups examples and renderer pictures by family"
+    notes: "family declared on the renderer module (FAMILY = '<family>'; fig_atlas/family.py, 10 families incl. schematic), a plot type inherits it through ingest_map, gallery.md groups examples and renderer pictures by family, fa renderers shows it, fa new renderer --family sets it; tests/test_gallery_coverage.py requires one per renderer and per picture; 891 tests collected (2 skipped) exit 0, fa reference --check ok, fa lint --hardcoded --check ok; V8 examples/ and snapshots unchanged (gallery PNGs redrawn by this PC's fonts, reverted); G2 visual check of the regrouped page pending"
   - id: S-01
     title: "paired tests: paired t, Wilcoxon signed-rank"
     kind: stats
