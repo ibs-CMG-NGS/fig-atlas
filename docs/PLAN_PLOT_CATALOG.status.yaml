@@ -38,16 +38,16 @@ cards:
     kind: infra
     phase: 0
     priority: P1
-    status: todo
+    status: claimed
     depends_on: []
     plot_type: null
     data: null
-    owner: null
-    branch: null
+    owner: "opencode@KimYG 2026-10-27"
+    branch: "plot/I-02-gallery-families"
     commits: []
     version: null
     review: null
-    notes: ""
+    notes: "design: family declared on the renderer module (FAMILY = '<family>'), resolved by plot_type through ingest_map; gallery.md groups examples and renderer pictures by family"
   - id: S-01
     title: "paired tests: paired t, Wilcoxon signed-rank"
     kind: stats
