@@ -2,13 +2,13 @@
 # One card per task; field meanings in the plan, section 4. Change a card when you claim, hand in or
 # finish a task (section 8.1); check the file against the package with
 #   python scripts/check_plan_plot_catalog.py
-plan_version: 2
+plan_version: 3
 package_version: "0.1.0.dev0 (fig-atlas 50ab6eb on main, checked 2026-10-27)"
 baseline:                       # what existed when the plan started (not tasks)
   plot_types: 25                # plot types fa ingest bundle draws, each with an example bundle and a contract
   renderers: 54                 # registered renderer names (two omics recipes share a pack renderer's name), each with a gallery picture
 gates:                          # researcher decisions (plan section 11): pending | passed | <date and note>
-  G1: pending                   # candidate list, priorities, scope; reference-value tool (R)
+  G1: "passed 2026-10-27 (scope fixed: strict separation -- the analysis script runs the tests, the package draws and records them; S-01..S-06 dropped, R reference tool no longer needed; PC-17 donut/pie deferred to the Phase 5 recheck)"   # candidate list, priorities, scope
   G3: pending                   # new required dependencies (only when a task needs one)
   G4: pending                   # release 0.2.0 after Phase 2
 phase_gates:                    # a phase's cards can start only after these gates have passed
@@ -48,12 +48,44 @@ cards:
     version: "unreleased (fig-atlas 0.1.0.dev0)"
     review: "G2 approved 2026-10-27"
     notes: "family declared on the renderer module (FAMILY = '<family>'; fig_atlas/family.py, 10 families incl. schematic), a plot type inherits it through ingest_map, gallery.md groups examples and renderer pictures by family, fa renderers shows it, fa new renderer --family sets it; tests/test_gallery_coverage.py requires one per renderer and per picture; 891 tests collected (2 skipped) exit 0, fa reference --check ok, fa lint --hardcoded --check ok; V8 examples/ and snapshots unchanged (gallery PNGs redrawn by this PC's fonts, reverted); merged to main and pushed, CI green"
+  - id: I-03
+    title: "renderers compute no statistics: results arrive as columns (audit + group_scatter r/p)"
+    kind: infra
+    phase: 0
+    priority: P1
+    status: todo
+    depends_on: []
+    plot_type: null
+    data: null
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: "plan v3 boundary: audit every renderer for scipy.stats/optimize and classify what it computes as either the drawn shape (cluster order, KM curve, mean+/-CI band, violin density -- keep) or a reported result (pearson r/p in group_scatter -- becomes r_col/p_col inputs; dose_response's 4PL fit moves to E-04). Record the classification in fig-atlas docs/decisions. Example bundles gain the result columns; snapshots unchanged."
+
+  - id: I-04
+    title: "analysis recipes: run the test, write the value column, stats.record"
+    kind: infra
+    phase: 0
+    priority: P1
+    status: todo
+    depends_on: []
+    plot_type: null
+    data: null
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: "plan v3, section 5.2: docs/howto/analysis_recipes.md (+ .ko.md twin, required by tests/test_docs_i18n.py) with one minimal example per S-01..S-06 (paired test, post-hoc, correlation/regression, ROC/AUC, curve fit, contingency): compute in scipy/R, write the value column, stats.record(table, name=...), point the config at it. Add a commented case to the project analysis template. Reword AGENTS.md section 4.6 in both repositories to the v3 boundary (fig-atlas AGENTS.md has uncommitted user edits -- coordinate before touching it)."
+
   - id: S-01
     title: "paired tests: paired t, Wilcoxon signed-rank"
     kind: stats
     phase: 1
     priority: P1
-    status: todo
+    status: dropped
     depends_on: []
     plot_type: null
     data: null
@@ -62,13 +94,13 @@ cards:
     commits: []
     version: null
     review: null
-    notes: ""
+    notes: "dropped in plan v3 (gate G1, strict separation): the test runs in the analysis script, not in the package; the figure draws a value column and stats.record keeps the test table. Recipe: I-04. PC-01 prints p_value."
   - id: S-02
     title: "post-hoc comparisons: Tukey HSD, Dunnett, Kruskal-Wallis + Dunn"
     kind: stats
     phase: 1
     priority: P1
-    status: todo
+    status: dropped
     depends_on: []
     plot_type: null
     data: null
@@ -77,13 +109,13 @@ cards:
     commits: []
     version: null
     review: null
-    notes: ""
+    notes: "dropped in plan v3 (gate G1, strict separation): the test runs in the analysis script, not in the package; the figure draws a value column and stats.record keeps the test table. Recipe: I-04. Bracket drawing is E-01."
   - id: S-03
     title: "correlation (Pearson, Spearman) and linear regression with bands"
     kind: stats
     phase: 1
     priority: P1
-    status: todo
+    status: dropped
     depends_on: []
     plot_type: null
     data: null
@@ -92,13 +124,13 @@ cards:
     commits: []
     version: null
     review: null
-    notes: ""
+    notes: "dropped in plan v3 (gate G1, strict separation): the test runs in the analysis script, not in the package; the figure draws a value column and stats.record keeps the test table. Recipe: I-04. PC-03/07/08 draw the line, band and r/p columns."
   - id: S-04
     title: "ROC curve and AUC with confidence interval"
     kind: stats
     phase: 1
     priority: P1
-    status: todo
+    status: dropped
     depends_on: []
     plot_type: null
     data: null
@@ -107,13 +139,13 @@ cards:
     commits: []
     version: null
     review: null
-    notes: ""
+    notes: "dropped in plan v3 (gate G1, strict separation): the test runs in the analysis script, not in the package; the figure draws a value column and stats.record keeps the test table. Recipe: I-04. PC-06 draws fpr/tpr/auc/auc_ci columns."
   - id: S-05
     title: "curve fitting framework (linear, exponential, Michaelis-Menten, 4PL)"
     kind: stats
     phase: 1
     priority: P2
-    status: todo
+    status: dropped
     depends_on: []
     plot_type: null
     data: null
@@ -122,13 +154,13 @@ cards:
     commits: []
     version: null
     review: null
-    notes: ""
+    notes: "dropped in plan v3 (gate G1, strict separation): the test runs in the analysis script, not in the package; the figure draws a value column and stats.record keeps the test table. Recipe: I-04. Model choice is the researcher's analysis decision; dose_response takes fit params (E-04)."
   - id: S-06
     title: "contingency: chi-square, Fisher exact, proportion CI"
     kind: stats
     phase: 1
     priority: P2
-    status: todo
+    status: dropped
     depends_on: []
     plot_type: null
     data: null
@@ -137,14 +169,14 @@ cards:
     commits: []
     version: null
     review: null
-    notes: ""
+    notes: "dropped in plan v3 (gate G1, strict separation): the test runs in the analysis script, not in the package; the figure draws a value column and stats.record keeps the test table. Recipe: I-04. PC-18 draws proportion bars and CI whiskers; the test p is a column."
   - id: PC-01
     title: "before-after (paired) plot"
     kind: plot
     phase: 2
     priority: P1
     status: todo
-    depends_on: [S-01]
+    depends_on: []
     plot_type: paired_plot
     data: "subject, condition, value"
     owner: null
@@ -152,14 +184,14 @@ cards:
     commits: []
     version: null
     review: null
-    notes: ""
+    notes: "plan v3: the paired test runs in the analysis script (recipe I-04); the renderer draws the paired points and the bracket from a p_value column."
   - id: PC-02
     title: "grouped bar (two factors, mean +/- error, points)"
     kind: plot
     phase: 2
     priority: P1
     status: todo
-    depends_on: [S-02]
+    depends_on: []
     plot_type: grouped_bar
     data: "factor_a, factor_b, value"
     owner: null
@@ -167,14 +199,14 @@ cards:
     commits: []
     version: null
     review: null
-    notes: ""
+    notes: "plan v3: post-hoc comparisons run in the analysis script (recipe I-04); the renderer draws brackets from p_value/padj columns."
   - id: PC-03
     title: "correlation scatter with regression line and band"
     kind: plot
     phase: 2
     priority: P1
     status: todo
-    depends_on: [S-03]
+    depends_on: []
     plot_type: correlation_scatter
     data: "x, y, optional group"
     owner: null
@@ -182,7 +214,7 @@ cards:
     commits: []
     version: null
     review: null
-    notes: ""
+    notes: "plan v3: regression line/band coordinates and r/p come from the analysis script (recipe I-04); the renderer draws them."
   - id: PC-04
     title: "raincloud (half violin + box + points)"
     kind: plot
@@ -219,7 +251,7 @@ cards:
     phase: 2
     priority: P1
     status: todo
-    depends_on: [S-04]
+    depends_on: []
     plot_type: roc_curve
     data: "label, score, optional marker"
     owner: null
@@ -227,14 +259,14 @@ cards:
     commits: []
     version: null
     review: null
-    notes: ""
+    notes: "plan v3: fpr, tpr, auc and auc_ci come from the analysis script (recipe I-04); the renderer draws the curve, the diagonal and the legend values."
   - id: PC-07
     title: "Bland-Altman plot"
     kind: plot
     phase: 2
     priority: P1
     status: todo
-    depends_on: [S-03]
+    depends_on: []
     plot_type: bland_altman
     data: "method_a, method_b"
     owner: null
@@ -242,14 +274,14 @@ cards:
     commits: []
     version: null
     review: null
-    notes: ""
+    notes: "plan v3: bias and limits of agreement come from the analysis script (recipe I-04); the renderer draws the scatter and the lines."
   - id: PC-08
     title: "correlation matrix (triangle, values, significance)"
     kind: plot
     phase: 2
     priority: P1
     status: todo
-    depends_on: [S-03]
+    depends_on: []
     plot_type: correlation_matrix
     data: "wide table: one column per variable"
     owner: null
@@ -257,14 +289,14 @@ cards:
     commits: []
     version: null
     review: null
-    notes: ""
+    notes: "plan v3: the r matrix and p values come from the analysis script (recipe I-04); the renderer draws the triangle and the value labels."
   - id: E-01
     title: "statistical brackets and stars on column graphs"
     kind: enhance
     phase: 3
     priority: P1
     status: todo
-    depends_on: [S-02]
+    depends_on: []
     plot_type: null
     data: null
     owner: null
@@ -272,7 +304,7 @@ cards:
     commits: []
     version: null
     review: null
-    notes: ""
+    notes: "plan v3: brackets draw from p_value/padj input columns; star thresholds and the correction display come from the config; the script records the test table with stats.record."
   - id: E-02
     title: "common axis options: log, broken axis, ranges"
     kind: enhance
@@ -304,12 +336,12 @@ cards:
     review: null
     notes: ""
   - id: E-04
-    title: "dose_response moved onto the S-05 fitting framework (same results)"
+    title: "dose_response takes the fit as input (no in-renderer curve_fit; same values)"
     kind: enhance
     phase: 3
     priority: P2
     status: todo
-    depends_on: [S-05]
+    depends_on: []
     plot_type: null
     data: null
     owner: null
@@ -317,7 +349,7 @@ cards:
     commits: []
     version: null
     review: null
-    notes: ""
+    notes: "plan v3: the 4PL fit moves out of the renderer -- fit params and curve coordinates come from the analysis script (recipe I-04), the renderer draws them and prints the parameters. The example bundle gains the fit values and its snapshot is updated deliberately (recorded V8 exception)."
   - id: E-05
     title: "line_band error-bar mode"
     kind: enhance
@@ -347,7 +379,7 @@ cards:
     commits: []
     version: null
     review: null
-    notes: ""
+    notes: "plan v3: the log-rank p comes from the analysis script (stats.record); the renderer prints the number-at-risk table and the p."
   - id: PC-09
     title: "QQ plot"
     kind: plot
@@ -364,20 +396,20 @@ cards:
     review: null
     notes: ""
   - id: PC-10
-    title: "XY curve fit (model choice, error bars)"
+    title: "XY curve fit (draws the fitted curve; the model is chosen in the analysis)"
     kind: plot
     phase: 4
     priority: P2
     status: todo
-    depends_on: [S-05]
+    depends_on: []
     plot_type: curve_fit
-    data: "x, y, optional group"
+    data: "x, y, optional group, fitted curve coordinates"
     owner: null
     branch: null
     commits: []
     version: null
     review: null
-    notes: ""
+    notes: "plan v3: model choice and fitting are analysis (recipe I-04); the renderer draws the fitted curve, points, error bars and parameter annotation from input columns."
   - id: PC-11
     title: "dual y-axis line plot"
     kind: plot
@@ -469,7 +501,7 @@ cards:
     review: null
     notes: ""
   - id: PC-17
-    title: "donut / pie (if approved at gate G1)"
+    title: "donut / pie (deferred: decide at the Phase 5 recheck of G1)"
     kind: plot
     phase: 4
     priority: P2
@@ -489,7 +521,7 @@ cards:
     phase: 4
     priority: P2
     status: todo
-    depends_on: [S-06]
+    depends_on: []
     plot_type: contingency_bar
     data: "group, outcome, count"
     owner: null
@@ -497,7 +529,7 @@ cards:
     commits: []
     version: null
     review: null
-    notes: ""
+    notes: "plan v3: the test p value comes from the analysis script (recipe I-04); the renderer draws the proportion bars and CI whiskers."
   - id: PC-19
     title: "radar chart"
     kind: plot
