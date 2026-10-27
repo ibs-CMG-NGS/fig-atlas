@@ -39,7 +39,10 @@ of one manuscript before being published as a package. This first public tree co
   figure prints and does not compute them. `group_scatter` prints its Pearson r and P from the
   `r_col` / `p_col` columns the analysis script writes (the gallery example carries them); the old
   in-renderer calculation runs with a deprecation warning until card E-04 removes it, and
-  `tests/test_renderer_purity.py` fails when a renderer starts computing a printed result.
+  `tests/test_renderer_purity.py` fails when a renderer starts computing a printed result. The
+  how-to page `docs/howto/analysis_recipes.md` gives the six recipes a catalog panel needs (paired
+  test, post-hoc, correlation/regression, ROC/AUC, curve fit, contingency), and the project analysis
+  template carries a commented case.
 - **Documentation**: a guide for researchers, tutorials run as tests (Case A, B and C worked
   examples among them), how-to guides, generated reference pages and a renderer gallery, design
   decision records, a documentation site (MkDocs) in English with a Korean version of every page
