@@ -53,12 +53,12 @@ cards:
     kind: infra
     phase: 0
     priority: P1
-    status: todo
+    status: claimed
     depends_on: []
     plot_type: null
     data: null
-    owner: null
-    branch: null
+    owner: "opencode@KimYG 2026-10-27"
+    branch: "plot/I-03-renderer-purity"
     commits: []
     version: null
     review: null
