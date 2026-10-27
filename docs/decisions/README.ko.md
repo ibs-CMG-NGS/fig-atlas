@@ -10,6 +10,7 @@
 | [0004](0004-procedures-are-commands.md) | 절차는 결정적 명령으로, AI는 같은 명령을 MCP로 부른다 | 채택 (2026-10-08) |
 | [0005](0005-agents-md-single-source.md) | 규칙의 단일 정본은 루트 `AGENTS.md` | 채택 (2026-10-08) |
 | [0006](0006-documentation-in-two-languages.md) | 문서는 영어가 정본이고, 한국어판을 함께 둔다 | 채택 (2026-10-14) |
+| [0007](0007-renderers-draw-results-they-do-not-compute.md) | 렌더러는 그림이 인쇄하는 결과를 그리고, 계산은 분석 스크립트가 한다 | 채택 (2026-10-27) |
 
 ## 새 결정 쓰기
 

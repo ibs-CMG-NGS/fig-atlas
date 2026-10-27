@@ -139,7 +139,14 @@ def group_scatter(rng):
             x = rng.uniform(20, 60)
             rows.append({"library": f"{batch[-1]}{i:02d}", "batch": batch, "frip_pct": round(float(x), 2),
                          "signal_log2": round(float(0.03 * x - 1.0 + shift + rng.normal(0, 0.15)), 3)})
-    return pd.DataFrame(rows)
+    df = pd.DataFrame(rows)
+    # What the figure prints comes from the analysis, not from the renderer
+    # (docs/decisions/0007): the correlation is computed here, once, and travels
+    # to the figure as a column. No extra random draws, so later bundles are unchanged.
+    from scipy.stats import pearsonr
+    r, p = pearsonr(df["frip_pct"], df["signal_log2"])
+    df["r"], df["p_value"] = float(r), float(p)
+    return df
 
 
 def effect_dots(rng):
@@ -416,7 +423,8 @@ plot_params:
   margin_bottom: 0.2            # fraction of the figure; room for the sample names below
   margin_right: 0.8             # fraction of the figure; room for the colour bar and its title
 """,
-    "group_scatter": HEAD + """# inputs/data.csv: one row per library -- frip_pct (x), signal_log2 (y), batch (group), library (label).
+    "group_scatter": HEAD + """# inputs/data.csv: one row per library -- frip_pct (x), signal_log2 (y), batch (group), library (label);
+# r and p_value hold the correlation the panel prints (computed by the analysis, drawn by the renderer).
 plot_type: group_scatter
 plot_params:
   x_col: frip_pct
@@ -424,6 +432,8 @@ plot_params:
   group_col: batch
   group_colors: {"batch 1": "#0072B2", "batch 2": "#E69F00"}
   legend: true
+  r_col: r
+  p_col: p_value
   xlabel: "Fraction of reads in peaks (%)"
   ylabel: "Signal (log2)"
 """,

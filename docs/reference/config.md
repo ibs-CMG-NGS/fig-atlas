@@ -25,7 +25,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | [`go_cluster_dot`](#go_cluster_dot) | fig_atlas_omics.renderers | 37 |
 | [`go_dot`](#go_dot) | fig_atlas_omics.renderers | 11 |
 | [`go_rrvgo_treemap`](#go_rrvgo_treemap) | fig_atlas_omics.renderers | 14 |
-| [`group_scatter`](#group_scatter) | core | 37 |
+| [`group_scatter`](#group_scatter) | core | 39 |
 | [`grouped_hbar`](#grouped_hbar) | core | 21 |
 | [`heatmap`](#heatmap) | core | 23 |
 | [`histogram`](#histogram) | core | 34 |
@@ -843,7 +843,9 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `fit_color` | colour | `#374151` | hex color | Fit line colour |
 | `fit_width` | number | `0.7` | pt | Fit line width |
 | `fit_style` | text | `-` |  | Fit line style (matplotlib linestyle) |
-| `annotate_r` | true / false | `True` |  | Print the Pearson r and P |
+| `r_col` | text | auto |  | Column with Pearson r for the panel (one value, written by the analysis script) |
+| `p_col` | text | auto |  | Column with the P value that goes with r_col |
+| `annotate_r` | true / false | `True` |  | Print r and P from r_col/p_col (needs both columns) |
 | `r_fmt` | text | `r = {r:+.2f}, P = {p:.1g}` |  | Format of the r text; fields r, p, n |
 | `r_xy` | list | `[0.03, 0.97]` | axes fraction (x, y) | Top-left corner of the r text |
 | `r_fontsize` | number | `5.5` | pt | r text size |

@@ -10,6 +10,7 @@ This folder records fig-atlas's main design decisions and their reasons. The rul
 | [0004](0004-procedures-are-commands.md) | Procedures are deterministic commands; AI calls the same commands over MCP | Accepted (2026-10-08) |
 | [0005](0005-agents-md-single-source.md) | The single source of the rules is the root `AGENTS.md` | Accepted (2026-10-08) |
 | [0006](0006-documentation-in-two-languages.md) | The documentation is English, the source of truth, with a Korean version beside it | Accepted (2026-10-14) |
+| [0007](0007-renderers-draw-results-they-do-not-compute.md) | Renderers draw the results a figure prints; the analysis script computes them | Accepted (2026-10-27) |
 
 ## Writing a new decision
 

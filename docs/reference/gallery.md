@@ -360,22 +360,23 @@ Two measurements per item, coloured by group, with a fitted line and Pearson r
 
 ![group_scatter](gallery/examples/group_scatter.png)
 
-`inputs/data.csv`, first 5 of 30 rows (4 columns):
+`inputs/data.csv`, first 5 of 30 rows (6 columns):
 
 ```text
-library,batch,frip_pct,signal_log2
-101,batch 1,35.22,-0.174
-102,batch 1,42.74,0.408
-103,batch 1,20.17,-0.486
-104,batch 1,34.21,0.175
-105,batch 1,51.44,0.644
+library,batch,frip_pct,signal_log2,r,p_value
+101,batch 1,35.22,-0.174,0.851104716118283,2.532289895624823e-09
+102,batch 1,42.74,0.408,0.851104716118283,2.532289895624823e-09
+103,batch 1,20.17,-0.486,0.851104716118283,2.532289895624823e-09
+104,batch 1,34.21,0.175,0.851104716118283,2.532289895624823e-09
+105,batch 1,51.44,0.644,0.851104716118283,2.532289895624823e-09
 ```
 
 Inputs: `data.csv`. `metadata/metadata.yaml`:
 
 ```yaml
 # Gallery example (examples/make_gallery.py): synthetic data, not measurements.
-# inputs/data.csv: one row per library -- frip_pct (x), signal_log2 (y), batch (group), library (label).
+# inputs/data.csv: one row per library -- frip_pct (x), signal_log2 (y), batch (group), library (label);
+# r and p_value hold the correlation the panel prints (computed by the analysis, drawn by the renderer).
 plot_type: group_scatter
 plot_params:
   x_col: frip_pct
@@ -383,6 +384,8 @@ plot_params:
   group_col: batch
   group_colors: {"batch 1": "#0072B2", "batch 2": "#E69F00"}
   legend: true
+  r_col: r
+  p_col: p_value
   xlabel: "Fraction of reads in peaks (%)"
   ylabel: "Signal (log2)"
 ```

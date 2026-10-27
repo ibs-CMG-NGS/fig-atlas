@@ -1,5 +1,6 @@
 # Gallery example (examples/make_gallery.py): synthetic data, not measurements.
-# inputs/data.csv: one row per library -- frip_pct (x), signal_log2 (y), batch (group), library (label).
+# inputs/data.csv: one row per library -- frip_pct (x), signal_log2 (y), batch (group), library (label);
+# r and p_value hold the correlation the panel prints (computed by the analysis, drawn by the renderer).
 plot_type: group_scatter
 plot_params:
   x_col: frip_pct
@@ -7,5 +8,7 @@ plot_params:
   group_col: batch
   group_colors: {"batch 1": "#0072B2", "batch 2": "#E69F00"}
   legend: true
+  r_col: r
+  p_col: p_value
   xlabel: "Fraction of reads in peaks (%)"
   ylabel: "Signal (log2)"
