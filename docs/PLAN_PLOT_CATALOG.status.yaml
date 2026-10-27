@@ -53,28 +53,28 @@ cards:
     kind: infra
     phase: 0
     priority: P1
-    status: in_review
+    status: done
     depends_on: []
     plot_type: null
     data: null
     owner: "opencode@KimYG 2026-10-27"
     branch: "plot/I-03-renderer-purity"
     commits: ["fig-atlas 6593d5f"]
-    version: null
-    review: null
-    notes: "plan v3 / ADR 0007 (docs/decisions/0007-renderers-draw-results-they-do-not-compute.md, + .ko). Audit of 9 renderer modules that import scipy: keep (the shape) heatmap/multi_group_heatmap/cross_condition_heatmap (clustering order), line_band (mean+/-CI band arithmetic); transitional and removed by E-04: dose_response (curve_fit 4PL), group_scatter (pearsonr). Done: group_scatter takes r_col/p_col (missing column -> ValueError, no column -> DeprecationWarning; picture identical), the gallery example carries r/p_value, tests/test_renderer_purity.py holds the allowlist (a stale entry also fails), tests/renderers/test_group_scatter.py adds 5 unit tests. Evidence: pytest 901 collected (2 skipped) exit 0; fa lint --hardcoded --check exit 0; fa reference --check exit 0 (gallery.md regenerated, the group_scatter picture is pixel-identical; the check only disagrees while the user's uncommitted line_band.py change is in the tree -- that param is theirs, config.md kept at main's line_band); V8: examples/gallery only the group_scatter bundle changed (deliberate: result columns), no snapshot cases existed for group_scatter. Not merged or pushed: awaiting review."
+    version: "unreleased (on fig-atlas main)"
+    review: "G2 approved 2026-10-27 (user); CI 40437317290 success, Documentation site 40437317324 success"
+    notes: "plan v3 / ADR 0007 (docs/decisions/0007-renderers-draw-results-they-do-not-compute.md, + .ko). Audit of 9 renderer modules that import scipy: keep (the shape) heatmap/multi_group_heatmap/cross_condition_heatmap (clustering order), line_band (mean+/-CI band arithmetic); transitional and removed by E-04: dose_response (curve_fit 4PL), group_scatter (pearsonr). Done: group_scatter takes r_col/p_col (missing column -> ValueError, no column -> DeprecationWarning; picture identical), the gallery example carries r/p_value, tests/test_renderer_purity.py holds the allowlist (a stale entry also fails), tests/renderers/test_group_scatter.py adds 5 unit tests. Evidence: pytest 901 collected (2 skipped) exit 0; fa lint --hardcoded --check exit 0; fa reference --check exit 0 (gallery.md regenerated, the group_scatter picture is pixel-identical; the check only disagreed while the user's uncommitted line_band.py change was in the tree -- that param is theirs, config.md kept at main's line_band); V8: examples/gallery only the group_scatter bundle changed (deliberate: result columns), no snapshot cases existed for group_scatter. Merged fast-forward to main and pushed; local branch deleted."
 
   - id: I-04
     title: "analysis recipes: run the test, write the value column, stats.record"
     kind: infra
     phase: 0
     priority: P1
-    status: todo
+    status: claimed
     depends_on: []
     plot_type: null
     data: null
-    owner: null
-    branch: null
+    owner: "opencode@KimYG 2026-10-27"
+    branch: "docs/I-04-analysis-recipes"
     commits: []
     version: null
     review: null
