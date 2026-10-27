@@ -53,16 +53,16 @@ cards:
     kind: infra
     phase: 0
     priority: P1
-    status: claimed
+    status: in_review
     depends_on: []
     plot_type: null
     data: null
     owner: "opencode@KimYG 2026-10-27"
     branch: "plot/I-03-renderer-purity"
-    commits: []
+    commits: ["fig-atlas 6593d5f"]
     version: null
     review: null
-    notes: "plan v3 boundary: audit every renderer for scipy.stats/optimize and classify what it computes as either the drawn shape (cluster order, KM curve, mean+/-CI band, violin density -- keep) or a reported result (pearson r/p in group_scatter -- becomes r_col/p_col inputs; dose_response's 4PL fit moves to E-04). Record the classification in fig-atlas docs/decisions. Example bundles gain the result columns; snapshots unchanged."
+    notes: "plan v3 / ADR 0007 (docs/decisions/0007-renderers-draw-results-they-do-not-compute.md, + .ko). Audit of 9 renderer modules that import scipy: keep (the shape) heatmap/multi_group_heatmap/cross_condition_heatmap (clustering order), line_band (mean+/-CI band arithmetic); transitional and removed by E-04: dose_response (curve_fit 4PL), group_scatter (pearsonr). Done: group_scatter takes r_col/p_col (missing column -> ValueError, no column -> DeprecationWarning; picture identical), the gallery example carries r/p_value, tests/test_renderer_purity.py holds the allowlist (a stale entry also fails), tests/renderers/test_group_scatter.py adds 5 unit tests. Evidence: pytest 901 collected (2 skipped) exit 0; fa lint --hardcoded --check exit 0; fa reference --check exit 0 (gallery.md regenerated, the group_scatter picture is pixel-identical; the check only disagrees while the user's uncommitted line_band.py change is in the tree -- that param is theirs, config.md kept at main's line_band); V8: examples/gallery only the group_scatter bundle changed (deliberate: result columns), no snapshot cases existed for group_scatter. Not merged or pushed: awaiting review."
 
   - id: I-04
     title: "analysis recipes: run the test, write the value column, stats.record"
@@ -336,7 +336,7 @@ cards:
     review: null
     notes: ""
   - id: E-04
-    title: "dose_response takes the fit as input (no in-renderer curve_fit; same values)"
+    title: "renderers compute no printed result: dose_response's 4PL fit and group_scatter's Pearson fallback"
     kind: enhance
     phase: 3
     priority: P2
@@ -349,7 +349,7 @@ cards:
     commits: []
     version: null
     review: null
-    notes: "plan v3: the 4PL fit moves out of the renderer -- fit params and curve coordinates come from the analysis script (recipe I-04), the renderer draws them and prints the parameters. The example bundle gains the fit values and its snapshot is updated deliberately (recorded V8 exception)."
+    notes: "plan v3 / ADR 0007: remove the two transitional exceptions tests/test_renderer_purity.py allowlists. dose_response takes fit params and curve coordinates as columns (recipe I-04) instead of calling curve_fit; group_scatter drops the Pearson fallback and needs r_col/p_col. Values stay the same; the affected example bundles gain the columns and their snapshots are updated deliberately (recorded V8 exception)."
   - id: E-05
     title: "line_band error-bar mode"
     kind: enhance

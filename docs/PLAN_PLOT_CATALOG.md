@@ -10,7 +10,7 @@
 
 | Phase | 내용 | 상태 |
 |---|---|---|
-| 0 | 기반: 상태 파일·점검 스크립트, 갤러리 분류(family), 작업 카드 틀, 통계 경계 정리 I-03·I-04 (§2 원칙 3) | ✅ 완료: I-01 (`261f558`), I-02 (`50ab6eb`, G2 승인 2026-10-27) · I-03·I-04는 ⬜ 대기 |
+| 0 | 기반: 상태 파일·점검 스크립트, 갤러리 분류(family), 작업 카드 틀, 통계 경계 정리 I-03·I-04 (§2 원칙 3) | ✅ 완료: I-01 (`261f558`), I-02 (`50ab6eb`, G2 승인 2026-10-27) · 🔄 I-03 (fig-atlas `6593d5f`, in_review) · ⬜ I-04 |
 | 1 | ~~통계 층 확장 S-01–S-06~~ → **폐지(v3)**: 검정은 분석 스크립트가 실행하고, 패키지는 표시·기록만 | ⬜ 없음 (S-01–S-06 `dropped`, 레시피는 I-04) |
 | 2 | 우선순위 1 그림 8종 (PC-01–PC-08) — v3에서 S 의존성이 없어져 G1 뒤 바로 시작 가능 | ⬜ 대기 |
 | 3 | 기존 그림 고도화 E-01–E-06 (통계 괄호, 축 옵션 등) | ⬜ 대기 |
@@ -125,7 +125,7 @@ stats.record(table, name="paired_t", title="Paired t-test (before vs after)")
 | E-01 | 통계 괄호·별표 옵션: p값은 입력 컬럼, 별 임계값·보정 표시는 config, 쓴 검정은 `stats.record` | `bar_scatter`, `boxplot`, `violin`, PC-02/04/05 | — |
 | E-02 | 축 옵션 공통화: 로그, 끊긴 축(broken axis), 축 범위 | 열·XY 그림 | — |
 | E-03 | 평균±SD/SEM/95%CI 겹치기, 개별 점 jitter·beeswarm | 열 그림 | — |
-| E-04 | `dose_response`의 내부 4PL 적합을 없애고 맞춤 모수·곡선을 입력으로 받는다(기존 그림은 의도적으로 스냅샷 갱신, 값은 동일) | `dose_response` | I-03 |
+| E-04 | 렌더러가 인쇄 결과를 계산하지 않게 마무리: `dose_response`의 내부 4PL 적합과 `group_scatter`의 Pearson 폴백을 없앤다(맞춤 모수·곡선 좌표·r/p는 입력 컬럼; 기존 그림은 의도적으로 스냅샷 갱신, 값은 동일) | `dose_response`, `group_scatter` | I-03 |
 | E-05 | `line_band`에 오차 막대 모드(띠 대신) | `line_band` | — |
 | E-06 | `survival`에 number-at-risk 표와 log-rank p 인쇄(p는 분석 스크립트가 `stats.record`로 남긴다) | `survival` | — (레시피 I-04) |
 
