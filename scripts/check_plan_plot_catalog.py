@@ -1,6 +1,6 @@
 """Check the plot-catalog plan's status file against the installed fig-atlas.
 
-    python scripts/check_plan_plot_catalog.py          # from the cmg-figures root, fig-atlas environment
+    python scripts/check_plan_plot_catalog.py          # from the fig-atlas root, fig-atlas environment
 
 Reads docs/PLAN_PLOT_CATALOG.status.yaml (the single source of task state;
 docs/PLAN_PLOT_CATALOG.md section 9) and reports:

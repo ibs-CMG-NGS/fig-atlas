@@ -2,9 +2,9 @@
 
 > 작성일: 2026-10-24 (개정 2026-10-27) · 계획 판: **v3** (개정 기록은 맨 아래)
 > 대상: 패키지 저장소 `fig-atlas`의 `fig_atlas/renderers/`, `fig_atlas/stats.py`, `fig_atlas/contracts.py`, `examples/gallery/`, `tests/`, 문서 갤러리(`docs/reference/gallery.md`)
-> 관련 문서: [ROADMAP_ECOSYSTEM_STRATEGY.md](ROADMAP_ECOSYSTEM_STRATEGY.md) (Phase 6a 범용 렌더러), fig-atlas `docs/decisions/0003-renderers-are-shapes.md`, `AGENTS.md` §3 (asset accumulation)
+> 관련 문서: cmg-figures `docs/ROADMAP_ECOSYSTEM_STRATEGY.md`(비공개 연구 저장소에 남김) (Phase 6a 범용 렌더러), `docs/decisions/0003-renderers-are-shapes.md`, `AGENTS.md` §3 (asset accumulation)
 > **상태의 정본**: [PLAN_PLOT_CATALOG.status.yaml](PLAN_PLOT_CATALOG.status.yaml) — 작업 하나하나의 상태·담당·커밋은 이 파일에만 적는다. 아래 표는 Phase 단위 요약이다.
-> **상태 확인**: `python scripts/check_plan_plot_catalog.py` (cmg-figures 루트에서) — 상태 파일과 패키지에 실제로 있는 것을 대조한다(§9).
+> **상태 확인**: `python scripts/check_plan_plot_catalog.py` (fig-atlas 루트에서) — 상태 파일과 패키지에 실제로 있는 것을 대조한다(§9).
 
 ## 진행 상황
 
@@ -233,7 +233,7 @@ stats.record(table, name="paired_t", title="Paired t-test (before vs after)")
 
 ### 8.1 작업 하나의 흐름
 1. **고르기**: 점검 스크립트의 "can start now" 목록에서 고른다(`status: todo`, `depends_on`이 모두 `done`, 그 Phase의 게이트 통과). 우선순위(P1 → P2 → P3), 같은 우선순위에서는 ID 순.
-2. **맡기**: 카드에 `status: claimed`, `owner`, `branch`를 적고 cmg-figures에 커밋한다(`plan(plot-catalog): claim PC-03`). 다른 owner가 있는 카드는 건드리지 않는다. 48시간 넘게 진척 없는 claim은 사람에게 물어본 뒤 넘겨받는다.
+2. **맡기**: 카드에 `status: claimed`, `owner`, `branch`를 적고 fig-atlas `main`에 상태 커밋으로 남긴다(`plan(plot-catalog): claim PC-03`; 작업 브랜치와 섞지 않는다). 2026-10-29까지의 상태 커밋은 cmg-figures에 있었고, 이 문서와 함께 이력째 옮겨 왔다. 다른 owner가 있는 카드는 건드리지 않는다. 48시간 넘게 진척 없는 claim은 사람에게 물어본 뒤 넘겨받는다.
 3. **작업**: fig-atlas에서 `branch` 브랜치(또는 서브에이전트는 worktree)에서 §5 체크리스트대로.
 4. **검토 요청**: 체크리스트의 자동 검증이 모두 통과하면 `status: in_review`, 증거(§6 끝)를 카드 `notes`나 보고서에 남긴다.
 5. **완료**: 게이트 G2 승인 후 main에 합치고 push, CI 확인, 카드에 `done`, `commits`, `version`, `review`를 적는다.
@@ -261,8 +261,8 @@ stats.record(table, name="paired_t", title="Paired t-test (before vs after)")
 ### 8.4 서브에이전트 지시문 틀
 ```
 fig-atlas 그림 종류 확장 계획의 작업 <ID>를 맡아라.
-읽을 것: cmg-figures/docs/PLAN_PLOT_CATALOG.md (§2 원칙, §5 완성 정의, §6 검증, §8 규약),
-         cmg-figures/docs/PLAN_PLOT_CATALOG.status.yaml 의 <ID> 카드, fig-atlas/AGENTS.md.
+읽을 것: fig-atlas/docs/PLAN_PLOT_CATALOG.md (§2 원칙, §5 완성 정의, §6 검증, §8 규약),
+         fig-atlas/docs/PLAN_PLOT_CATALOG.status.yaml 의 <ID> 카드, fig-atlas/AGENTS.md.
 작업 위치: fig-atlas worktree, 브랜치 <branch>. 공유 파일은 §8.3 규칙대로 맨 끝에 추가만.
 끝나면 보고: (1) 바뀐 파일, (2) 실행한 검증 명령과 결과, (3) 갤러리 그림 경로,
 (4) V8(기존 예제·스냅샷 불변) 결과, (5) 남은 문제. main에 합치거나 push하지 말 것.
@@ -271,7 +271,7 @@ fig-atlas 그림 종류 확장 계획의 작업 <ID>를 맡아라.
 ## 9. 상태 확인과 추적
 
 - **정본**: `docs/PLAN_PLOT_CATALOG.status.yaml`. `plan_version`(이 문서의 판), `package_version`(마지막으로 확인한 fig-atlas 버전·커밋), `gates`(게이트 상태: `pending` 또는 `passed <날짜> <메모>`), `phase_gates`(Phase별로 먼저 통과해야 할 게이트), 작업 카드 목록. 게이트를 통과시키는 것은 사람만 한다.
-- **점검 스크립트**: `python scripts/check_plan_plot_catalog.py` (cmg-figures 루트, fig-atlas 환경)
+- **점검 스크립트**: `python scripts/check_plan_plot_catalog.py` (fig-atlas 루트, fig-atlas 환경)
   - 카드 목록을 상태별로 요약하고, 시작할 수 있는 카드(의존 충족, todo)를 보여 준다.
   - `done`인 PC 카드마다 패키지에 실제로 있는지 확인: 렌더러 등록, ingest 연결, 계약, 예제 번들, 스냅샷 사례, 갤러리 그림. 빠지면 불일치로 보고(종료 코드 1).
   - 패키지에는 있는데 카드가 `done`이 아닌 것도 보고(상태 파일을 고치지 않은 경우).

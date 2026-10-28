@@ -5,7 +5,7 @@
 
 ## 배경
 
-그림은 숫자를 인쇄한다. 괄호 아래의 P값, 모서리의 Pearson r, 범례의 AUC, 맞춤 곡선 옆의 EC50, 생존 패널의 log-rank P. 그 숫자는 어딘가에서 계산된다. fig-atlas에서는 그 계산이 렌더러 안으로 새어 들어오고 있었다. `dose_response`는 `scipy.optimize.curve_fit`으로 4PL을 적합하고, `group_scatter`는 `scipy.stats.pearsonr`을 돌려 r과 P를 인쇄하며, 새 그림 종류 확장 계획(v2)은 짝지은 검정·사후 비교·ROC/AUC·곡선 맞춤 프레임워크를 담은 통계 층을 제안했다(`cmg-figures/docs/PLAN_PLOT_CATALOG.md`).
+그림은 숫자를 인쇄한다. 괄호 아래의 P값, 모서리의 Pearson r, 범례의 AUC, 맞춤 곡선 옆의 EC50, 생존 패널의 log-rank P. 그 숫자는 어딘가에서 계산된다. fig-atlas에서는 그 계산이 렌더러 안으로 새어 들어오고 있었다. `dose_response`는 `scipy.optimize.curve_fit`으로 4PL을 적합하고, `group_scatter`는 `scipy.stats.pearsonr`을 돌려 r과 P를 인쇄하며, 새 그림 종류 확장 계획(v2)은 짝지은 검정·사후 비교·ROC/AUC·곡선 맞춤 프레임워크를 담은 통계 층을 제안했다(`docs/PLAN_PLOT_CATALOG.md`).
 
 이는 패키지가 스스로에 대해 말하는 것과 어긋난다(`docs/guide/01-why.md`): *"It does not choose analysis methods or statistical criteria."* 또한 연구의 진짜 검정 옆에 두 번째 구현을 놓는다. 그 구현은 검정 선택의 근거가 되는 설계(짝짓기, 블록, 공변량, 결측)를 볼 수 없다.
 

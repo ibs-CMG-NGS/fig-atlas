@@ -2,7 +2,7 @@
 
 > 작성일: 2026-10-13
 > 대상: 패키지 저장소 `fig-atlas`의 `docs/`, `mkdocs.yml`, 문서 CI(`.github/workflows/docs.yml`, `tests/`)
-> 관련 문서: [ROADMAP_ECOSYSTEM_STRATEGY.md](ROADMAP_ECOSYSTEM_STRATEGY.md) Phase 8(문서 체계), 원고 `docs/paper/manuscript.md` §10 Availability
+> 관련 문서: cmg-figures `docs/ROADMAP_ECOSYSTEM_STRATEGY.md`(비공개 연구 저장소에 남김) Phase 8(문서 체계), 원고 cmg-figures `docs/paper/manuscript.md` §10 Availability
 
 ## 진행 상황
 
