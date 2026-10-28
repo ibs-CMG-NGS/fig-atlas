@@ -2,8 +2,8 @@
 
     python scripts/check_plan_plot_catalog.py          # from the fig-atlas root, fig-atlas environment
 
-Reads docs/PLAN_PLOT_CATALOG.status.yaml (the single source of task state;
-docs/PLAN_PLOT_CATALOG.md section 9) and reports:
+Reads plans/PLAN_PLOT_CATALOG.status.yaml (the single source of task state;
+plans/PLAN_PLOT_CATALOG.md section 9) and reports:
 - the cards by status, and the cards that can be started now (todo, every
   dependency done);
 - a done plot card whose assets are missing from the package: renderer
@@ -25,7 +25,7 @@ from pathlib import Path
 import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
-STATUS = ROOT / "docs" / "PLAN_PLOT_CATALOG.status.yaml"
+STATUS = ROOT / "plans" / "PLAN_PLOT_CATALOG.status.yaml"
 ORDER = ["todo", "claimed", "in_review", "done", "blocked", "dropped"]
 
 

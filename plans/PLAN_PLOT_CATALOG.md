@@ -261,8 +261,8 @@ stats.record(table, name="paired_t", title="Paired t-test (before vs after)")
 ### 8.4 서브에이전트 지시문 틀
 ```
 fig-atlas 그림 종류 확장 계획의 작업 <ID>를 맡아라.
-읽을 것: fig-atlas/docs/PLAN_PLOT_CATALOG.md (§2 원칙, §5 완성 정의, §6 검증, §8 규약),
-         fig-atlas/docs/PLAN_PLOT_CATALOG.status.yaml 의 <ID> 카드, fig-atlas/AGENTS.md.
+읽을 것: fig-atlas/plans/PLAN_PLOT_CATALOG.md (§2 원칙, §5 완성 정의, §6 검증, §8 규약),
+         fig-atlas/plans/PLAN_PLOT_CATALOG.status.yaml 의 <ID> 카드, fig-atlas/AGENTS.md.
 작업 위치: fig-atlas worktree, 브랜치 <branch>. 공유 파일은 §8.3 규칙대로 맨 끝에 추가만.
 끝나면 보고: (1) 바뀐 파일, (2) 실행한 검증 명령과 결과, (3) 갤러리 그림 경로,
 (4) V8(기존 예제·스냅샷 불변) 결과, (5) 남은 문제. main에 합치거나 push하지 말 것.
@@ -270,7 +270,7 @@ fig-atlas 그림 종류 확장 계획의 작업 <ID>를 맡아라.
 
 ## 9. 상태 확인과 추적
 
-- **정본**: `docs/PLAN_PLOT_CATALOG.status.yaml`. `plan_version`(이 문서의 판), `package_version`(마지막으로 확인한 fig-atlas 버전·커밋), `gates`(게이트 상태: `pending` 또는 `passed <날짜> <메모>`), `phase_gates`(Phase별로 먼저 통과해야 할 게이트), 작업 카드 목록. 게이트를 통과시키는 것은 사람만 한다.
+- **정본**: `plans/PLAN_PLOT_CATALOG.status.yaml`. `plan_version`(이 문서의 판), `package_version`(마지막으로 확인한 fig-atlas 버전·커밋), `gates`(게이트 상태: `pending` 또는 `passed <날짜> <메모>`), `phase_gates`(Phase별로 먼저 통과해야 할 게이트), 작업 카드 목록. 게이트를 통과시키는 것은 사람만 한다.
 - **점검 스크립트**: `python scripts/check_plan_plot_catalog.py` (fig-atlas 루트, fig-atlas 환경)
   - 카드 목록을 상태별로 요약하고, 시작할 수 있는 카드(의존 충족, todo)를 보여 준다.
   - `done`인 PC 카드마다 패키지에 실제로 있는지 확인: 렌더러 등록, ingest 연결, 계약, 예제 번들, 스냅샷 사례, 갤러리 그림. 빠지면 불일치로 보고(종료 코드 1).

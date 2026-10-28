@@ -5,7 +5,7 @@
 
 ## Context
 
-A figure prints numbers: a P value under a bracket, a Pearson r in a corner, an AUC in a legend, an EC50 beside a fitted curve, a log-rank P in a survival panel. Somewhere those numbers are computed. In fig-atlas they were creeping into the renderers: `dose_response` fits a 4PL curve with `scipy.optimize.curve_fit`, `group_scatter` runs `scipy.stats.pearsonr` and prints r and P, and the expansion plan for new plot types proposed a statistics layer with paired tests, post-hoc comparisons, ROC/AUC and a curve-fitting framework (`docs/PLAN_PLOT_CATALOG.md`, v2).
+A figure prints numbers: a P value under a bracket, a Pearson r in a corner, an AUC in a legend, an EC50 beside a fitted curve, a log-rank P in a survival panel. Somewhere those numbers are computed. In fig-atlas they were creeping into the renderers: `dose_response` fits a 4PL curve with `scipy.optimize.curve_fit`, `group_scatter` runs `scipy.stats.pearsonr` and prints r and P, and the expansion plan for new plot types proposed a statistics layer with paired tests, post-hoc comparisons, ROC/AUC and a curve-fitting framework (`plans/PLAN_PLOT_CATALOG.md`, v2).
 
 That contradicts what the package says about itself (`docs/guide/01-why.md`): *"It does not choose analysis methods or statistical criteria."* It also puts a second implementation of the test next to the study's real one, where it cannot see the design (pairing, blocking, covariates, missing values) that the choice of test depends on.
 

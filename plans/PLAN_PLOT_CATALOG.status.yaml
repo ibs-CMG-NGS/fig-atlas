@@ -1,4 +1,4 @@
-# Status of the plot-catalog plan (docs/PLAN_PLOT_CATALOG.md) -- the single source of task state.
+# Status of the plot-catalog plan (plans/PLAN_PLOT_CATALOG.md) -- the single source of task state.
 # One card per task; field meanings in the plan, section 4. Change a card when you claim, hand in or
 # finish a task (section 8.1); check the file against the package with
 #   python scripts/check_plan_plot_catalog.py

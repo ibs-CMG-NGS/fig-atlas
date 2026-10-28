@@ -90,12 +90,9 @@ plugins:
 hooks:
   - scripts/mkdocs_hooks.py
 
-# Research records of one study, and the package's working plans (PLAN_*, DESIGN_REVIEW):
-# kept in the repository, not on the site.
+# Research records of one study: kept in the repository, not on the site.
 exclude_docs: |
   guide/_template*.md
-  /PLAN_*
-  /DESIGN_REVIEW.md
   usability/
   paper/
   storylines/
