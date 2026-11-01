@@ -3,7 +3,7 @@
 # finish a task (section 8.1); check the file against the package with
 #   python scripts/check_plan_plot_catalog.py
 plan_version: 3
-package_version: "0.1.0.dev0 (fig-atlas 50ab6eb on main, checked 2026-10-27)"
+package_version: "0.1.0.dev0 (fig-atlas 44d40ea on main, checked 2026-11-01)"
 baseline:                       # what existed when the plan started (not tasks)
   plot_types: 25                # plot types fa ingest bundle draws, each with an example bundle and a contract
   renderers: 54                 # registered renderer names (two omics recipes share a pack renderer's name), each with a gallery picture
@@ -69,16 +69,16 @@ cards:
     kind: infra
     phase: 0
     priority: P1
-    status: in_review
+    status: done
     depends_on: []
     plot_type: null
     data: null
     owner: "opencode@KimYG 2026-10-27"
     branch: "docs/I-04-analysis-recipes"
-    commits: ["fig-atlas dd238f6", "fig-atlas ce843bd"]
-    version: null
-    review: null
-    notes: "plan v3, section 5.2. Delivered: docs/howto/analysis_recipes.md + .ko.md (identical structure, tests/test_docs_i18n.py) -- the five shared steps (compute, write the column, stats.record, name it in the config, record the legend sentence) and one recipe per dropped S card: paired test (S-01), post-hoc Tukey/Dunnett (S-02), correlation + regression with r_col/p_col (S-03), ROC/AUC without an extra dependency plus bootstrap/DeLong note (S-04), 4PL curve fit (S-05), contingency + Wilson interval (S-06). Project analysis template carries a commented case; mkdocs nav lists the page and ADR 0007; ADR 0007 now links the page and records the leftover renderer-side test path (tf_expression_bars, E-01); AGENTS.md section 4.6 reworded to the v3 boundary in both repositories (fig-atlas commit also carries the user's pending 1.5 bullet). Evidence: full pytest exit 0 (901 collected, 2 skipped); fa lint --hardcoded --check exit 0; docs i18n/site/agent-docs tests pass. Not merged or pushed yet."
+    commits: ["fig-atlas dd238f6", "fig-atlas ce843bd", "fig-atlas a999abd", "PR #2 (merge 861c946)", "PR #3 (merge 44d40ea)"]
+    version: "unreleased (on fig-atlas main)"
+    review: "approved 2026-11-01 (user); main CI 41309022162 success, Documentation site 41309022167 success (PR #2 alone left main CI red -- api.md not regenerated -- fixed by PR #3)"
+    notes: "plan v3, section 5.2. Delivered: docs/howto/analysis_recipes.md + .ko.md (identical structure, tests/test_docs_i18n.py) -- the five shared steps (compute, write the column, stats.record, name it in the config, record the legend sentence) and one recipe per dropped S card: paired test (S-01), post-hoc Tukey/Dunnett (S-02), correlation + regression with r_col/p_col (S-03), ROC/AUC without an extra dependency plus bootstrap/DeLong note (S-04), 4PL curve fit (S-05), contingency + Wilson interval (S-06). Project analysis template carries a commented case; mkdocs nav lists the page and ADR 0007; ADR 0007 now links the page and records the leftover renderer-side test path (tf_expression_bars, E-01); AGENTS.md section 4.6 reworded to the v3 boundary in both repositories (fig-atlas commit also carries the user's pending 1.5 bullet). Evidence: full pytest exit 0 (901 collected, 2 skipped); fa lint --hardcoded --check exit 0; docs i18n/site/agent-docs tests pass. Merged into main by PR #2 and PR #3 (2026-11-01)."
 
   - id: S-01
     title: "paired tests: paired t, Wilcoxon signed-rank"
