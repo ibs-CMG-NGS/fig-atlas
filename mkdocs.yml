@@ -138,6 +138,7 @@ nav:
       - Connect AI agents (fa mcp): howto/ai_agents.md
       - Write a domain pack: howto/new_domain_pack.md
       - Switch to a journal's format: howto/journal_presets.md
+      - Compute the numbers a figure prints: howto/analysis_recipes.md
   - Reference:
       - Data bundle contracts: contracts/README.md
       - Table bundles (lines, scatter): contracts/table_bundle_contract.md
@@ -157,3 +158,4 @@ nav:
           - 0004 Procedures are commands, served over MCP: decisions/0004-procedures-are-commands.md
           - 0005 One source for the rules: decisions/0005-agents-md-single-source.md
           - 0006 Documentation in two languages: decisions/0006-documentation-in-two-languages.md
+          - 0007 Renderers draw results, they do not compute them: decisions/0007-renderers-draw-results-they-do-not-compute.md
