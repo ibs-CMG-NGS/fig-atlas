@@ -79,6 +79,28 @@ plot_params:
   summary: mean
 ```
 
+## `plot_type: grouped_bar` — 그룹 막대 (요인 둘)
+
+범주마다 그룹별 막대를 그립니다. 막대는 평균(또는 중앙값)이고 SD·SEM·95% CI 오차 막대와 반복값 점이 겹칩니다(`render_grouped_bar`). `arrangement: interleaved`는 범주 안에 그룹을 나란히, `separated`는 그룹마다 묶음을 따로 둡니다. 괄호는 범주 안에서 각 그룹을 `control_group`과 비교합니다.
+
+| 역할 (plot_params 키) | 기본 열 이름 | 필수 | 내용 |
+|---|---|---|---|
+| `category_col` | `category` | 예 | 첫 번째 요인(x 범주) |
+| `group_col` | `group` | 예 | 두 번째 요인(막대 색) |
+| `value_col` | `value` | 예 | 반복 측정값 |
+| `pvalue_col` | — | 아니오 | (범주, 그룹) 행마다 그 그룹의 `control_group` 대비 P 값. 분석 스크립트의 사후 검정에서 구합니다([분석 레시피](../howto/analysis_recipes.md) 3절). 적으면 그 열이 있어야 합니다 |
+
+```yaml
+plot_type: grouped_bar
+plot_params:
+  category_col: genotype
+  group_col: treatment
+  value_col: expression
+  control_group: vehicle
+  pvalue_col: p_vs_vehicle
+  error: sem
+```
+
 ## 검사
 
 `fa bundle check <번들>`이 오류로 보고하는 것:

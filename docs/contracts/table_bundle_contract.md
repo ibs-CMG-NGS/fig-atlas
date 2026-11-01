@@ -79,6 +79,28 @@ plot_params:
   summary: mean
 ```
 
+## `plot_type: grouped_bar` — grouped bars (two factors)
+
+Draws a bar per group within each category: the mean (or median) with an SD, SEM or 95% CI error bar and the replicates on top (`render_grouped_bar`). `arrangement: interleaved` puts the groups side by side in each category; `separated` gives each group its own block. Brackets compare each group with `control_group` within a category.
+
+| Role (plot_params key) | Default column name | Required | Content |
+|---|---|---|---|
+| `category_col` | `category` | Yes | The first factor (x categories) |
+| `group_col` | `group` | Yes | The second factor (bar colour) |
+| `value_col` | `value` | Yes | The replicate values |
+| `pvalue_col` | — | No | On each (category, group) row, that group's P value against `control_group`, from a post-hoc test run in the analysis script ([analysis recipes](../howto/analysis_recipes.md), section 3). If given, the column must exist |
+
+```yaml
+plot_type: grouped_bar
+plot_params:
+  category_col: genotype
+  group_col: treatment
+  value_col: expression
+  control_group: vehicle
+  pvalue_col: p_vs_vehicle
+  error: sem
+```
+
 ## Checks
 
 `fa bundle check <bundle>` reports as errors:

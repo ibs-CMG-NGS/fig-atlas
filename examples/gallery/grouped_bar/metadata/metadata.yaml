@@ -1,0 +1,18 @@
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per replicate -- genotype (category), treatment (group), rel_expression (value),
+# p_vs_vehicle (each treatment's Dunnett P against vehicle within a genotype, computed when the data were
+# made -- the renderer draws it, it runs no test). With your data: keep these columns, or name yours below.
+plot_type: grouped_bar
+plot_params:
+  category_col: genotype
+  group_col: treatment
+  value_col: rel_expression
+  pvalue_col: p_vs_vehicle
+  control_group: vehicle
+  category_order: ["WT", "Het", "KO"]
+  group_order: ["vehicle", "drug A", "drug B"]
+  arrangement: interleaved      # or separated: one block of genotypes per treatment
+  error: sem                    # sd, sem or ci95 -- say which in the legend
+  group_colors: {"vehicle": "#d1d5db", "drug A": "#2563eb", "drug B": "#93c5fd"}
+  legend_loc: "upper right"
+  labels_ylabel: "Relative expression"

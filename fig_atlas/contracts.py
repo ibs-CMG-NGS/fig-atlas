@@ -126,6 +126,10 @@ CORE_CONTRACTS = [
              role_columns=(("subject_col", "subject"), ("condition_col", "condition"), ("value_col", "value")),
              role_optional=("group_col", "pvalue_col"), doc="docs/contracts/table_bundle_contract.md",
              title="Before and after: one row per (subject, condition), optional group and P value from the analysis"),
+    Contract("core.grouped_bar", ("grouped_bar",),
+             role_columns=(("category_col", "category"), ("group_col", "group"), ("value_col", "value")),
+             role_optional=("pvalue_col",), doc="docs/contracts/table_bundle_contract.md",
+             title="Two factors: one row per replicate (category, group, value), optional P value against a control"),
 ]
 CORE_INGEST = {
     "venn": "fig_atlas.renderers:render_venn",
@@ -145,6 +149,7 @@ CORE_INGEST = {
     "heatmap": "fig_atlas.renderers:render_heatmap",
     "pca": "fig_atlas.renderers:render_pca",
     "paired_plot": "fig_atlas.renderers:render_paired_plot",
+    "grouped_bar": "fig_atlas.renderers:render_grouped_bar",
 }
 
 

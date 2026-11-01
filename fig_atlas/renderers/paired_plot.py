@@ -177,9 +177,9 @@ def render_paired_plot(ax, df, params):
                 ax.scatter(rows["xpos"], rows["centre"], s=float(params.get("summary_marker_size", 30.0)),
                            color=s_color, zorder=5, linewidths=edge_w)
             if params.get("summary_error", "none") != "none":
-                ok = rows["upper"].notna()
-                ax.errorbar(rows.loc[ok, "xpos"], rows.loc[ok, "centre"],
-                            yerr=[rows.loc[ok, "centre"] - rows.loc[ok, "lower"], rows.loc[ok, "upper"] - rows.loc[ok, "centre"]],
+                r = rows[rows["upper"].notna()]
+                ax.errorbar(r["xpos"].to_numpy(float), r["centre"].to_numpy(float),
+                            yerr=[(r["centre"] - r["lower"]).to_numpy(float), (r["upper"] - r["centre"]).to_numpy(float)],
                             fmt="none", ecolor=s_color, elinewidth=float(params.get("error_width", 0.8)),
                             capsize=float(params.get("error_cap_size", 3.0)), zorder=5)
                 tops[g] = max(tops.get(g, rows["upper"].max()), float(rows["upper"].max()))
