@@ -26,6 +26,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | [`go_dot`](#go_dot) | fig_atlas_omics.renderers | 11 |
 | [`go_rrvgo_treemap`](#go_rrvgo_treemap) | fig_atlas_omics.renderers | 14 |
 | [`group_scatter`](#group_scatter) | core | 39 |
+| [`grouped_bar`](#grouped_bar) | core | 54 |
 | [`grouped_hbar`](#grouped_hbar) | core | 21 |
 | [`heatmap`](#heatmap) | core | 23 |
 | [`histogram`](#histogram) | core | 34 |
@@ -866,6 +867,67 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `title_size` | number | `6.5` | pt | Panel title font size |
 | `axes_label_size` | number | `6.0` | pt | Axis title font size |
 | `tick_label_size` | number | `5.5` | pt | Tick label font size |
+
+## grouped_bar
+
+`fig_atlas.renderers:render_grouped_bar`
+
+| Key | Type | Default | Unit | What it does |
+|---|---|---|---|---|
+| `category_col` | text | `category` |  | Column with the first factor (x categories) |
+| `group_col` | text | `group` |  | Column with the second factor (bar colour) |
+| `value_col` | text | `value` |  | Column with the replicate values |
+| `pvalue_col` | text | auto |  | Column with each (category, group)'s P value against control_group, from the analysis (default: none) |
+| `control_group` | text | auto |  | The group the brackets compare against (needed with pvalue_col) |
+| `category_order` | list | auto |  | Categories left to right (default: order in the data) |
+| `group_order` | list | auto |  | Groups in each cluster or block (default: order in the data) |
+| `category_labels` | mapping | `{}` |  | Tick label per category (default: the value) |
+| `group_labels` | mapping | `{}` |  | Legend or block label per group (default: the value) |
+| `arrangement` | one of `interleaved`, `separated` | `interleaved` |  | interleaved: groups side by side in each category; separated: one block of categories per group |
+| `bar_width` | number | `0.8` | x units (categories are 1 apart) | Width of a cluster of groups (interleaved) or of one bar (separated) — lower for thinner bars |
+| `block_gap` | number | `0.8` | x units | Extra space between blocks (separated) |
+| `summary` | one of `mean`, `median` | `mean` |  | Bar height |
+| `error` | one of `none`, `sd`, `sem`, `ci95` | `sem` |  | Error bar: SD, SEM or 95% t-interval of the mean (state it in the legend) |
+| `group_colors` | mapping | `{}` | hex color | Colour per group (default: color) |
+| `color` | colour | `#9ca3af` | hex color | Bar colour without a group colour |
+| `bar_alpha` | number | `0.85` | [0-1] opacity | Bar fill opacity |
+| `bar_edge_color` | colour | `#374151` | hex color | Bar outline colour |
+| `bar_edge_width` | number | `0.6` | pt | Bar outline width |
+| `error_color` | colour | `#111827` | hex color | Error bar colour |
+| `error_width` | number | `0.8` | pt | Error bar line width |
+| `error_cap_size` | number | `2.5` | pt | Error bar cap length (0: no caps) |
+| `show_points` | true / false | `True` |  | Draw the replicates over the bars |
+| `point_color` | colour | `#111827` | hex color | Replicate point colour |
+| `point_size` | number | `8.0` | pt^2 (marker area) | Replicate point size |
+| `point_alpha` | number | `0.8` | [0-1] opacity | Replicate point opacity |
+| `point_edge_width` | number | `0.0` | pt | Replicate point outline width (0: none) |
+| `point_jitter` | number | `0.25` | fraction of a bar's width | Horizontal scatter of the points within a bar — 0 puts them in one column |
+| `point_seed` | integer | `0` | random seed | Seed of the jitter (fixed: the same picture every build) |
+| `show_significance` | true / false | `True` |  | Draw brackets when pvalue_col and control_group are given |
+| `sig_thresholds` | list | `[[0.001, '***'], [0.01, '**'], [0.05, '*']]` | P value | [threshold, symbol] pairs, P < threshold gets the symbol (state the rule in the legend) |
+| `sig_ns_display` | text | `ns` |  | Text for a P at or above every threshold ('' to draw no bracket) |
+| `sig_gap` | number | `0.04` | fraction of the y range | Gap between the bars and a bracket |
+| `sig_tick` | number | `0.02` | fraction of the y range | Height of a bracket's end ticks |
+| `sig_step` | number | `0.09` | fraction of the y range | Vertical distance between stacked brackets — raise if the stars of stacked brackets touch |
+| `sig_line_color` | colour | `#333333` | hex color | Bracket colour |
+| `sig_line_width` | number | `0.8` | pt | Bracket line width |
+| `sig_font_size` | number | computed | pt | Star size (default: tick_label_size) |
+| `y_min` | number | auto | data coords | Lower y limit (default: 0 for non-negative data) |
+| `y_max` | number | auto | data coords | Upper y limit (default: the top of the drawing plus y_headroom) |
+| `y_headroom` | number | `0.06` | fraction of the y range | Room above the highest mark |
+| `labels_title` | text | auto |  | Panel title (none: no title) |
+| `labels_xlabel` | text | `` |  | x-axis title (default: none; the ticks name the categories) |
+| `labels_ylabel` | text | computed |  | y-axis title (default: value_col) |
+| `title_size` | number | `8.0` | pt | Panel title size |
+| `axes_label_size` | number | auto | pt | Axis title size (default: rcParams) |
+| `tick_label_size` | number | auto | pt | Tick label size (default: rcParams) |
+| `xtick_rotation` | number | `0.0` | degrees | Rotation of the category labels — 45 for long names |
+| `block_label_pad` | number | `14.0` | pt | Distance of the block labels below the axis (separated) — raise if they touch the tick labels |
+| `show_legend` | true / false | `True` |  | Show the group legend (interleaved) |
+| `legend_loc` | text | `best` |  | Legend location (matplotlib loc) |
+| `legend_anchor` | list | auto | axes fraction (x, y) | bbox_to_anchor for the legend (default: inside, at legend_loc) |
+| `legend_frameon` | true / false | `False` |  | Draw a frame around the legend |
+| `hide_top_right` | true / false | `True` |  | Hide the top and right axis lines |
 
 ## grouped_hbar
 

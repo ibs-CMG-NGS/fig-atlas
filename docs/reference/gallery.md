@@ -630,6 +630,59 @@ fa ingest bundle raw_data/<project>/volcano --project <project>
 fa build <project> --preflight
 ```
 
+### Grouped
+
+Several series or items compared within one category (grouped bars, paired dumbbells).
+
+#### grouped_bar
+
+Two factors: one row per replicate (category, group, value), optional P value against a control
+
+![grouped_bar](gallery/examples/grouped_bar.png)
+
+`inputs/data.csv`, first 5 of 36 rows (5 columns):
+
+```text
+genotype,treatment,replicate,rel_expression,p_vs_vehicle
+WT,vehicle,1,0.882,
+WT,vehicle,2,0.908,
+WT,vehicle,3,1.079,
+WT,vehicle,4,1.025,
+WT,drug A,1,2.032,9.81e-09
+```
+
+Inputs: `data.csv`. `metadata/metadata.yaml`:
+
+```yaml
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per replicate -- genotype (category), treatment (group), rel_expression (value),
+# p_vs_vehicle (each treatment's Dunnett P against vehicle within a genotype, computed when the data were
+# made -- the renderer draws it, it runs no test). With your data: keep these columns, or name yours below.
+plot_type: grouped_bar
+plot_params:
+  category_col: genotype
+  group_col: treatment
+  value_col: rel_expression
+  pvalue_col: p_vs_vehicle
+  control_group: vehicle
+  category_order: ["WT", "Het", "KO"]
+  group_order: ["vehicle", "drug A", "drug B"]
+  arrangement: interleaved      # or separated: one block of genotypes per treatment
+  error: sem                    # sd, sem or ci95 -- say which in the legend
+  group_colors: {"vehicle": "#d1d5db", "drug A": "#2563eb", "drug B": "#93c5fd"}
+  legend_loc: "upper right"
+  labels_ylabel: "Relative expression"
+```
+
+Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
+
+```bash
+cp -r <fig-atlas>/examples/gallery/grouped_bar raw_data/<project>/
+fa bundle check raw_data/<project>/grouped_bar
+fa ingest bundle raw_data/<project>/grouped_bar --project <project>
+fa build <project> --preflight
+```
+
 ### Survival
 
 Time to an event: Kaplan-Meier curves.
@@ -1214,6 +1267,14 @@ One example per renderer (and per layout where a renderer has more than one), dr
 ![volcano](gallery/volcano.png)
 
 ### Grouped
+
+#### grouped_bar
+
+![grouped_bar](gallery/grouped_bar.png)
+
+#### grouped_bar_separated
+
+![grouped_bar_separated](gallery/grouped_bar_separated.png)
 
 #### grouped_hbar
 

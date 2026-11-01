@@ -658,6 +658,39 @@ def paired_plot_bar():
                         "labels_ylabel": "Glucose (mmol/l)"})
     return fig
 
+
+def _grouped(rng):
+    rows = []
+    for gt, base in (("WT", 1.0), ("KO", 0.6)):
+        for t, d in (("vehicle", 0.0), ("drug A", 0.8), ("drug B", 0.2)):
+            p = None if t == "vehicle" else (0.002 if d > 0.5 else 0.3)
+            rows += [{"genotype": gt, "treatment": t, "expr": base * (1 + d) + e, "p": p} for e in rng.normal(0, 0.1, 4)]
+    return pd.DataFrame(rows)
+
+
+def grouped_bar():
+    """PC-02: interleaved, SEM, replicates, brackets against vehicle (stacked)."""
+    from fig_atlas.renderers import render_grouped_bar
+    fig, ax = plt.subplots(figsize=(2.8, 2.2))
+    render_grouped_bar(ax, _grouped(_rng()), {**TYPO, "category_col": "genotype", "group_col": "treatment",
+                                              "value_col": "expr", "pvalue_col": "p", "control_group": "vehicle",
+                                              "group_colors": {"vehicle": "#d1d5db", "drug A": "#2563eb",
+                                                               "drug B": "#93c5fd"},
+                                              "legend_loc": "upper right", "labels_ylabel": "Expression"})
+    return fig
+
+
+def grouped_bar_separated():
+    """PC-02 scope: one block of genotypes per treatment."""
+    from fig_atlas.renderers import render_grouped_bar
+    fig, ax = plt.subplots(figsize=(2.8, 2.2))
+    render_grouped_bar(ax, _grouped(_rng()), {**TYPO, "category_col": "genotype", "group_col": "treatment",
+                                              "value_col": "expr", "arrangement": "separated", "error": "sd",
+                                              "group_colors": {"vehicle": "#d1d5db", "drug A": "#2563eb",
+                                                               "drug B": "#93c5fd"},
+                                              "labels_ylabel": "Expression"})
+    return fig
+
 CASES = {
     "cross_condition_dotplot": cross_condition_dotplot,
     "cross_condition_heatmap": cross_condition_heatmap,
@@ -705,6 +738,8 @@ CASES = {
     "paired_plot": paired_plot,
     "paired_plot_grouped": paired_plot_grouped,
     "paired_plot_bar": paired_plot_bar,
+    "grouped_bar": grouped_bar,
+    "grouped_bar_separated": grouped_bar_separated,
 }
 
 # Gallery families (fig_atlas.family) for pictures that are not a renderer

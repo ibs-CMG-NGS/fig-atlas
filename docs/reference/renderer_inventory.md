@@ -40,6 +40,7 @@ Compendium projects: none.
 | 4 | `render_go_dot` | `fig_atlas_omics/renderers/go_dot.py` | 0 | — | — |
 | 4 | `render_go_rrvgo_treemap` | `fig_atlas_omics/renderers/go_rrvgo_treemap.py` | 0 | — | — |
 | 4 | `render_group_scatter` | `fig_atlas/renderers/group_scatter.py` | 0 | — | — |
+| 4 | `render_grouped_bar` | `fig_atlas/renderers/grouped_bar.py` | 0 | — | — |
 | 4 | `render_grouped_hbar` | `fig_atlas/renderers/grouped_hbar.py` | 0 | — | — |
 | 4 | `render_heatmap` | `fig_atlas/renderers/heatmap.py` | 0 | — | — |
 | 4 | `render_histogram` | `fig_atlas/renderers/histogram.py` | 0 | — | — |
@@ -74,4 +75,4 @@ Compendium projects: none.
 | 4 | `render_violin` | `fig_atlas/renderers/violin.py` | 0 | — | — |
 | 4 | `render_volcano` | `fig_atlas_omics/renderers/volcano.py` | 0 | — | — |
 
-Summary: tier 2 active — 4, tier 4 unused — 56.
+Summary: tier 2 active — 4, tier 4 unused — 57.

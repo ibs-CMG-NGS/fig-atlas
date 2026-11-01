@@ -25,6 +25,7 @@ from .effect_dots import render_effect_dots
 from .flow_diagram import render_flow_diagram
 from .funnel import render_funnel
 from .group_scatter import render_group_scatter
+from .grouped_bar import render_grouped_bar
 from .grouped_hbar import render_grouped_hbar
 from .heatmap import render_heatmap
 from .histogram import render_histogram
@@ -60,6 +61,7 @@ __all__ = [
     "render_flow_diagram",
     "render_funnel",
     "render_group_scatter",
+    "render_grouped_bar",
     "render_grouped_hbar",
     "render_heatmap",
     "render_histogram",

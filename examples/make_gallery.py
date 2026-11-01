@@ -328,6 +328,24 @@ def paired_plot(rng):
                              "glucose_mmol_l": round(float(v), 2), "p_value": float(f"{p:.3g}")})
     return pd.DataFrame(rows)
 
+
+def grouped_bar(rng):
+    """qPCR expression of a gene in three genotypes, three treatments, four replicates.
+    Each treatment is compared with vehicle within a genotype by Dunnett's test, as an
+    analysis script would (docs/howto/analysis_recipes.md, section 3); the renderer
+    only draws the p_vs_vehicle column."""
+    from scipy.stats import dunnett
+    effect = {"vehicle": 0.0, "drug A": 0.9, "drug B": 0.25}
+    rows = []
+    for gt, base in (("WT", 1.0), ("Het", 0.8), ("KO", 0.5)):
+        vals = {t: base + d * base + rng.normal(0, 0.12, 4) for t, d in effect.items()}
+        res = dunnett(vals["drug A"], vals["drug B"], control=vals["vehicle"])
+        p = {"vehicle": None, "drug A": float(f"{res.pvalue[0]:.3g}"), "drug B": float(f"{res.pvalue[1]:.3g}")}
+        for t, v in vals.items():
+            rows += [{"genotype": gt, "treatment": t, "replicate": i, "rel_expression": round(float(x), 3),
+                      "p_vs_vehicle": p[t]} for i, x in enumerate(v, start=1)]
+    return pd.DataFrame(rows)
+
 HEAD = "# Gallery example (examples/make_gallery.py): synthetic data, not measurements.\n"
 META = {
     "line_band": HEAD + """# inputs/data.csv: one row per replicate measurement -- strain (line), hour (x), od600 (y).
@@ -652,6 +670,24 @@ plot_params:
   group_colors: {"vehicle": "#6b7280", "drug": "#2563eb"}
   labels_ylabel: "Fasting glucose (mmol/l)"
 """,
+    "grouped_bar": HEAD + """# inputs/data.csv: one row per replicate -- genotype (category), treatment (group), rel_expression (value),
+# p_vs_vehicle (each treatment's Dunnett P against vehicle within a genotype, computed when the data were
+# made -- the renderer draws it, it runs no test). With your data: keep these columns, or name yours below.
+plot_type: grouped_bar
+plot_params:
+  category_col: genotype
+  group_col: treatment
+  value_col: rel_expression
+  pvalue_col: p_vs_vehicle
+  control_group: vehicle
+  category_order: ["WT", "Het", "KO"]
+  group_order: ["vehicle", "drug A", "drug B"]
+  arrangement: interleaved      # or separated: one block of genotypes per treatment
+  error: sem                    # sd, sem or ci95 -- say which in the legend
+  group_colors: {"vehicle": "#d1d5db", "drug A": "#2563eb", "drug B": "#93c5fd"}
+  legend_loc: "upper right"
+  labels_ylabel: "Relative expression"
+""",
 }
 
 
@@ -668,7 +704,7 @@ def main() -> None:
               "cross_condition_dotplot": cross_condition_dotplot, "motif_dotplot": motif_dotplot,
               "peak_feature_enrichment": peak_feature_enrichment,
               # plot catalog (plans/PLAN_PLOT_CATALOG.md), appended in card order
-              "paired_plot": paired_plot}
+              "paired_plot": paired_plot, "grouped_bar": grouped_bar}
     for name, make in makers.items():
         _write(name, make(rng), META[name])
     # The images get their own random stream, so adding a table example never changes their pixels.
