@@ -311,6 +311,23 @@ def peak_feature_enrichment(rng):
                          "p_adjust": float(f"{10 ** -rng.uniform(0, 6):.3g}")})
     return pd.DataFrame(rows)
 
+# --- plot catalog (plans/PLAN_PLOT_CATALOG.md), appended so earlier examples keep their data ---
+def paired_plot(rng):
+    """Fasting glucose of 8 mice per arm at baseline and week 4. The paired t-test runs
+    here, as an analysis script would (docs/howto/analysis_recipes.md, section 2);
+    the renderer only draws the p_value column."""
+    from scipy.stats import ttest_rel
+    rows = []
+    for arm, drop in (("vehicle", 0.0), ("drug", 1.6)):
+        base = rng.normal(9.0, 1.0, 8)
+        week4 = base - drop + rng.normal(0, 0.6, 8)
+        p = float(ttest_rel(week4, base).pvalue)
+        for i, (b, w) in enumerate(zip(base, week4), start=1):
+            for cond, v in (("baseline", b), ("week 4", w)):
+                rows.append({"mouse": f"{arm[0].upper()}{i}", "arm": arm, "timepoint": cond,
+                             "glucose_mmol_l": round(float(v), 2), "p_value": float(f"{p:.3g}")})
+    return pd.DataFrame(rows)
+
 HEAD = "# Gallery example (examples/make_gallery.py): synthetic data, not measurements.\n"
 META = {
     "line_band": HEAD + """# inputs/data.csv: one row per replicate measurement -- strain (line), hour (x), od600 (y).
@@ -616,6 +633,23 @@ plot_params:
   axes_label_size: 7            # pt
   tick_label_size: 6            # pt
 """,
+    "paired_plot": HEAD + """# inputs/data.csv: one row per (mouse, timepoint) -- mouse (subject), arm (group), timepoint (condition),
+# glucose_mmol_l (value), p_value (each arm's paired t-test, computed when the data were made -- the
+# renderer draws it, it runs no test). With your data: keep these columns, or name yours below.
+plot_type: paired_plot
+plot_params:
+  subject_col: mouse
+  condition_col: timepoint
+  value_col: glucose_mmol_l
+  group_col: arm
+  pvalue_col: p_value
+  condition_order: ["baseline", "week 4"]
+  group_order: ["vehicle", "drug"]
+  condition_labels: {"baseline": "Base", "week 4": "Wk 4"}
+  summary: mean
+  group_colors: {"vehicle": "#6b7280", "drug": "#2563eb"}
+  labels_ylabel: "Fasting glucose (mmol/l)"
+""",
 }
 
 
@@ -630,7 +664,9 @@ def main() -> None:
               "volcano": volcano, "ma_plot": ma_plot, "go_bar": go_bar, "go_cluster_dot": go_cluster_dot,
               "count_summary": count_summary, "cross_condition_heatmap": cross_condition_heatmap,
               "cross_condition_dotplot": cross_condition_dotplot, "motif_dotplot": motif_dotplot,
-              "peak_feature_enrichment": peak_feature_enrichment}
+              "peak_feature_enrichment": peak_feature_enrichment,
+              # plot catalog (plans/PLAN_PLOT_CATALOG.md), appended in card order
+              "paired_plot": paired_plot}
     for name, make in makers.items():
         _write(name, make(rng), META[name])
     # The images get their own random stream, so adding a table example never changes their pixels.

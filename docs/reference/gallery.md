@@ -267,6 +267,54 @@ fa ingest bundle raw_data/<project>/histogram --project <project>
 fa build <project> --preflight
 ```
 
+#### paired_plot
+
+Before and after: one row per (subject, condition), optional group and P value from the analysis
+
+![paired_plot](gallery/examples/paired_plot.png)
+
+`inputs/data.csv`, first 5 of 32 rows (5 columns):
+
+```text
+mouse,arm,timepoint,glucose_mmol_l,p_value
+V1,vehicle,baseline,10.54,0.946
+V1,vehicle,week 4,10.41,0.946
+V2,vehicle,baseline,8.65,0.946
+V2,vehicle,week 4,9.26,0.946
+V3,vehicle,baseline,11.18,0.946
+```
+
+Inputs: `data.csv`. `metadata/metadata.yaml`:
+
+```yaml
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per (mouse, timepoint) -- mouse (subject), arm (group), timepoint (condition),
+# glucose_mmol_l (value), p_value (each arm's paired t-test, computed when the data were made -- the
+# renderer draws it, it runs no test). With your data: keep these columns, or name yours below.
+plot_type: paired_plot
+plot_params:
+  subject_col: mouse
+  condition_col: timepoint
+  value_col: glucose_mmol_l
+  group_col: arm
+  pvalue_col: p_value
+  condition_order: ["baseline", "week 4"]
+  group_order: ["vehicle", "drug"]
+  condition_labels: {"baseline": "Base", "week 4": "Wk 4"}
+  summary: mean
+  group_colors: {"vehicle": "#6b7280", "drug": "#2563eb"}
+  labels_ylabel: "Fasting glucose (mmol/l)"
+```
+
+Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
+
+```bash
+cp -r <fig-atlas>/examples/gallery/paired_plot raw_data/<project>/
+fa bundle check raw_data/<project>/paired_plot
+fa ingest bundle raw_data/<project>/paired_plot --project <project>
+fa build <project> --preflight
+```
+
 #### violin
 
 Distribution per category: one row per observation (category, value)
@@ -1112,6 +1160,14 @@ One example per renderer (and per layout where a renderer has more than one), dr
 #### go_bar
 
 ![go_bar](gallery/go_bar.png)
+
+#### paired_plot
+
+![paired_plot](gallery/paired_plot.png)
+
+#### paired_plot_grouped
+
+![paired_plot_grouped](gallery/paired_plot_grouped.png)
 
 #### sample_metric_bars
 

@@ -56,6 +56,29 @@ plot_params:
   sig_threshold: 0.05
 ```
 
+## `plot_type: paired_plot` — 전후 비교
+
+개체마다 조건 사이의 값을 선으로 이어 그립니다(전 → 후, 또는 여러 시점). 평균·중앙값 선과 유의성 괄호를 더할 수 있습니다(`render_paired_plot`). 그룹 열이 있으면 그룹이 나란히 놓이고, 그룹마다 자기 조건을 가집니다.
+
+| 역할 (plot_params 키) | 기본 열 이름 | 필수 | 내용 |
+|---|---|---|---|
+| `subject_col` | `subject` | 예 | 값이 속한 개체(개체 하나에 선 하나) |
+| `condition_col` | `condition` | 예 | 조건. 순서는 `condition_order` |
+| `value_col` | `value` | 예 | 측정값 |
+| `group_col` | — | 아니오 | 두 번째 요인. 그룹이 나란히 놓입니다. 적으면 그 열이 있어야 합니다 |
+| `pvalue_col` | — | 아니오 | 분석 스크립트에서 짝지은 검정으로 구한 그룹별 P 값([분석 레시피](../howto/analysis_recipes.md) 2절). 괄호를 그립니다. 적으면 그 열이 있어야 합니다 |
+
+```yaml
+plot_type: paired_plot
+plot_params:
+  subject_col: mouse
+  condition_col: timepoint
+  value_col: glucose
+  condition_order: ["baseline", "week 4"]
+  pvalue_col: p_value
+  summary: mean
+```
+
 ## 검사
 
 `fa bundle check <번들>`이 오류로 보고하는 것:

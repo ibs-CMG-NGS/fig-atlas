@@ -122,6 +122,10 @@ CORE_CONTRACTS = [
              role_columns=(("x_col", "category"), ("stack_col", "part"), ("value_col", "count")),
              doc="docs/contracts/table_bundle_contract.md",
              title="Composition: one row per (category, part) with a count"),
+    Contract("core.paired_plot", ("paired_plot",),
+             role_columns=(("subject_col", "subject"), ("condition_col", "condition"), ("value_col", "value")),
+             role_optional=("group_col", "pvalue_col"), doc="docs/contracts/table_bundle_contract.md",
+             title="Before and after: one row per (subject, condition), optional group and P value from the analysis"),
 ]
 CORE_INGEST = {
     "venn": "fig_atlas.renderers:render_venn",
@@ -140,6 +144,7 @@ CORE_INGEST = {
     "bar_scatter": "fig_atlas.renderers:render_bar_scatter",
     "heatmap": "fig_atlas.renderers:render_heatmap",
     "pca": "fig_atlas.renderers:render_pca",
+    "paired_plot": "fig_atlas.renderers:render_paired_plot",
 }
 
 

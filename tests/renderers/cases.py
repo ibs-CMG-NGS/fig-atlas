@@ -613,6 +613,39 @@ def single_tf_expression_scatter_bar():
                                             params={**TYPO, "ylabel": "log2 normalized counts"})
     return fig
 
+# ----------------------------------------------------------------------------
+# Plot catalog (plans/PLAN_PLOT_CATALOG.md): one case per new plot type, appended in card order.
+# ----------------------------------------------------------------------------
+def _paired(rng, arms):
+    rows = []
+    for arm, drop, p in arms:
+        base = rng.normal(9.0, 1.0, 6)
+        for i, (b, w) in enumerate(zip(base, base - drop + rng.normal(0, 0.5, 6)), start=1):
+            rows += [{"mouse": f"{arm}{i}", "arm": arm, "time": "baseline", "glucose": b, "p": p},
+                     {"mouse": f"{arm}{i}", "arm": arm, "time": "week 4", "glucose": w, "p": p}]
+    return pd.DataFrame(rows)
+
+
+def paired_plot():
+    """PC-01: one group, mean line, a bracket from the p column."""
+    from fig_atlas.renderers import render_paired_plot
+    fig, ax = plt.subplots(figsize=(1.8, 2.2))
+    render_paired_plot(ax, _paired(_rng(), [("drug", 1.5, 0.002)]),
+                       {**TYPO, "subject_col": "mouse", "condition_col": "time", "value_col": "glucose",
+                        "pvalue_col": "p", "summary": "mean", "labels_ylabel": "Glucose (mmol/l)"})
+    return fig
+
+
+def paired_plot_grouped():
+    """PC-01 scope: groups side by side, lines coloured by direction."""
+    from fig_atlas.renderers import render_paired_plot
+    fig, ax = plt.subplots(figsize=(2.8, 2.2))
+    render_paired_plot(ax, _paired(_rng(), [("vehicle", 0.0, 0.8), ("drug", 1.5, 0.002)]),
+                       {**TYPO, "subject_col": "mouse", "condition_col": "time", "value_col": "glucose",
+                        "group_col": "arm", "pvalue_col": "p", "line_color_by": "direction",
+                        "labels_ylabel": "Glucose (mmol/l)"})
+    return fig
+
 CASES = {
     "cross_condition_dotplot": cross_condition_dotplot,
     "cross_condition_heatmap": cross_condition_heatmap,
@@ -657,6 +690,8 @@ CASES = {
     "peak_feature_enrichment": peak_feature_enrichment,
     "peak_feature_composition": peak_feature_composition,
     "single_tf_expression_scatter_bar": single_tf_expression_scatter_bar,
+    "paired_plot": paired_plot,
+    "paired_plot_grouped": paired_plot_grouped,
 }
 
 # Gallery families (fig_atlas.family) for pictures that are not a renderer

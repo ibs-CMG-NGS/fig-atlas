@@ -1,0 +1,17 @@
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per (mouse, timepoint) -- mouse (subject), arm (group), timepoint (condition),
+# glucose_mmol_l (value), p_value (each arm's paired t-test, computed when the data were made -- the
+# renderer draws it, it runs no test). With your data: keep these columns, or name yours below.
+plot_type: paired_plot
+plot_params:
+  subject_col: mouse
+  condition_col: timepoint
+  value_col: glucose_mmol_l
+  group_col: arm
+  pvalue_col: p_value
+  condition_order: ["baseline", "week 4"]
+  group_order: ["vehicle", "drug"]
+  condition_labels: {"baseline": "Base", "week 4": "Wk 4"}
+  summary: mean
+  group_colors: {"vehicle": "#6b7280", "drug": "#2563eb"}
+  labels_ylabel: "Fasting glucose (mmol/l)"

@@ -56,6 +56,29 @@ plot_params:
   sig_threshold: 0.05
 ```
 
+## `plot_type: paired_plot` — before and after
+
+Draws each subject's values joined across conditions (before → after, or more time points), with an optional mean or median line and a significance bracket (`render_paired_plot`). With a group column the groups sit side by side, each with its own conditions.
+
+| Role (plot_params key) | Default column name | Required | Content |
+|---|---|---|---|
+| `subject_col` | `subject` | Yes | The subject a value belongs to (one line per subject) |
+| `condition_col` | `condition` | Yes | The condition, ordered by `condition_order` |
+| `value_col` | `value` | Yes | The measured value |
+| `group_col` | — | No | A second factor; its groups sit side by side. If given, the column must exist |
+| `pvalue_col` | — | No | Each group's P value from a paired test run in the analysis script ([analysis recipes](../howto/analysis_recipes.md), section 2); draws the bracket. If given, the column must exist |
+
+```yaml
+plot_type: paired_plot
+plot_params:
+  subject_col: mouse
+  condition_col: timepoint
+  value_col: glucose
+  condition_order: ["baseline", "week 4"]
+  pvalue_col: p_value
+  summary: mean
+```
+
 ## Checks
 
 `fa bundle check <bundle>` reports as errors:

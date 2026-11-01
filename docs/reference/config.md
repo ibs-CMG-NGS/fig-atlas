@@ -38,6 +38,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | [`motif_dotplot`](#motif_dotplot) | fig_atlas_omics.renderers | 44 |
 | [`multi_group_heatmap`](#multi_group_heatmap) | core | 32 |
 | [`paired_dumbbell`](#paired_dumbbell) | core | 39 |
+| [`paired_plot`](#paired_plot) | core | 47 |
 | [`pathway_evidence_dotplot`](#pathway_evidence_dotplot) | fig_atlas_omics.renderers | 28 |
 | [`pathway_test_matrix`](#pathway_test_matrix) | fig_atlas_omics.renderers | 42 |
 | [`pca`](#pca) | core | 16 |
@@ -1302,6 +1303,60 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `wspace` | number | `0.28` | fraction of a column's width | Gap between the RNA and ATAC columns |
 | `left_inset` | number | `0.0` | [0-1] fraction of the slot width | Empty strip on the left of the slot — raise if the row titles clip at the left |
 | `extend_right` | number | `0.0` | fraction of the plot width | Stretch the plots rightwards by this share (to end where a neighbouring panel ends) |
+
+## paired_plot
+
+`fig_atlas.renderers:render_paired_plot`
+
+| Key | Type | Default | Unit | What it does |
+|---|---|---|---|---|
+| `subject_col` | text | `subject` |  | Column naming the subject each value belongs to (one line per subject) |
+| `condition_col` | text | `condition` |  | Column with the condition (x position): before, after, ... |
+| `value_col` | text | `value` |  | Column with the measured values (y) |
+| `group_col` | text | auto |  | Column with a second factor; its groups sit side by side (default: one group) |
+| `pvalue_col` | text | auto |  | Column with each group's P value from the analysis (paired test); draws the bracket (default: none) |
+| `condition_order` | list | auto |  | Conditions left to right (default: order in the data) |
+| `group_order` | list | auto |  | Groups left to right (default: order in the data) |
+| `condition_labels` | mapping | `{}` |  | Tick label per condition (default: the value) |
+| `group_labels` | mapping | `{}` |  | Label per group under its conditions (default: the value) |
+| `line_color_by` | one of `group`, `direction` | `group` |  | Colour a subject's line by its group, or by whether it went up or down from the first condition |
+| `group_colors` | mapping | `{}` | hex color | Colour per group (default: color) |
+| `color` | colour | `#4b5563` | hex color | Line and point colour without a group colour |
+| `up_color` | colour | `#dc2626` | hex color | Line colour of a subject that went up (line_color_by: direction) |
+| `down_color` | colour | `#2563eb` | hex color | Line colour of a subject that went down (line_color_by: direction) |
+| `line_width` | number | `0.8` | pt | Subject line width |
+| `line_alpha` | number | `0.7` | [0-1] opacity | Subject line opacity — lower when many subjects overlap |
+| `point_size` | number | `12.0` | pt^2 (marker area) | Point size |
+| `point_alpha` | number | `0.9` | [0-1] opacity | Point opacity |
+| `marker` | text | `o` |  | Point marker (matplotlib marker; '' for none) |
+| `point_edge_width` | number | `0.0` | pt | Outline width of the points and summary markers (0: none) |
+| `summary` | one of `none`, `mean`, `median` | `none` |  | Summary line drawn over the subjects |
+| `summary_color` | colour | `#111827` | hex color | Summary line colour |
+| `summary_width` | number | `2.0` | pt | Summary line width |
+| `summary_marker_size` | number | `30.0` | pt^2 (marker area) | Summary marker size |
+| `condition_gap` | number | `1.0` | x units between conditions | Distance between neighbouring conditions |
+| `group_gap` | number | `0.8` | x units | Extra space between groups — raise to separate the groups more |
+| `x_margin` | number | `0.4` | x units | Space left of the first and right of the last condition |
+| `y_min` | number | auto | data coords | Lower y limit (default: matplotlib) |
+| `y_max` | number | auto | data coords | Upper y limit (default: data top plus room for the brackets) |
+| `y_headroom` | number | `0.12` | fraction of the data range | Room above the data for the brackets — raise if the stars touch the top |
+| `show_significance` | true / false | `True` |  | Draw a bracket per group when pvalue_col is given |
+| `sig_thresholds` | list | `[[0.001, '***'], [0.01, '**'], [0.05, '*']]` | P value | [threshold, symbol] pairs, P < threshold gets the symbol (state the rule in the legend) |
+| `sig_ns_display` | text | `ns` |  | Text for a P at or above every threshold ('' to draw nothing) |
+| `sig_gap` | number | `0.04` | fraction of the data range | Gap between the data and the bracket |
+| `sig_tick` | number | `0.02` | fraction of the data range | Height of the bracket's end ticks |
+| `sig_line_color` | colour | `#333333` | hex color | Bracket colour |
+| `sig_line_width` | number | `0.8` | pt | Bracket line width |
+| `sig_font_size` | number | computed | pt | Star size (default: tick_label_size) |
+| `labels_title` | text | auto |  | Panel title (none: no title) |
+| `labels_xlabel` | text | `` |  | x-axis title (default: none; the ticks name the conditions) |
+| `labels_ylabel` | text | computed |  | y-axis title (default: value_col) |
+| `title_size` | number | `8.0` | pt | Panel title size |
+| `axes_label_size` | number | auto | pt | Axis title size (default: rcParams) |
+| `tick_label_size` | number | auto | pt | Tick label size (default: rcParams) |
+| `group_label_size` | number | computed | pt | Size of the group labels under the ticks (default: tick_label_size) |
+| `group_label_pad` | number | `14.0` | pt | Distance of the group labels below the axis — raise if they touch the tick labels |
+| `hide_top_right` | true / false | `True` |  | Hide the top and right axis lines |
 
 ## pathway_evidence_dotplot
 
