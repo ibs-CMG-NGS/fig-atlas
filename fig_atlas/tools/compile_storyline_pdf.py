@@ -366,71 +366,140 @@ def generate_cover_page(story_data: dict, out_cover_pdf: Path) -> None:
             ax.text(0.08, 0.814, line, fontsize=7.5,
                     color="#b91c1c" if bad else "#64748b", fontweight="bold" if bad else "normal")
 
+        fig_w_pt = fig.get_size_inches()[0] * 72.0
+        renderer = fig.canvas.get_renderer()
+
+        def pt_width(s: str, font: FontProperties) -> float:
+            w_px = renderer.get_text_width_height_descent(s, font, ismath=False)[0]
+            return w_px * 72.0 / fig.dpi
+
         # Core Hypothesis Card
-        hypo_rect = plt.Rectangle((0.08, 0.70), 0.84, 0.105, facecolor="#f8fafc", edgecolor="#94a3b8", lw=1.0)
+        hypo_rect = plt.Rectangle((0.08, 0.690), 0.84, 0.115, facecolor="#f8fafc", edgecolor="#94a3b8", lw=1.0)
         ax.add_patch(hypo_rect)
-        ax.text(0.10, 0.775, "CORE HYPOTHESIS & DEDUCTIVE NARRATIVE ARC", 
-                fontsize=8.5, fontweight="bold", color="#1e293b")
+        ax.text(0.10, 0.793, "CORE HYPOTHESIS & DEDUCTIVE NARRATIVE ARC", 
+                fontsize=8.5, fontweight="bold", color="#1e293b", va="top")
         # The storyline's own words: storyline.yaml `narrative` (line breaks kept), else its hypothesis.
         hypo_text = story_data.get("narrative") or story_data.get("hypothesis") or ""
-        ax.text(0.10, 0.715, hypo_text, fontsize=7.5, color="#334155", va="bottom", linespacing=1.25)
+        fp_hypo = FontProperties(family="sans-serif", size=6.6)
+        max_w_hypo = 0.80 * fig_w_pt
+
+        def wrap_para(text: str, max_w: float, font: FontProperties) -> str:
+            out_lines = []
+            for paragraph in text.split("\n"):
+                if not paragraph.strip():
+                    out_lines.append("")
+                    continue
+                words = paragraph.split()
+                cur = ""
+                for w in words:
+                    trial = f"{cur} {w}" if cur else w
+                    if cur and pt_width(trial, font) > max_w:
+                        out_lines.append(cur)
+                        cur = w
+                    else:
+                        cur = trial
+                if cur:
+                    out_lines.append(cur)
+            return "\n".join(out_lines)
+
+        wrapped_hypo = wrap_para(hypo_text, max_w_hypo, fp_hypo)
+        ax.text(0.10, 0.774, wrapped_hypo, fontproperties=fp_hypo, color="#334155", va="top", linespacing=1.20)
         
         # Figure Allocation Table
-        ax.text(0.08, 0.675, "MANUSCRIPT FIGURE ALLOCATION & SEQUENTIAL ARCHITECTURE", 
-                fontsize=9.5, fontweight="bold", color="#0f172a")
-                
-        def wrap_name(n: str) -> str:
-            tokens = n.split("-")
-            mid = len(tokens) // 2
-            return "-".join(tokens[:mid]) + "-\n" + "-".join(tokens[mid:])
+        ax.text(0.08, 0.668, "MANUSCRIPT FIGURE ALLOCATION & SEQUENTIAL ARCHITECTURE", 
+                fontsize=9.0, fontweight="bold", color="#0f172a")
+
+        table_w_pt = 0.84 * fig_w_pt
+        col_widths = [0.15, 0.25, 0.60]
+        col1_max_pt = 105.0
+        col2_max_pt = 255.0
+
+        n_rows = len(story_data["figures"]) + len(story_data.get("tables", [])) + 1
+        f_size = 5.4 if n_rows >= 18 else max(5.6, min(7.2, 70.0 / n_rows))
+
+        fp_desc = FontProperties(family="sans-serif", size=f_size)
+        fp_mono = FontProperties(family="monospace", size=f_size - 0.4)
+
+        def wrap_mono(n: str, max_w: float) -> str:
+            if "/" in n:
+                fname = n.split("/")[-1]
+                tokens = fname.split("_")
+                mid = len(tokens) // 2
+                return "_".join(tokens[:mid]) + "_\n" + "_".join(tokens[mid:])
+            if pt_width(n, fp_mono) <= max_w:
+                return n
+            for sep in ("-", "_"):              # project names use "-", table file names "_"
+                tokens = n.split(sep)
+                if len(tokens) > 1:
+                    mid = len(tokens) // 2
+                    return sep.join(tokens[:mid]) + sep + "\n" + sep.join(tokens[mid:])
+            return n                            # nothing to break at: leave it whole
+
+        def wrap_desc(s: str, max_w: float) -> str:
+            lines, cur = [], ""
+            for word in s.split():
+                trial = f"{cur} {word}" if cur else word
+                if cur and pt_width(trial, fp_desc) > max_w:
+                    lines.append(cur)
+                    cur = word
+                else:
+                    cur = trial
+            lines.append(cur)
+            return "\n".join(lines)
 
         table_rows = [["Figure / Table", "Project / File", "Biological Role & Deductive Takeaway"]]
         for f in story_data["figures"]:
-            p_wrap = wrap_name(f["project"])
-            d_wrap = "\n".join(textwrap.wrap(f["description"], width=46))
-            table_rows.append([f["role"], p_wrap, d_wrap])
+            p_wrap = wrap_mono(f["project"], col1_max_pt)
+            d_wrap = wrap_desc(f["description"], col2_max_pt)
+            r_label = f["role"].replace("Supplementary Figure ", "Suppl. Figure ")
+            table_rows.append([r_label, p_wrap, d_wrap])
         for t in story_data.get("tables", []):
-            f_wrap = "\n".join(textwrap.wrap(t["file"], width=34))
-            d_wrap = "\n".join(textwrap.wrap(t["description"], width=46))
+            f_wrap = wrap_mono(t["file"], col1_max_pt)
+            d_wrap = wrap_desc(t["description"], col2_max_pt)
             table_rows.append([t["role"].replace("Supplementary ", "Suppl. "), f_wrap, d_wrap])
             
         n_rows = len(table_rows)
-        t_height = min(0.48, max(0.38, n_rows * 0.026))
-        f_size = max(5.6, min(7.2, 70.0 / n_rows))
+        # Calculate dynamic row height weights based on line count of each row
+        row_lines = [max(cell_text.count("\n") + 1 for cell_text in row) for row in table_rows]
+        total_lines = sum(row_lines)
         
-        tab = ax.table(cellText=table_rows, loc="center", cellLoc="left", bbox=[0.08, 0.66 - t_height, 0.84, t_height],
-                       colWidths=[0.20, 0.34, 0.46])
+        line_unit_h = 0.0125 if n_rows >= 18 else 0.0150
+        t_height = min(0.48, max(0.35, total_lines * line_unit_h))
+        
+        tab = ax.table(cellText=table_rows, loc="center", cellLoc="left", 
+                       bbox=[0.08, 0.655 - t_height, 0.84, t_height],
+                       colWidths=col_widths)
         tab.auto_set_font_size(False)
         tab.set_fontsize(f_size)
         
-        cell_h = t_height / n_rows
         for (r, c), cell in tab.get_celld().items():
             cell.set_edgecolor("#cbd5e1")
-            cell.set_height(cell_h)
+            row_h = t_height * (row_lines[r] / total_lines)
+            cell.set_height(row_h)
             if r == 0:
                 cell.set_facecolor("#1e293b")
-                cell.set_text_props(color="white", weight="bold", size=f_size + 0.8)
+                cell.set_text_props(color="white", weight="bold", size=f_size + 0.6)
             else:
                 is_main = "Main" in table_rows[r][0]
                 cell.set_facecolor("#f1f5f9" if is_main else ("#f8fafc" if r % 2 == 1 else "#ffffff"))
                 if c == 0:
-                    cell.set_text_props(weight="bold", color="#0f172a" if is_main else "#475569", size=f_size + 0.3)
+                    cell.set_text_props(weight="bold", color="#0f172a" if is_main else "#475569", size=f_size + 0.2)
                 elif c == 1:
                     cell.set_text_props(color="#0284c7", size=f_size - 0.4, family="monospace")
                 else:
                     cell.set_text_props(color="#1e293b", size=f_size)
 
         # Verification & Quality Statement below table
-        v_top = 0.66 - t_height - 0.025
+        v_top = (0.655 - t_height) - 0.015
         ax.text(0.08, v_top, "PUBLICATION INTEGRITY & REPEATABILITY STANDARDS", 
-                fontsize=8.5, fontweight="bold", color="#0f172a")
+                fontsize=8.0, fontweight="bold", color="#0f172a")
         notes = (
             "• Each figure page carries its journal-style legend below the figure; supplementary tables ship as CSV files.\n"
             "• All figure panels are rendered in lossless vector PDF format (300+ DPI, Matplotlib Agg).\n"
             "• Figures drawn 1:1 at final print size (A4 portrait, 184.6 mm content width; 5-8 pt type, config-driven).\n"
             "• Raw datasets remain strictly read-only and immutable; verified 100% against clean atlas manifests."
         )
-        ax.text(0.08, v_top - 0.058, notes, fontsize=7.2, color="#475569", linespacing=1.2)
+        ax.text(0.08, v_top - 0.046, notes, fontsize=6.8, color="#475569", linespacing=1.2)
         
         # Footer
         ax.plot([0.08, 0.92], [0.045, 0.045], color="#e2e8f0", lw=1.0)
