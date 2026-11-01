@@ -206,16 +206,16 @@ cards:
     kind: plot
     phase: 2
     priority: P1
-    status: in_review
+    status: done
     depends_on: []
     plot_type: grouped_bar
     data: "factor_a, factor_b, value"
     owner: "claude-code 2026-11-01"
     branch: "plot/PC-02-grouped-bar"
-    commits: ["fig-atlas 96820d8"]
-    version: null
-    review: null
-    notes: "plan v3: post-hoc comparisons run in the analysis script (recipe I-04); the renderer draws brackets from p_value/padj columns. I-05 scope: interleaved and separated bar arrangements. Delivered (2026-11-02): fig_atlas/renderers/grouped_bar.py (grouped family; category/group/value roles, arrangement interleaved|separated, summary mean|median, error none|sd|sem|ci95, jittered replicates, brackets from control_group to each group from pvalue_col, stacked when they overlap; all-pairs comparisons left for E-01), contract core.grouped_bar + table contract docs (en/ko), example bundle examples/gallery/grouped_bar (Dunnett's test in the generator), snapshot cases grouped_bar and grouped_bar_separated, tests/renderers/test_grouped_bar.py. Evidence: full pytest exit 0; fa reference --check, fa inventory --check, fa lint --hardcoded --check, fa claims --check exit 0; example preflight clean at 85 mm; existing examples and snapshots unchanged (V8). Awaiting G2."
+    commits: ["fig-atlas 96820d8", "fig-atlas 078ff36", "PR #11 (merge 9e29927)"]
+    version: "unreleased (on fig-atlas main)"
+    review: "G2 approved 2026-11-02 (user); PR #11 merged; main CI 41357869609 success, Documentation site 41357869759 success"
+    notes: "plan v3: post-hoc comparisons run in the analysis script (recipe I-04); the renderer draws brackets from p_value/padj columns. I-05 scope: interleaved and separated bar arrangements. Delivered (2026-11-02): fig_atlas/renderers/grouped_bar.py (grouped family; category/group/value roles, arrangement interleaved|separated, summary mean|median, error none|sd|sem|ci95, jittered replicates, brackets from control_group to each group from pvalue_col, stacked when they overlap; all-pairs comparisons left for E-01), contract core.grouped_bar + table contract docs (en/ko), example bundle examples/gallery/grouped_bar (Dunnett's test in the generator), snapshot cases grouped_bar and grouped_bar_separated, tests/renderers/test_grouped_bar.py. Evidence: full pytest exit 0; fa reference --check, fa inventory --check, fa lint --hardcoded --check, fa claims --check exit 0; example preflight clean at 85 mm; existing examples and snapshots unchanged (V8). Also fixed in PR #11: paired_plot error bars take numpy arrays (pandas FutureWarning), pictures unchanged."
   - id: PC-03
     title: "correlation scatter with regression line and band"
     kind: plot
