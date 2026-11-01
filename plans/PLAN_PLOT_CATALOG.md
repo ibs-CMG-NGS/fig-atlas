@@ -1,6 +1,6 @@
 # fig-atlas 그림 종류(plot catalog) 확장 계획
 
-> 작성일: 2026-10-24 (개정 2026-11-01) · 계획 판: **v4** (개정 기록은 맨 아래)
+> 작성일: 2026-10-24 (개정 2026-11-01) · 계획 판: **v5** (개정 기록은 맨 아래)
 > 대상: 패키지 저장소 `fig-atlas`의 `fig_atlas/renderers/`, `fig_atlas/stats.py`, `fig_atlas/contracts.py`, `examples/gallery/`, `tests/`, 문서 갤러리(`docs/reference/gallery.md`)
 > 관련 문서: cmg-figures `docs/ROADMAP_ECOSYSTEM_STRATEGY.md`(비공개 연구 저장소에 남김) (Phase 6a 범용 렌더러), `docs/decisions/0003-renderers-are-shapes.md`, `AGENTS.md` §3 (asset accumulation)
 > **상태의 정본**: [PLAN_PLOT_CATALOG.status.yaml](PLAN_PLOT_CATALOG.status.yaml) — 작업 하나하나의 상태·담당·커밋은 이 파일에만 적는다. 아래 표는 Phase 단위 요약이다.
@@ -10,7 +10,7 @@
 
 | Phase | 내용 | 상태 |
 |---|---|---|
-| 0 | 기반: 상태 파일·점검 스크립트, 갤러리 분류(family), 작업 카드 틀, 통계 경계 정리 I-03·I-04 (§2 원칙 3) | ✅ 완료 (2026-11-01): I-01 (`261f558`), I-02 (`50ab6eb`, G2 승인 2026-10-27), I-03 (`6593d5f`, G2 승인·CI green), I-04 (`dd238f6`+`ce843bd`+`a999abd`, PR #2·#3, 승인 2026-11-01) · 🔄 I-05 in_review (Prism 대조표, G1 재검토 대기) |
+| 0 | 기반: 상태 파일·점검 스크립트, 갤러리 분류(family), 작업 카드 틀, 통계 경계 정리 I-03·I-04 (§2 원칙 3) | ✅ 완료 (2026-11-01): I-01 (`261f558`), I-02 (`50ab6eb`, G2 승인 2026-10-27), I-03 (`6593d5f`, G2 승인·CI green), I-04 (`dd238f6`+`ce843bd`+`a999abd`, PR #2·#3, 승인 2026-11-01) · ✅ I-05 (Prism 대조표, PR #6 `4e24d91`, G1 재검토 통과 2026-11-01) |
 | 1 | ~~통계 층 확장 S-01–S-06~~ → **폐지(v3)**: 검정은 분석 스크립트가 실행하고, 패키지는 표시·기록만 | ⬜ 없음 (S-01–S-06 `dropped`, 레시피는 I-04) |
 | 2 | 우선순위 1 그림 8종 (PC-01–PC-08) — v3에서 S 의존성이 없어졌고 G1 통과, Phase 0 완료로 시작 가능 | ⬜ 대기 |
 | 3 | 기존 그림 고도화 E-01–E-06 (통계 괄호, 축 옵션 등) | ⬜ 대기 |
@@ -119,6 +119,14 @@ stats.record(table, name="paired_t", title="Paired t-test (before vs after)")
 | PC-20 | 극좌표(polar/rose) | 순환 데이터 | angle, value | — | P3 |
 | PC-21 | sankey/alluvial | 흐름 | source, target, value | — | P3 |
 | PC-22 | 삼각 좌표(ternary) | 조성 | a, b, c | — | P3 |
+| PC-23 | 잔차 그림(잔차 대 적합값/x, 0선) | XY | x 또는 fitted, residual, (group) | 잔차(분석에서) | P2 |
+| PC-24 | spaghetti(개체별 궤적, 평균선 선택) | XY | subject, x, y, (group) | — | P2 |
+| PC-25 | 누적 분포(ECDF, 확률 축 선택) | XY | value, (group) | — | P2 |
+| PC-26 | population pyramid(좌우 막대) | XY | category, side, value | — | P3 |
+| PC-27 | 추정 그림(Gardner–Altman / Cumming) | 열 | group, value | 효과 크기·신뢰구간(분석에서) | P2 |
+| PC-28 | 백분율 점 그림 | 부분과 전체 | part, value | — | P3 |
+| PC-29 | 단독 덴드로그램 | 다변수 | 연결 표(분석에서) | 트리(분석에서) | P3 |
+| PC-30 | 중첩(subcolumn) 산점 | 중첩 | group, subject, value | — | P2 |
 
 ### 3.3 기존 그림 고도화 (E)
 
@@ -130,6 +138,14 @@ stats.record(table, name="paired_t", title="Paired t-test (before vs after)")
 | E-04 | 렌더러가 인쇄 결과를 계산하지 않게 마무리: `dose_response`의 내부 4PL 적합과 `group_scatter`의 Pearson 폴백을 없앤다(맞춤 모수·곡선 좌표·r/p는 입력 컬럼; 기존 그림은 의도적으로 스냅샷 갱신, 값은 동일) | `dose_response`, `group_scatter` | I-03 |
 | E-05 | `line_band`에 오차 막대 모드(띠 대신) | `line_band` | — |
 | E-06 | `survival`에 number-at-risk 표와 log-rank p 인쇄(p는 분석 스크립트가 `stats.record`로 남긴다) | `survival` | — (레시피 I-04) |
+| E-07 | `boxplot` 수염 방식 선택(min–max, Tukey, 백분위), 범례에 방식 명시(live claim) | `boxplot` | — |
+| E-08 | `bar_scatter`의 floating bar(최소–최대) 막대 모드 | `bar_scatter` | — |
+| E-09 | 그룹 box·violin(두 번째 요인을 나란히) | `boxplot`, `violin` | — |
+| E-10 | 생존 곡선 신뢰띠(띠 좌표는 분석에서) | `survival` | — |
+| E-11 | PCA loadings·biplot·scree | `pca` | — |
+| E-12 | 신뢰 타원·convex hull | `group_scatter`, `pca` | — |
+
+**I-05에서 더한 것(v5, G1 재검토 2026-11-01)**: PC-23–PC-30과 E-07–E-12(우선순위는 대조표의 제안대로). 기존 카드의 범위 보강: PC-01 그룹 전후 비교, PC-02 interleaved·separated 배치, PC-05 aligned dot, PC-10 스플라인 곡선, PC-16 단일 면적(상태 파일 카드의 notes에 적음).
 
 ## 4. 작업 카드 (작업 하나의 명세)
 
@@ -310,3 +326,4 @@ fig-atlas 그림 종류 확장 계획의 작업 <ID>를 맡아라.
 | v2 | 2026-10-27 | I-02에서 family 목록에 `schematic`(도식·패널 태그 같은 레이아웃 도우미)을 더하고, family의 정본을 계약이 아니라 렌더러 모듈의 `FAMILY`로 확정(plot_type은 ingest_map으로 상속). §5.1 완성 정의에 분류 항목 추가 |
 | v3 | 2026-10-27 | **통계 경계 확정(G1): 엄격 분리.** 패키지는 검정·보정·모형을 실행하지 않는다 — 검정은 분석 스크립트(scipy·R), 패키지는 표시(별·괄호·오차막대·밴드·비율 CI)와 기록(`stats.record`·`verify`)만. §2 원칙 3을 "그림이 인쇄하는 숫자는 들어온다"로 교체, §3.1의 S-01–S-06을 `dropped`로 전환하고 분석 레시피(I-04)로 이동, PC-01/02/03/06/07/08/10/18·E-01/04/06의 S 의존성 해제, §5.2를 "분석 레시피"로 교체, V3를 "인쇄값·기록"으로 재정의, Phase 1 폐지. 카드 추가: I-03(렌더러 순수성), I-04(분석 레시피). R 참값 도구 결정은 불필요해짐 |
 | v4 | 2026-11-01 | I-05 추가: GraphPad Prism 그래프 목록과의 대조표(`PLOT_CATALOG_PRISM_COVERAGE.md`). 새 후보 14개(PC-23–PC-30, E-07–E-12)와 기존 카드 범위 보강 5건(PC-01·02·05·10·16)을 G1 재검토에 올림 |
+| v5 | 2026-11-01 | G1 재검토 통과: I-05의 새 카드 14개(PC-23–PC-30, E-07–E-12)를 제안한 우선순위대로 받아들임(P1: E-07·E-09, P2: PC-23·24·25·27·30, E-10·11, P3: PC-26·28·29, E-08·12). 기존 카드 5개 범위 보강. I-05 done |
