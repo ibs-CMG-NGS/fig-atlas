@@ -32,7 +32,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | [`image_panel`](#image_panel) | core | 27 |
 | [`interval_track`](#interval_track) | fig_atlas_omics.renderers | 34 |
 | [`jaccard_heatmap`](#jaccard_heatmap) | core | 25 |
-| [`line_band`](#line_band) | core | 44 |
+| [`line_band`](#line_band) | core | 45 |
 | [`ma_plot`](#ma_plot) | fig_atlas_omics.renderers | 24 |
 | [`motif_architecture_table`](#motif_architecture_table) | fig_atlas_omics.renderers | 5 |
 | [`motif_dotplot`](#motif_dotplot) | fig_atlas_omics.renderers | 44 |
@@ -1120,6 +1120,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `tick_label_size` | number | auto | pt | Tick label size (default: rcParams) |
 | `show_legend` | true / false | `True` |  | Show the group legend (only with a group_col) |
 | `legend_loc` | text | `best` |  | Legend location (matplotlib loc) |
+| `legend_anchor` | list | auto | axes fraction (x, y) | bbox_to_anchor for the legend (default: inside the axes, placed by legend_loc) — set e.g. [1.02, 1.0] to move the legend outside when the lines fill every corner |
 | `legend_fontsize` | number | computed | pt | Legend font size (default: tick_label_size) |
 | `legend_frameon` | true / false | `False` |  | Draw a frame around the legend |
 

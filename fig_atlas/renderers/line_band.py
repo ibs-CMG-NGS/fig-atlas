@@ -73,6 +73,9 @@ SCHEMA = Schema("line_band", params=[
     Param("tick_label_size", float, None, unit="pt", range=(0, None), role="Tick label size (default: rcParams)"),
     Param("show_legend", bool, True, role="Show the group legend (only with a group_col)"),
     Param("legend_loc", str, "best", role="Legend location (matplotlib loc)"),
+    Param("legend_anchor", list, None, unit="axes fraction (x, y)",
+          role="bbox_to_anchor for the legend (default: inside the axes, placed by legend_loc)",
+          tune="set e.g. [1.02, 1.0] to move the legend outside when the lines fill every corner"),
     Param("legend_fontsize", float, CODE_DEFAULT, unit="pt", range=(0, None), role="Legend font size (default: tick_label_size)"),
     Param("legend_frameon", bool, False, role="Draw a frame around the legend"),
 ])
@@ -185,6 +188,8 @@ def render_line_band(ax, df, params):
         ax.tick_params(labelsize=tick_sz)
     if g_col and params.get("show_legend", True):
         fs = params.get("legend_fontsize", tick_sz)
+        anchor = params.get("legend_anchor")
         ax.legend(loc=params.get("legend_loc", "best"), frameon=bool(params.get("legend_frameon", False)),
+                  **({} if anchor is None else {"bbox_to_anchor": tuple(anchor)}),
                   **({} if fs is None else {"fontsize": fs}))
     return summary
