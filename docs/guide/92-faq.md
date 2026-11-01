@@ -1,12 +1,15 @@
 ---
 title: Appendix B. Questions and troubleshooting
 audience: researchers (no programming experience needed)
-reviewed: 2026-10-14
+reviewed: 2026-11-02
 ---
 
 # Appendix B. Questions and troubleshooting
 
 ## Figures and the config
+
+**Do I have to write the config myself?**
+No. The tool writes it. `fa new project` makes the skeleton (`project:`, `paths:`, `figures:`, an empty `plots:`), and `fa ingest bundle` fills the block for each panel with every value that kind of figure uses, each with its explaining comment. Do not copy another project's config: its paths and analysis file name would not match. What you do is change the generated values and the layout under `figures:` (chapters 4 and 6).
 
 **I changed the config but the figure is the same.**
 - Check that you **saved** the config.
@@ -32,6 +35,9 @@ The raw data (`raw_data/`) are not uploaded to the repository (GitHub), so undo 
 
 **The bundle check reports an error.**
 A column the figure needs is not in the table; the message says which. Do not edit the table (`data.csv`): check that the note points to the table's real column name, or ask for the data to be exported again (chapter 3).
+
+**Attaching a bundle is refused.**
+There are four cases. ① A contract error: a column the figure needs is missing — do not edit the table; fix the note's column name or get the data again (chapter 3). ② No renderer draws that `plot_type` — check `fa bundle contracts`, and make a new kind of figure as Case A·C in chapter 5. ③ A panel of the same name exists — give another name with `--name`. ④ The bundle is outside the repository — move it under `raw_data/`.
 
 **The data changed and I do not know which figures to redraw.**
 💬 "Check whether any figures are stale." You get the stale figures and the reasons (chapter 10).
