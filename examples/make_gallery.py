@@ -339,12 +339,36 @@ def grouped_bar(rng):
     rows = []
     for gt, base in (("WT", 1.0), ("Het", 0.8), ("KO", 0.5)):
         vals = {t: base + d * base + rng.normal(0, 0.12, 4) for t, d in effect.items()}
-        res = dunnett(vals["drug A"], vals["drug B"], control=vals["vehicle"])
+        res = dunnett(vals["drug A"], vals["drug B"], control=vals["vehicle"], random_state=0)  # seeded integration
         p = {"vehicle": None, "drug A": float(f"{res.pvalue[0]:.3g}"), "drug B": float(f"{res.pvalue[1]:.3g}")}
         for t, v in vals.items():
             rows += [{"genotype": gt, "treatment": t, "replicate": i, "rel_expression": round(float(x), 3),
                       "p_vs_vehicle": p[t]} for i, x in enumerate(v, start=1)]
     return pd.DataFrame(rows)
+
+
+def correlation_scatter(rng):
+    """Body weight and fat mass of mice on two diets, 14 per diet. The least-squares
+    line, its 95% confidence band and Pearson r and P are computed per diet here, as
+    an analysis script would (docs/howto/analysis_recipes.md, section 4), and travel
+    as fit rows and r / p_value columns; the renderer only draws them."""
+    from scipy.stats import pearsonr, t
+    rows, fits = [], []
+    for diet, slope, base in (("chow", 0.25, 2.0), ("high-fat", 0.55, 1.0)):
+        w = rng.uniform(22, 38, 14)
+        fat = base + slope * (w - 22) + rng.normal(0, 1.0, 14)
+        r, p = pearsonr(w, fat)
+        b, a = np.polyfit(w, fat, 1)
+        resid = fat - (a + b * w)
+        s = np.sqrt(resid @ resid / (len(w) - 2))
+        grid = np.linspace(w.min(), w.max(), 25)
+        half = t.ppf(0.975, len(w) - 2) * s * np.sqrt(1 / len(w) + (grid - w.mean()) ** 2 / ((w - w.mean()) ** 2).sum())
+        rows += [{"diet": diet, "body_weight": round(float(x), 2), "fat_mass": round(float(y), 2),
+                  "r": round(float(r), 4), "p_value": float(f"{p:.3g}")} for x, y in zip(w, fat)]
+        fits += [{"diet": diet, "fit_x": round(float(x), 3), "fit_y": round(float(a + b * x), 4),
+                  "ci_low": round(float(a + b * x - h), 4), "ci_high": round(float(a + b * x + h), 4)}
+                 for x, h in zip(grid, half)]
+    return pd.concat([pd.DataFrame(rows), pd.DataFrame(fits)], ignore_index=True)
 
 HEAD = "# Gallery example (examples/make_gallery.py): synthetic data, not measurements.\n"
 META = {
@@ -688,6 +712,27 @@ plot_params:
   legend_loc: "upper right"
   labels_ylabel: "Relative expression"
 """,
+    "correlation_scatter": HEAD + """# inputs/data.csv: one row per mouse -- diet (group), body_weight (x), fat_mass (y), and each diet's
+# Pearson r and P (r, p_value) -- then the fit rows: a grid of body weights (fit_x) with the least-squares
+# line (fit_y) and its 95% confidence band (ci_low, ci_high), all computed when the data were made. The
+# renderer draws them; it fits nothing. With your data: keep these columns, or name yours below.
+plot_type: correlation_scatter
+plot_params:
+  x_col: body_weight
+  y_col: fat_mass
+  group_col: diet
+  group_order: ["chow", "high-fat"]
+  group_colors: {"chow": "#6b7280", "high-fat": "#dc2626"}
+  fit_x_col: fit_x
+  fit_y_col: fit_y
+  band_lower_col: ci_low        # 95% confidence band of the line -- say so in the legend
+  band_upper_col: ci_high
+  r_col: r
+  p_col: p_value
+  legend_loc: "lower right"
+  labels_xlabel: "Body weight (g)"
+  labels_ylabel: "Fat mass (g)"
+""",
 }
 
 
@@ -704,7 +749,8 @@ def main() -> None:
               "cross_condition_dotplot": cross_condition_dotplot, "motif_dotplot": motif_dotplot,
               "peak_feature_enrichment": peak_feature_enrichment,
               # plot catalog (plans/PLAN_PLOT_CATALOG.md), appended in card order
-              "paired_plot": paired_plot, "grouped_bar": grouped_bar}
+              "paired_plot": paired_plot, "grouped_bar": grouped_bar,
+              "correlation_scatter": correlation_scatter}
     for name, make in makers.items():
         _write(name, make(rng), META[name])
     # The images get their own random stream, so adding a table example never changes their pixels.

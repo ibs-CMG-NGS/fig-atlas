@@ -101,6 +101,33 @@ plot_params:
   error: sem
 ```
 
+## `plot_type: correlation_scatter` — correlation scatter (two variables)
+
+Draws one point per item, a regression line with its band, and r and P per group (`render_correlation_scatter`). The line, the band and the numbers come from the analysis script ([analysis recipes](../howto/analysis_recipes.md), section 4): the line and band as coordinates on extra rows of the same table, r and P as columns.
+
+| Role (plot_params key) | Default column name | Required | Content |
+|---|---|---|---|
+| `x_col` | `x` | Yes | The first variable |
+| `y_col` | `y` | Yes | The second variable |
+| `group_col` | — | No | Splits the points (and fit rows) into coloured groups |
+| `fit_x_col`, `fit_y_col` | — | No | On fit rows: a grid of x values and the fitted y. A fit row with an empty group is a line over all points |
+| `band_lower_col`, `band_upper_col` | — | No | On fit rows: the band's edges (a confidence or a prediction band; say which in the legend) |
+| `r_col`, `p_col` | — | No | Each group's r and P, repeated on its rows. If given, the columns must exist |
+
+```yaml
+plot_type: correlation_scatter
+plot_params:
+  x_col: body_weight
+  y_col: fat_mass
+  group_col: diet
+  fit_x_col: fit_x
+  fit_y_col: fit_y
+  band_lower_col: ci_low
+  band_upper_col: ci_high
+  r_col: r
+  p_col: p_value
+```
+
 ## Checks
 
 `fa bundle check <bundle>` reports as errors:

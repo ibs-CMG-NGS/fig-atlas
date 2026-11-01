@@ -691,6 +691,51 @@ def grouped_bar_separated():
                                               "labels_ylabel": "Expression"})
     return fig
 
+
+def _correlated(rng):
+    rows, fits = [], []
+    for g, slope in (("chow", 0.3), ("high-fat", 0.6)):
+        x = rng.uniform(20, 40, 12)
+        y = slope * x + rng.normal(0, 1.2, 12)
+        b, a = np.polyfit(x, y, 1)
+        grid = np.linspace(x.min(), x.max(), 20)
+        half = 0.8 + 0.04 * (grid - x.mean()) ** 2
+        rows += [{"diet": g, "w": xi, "fat": yi, "r": 0.9 if g == "chow" else 0.95,
+                  "p": 0.0004 if g == "chow" else 0.00001} for xi, yi in zip(x, y)]
+        fits += [{"diet": g, "fx": gx, "fy": a + b * gx, "lo": a + b * gx - h, "hi": a + b * gx + h}
+                 for gx, h in zip(grid, half)]
+    return pd.concat([pd.DataFrame(rows), pd.DataFrame(fits)], ignore_index=True)
+
+
+def correlation_scatter():
+    """PC-03: two groups, a line and band per group from fit rows, r and P per group."""
+    from fig_atlas.renderers import render_correlation_scatter
+    fig, ax = plt.subplots(figsize=(2.6, 2.2))
+    render_correlation_scatter(ax, _correlated(_rng()), {
+        **TYPO, "x_col": "w", "y_col": "fat", "group_col": "diet",
+        "group_colors": {"chow": "#6b7280", "high-fat": "#dc2626"},
+        "fit_x_col": "fx", "fit_y_col": "fy", "band_lower_col": "lo", "band_upper_col": "hi",
+        "r_col": "r", "p_col": "p", "legend_loc": "lower right",
+        "labels_xlabel": "Body weight (g)", "labels_ylabel": "Fat mass (g)"})
+    return fig
+
+
+def correlation_scatter_pooled():
+    """PC-03: one colour, a line over all points (fit rows without a group), r² text."""
+    from fig_atlas.renderers import render_correlation_scatter
+    df = _correlated(_rng())
+    pts = df[df["w"].notna()][["w", "fat"]].assign(r=0.82, p=0.00003)
+    b, a = np.polyfit(pts["w"], pts["fat"], 1)
+    grid = np.linspace(pts["w"].min(), pts["w"].max(), 20)
+    half = 1.0 + 0.05 * (grid - pts["w"].mean()) ** 2
+    fit = pd.DataFrame({"fx": grid, "fy": a + b * grid, "lo": a + b * grid - half, "hi": a + b * grid + half})
+    fig, ax = plt.subplots(figsize=(2.6, 2.2))
+    render_correlation_scatter(ax, pd.concat([pts, fit], ignore_index=True), {
+        **TYPO, "x_col": "w", "y_col": "fat", "fit_x_col": "fx", "fit_y_col": "fy",
+        "band_lower_col": "lo", "band_upper_col": "hi", "r_col": "r", "p_col": "p",
+        "stats_format": "R² = {r2:.2f}, {p_text}, n = {n}"})
+    return fig
+
 CASES = {
     "cross_condition_dotplot": cross_condition_dotplot,
     "cross_condition_heatmap": cross_condition_heatmap,
@@ -740,6 +785,8 @@ CASES = {
     "paired_plot_bar": paired_plot_bar,
     "grouped_bar": grouped_bar,
     "grouped_bar_separated": grouped_bar_separated,
+    "correlation_scatter": correlation_scatter,
+    "correlation_scatter_pooled": correlation_scatter_pooled,
 }
 
 # Gallery families (fig_atlas.family) for pictures that are not a renderer

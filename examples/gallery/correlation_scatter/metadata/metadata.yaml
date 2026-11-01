@@ -1,0 +1,21 @@
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per mouse -- diet (group), body_weight (x), fat_mass (y), and each diet's
+# Pearson r and P (r, p_value) -- then the fit rows: a grid of body weights (fit_x) with the least-squares
+# line (fit_y) and its 95% confidence band (ci_low, ci_high), all computed when the data were made. The
+# renderer draws them; it fits nothing. With your data: keep these columns, or name yours below.
+plot_type: correlation_scatter
+plot_params:
+  x_col: body_weight
+  y_col: fat_mass
+  group_col: diet
+  group_order: ["chow", "high-fat"]
+  group_colors: {"chow": "#6b7280", "high-fat": "#dc2626"}
+  fit_x_col: fit_x
+  fit_y_col: fit_y
+  band_lower_col: ci_low        # 95% confidence band of the line -- say so in the legend
+  band_upper_col: ci_high
+  r_col: r
+  p_col: p_value
+  legend_loc: "lower right"
+  labels_xlabel: "Body weight (g)"
+  labels_ylabel: "Fat mass (g)"

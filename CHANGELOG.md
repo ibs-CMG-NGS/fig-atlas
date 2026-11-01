@@ -53,6 +53,9 @@ of one manuscript before being published as a package. This first public tree co
 - **PC-02 `grouped_bar`** (grouped): two factors -- a bar per group within each category (mean or
   median, SD, SEM or 95% CI error bar, replicates on top), interleaved or separated, and brackets
   against `control_group` from the P values a post-hoc test in the analysis writes (`pvalue_col`).
+- **PC-03 `correlation_scatter`** (xy): two variables -- points by group, a regression line and its
+  band from fit rows the analysis writes (`fit_x_col`, `fit_y_col`, `band_lower_col`,
+  `band_upper_col`), and r and P per group from columns (`r_col`, `p_col`).
 - **Documentation**: a guide for researchers, tutorials run as tests (Case A, B and C worked
   examples among them), how-to guides, generated reference pages and a renderer gallery, design
   decision records, a documentation site (MkDocs) in English with a Korean version of every page

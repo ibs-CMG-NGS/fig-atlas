@@ -221,16 +221,16 @@ cards:
     kind: plot
     phase: 2
     priority: P1
-    status: todo
+    status: in_review
     depends_on: []
     plot_type: correlation_scatter
     data: "x, y, optional group"
-    owner: null
-    branch: null
-    commits: []
+    owner: "claude-code 2026-11-02"
+    branch: "plot/PC-03-correlation-scatter"
+    commits: ["fig-atlas b90f3ba"]
     version: null
     review: null
-    notes: "plan v3: regression line/band coordinates and r/p come from the analysis script (recipe I-04); the renderer draws them."
+    notes: "plan v3: regression line/band coordinates and r/p come from the analysis script (recipe I-04); the renderer draws them. Delivered (2026-11-02): fig_atlas/renderers/correlation_scatter.py (xy family; x/y roles, groups by colour, line and band from fit rows in the same table -- fit_x_col, fit_y_col, band_lower_col, band_upper_col; a fit row without a group is a line over all points -- r and P per group from r_col/p_col, text fields r, r2, p, p_text, n, group, P floor), contract core.correlation_scatter + table contract docs (en/ko), example bundle examples/gallery/correlation_scatter (least squares, 95% confidence band, Pearson r in the generator), snapshot cases correlation_scatter and correlation_scatter_pooled, tests/renderers/test_correlation_scatter.py. Also: the gallery generator seeds Dunnett (random_state=0), whose P values changed every run (grouped_bar example data, stars unchanged). Evidence: full pytest exit 0; fa reference --check, fa inventory --check, fa lint --hardcoded --check, fa claims --check exit 0; example preflight clean at 85 mm; other examples and snapshots unchanged (V8). Awaiting G2."
   - id: PC-04
     title: "raincloud (half violin + box + points)"
     kind: plot
