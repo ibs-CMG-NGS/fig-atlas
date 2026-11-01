@@ -1,7 +1,7 @@
 ---
 title: "6. Changing a figure: reading and writing the config"
 audience: researchers (no programming experience needed)
-reviewed: 2026-10-14
+reviewed: 2026-11-02
 ---
 
 # 6. Changing a figure: reading and writing the config
@@ -46,6 +46,23 @@ When a bundle is attached, the tool writes into its panel block **every value th
 | `(from the bundle)` | The value came from the bundle's note. You may change it: the bundle stays as it is, and the config's value is used from now on. |
 | `null` | "Not set = automatic". For example `y_max: null` fits the axis range to the data. Put a number and it is fixed to that. |
 | `#` at the start of a line | A line that is switched off. A value marked *(computed when unset)* is worked out by the program when left empty. To set it yourself, remove the `#` and put a value. |
+
+## What a generated panel block looks like
+
+Attaching a bundle (`fa ingest bundle`) writes a block like this under `plots:`, shortened from the `dose_response` block of the chapter 4 example.
+
+```yaml
+  dose_response:
+    renderer: "fig_atlas.renderers:render_line_band"   # what draws it: the component for this kind of figure (written by ingest)
+    bundle: "examples/dose_response"                   # what it draws: the data, read only
+    x_col: "dose_uM"        # Column with the x values ... (from the bundle)
+    y_col: "viability"      # Column with the values ... (from the bundle)
+    error: "sem"            # Band around the centre ... (from the bundle)
+    title_size: 8.0         # Panel title font size; pt ... (from the style preset)
+    # legend_fontsize: null # Legend font size ... (computed when unset)
+```
+
+The first two lines (`renderer`, `bundle`) are set by ingest: they say what draws the panel and from which data, and you do not write them by hand. The rest are the values that kind of figure uses, and each comment says what it does.
 
 ## Example: fixing a warning and matching title sizes
 

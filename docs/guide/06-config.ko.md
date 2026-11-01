@@ -1,7 +1,7 @@
 ---
 title: "6. 그림 고치기: config 읽고 쓰기"
 audience: 연구자 (프로그래밍 경험 불필요)
-reviewed: 2026-10-08
+reviewed: 2026-11-02
 ---
 
 # 6. 그림 고치기: config 읽고 쓰기
@@ -46,6 +46,23 @@ plots:              # 패널마다 한 블록
 | `(from the bundle)` | 번들의 메모에서 옮겨 온 값입니다. 고쳐도 됩니다. 번들은 그대로이고, 이제 설정 파일의 값이 쓰입니다. |
 | `null` | "정해 두지 않음 = 자동"입니다. 예를 들어 `y_max: null`이면 축 범위를 데이터에 맞춰 자동으로 정합니다. 숫자를 넣으면 그 값으로 고정됩니다. |
 | 줄 맨 앞의 `#` | 꺼져 있는 줄입니다. 설명에 *(computed when unset)* 이 붙은 값은 비워 두면 프로그램이 계산해 정합니다. 직접 정하려면 `#`를 지우고 값을 넣습니다. |
+
+## 생성된 패널 블록의 생김새
+
+번들을 붙이면(`fa ingest bundle`) `plots:` 아래에 이런 블록이 생깁니다. 4장 예제의 `dose_response` 블록에서 줄을 줄여 옮겼습니다.
+
+```yaml
+  dose_response:
+    renderer: "fig_atlas.renderers:render_line_band"   # what draws it: the component for this kind of figure (written by ingest)
+    bundle: "examples/dose_response"                   # what it draws: the data, read only
+    x_col: "dose_uM"        # Column with the x values ... (from the bundle)
+    y_col: "viability"      # Column with the values ... (from the bundle)
+    error: "sem"            # Band around the centre ... (from the bundle)
+    title_size: 8.0         # Panel title font size; pt ... (from the style preset)
+    # legend_fontsize: null # Legend font size ... (computed when unset)
+```
+
+맨 위 두 줄(`renderer`, `bundle`)은 ingest가 정합니다. 무엇을 어떤 데이터로 그리는지 적은 줄이라 손으로 쓰지 않습니다. 나머지는 그 그림 종류가 쓰는 값이고, 주석이 무엇을 조절하는지 알려 줍니다.
 
 ## 예: 경고 고치기와 제목 크기 맞추기
 

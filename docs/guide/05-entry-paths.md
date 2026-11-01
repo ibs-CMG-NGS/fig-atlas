@@ -1,7 +1,7 @@
 ---
 title: "5. Three entry points (Case A, B, C)"
 audience: researchers (no programming experience needed)
-reviewed: 2026-10-14
+reviewed: 2026-11-02
 ---
 
 # 5. Three entry points (Case A, B, C)
@@ -42,6 +42,13 @@ This is what you did in chapter 4. Example to follow: [Tutorial: first figure](.
 ⌨ **Command:** `fa ingest bundle bundle-folder --project name`
 
 A component that draws the bundle's kind of figure (`plot_type`) must already exist. If not, the AI tells you, and making that kind of figure goes like Case A or C.
+
+### How far you get without code
+
+Case B covers this much.
+
+- **It works when:** the bundle passes its contract, a renderer exists for its `plot_type`, and the panels form an equal grid of at most three per row. Set the layout with `figures:` `columns` (chapter 6).
+- **It needs a script when:** the layout nests panels of different sizes (assembling a paper figure, [chapter 11](11-lifecycle.md)), the panel prints a value that must be computed such as a test or a fit ([chapter 9](09-integrity.md)), or the kind of figure does not exist yet (Case A·C below).
 
 ## Case A: when you have plotting code you wrote
 
