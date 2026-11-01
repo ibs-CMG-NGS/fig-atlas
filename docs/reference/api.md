@@ -11,7 +11,9 @@ A new project's script (`fa new project`) already uses the common ones:
 
 Created by `fa new project` on <date>. Load the input bundles (read only),
 compute what the panels show, and draw them with fig_atlas renderers; every
-visual setting comes from the project config (configs/config_my-project.yaml). Record any number a
+visual setting comes from the project config (configs/config_my-project.yaml). Run the statistics here,
+not in the renderer: the values a panel prints arrive as columns
+(docs/howto/analysis_recipes.md, docs/decisions/0007). Record any number a
 legend quotes with claims.record() and register the plotted tables with
 source_data.add() (AGENTS.md 4.5).
 """
@@ -22,7 +24,7 @@ import matplotlib  # noqa: E402
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 
-from fig_atlas import claims, get_config, save_page_figure, source_data  # noqa: E402
+from fig_atlas import claims, get_config, save_page_figure, source_data, stats  # noqa: E402
 from fig_atlas.bundle_figure import draw_plots  # noqa: E402
 from fig_atlas.renderers import place_panel_tags  # noqa: E402
 
@@ -34,7 +36,18 @@ OUT = CONFIG.figures_root
 
 def load(name: str, block: dict):
     """Data for a plots.<name> block that has no `bundle` (read RAW, never modify it).
-    Blocks with a bundle are loaded from it automatically."""
+    Blocks with a bundle are loaded from it automatically.
+
+    The numbers the panel prints are computed here, not by the renderer
+    (docs/howto/analysis_recipes.md): run the test, write the value as the column
+    the config names, and register the test table.
+
+        from scipy.stats import ttest_ind
+        table["p_value"] = ttest_ind(a, b, equal_var=False).pvalue   # named by pvalue_col
+        stats.record(pd.DataFrame({"test": ["Welch"], "n": [len(table)], "p": [p]}),
+                     name="two_group", title="Case versus control (Welch)")
+
+    """
     raise NotImplementedError(f"load the data for plots.{name}")
 
 
@@ -49,6 +62,7 @@ def main() -> None:
     # Every plots.<name> block in the config is one panel (fig_atlas.bundle_figure).
     columns = draw_plots(fig, CFG.get("plots", {}), CONFIG.project_root, fcfg, load=load)
     # claims.record("n_samples", n, source="...")               # numbers quoted in the legend
+    # claims.record("star_rule", "Welch's t-test (P < 0.05 = *, ...)")   # the legend sentence for marks
     # source_data.add(table, panel="a", title="...")             # values a panel plots
 
     tcfg = fcfg.get("tags", {})
