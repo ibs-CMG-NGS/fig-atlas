@@ -646,6 +646,18 @@ def paired_plot_grouped():
                         "labels_ylabel": "Glucose (mmol/l)"})
     return fig
 
+
+def paired_plot_bar():
+    """PC-01: the mean as a bar per condition with SEM, subjects on top, axis from zero."""
+    from fig_atlas.renderers import render_paired_plot
+    fig, ax = plt.subplots(figsize=(2.8, 2.2))
+    render_paired_plot(ax, _paired(_rng(), [("vehicle", 0.0, 0.8), ("drug", 1.5, 0.002)]),
+                       {**TYPO, "subject_col": "mouse", "condition_col": "time", "value_col": "glucose",
+                        "group_col": "arm", "pvalue_col": "p", "summary": "mean", "summary_style": "bar",
+                        "summary_error": "sem", "group_colors": {"vehicle": "#6b7280", "drug": "#2563eb"},
+                        "labels_ylabel": "Glucose (mmol/l)"})
+    return fig
+
 CASES = {
     "cross_condition_dotplot": cross_condition_dotplot,
     "cross_condition_heatmap": cross_condition_heatmap,
@@ -692,6 +704,7 @@ CASES = {
     "single_tf_expression_scatter_bar": single_tf_expression_scatter_bar,
     "paired_plot": paired_plot,
     "paired_plot_grouped": paired_plot_grouped,
+    "paired_plot_bar": paired_plot_bar,
 }
 
 # Gallery families (fig_atlas.family) for pictures that are not a renderer

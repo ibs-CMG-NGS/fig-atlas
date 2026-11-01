@@ -2,7 +2,8 @@
 
 One line per subject from condition to condition (before -> after, or more
 than two time points), points at the values, an optional group summary (mean
-or median) drawn over them, and an optional significance bracket per group.
+or median) -- as a line over them or as a bar behind them, with SD, SEM or a
+95% CI error bar -- and an optional significance bracket per group.
 With a group_col the groups sit side by side, each with its own conditions
 (Prism's grouped before-after).
 
@@ -19,6 +20,7 @@ fig_atlas.source_data.add.
 from __future__ import annotations
 
 from fig_atlas.params import text_param
+from fig_atlas.renderers.line_band import summarise
 from fig_atlas.schema import CODE_DEFAULT, Param, Schema, uses_schema
 from fig_atlas.stats import stars
 
@@ -51,17 +53,31 @@ SCHEMA = Schema("paired_plot", params=[
     Param("marker", str, "o", role="Point marker (matplotlib marker; '' for none)"),
     Param("point_edge_width", float, 0.0, unit="pt", range=(0, None), role="Outline width of the points and summary markers (0: none)"),
     # [Group summary]
-    Param("summary", ("none", "mean", "median"), "none", role="Summary line drawn over the subjects"),
-    Param("summary_color", "color", "#111827", unit="hex color", role="Summary line colour"),
+    Param("summary", ("none", "mean", "median"), "none", role="Group summary per condition (none: subjects only)"),
+    Param("summary_style", ("line", "bar"), "line",
+          role="Summary as a line joining the conditions, or as a bar per condition behind the subjects",
+          tune="bar shows each condition's level; line shows the change"),
+    Param("summary_error", ("none", "sd", "sem", "ci95"), "none",
+          role="Error bar on the summary: SD, SEM or 95% t-interval of the mean (state it in the legend)"),
+    Param("summary_color", "color", "#111827", unit="hex color", role="Summary line, marker and error bar colour"),
     Param("summary_width", float, 2.0, unit="pt", range=(0, None), role="Summary line width"),
-    Param("summary_marker_size", float, 30.0, unit="pt^2 (marker area)", range=(0, None), role="Summary marker size"),
+    Param("summary_marker_size", float, 30.0, unit="pt^2 (marker area)", range=(0, None), role="Summary marker size (line style)"),
+    Param("bar_width", float, 0.55, unit="x units (conditions are condition_gap apart)", range=(0, None),
+          role="Width of a summary bar"),
+    Param("bar_alpha", float, 0.35, unit="[0-1] opacity", range=(0, 1), role="Fill opacity of the summary bars (group colour)",
+          tune="lower so the subject lines stay visible"),
+    Param("bar_edge_color", "color", None, unit="hex color", role="Bar outline colour (default: the group colour)"),
+    Param("bar_edge_width", float, 0.8, unit="pt", range=(0, None), role="Bar outline width"),
+    Param("error_width", float, 0.8, unit="pt", range=(0, None), role="Error bar line width"),
+    Param("error_cap_size", float, 3.0, unit="pt", range=(0, None), role="Error bar cap length (0: no caps)"),
     # [Layout]
     Param("condition_gap", float, 1.0, unit="x units between conditions", range=(0, None),
           role="Distance between neighbouring conditions"),
     Param("group_gap", float, 0.8, unit="x units", range=(0, None),
           role="Extra space between groups", tune="raise to separate the groups more"),
     Param("x_margin", float, 0.4, unit="x units", range=(0, None), role="Space left of the first and right of the last condition"),
-    Param("y_min", float, None, unit="data coords", role="Lower y limit (default: matplotlib)"),
+    Param("y_min", float, None, unit="data coords",
+          role="Lower y limit (default: matplotlib; 0 with summary bars and non-negative data)"),
     Param("y_max", float, None, unit="data coords", role="Upper y limit (default: data top plus room for the brackets)"),
     Param("y_headroom", float, 0.12, unit="fraction of the data range", range=(0, None),
           role="Room above the data for the brackets", tune="raise if the stars touch the top"),
@@ -140,18 +156,37 @@ def render_paired_plot(ax, df, params):
             ax.scatter(rows["x"], rows[v_col], s=ps, alpha=pa, color=color, marker=marker, zorder=3, linewidths=edge_w)
 
     how = params.get("summary", "none")
+    bars = how != "none" and params.get("summary_style", "line") == "bar"
+    tops = data.groupby(g_key, sort=False)[v_col].max().to_dict() if len(data) else {}
     if how != "none" and len(data):
-        agg = data.groupby([g_key, c_col], sort=False)[v_col].agg(how).reset_index()
-        agg["x"] = [x_of[(g, c)] for g, c in zip(agg[g_key], agg[c_col])]
-        for _, rows in agg.groupby(g_key, sort=False):
-            rows = rows.sort_values("x")
-            ax.plot(rows["x"], rows[v_col], color=params.get("summary_color", "#111827"),
-                    linewidth=float(params.get("summary_width", 2.0)), zorder=4)
-            ax.scatter(rows["x"], rows[v_col], s=float(params.get("summary_marker_size", 30.0)),
-                       color=params.get("summary_color", "#111827"), zorder=5, linewidths=edge_w)
+        # Mean or median per (group, condition) and its error: display arithmetic shared with line_band.
+        agg = summarise(data, c_col, v_col, g_key, how, params.get("summary_error", "none"))
+        agg["xpos"] = [x_of[(g, c)] for g, c in zip(agg["group"], agg["x"])]
+        s_color = params.get("summary_color", "#111827")
+        for g, rows in agg.groupby("group", sort=False):
+            rows = rows.sort_values("xpos")
+            if bars:
+                fill = colors.get(g, base)
+                ax.bar(rows["xpos"], rows["centre"], width=float(params.get("bar_width", 0.55)), color=fill,
+                       alpha=float(params.get("bar_alpha", 0.35)), zorder=1,
+                       edgecolor=params.get("bar_edge_color") or fill,
+                       linewidth=float(params.get("bar_edge_width", 0.8)))
+            else:
+                ax.plot(rows["xpos"], rows["centre"], color=s_color,
+                        linewidth=float(params.get("summary_width", 2.0)), zorder=4)
+                ax.scatter(rows["xpos"], rows["centre"], s=float(params.get("summary_marker_size", 30.0)),
+                           color=s_color, zorder=5, linewidths=edge_w)
+            if params.get("summary_error", "none") != "none":
+                ok = rows["upper"].notna()
+                ax.errorbar(rows.loc[ok, "xpos"], rows.loc[ok, "centre"],
+                            yerr=[rows.loc[ok, "centre"] - rows.loc[ok, "lower"], rows.loc[ok, "upper"] - rows.loc[ok, "centre"]],
+                            fmt="none", ecolor=s_color, elinewidth=float(params.get("error_width", 0.8)),
+                            capsize=float(params.get("error_cap_size", 3.0)), zorder=5)
+                tops[g] = max(tops.get(g, rows["upper"].max()), float(rows["upper"].max()))
 
     tick_sz = params.get("tick_label_size")
-    lo, hi = (float(data[v_col].min()), float(data[v_col].max())) if len(data) else (0.0, 1.0)
+    lo, hi = (float(data[v_col].min()), max(float(data[v_col].max()), max(tops.values(), default=0.0))) \
+        if len(data) else (0.0, 1.0)
     span = (hi - lo) or abs(hi) or 1.0
     if params.get("show_significance", True) and p_col and p_col in data.columns and len(conditions) > 1:
         thresholds = sorted((float(t), str(sym)) for t, sym in params.get(
@@ -167,7 +202,7 @@ def render_paired_plot(ax, df, params):
             if not sym:
                 continue
             x1, x2 = x_of[(g, conditions[0])], x_of[(g, conditions[-1])]
-            y = float(rows[v_col].max()) + gap
+            y = float(tops.get(g, rows[v_col].max())) + gap
             ax.plot([x1, x1, x2, x2], [y, y + tick, y + tick, y], color=line_c, linewidth=line_w, zorder=6)
             ax.text((x1 + x2) / 2, y + tick, sym, ha="center", va="bottom", color=line_c, zorder=6,
                     **({} if sig_fs is None else {"fontsize": sig_fs}))
@@ -175,6 +210,8 @@ def render_paired_plot(ax, df, params):
     margin = float(params.get("x_margin", 0.4))
     ax.set_xlim(-margin, x_of[(groups[-1], conditions[-1])] + margin if conditions else 1.0)
     y_min, y_max = params.get("y_min"), params.get("y_max")
+    if y_min is None and bars and lo >= 0:
+        y_min = 0.0                      # a bar's height is its value: the axis starts at zero
     ax.set_ylim(bottom=y_min, top=y_max if y_max is not None else hi + float(params.get("y_headroom", 0.12)) * span
                 + (float(params.get("sig_gap", 0.04)) + float(params.get("sig_tick", 0.02))) * span
                 if p_col else None)

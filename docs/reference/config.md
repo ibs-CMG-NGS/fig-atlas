@@ -38,7 +38,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | [`motif_dotplot`](#motif_dotplot) | fig_atlas_omics.renderers | 44 |
 | [`multi_group_heatmap`](#multi_group_heatmap) | core | 32 |
 | [`paired_dumbbell`](#paired_dumbbell) | core | 39 |
-| [`paired_plot`](#paired_plot) | core | 47 |
+| [`paired_plot`](#paired_plot) | core | 55 |
 | [`pathway_evidence_dotplot`](#pathway_evidence_dotplot) | fig_atlas_omics.renderers | 28 |
 | [`pathway_test_matrix`](#pathway_test_matrix) | fig_atlas_omics.renderers | 42 |
 | [`pca`](#pca) | core | 16 |
@@ -1330,14 +1330,22 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `point_alpha` | number | `0.9` | [0-1] opacity | Point opacity |
 | `marker` | text | `o` |  | Point marker (matplotlib marker; '' for none) |
 | `point_edge_width` | number | `0.0` | pt | Outline width of the points and summary markers (0: none) |
-| `summary` | one of `none`, `mean`, `median` | `none` |  | Summary line drawn over the subjects |
-| `summary_color` | colour | `#111827` | hex color | Summary line colour |
+| `summary` | one of `none`, `mean`, `median` | `none` |  | Group summary per condition (none: subjects only) |
+| `summary_style` | one of `line`, `bar` | `line` |  | Summary as a line joining the conditions, or as a bar per condition behind the subjects — bar shows each condition's level; line shows the change |
+| `summary_error` | one of `none`, `sd`, `sem`, `ci95` | `none` |  | Error bar on the summary: SD, SEM or 95% t-interval of the mean (state it in the legend) |
+| `summary_color` | colour | `#111827` | hex color | Summary line, marker and error bar colour |
 | `summary_width` | number | `2.0` | pt | Summary line width |
-| `summary_marker_size` | number | `30.0` | pt^2 (marker area) | Summary marker size |
+| `summary_marker_size` | number | `30.0` | pt^2 (marker area) | Summary marker size (line style) |
+| `bar_width` | number | `0.55` | x units (conditions are condition_gap apart) | Width of a summary bar |
+| `bar_alpha` | number | `0.35` | [0-1] opacity | Fill opacity of the summary bars (group colour) — lower so the subject lines stay visible |
+| `bar_edge_color` | colour | auto | hex color | Bar outline colour (default: the group colour) |
+| `bar_edge_width` | number | `0.8` | pt | Bar outline width |
+| `error_width` | number | `0.8` | pt | Error bar line width |
+| `error_cap_size` | number | `3.0` | pt | Error bar cap length (0: no caps) |
 | `condition_gap` | number | `1.0` | x units between conditions | Distance between neighbouring conditions |
 | `group_gap` | number | `0.8` | x units | Extra space between groups — raise to separate the groups more |
 | `x_margin` | number | `0.4` | x units | Space left of the first and right of the last condition |
-| `y_min` | number | auto | data coords | Lower y limit (default: matplotlib) |
+| `y_min` | number | auto | data coords | Lower y limit (default: matplotlib; 0 with summary bars and non-negative data) |
 | `y_max` | number | auto | data coords | Upper y limit (default: data top plus room for the brackets) |
 | `y_headroom` | number | `0.12` | fraction of the data range | Room above the data for the brackets — raise if the stars touch the top |
 | `show_significance` | true / false | `True` |  | Draw a bracket per group when pvalue_col is given |

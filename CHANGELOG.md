@@ -47,7 +47,8 @@ of one manuscript before being published as a package. This first public tree co
 ### Added — plot types (plans/PLAN_PLOT_CATALOG.md)
 
 - **PC-01 `paired_plot`** (column): before and after -- one line per subject across conditions,
-  optional mean or median line, groups side by side, lines coloured by group or by direction, and a
+  optional mean or median -- a line joining the conditions or a bar per condition behind the subjects,
+  with SD, SEM or 95% CI error bars --, groups side by side, lines coloured by group or by direction, and a
   bracket per group from a P value column the analysis writes (`pvalue_col`).
 - **Documentation**: a guide for researchers, tutorials run as tests (Case A, B and C worked
   examples among them), how-to guides, generated reference pages and a renderer gallery, design

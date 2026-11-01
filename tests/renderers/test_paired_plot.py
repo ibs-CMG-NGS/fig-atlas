@@ -101,3 +101,27 @@ def test_summary_line(how):
         assert len(ax.lines) == 4                                   # three subjects + the summary
     finally:
         plt.close(fig)
+
+
+def test_summary_bars_start_at_zero_with_error_bars():
+    fig, ax, _ = _draw(PAIRS, {"summary": "mean", "summary_style": "bar", "summary_error": "sem"})
+    try:
+        bars = [p for p in ax.patches if p.get_height() > 0]
+        assert len(bars) == 2                                       # one bar per condition
+        assert bars[0].get_height() == pytest.approx(2.0)           # mean of 1, 2, 3 at "before"
+        assert ax.get_ylim()[0] == 0.0
+        assert ax.containers                                        # the error bars
+        assert len(ax.lines) == 3 + 2                               # subjects + the error bars' two lines
+    finally:
+        plt.close(fig)
+
+
+def test_bracket_clears_the_error_bars():
+    df = PAIRS.assign(p=0.01)
+    fig, ax, _ = _draw(df, {"summary": "mean", "summary_style": "bar", "summary_error": "sd", "pvalue_col": "p"})
+    try:
+        fig.canvas.draw()
+        star = next(t for t in ax.texts if t.get_text() == "*")
+        assert star.get_position()[1] > 3.5                          # above the highest subject value
+    finally:
+        plt.close(fig)

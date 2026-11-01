@@ -647,6 +647,8 @@ plot_params:
   group_order: ["vehicle", "drug"]
   condition_labels: {"baseline": "Base", "week 4": "Wk 4"}
   summary: mean
+  summary_style: bar            # the mean as a bar per timepoint, subjects on top; line joins the means instead
+  summary_error: sem            # error bar on the bar: sd, sem or ci95 (say which in the legend)
   group_colors: {"vehicle": "#6b7280", "drug": "#2563eb"}
   labels_ylabel: "Fasting glucose (mmol/l)"
 """,
