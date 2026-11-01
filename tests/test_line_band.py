@@ -53,6 +53,17 @@ def test_lines_bands_and_points_are_drawn():
         plt.close(fig)
 
 
+def test_legend_anchor_moves_the_legend_outside():
+    df = pd.concat([REPS, REPS.assign(g="b")])
+    fig, ax, _ = _draw(df, {"x_col": "t", "y_col": "v", "group_col": "g", "legend_loc": "upper left",
+                            "legend_anchor": [1.02, 1.0]})
+    try:
+        fig.canvas.draw()
+        assert ax.get_legend().get_window_extent().x0 >= ax.get_window_extent().x1   # right of the axes
+    finally:
+        plt.close(fig)
+
+
 def test_categorical_x_and_log_x():
     df = pd.DataFrame({"cond": ["ctrl", "low", "high"] * 2, "v": [1, 2, 3, 1.5, 2.5, 3.5]})
     fig, ax, _ = _draw(df, {"x_col": "cond", "y_col": "v", "x_order": ["ctrl", "low", "high"], "error": "ci95"})

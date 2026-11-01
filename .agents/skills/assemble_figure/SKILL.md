@@ -36,7 +36,7 @@ description: "Assemble multi-panel publication figures by composing modular expl
    ax_a, ax_b = fig.add_subplot(gs[0, 0]), fig.add_subplot(gs[0, 1])
    render("volcano", ax_a, data_a, config.settings["plots"]["volcano"])    # 렌더러가 코어든 팩이든
    render("heatmap", ax_b, data_b, config.settings["plots"]["heatmap"])
-   place_panel_tags(fig, [[("a", [ax_a])], [("b", [ax_b])]])          # 외곽 경계 기준 정렬 (AGENTS.md §1.5)
+   place_panel_tags(fig, [[("a", [ax_a])], [("b", [ax_b])]])          # 외곽 경계 기준 정렬 (AGENTS.md §1.5; 복합 서브플롯은 [ax_parent, *child_axes])
    save_page_figure(fig, stem.with_suffix(".pdf"))
    ```
    스크립트가 config에서 직접 읽는 키는 `LAYOUT_SCHEMA`에 선언합니다(Step 4 참조). 패널이 번들 하나씩이면 `fa new project`의 골격처럼 `fig_atlas.bundle_figure.draw_plots`로 `plots:` 블록을 차례로 그릴 수도 있습니다.
