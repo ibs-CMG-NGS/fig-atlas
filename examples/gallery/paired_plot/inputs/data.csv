@@ -1,0 +1,33 @@
+mouse,arm,timepoint,glucose_mmol_l,p_value
+V1,vehicle,baseline,10.54,0.946
+V1,vehicle,week 4,10.41,0.946
+V2,vehicle,baseline,8.65,0.946
+V2,vehicle,week 4,9.26,0.946
+V3,vehicle,baseline,11.18,0.946
+V3,vehicle,week 4,11.15,0.946
+V4,vehicle,baseline,7.74,0.946
+V4,vehicle,week 4,7.53,0.946
+V5,vehicle,baseline,10.62,0.946
+V5,vehicle,week 4,10.61,0.946
+V6,vehicle,baseline,9.39,0.946
+V6,vehicle,week 4,9.27,0.946
+V7,vehicle,baseline,8.56,0.946
+V7,vehicle,week 4,8.16,0.946
+V8,vehicle,baseline,7.78,0.946
+V8,vehicle,week 4,8.13,0.946
+D1,drug,baseline,9.7,7.39e-05
+D1,drug,week 4,7.31,7.39e-05
+D2,drug,baseline,10.06,7.39e-05
+D2,drug,week 4,8.64,7.39e-05
+D3,drug,baseline,8.37,7.39e-05
+D3,drug,week 4,6.41,7.39e-05
+D4,drug,baseline,10.87,7.39e-05
+D4,drug,week 4,9.2,7.39e-05
+D5,drug,baseline,7.73,7.39e-05
+D5,drug,week 4,5.72,7.39e-05
+D6,drug,baseline,8.18,7.39e-05
+D6,drug,week 4,7.68,7.39e-05
+D7,drug,baseline,9.14,7.39e-05
+D7,drug,week 4,7.0,7.39e-05
+D8,drug,baseline,8.99,7.39e-05
+D8,drug,week 4,7.45,7.39e-05

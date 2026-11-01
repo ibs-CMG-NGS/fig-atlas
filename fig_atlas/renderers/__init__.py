@@ -32,6 +32,7 @@ from .image_panel import render_image_panel
 from .jaccard_heatmap import render_jaccard_heatmap
 from .line_band import render_line_band
 from .multi_group_heatmap import render_multi_group_heatmap
+from .paired_plot import render_paired_plot
 from .panels import align_title_to_labels, panel_label, place_panel_tags
 from .pca import render_pca
 from .sample_metric_bars import render_sample_metric_bars
@@ -67,6 +68,7 @@ __all__ = [
     "render_line_band",
     "render_multi_group_heatmap",
     "render_paired_dumbbell",
+    "render_paired_plot",
     "render_pca",
     "render_sample_metric_bars",
     "render_signed_heatmap",

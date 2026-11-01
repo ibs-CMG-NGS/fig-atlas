@@ -9,8 +9,8 @@ plans/PLAN_PLOT_CATALOG.md section 9) and reports:
 - a done plot card whose assets are missing from the package: renderer
   registered, plot_type in the ingest map, a contract, an example bundle,
   a snapshot case, a gallery picture;
-- a plot card that is not done although its plot_type is already in the
-  package (the status file was not updated);
+- a plot card that is not done (and not being worked on: claimed or in_review)
+  although its plot_type is already in the package (the status file was not updated);
 - a card claimed or further along before its dependencies are done, or
   before the gates of its phase have passed (gates, phase_gates).
 Exit code 1 when anything disagrees.
@@ -108,7 +108,7 @@ def main() -> int:
                 problems.append(f"{c['id']} is done but the package lacks for {pt}: {', '.join(missing)}")
             if not c.get("commits") or not c.get("version"):
                 problems.append(f"{c['id']} is done but has no commits/version recorded")
-        elif have["ingest"] and have["example bundle"]:
+        elif c["status"] not in ("claimed", "in_review") and have["ingest"] and have["example bundle"]:
             problems.append(f"{c['id']} ({pt}) is already in the package but the card says {c['status']}")
 
     print()

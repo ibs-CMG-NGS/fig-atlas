@@ -191,16 +191,16 @@ cards:
     kind: plot
     phase: 2
     priority: P1
-    status: todo
+    status: in_review
     depends_on: []
     plot_type: paired_plot
     data: "subject, condition, value"
-    owner: null
-    branch: null
-    commits: []
+    owner: "claude-code 2026-11-01"
+    branch: "plot/PC-01-paired-plot"
+    commits: ["fig-atlas ad6248b"]
     version: null
     review: null
-    notes: "plan v3: the paired test runs in the analysis script (recipe I-04); the renderer draws the paired points and the bracket from a p_value column. I-05 scope: also grouped before-after (pairs within each group of a second factor)."
+    notes: "plan v3: the paired test runs in the analysis script (recipe I-04); the renderer draws the paired points and the bracket from a p_value column. I-05 scope: also grouped before-after (pairs within each group of a second factor). Delivered (2026-11-01): fig_atlas/renderers/paired_plot.py (column family; subject/condition/value roles, group side by side, line_color_by group|direction, summary mean|median, bracket from pvalue_col), contract core.paired_plot + table contract docs (en/ko), example bundle examples/gallery/paired_plot (paired t-test in the generator), snapshot cases paired_plot and paired_plot_grouped, tests/renderers/test_paired_plot.py. Evidence: full pytest exit 0; fa reference --check, fa inventory --check, fa lint --hardcoded --check, fa claims --check exit 0; example preflight clean at 85 mm; existing examples and snapshots unchanged (V8). G2 round 1 (user, 2026-11-01): add the mean as a bar per condition -- done: summary_style line|bar, summary_error none|sd|sem|ci95 (display arithmetic from line_band.summarise), axis from 0 with bars; the example now uses bar + SEM; snapshot case paired_plot_bar. Awaiting G2 on the revised pictures."
   - id: PC-02
     title: "grouped bar (two factors, mean +/- error, points)"
     kind: plot
