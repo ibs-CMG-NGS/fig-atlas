@@ -2,13 +2,13 @@
 # One card per task; field meanings in the plan, section 4. Change a card when you claim, hand in or
 # finish a task (section 8.1); check the file against the package with
 #   python scripts/check_plan_plot_catalog.py
-plan_version: 4
+plan_version: 5
 package_version: "0.1.0.dev0 (fig-atlas 44d40ea on main, checked 2026-11-01)"
 baseline:                       # what existed when the plan started (not tasks)
   plot_types: 25                # plot types fa ingest bundle draws, each with an example bundle and a contract
   renderers: 54                 # registered renderer names (two omics recipes share a pack renderer's name), each with a gallery picture
 gates:                          # researcher decisions (plan section 11): pending | passed | <date and note>
-  G1: "passed 2026-10-27 (scope fixed: strict separation -- the analysis script runs the tests, the package draws and records them; S-01..S-06 dropped, R reference tool no longer needed; PC-17 donut/pie deferred to the Phase 5 recheck)"   # candidate list, priorities, scope
+  G1: "passed 2026-10-27 (scope fixed: strict separation -- the analysis script runs the tests, the package draws and records them; S-01..S-06 dropped, R reference tool no longer needed; PC-17 donut/pie deferred to the Phase 5 recheck); recheck passed 2026-11-01 (I-05: 14 cards PC-23..PC-30, E-07..E-12 accepted with the proposed priorities)"   # candidate list, priorities, scope
   G3: pending                   # new required dependencies (only when a task needs one)
   G4: pending                   # release 0.2.0 after Phase 2
 phase_gates:                    # a phase's cards can start only after these gates have passed
@@ -85,15 +85,15 @@ cards:
     kind: infra
     phase: 0
     priority: P1
-    status: in_review
+    status: done
     depends_on: []
     plot_type: null
     data: null
     owner: "claude-code 2026-11-01"
     branch: "plan/I-05-prism-coverage"
-    commits: []
-    version: null
-    review: null
+    commits: ["fig-atlas 41dd7a9", "PR #6 (merge 4e24d91)"]
+    version: "plan v4"
+    review: "approved 2026-11-01 (user): PR #6 merged; the 14 proposed cards accepted with the proposed priorities (plan v5)"
     notes: "plans/PLOT_CATALOG_PRISM_COVERAGE.md: 50 Prism items from the Prism 11 guides (sources and check date in the file) -- have 13, partial 7, planned 15, new 12, out of scope 3; with the plan done 33/50 (66 %), with the 14 proposed cards (PC-23..PC-30, E-07..E-12) 47/50. Proposed cards are not in this file until the user accepts them at the G1 recheck."
 
   - id: S-01
@@ -200,7 +200,7 @@ cards:
     commits: []
     version: null
     review: null
-    notes: "plan v3: the paired test runs in the analysis script (recipe I-04); the renderer draws the paired points and the bracket from a p_value column."
+    notes: "plan v3: the paired test runs in the analysis script (recipe I-04); the renderer draws the paired points and the bracket from a p_value column. I-05 scope: also grouped before-after (pairs within each group of a second factor)."
   - id: PC-02
     title: "grouped bar (two factors, mean +/- error, points)"
     kind: plot
@@ -215,7 +215,7 @@ cards:
     commits: []
     version: null
     review: null
-    notes: "plan v3: post-hoc comparisons run in the analysis script (recipe I-04); the renderer draws brackets from p_value/padj columns."
+    notes: "plan v3: post-hoc comparisons run in the analysis script (recipe I-04); the renderer draws brackets from p_value/padj columns. I-05 scope: interleaved and separated bar arrangements."
   - id: PC-03
     title: "correlation scatter with regression line and band"
     kind: plot
@@ -260,7 +260,7 @@ cards:
     commits: []
     version: null
     review: null
-    notes: ""
+    notes: "I-05 scope: aligned dot style as an option."
   - id: PC-06
     title: "ROC curve with AUC"
     kind: plot
@@ -425,7 +425,7 @@ cards:
     commits: []
     version: null
     review: null
-    notes: "plan v3: model choice and fitting are analysis (recipe I-04); the renderer draws the fitted curve, points, error bars and parameter annotation from input columns."
+    notes: "plan v3: model choice and fitting are analysis (recipe I-04); the renderer draws the fitted curve, points, error bars and parameter annotation from input columns. I-05 scope: smoothing and Akima splines drawn from given curve coordinates, like any fitted curve."
   - id: PC-11
     title: "dual y-axis line plot"
     kind: plot
@@ -515,7 +515,7 @@ cards:
     commits: []
     version: null
     review: null
-    notes: ""
+    notes: "I-05 scope: a single filled area as the one-part case."
   - id: PC-17
     title: "donut / pie (deferred: decide at the Phase 5 recheck of G1)"
     kind: plot
@@ -606,3 +606,227 @@ cards:
     version: null
     review: null
     notes: ""
+
+  - id: E-07
+    title: "boxplot whisker method: min-max, Tukey (1.5 IQR), percentiles; stated in the legend"
+    kind: enhance
+    phase: 3
+    priority: P1
+    status: todo
+    depends_on: []
+    plot_type: null
+    data: null
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: "I-05: Prism's box-and-whiskers offers several whisker methods; the legend names the one used (live claim)."
+
+  - id: E-09
+    title: "grouped box and violin: a second factor side by side"
+    kind: enhance
+    phase: 3
+    priority: P1
+    status: todo
+    depends_on: []
+    plot_type: null
+    data: null
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: "I-05: Prism grouped tables draw box/violin per second factor; boxplot and violin take one factor today."
+
+  - id: E-10
+    title: "survival confidence band"
+    kind: enhance
+    phase: 3
+    priority: P2
+    status: todo
+    depends_on: []
+    plot_type: null
+    data: null
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: "I-05; band coordinates come from the analysis (plan v3 boundary), the renderer draws them."
+
+  - id: E-11
+    title: "PCA loadings, biplot and scree"
+    kind: enhance
+    phase: 3
+    priority: P2
+    status: todo
+    depends_on: []
+    plot_type: null
+    data: null
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: "I-05; loadings and explained variance come from the analysis or the existing pca input table."
+
+  - id: E-08
+    title: "floating bars (min to max) as a bar_scatter bar mode"
+    kind: enhance
+    phase: 3
+    priority: P3
+    status: todo
+    depends_on: []
+    plot_type: null
+    data: null
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: "I-05"
+
+  - id: E-12
+    title: "confidence ellipses and convex hulls on group_scatter and pca"
+    kind: enhance
+    phase: 3
+    priority: P3
+    status: todo
+    depends_on: []
+    plot_type: null
+    data: null
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: "I-05; ellipse coordinates may be computed in the analysis (v3) or drawn from given centre/covariance columns."
+
+  - id: PC-23
+    title: "residual plot (residuals vs fitted or x, zero line)"
+    kind: plot
+    phase: 4
+    priority: P2
+    status: todo
+    depends_on: []
+    plot_type: residual_plot
+    data: "x or fitted, residual, optional group"
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: "I-05; residuals come from the analysis (v3)."
+
+  - id: PC-24
+    title: "spaghetti plot (one line per subject, optional mean line)"
+    kind: plot
+    phase: 4
+    priority: P2
+    status: todo
+    depends_on: []
+    plot_type: spaghetti
+    data: "subject, x, y, optional group"
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: "I-05"
+
+  - id: PC-25
+    title: "cumulative distribution (ECDF), optional probability axis"
+    kind: plot
+    phase: 4
+    priority: P2
+    status: todo
+    depends_on: []
+    plot_type: ecdf
+    data: "value, optional group"
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: "I-05"
+
+  - id: PC-27
+    title: "estimation plot (Gardner-Altman / Cumming: effect size and CI axis)"
+    kind: plot
+    phase: 4
+    priority: P2
+    status: todo
+    depends_on: []
+    plot_type: estimation_plot
+    data: "group, value; effect size and CI columns"
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: "I-05; the mean difference and its CI come from the analysis (v3)."
+
+  - id: PC-30
+    title: "nested (subcolumn) scatter: replicates within subjects within groups"
+    kind: plot
+    phase: 4
+    priority: P2
+    status: todo
+    depends_on: []
+    plot_type: nested_scatter
+    data: "group, subject, value"
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: "I-05"
+
+  - id: PC-26
+    title: "population pyramid (back-to-back bars)"
+    kind: plot
+    phase: 5
+    priority: P3
+    status: todo
+    depends_on: []
+    plot_type: population_pyramid
+    data: "category, side, value"
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: "I-05"
+
+  - id: PC-28
+    title: "percentage dot plot (parts of whole as dots)"
+    kind: plot
+    phase: 5
+    priority: P3
+    status: todo
+    depends_on: []
+    plot_type: percentage_dots
+    data: "part, value"
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: "I-05"
+
+  - id: PC-29
+    title: "dendrogram on its own"
+    kind: plot
+    phase: 5
+    priority: P3
+    status: todo
+    depends_on: []
+    plot_type: dendrogram
+    data: "linkage table (from the analysis)"
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: "I-05; the tree comes from the analysis (v3)."
