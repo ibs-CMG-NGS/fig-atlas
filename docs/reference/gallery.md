@@ -362,6 +362,58 @@ fa build <project> --preflight
 
 y against x, with a fit, band or threshold: dose-response, correlation, volcano.
 
+#### correlation_scatter
+
+Two variables: one row per item (x, y), optional fit rows (line, band) and r and P from the analysis
+
+![correlation_scatter](gallery/examples/correlation_scatter.png)
+
+`inputs/data.csv`, first 5 of 78 rows (9 columns):
+
+```text
+diet,body_weight,fat_mass,r,p_value,fit_x,fit_y,ci_low,ci_high
+chow,35.37,5.67,0.8104,0.000439,,,,
+chow,35.52,4.37,0.8104,0.000439,,,,
+chow,23.79,2.23,0.8104,0.000439,,,,
+chow,34.0,5.1,0.8104,0.000439,,,,
+chow,24.58,2.88,0.8104,0.000439,,,,
+```
+
+Inputs: `data.csv`. `metadata/metadata.yaml`:
+
+```yaml
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per mouse -- diet (group), body_weight (x), fat_mass (y), and each diet's
+# Pearson r and P (r, p_value) -- then the fit rows: a grid of body weights (fit_x) with the least-squares
+# line (fit_y) and its 95% confidence band (ci_low, ci_high), all computed when the data were made. The
+# renderer draws them; it fits nothing. With your data: keep these columns, or name yours below.
+plot_type: correlation_scatter
+plot_params:
+  x_col: body_weight
+  y_col: fat_mass
+  group_col: diet
+  group_order: ["chow", "high-fat"]
+  group_colors: {"chow": "#6b7280", "high-fat": "#dc2626"}
+  fit_x_col: fit_x
+  fit_y_col: fit_y
+  band_lower_col: ci_low        # 95% confidence band of the line -- say so in the legend
+  band_upper_col: ci_high
+  r_col: r
+  p_col: p_value
+  legend_loc: "lower right"
+  labels_xlabel: "Body weight (g)"
+  labels_ylabel: "Fat mass (g)"
+```
+
+Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
+
+```bash
+cp -r <fig-atlas>/examples/gallery/correlation_scatter raw_data/<project>/
+fa bundle check raw_data/<project>/correlation_scatter
+fa ingest bundle raw_data/<project>/correlation_scatter --project <project>
+fa build <project> --preflight
+```
+
 #### dose_response
 
 Dose series: one row per replicate (dose > 0, response), optional group
@@ -648,7 +700,7 @@ WT,vehicle,1,0.882,
 WT,vehicle,2,0.908,
 WT,vehicle,3,1.079,
 WT,vehicle,4,1.025,
-WT,drug A,1,2.032,9.81e-09
+WT,drug A,1,2.032,6.43e-09
 ```
 
 Inputs: `data.csv`. `metadata/metadata.yaml`:
@@ -1241,6 +1293,14 @@ One example per renderer (and per layout where a renderer has more than one), dr
 ![tf_expression_scatter_grid](gallery/tf_expression_scatter_grid.png)
 
 ### XY
+
+#### correlation_scatter
+
+![correlation_scatter](gallery/correlation_scatter.png)
+
+#### correlation_scatter_pooled
+
+![correlation_scatter_pooled](gallery/correlation_scatter_pooled.png)
 
 #### line_band
 

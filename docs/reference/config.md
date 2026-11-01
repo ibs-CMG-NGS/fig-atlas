@@ -12,6 +12,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | [`chromosome_ideogram`](#chromosome_ideogram) | fig_atlas_omics.renderers | 42 |
 | [`cis_linkage_panel`](#cis_linkage_panel) | fig_atlas_omics.renderers | 20 |
 | [`clustered_go_heatmap`](#clustered_go_heatmap) | fig_atlas_omics.renderers | 21 |
+| [`correlation_scatter`](#correlation_scatter) | core | 55 |
 | [`count_summary`](#count_summary) | fig_atlas_omics.renderers | 20 |
 | [`cross_condition_dotplot`](#cross_condition_dotplot) | fig_atlas_omics.renderers | 62 |
 | [`cross_condition_heatmap`](#cross_condition_heatmap) | fig_atlas_omics.renderers | 42 |
@@ -312,6 +313,68 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `divider_lw` | number | `1.4` | pt | Width of the line between conditions |
 | `species_divider_color` | colour | `#CBD5E1` | hex color | Line between the two species of a condition |
 | `species_divider_lw` | number | `0.7` | pt | Width of the species divider |
+
+## correlation_scatter
+
+`fig_atlas.renderers:render_correlation_scatter`
+
+| Key | Type | Default | Unit | What it does |
+|---|---|---|---|---|
+| `group_col` | text | auto |  | Column splitting the data into coloured groups (default: one group) |
+| `group_order` | list | auto |  | Group order in drawing and legend (default: order in the data) |
+| `group_colors` | mapping | `{}` | hex color | Colour per group (default: matplotlib colour cycle) |
+| `group_labels` | mapping | `{}` |  | Legend label per group (default: the group value) |
+| `color` | colour | `#4b5563` | hex color | Colour when there is no group_col |
+| `x_log` | true / false | `False` |  | Log-scaled x axis |
+| `x_min` | number | auto | data coords | Lower x limit (both x_min and x_max needed) |
+| `x_max` | number | auto | data coords | Upper x limit |
+| `y_log` | true / false | `False` |  | Log-scaled y axis |
+| `y_min` | number | auto | data coords | Lower y limit (both y_min and y_max needed) |
+| `y_max` | number | auto | data coords | Upper y limit |
+| `grid` | true / false | `False` |  | Draw horizontal grid lines |
+| `grid_alpha` | number | `0.3` | [0-1] opacity | Grid opacity |
+| `spine_width` | number | auto | pt | Axis line width (default: rcParams) |
+| `hide_top_right` | true / false | `True` |  | Hide the top and right axis lines |
+| `labels_title` | text | auto |  | Panel title (none: no title) |
+| `labels_xlabel` | text | computed |  | x-axis title (default: the x column's name) |
+| `labels_ylabel` | text | computed |  | y-axis title (default: the y column's name) |
+| `title_size` | number | `8.0` | pt | Panel title size |
+| `title_pad` | number | auto | pt | Gap between panel title and plot |
+| `axes_label_size` | number | auto | pt | Axis title size (default: rcParams) |
+| `tick_label_size` | number | auto | pt | Tick label size (default: rcParams) |
+| `show_legend` | true / false | `True` |  | Show the group legend (only with a group_col) |
+| `legend_loc` | text | `best` |  | Legend location (matplotlib loc) |
+| `legend_fontsize` | number | auto | pt | Legend font size (none: tick_label_size) |
+| `legend_frameon` | true / false | `False` |  | Draw a frame around the legend |
+| `x_col` | text | `x` |  | Column with the x values |
+| `y_col` | text | `y` |  | Column with the y values |
+| `fit_x_col` | text | auto |  | Column with the x grid of the fitted line, on fit rows (default: no line) |
+| `fit_y_col` | text | auto |  | Column with the fitted y at each fit_x |
+| `band_lower_col` | text | auto |  | Column with the band's lower edge at each fit_x (default: no band) |
+| `band_upper_col` | text | auto |  | Column with the band's upper edge at each fit_x |
+| `r_col` | text | auto |  | Column with each group's correlation r, from the analysis (default: no text) |
+| `p_col` | text | auto |  | Column with the P value that goes with r_col |
+| `point_size` | number | `12.0` | pt^2 (marker area) | Point size — lower for dense data |
+| `point_alpha` | number | `0.8` | [0-1] opacity | Point opacity |
+| `point_edge_color` | colour | `#ffffff` | hex color | Point outline colour |
+| `point_edge_width` | number | `0.3` | pt | Point outline width (0: none) |
+| `show_fit` | true / false | `True` |  | Draw the fitted line when fit_x_col and fit_y_col are given |
+| `show_band` | true / false | `True` |  | Draw the band when band_lower_col and band_upper_col are given |
+| `fit_color` | colour | auto | hex color | Line and band colour (default: the group's colour; a line over all groups uses color) |
+| `fit_line_width` | number | `1.0` | pt | Fitted line width |
+| `fit_line_style` | text | `-` |  | Fitted line style (matplotlib linestyle) |
+| `band_alpha` | number | `0.18` | [0-1] opacity | Band fill opacity — lower when bands of several groups overlap |
+| `band_edge_width` | number | `0.0` | pt | Band outline width (0: none) |
+| `show_stats` | true / false | `True` |  | Print r and P when r_col and p_col are given |
+| `stats_format` | text | `r = {r:.2f}, {p_text}` |  | Text of one line; fields r, r2 (r squared), p (number), p_text ('P = 0.012' or 'P < 0.0001'), n (points drawn) and group (its label) |
+| `p_floor` | number | `0.0001` | P value | Smaller P values print as 'P < p_floor' |
+| `p_digits` | integer | `2` | significant digits | Digits of a printed P |
+| `stats_loc` | one of `upper left`, `upper right`, `lower left`, `lower right` | `upper left` |  | Corner of the axes holding the text — move it away from the points |
+| `stats_pad` | number | `0.03` | axes fraction | Distance of the text from the corner |
+| `stats_line_spacing` | number | `1.3` | multiple of the font size | Distance between the lines of several groups |
+| `stats_fontsize` | number | auto | pt | Text size (default: tick_label_size) |
+| `stats_color_by_group` | true / false | `True` |  | Write each group's line in the group's colour |
+| `stats_color` | colour | `#111827` | hex color | Text colour (one group, or colouring off) |
 
 ## count_summary
 

@@ -101,6 +101,33 @@ plot_params:
   error: sem
 ```
 
+## `plot_type: correlation_scatter` — 상관 산점도 (변수 둘)
+
+항목마다 점 하나를 찍고, 회귀선과 그 띠, 그룹별 r과 P를 그립니다(`render_correlation_scatter`). 선과 띠와 숫자는 분석 스크립트가 만듭니다([분석 레시피](../howto/analysis_recipes.md) 4절). 선과 띠는 같은 표의 추가 행에 좌표로, r과 P는 열로 들어옵니다.
+
+| 역할 (plot_params 키) | 기본 열 이름 | 필수 | 내용 |
+|---|---|---|---|
+| `x_col` | `x` | 예 | 첫 번째 변수 |
+| `y_col` | `y` | 예 | 두 번째 변수 |
+| `group_col` | — | 아니오 | 점(과 적합 행)을 색 그룹으로 나눕니다 |
+| `fit_x_col`, `fit_y_col` | — | 아니오 | 적합 행에서 x 격자와 적합된 y. 그룹이 빈 적합 행은 모든 점에 대한 선입니다 |
+| `band_lower_col`, `band_upper_col` | — | 아니오 | 적합 행에서 띠의 아래·위 경계(신뢰띠 또는 예측띠; 어느 쪽인지 범례에 적습니다) |
+| `r_col`, `p_col` | — | 아니오 | 그룹마다의 r과 P, 그 그룹의 행에 반복. 적으면 그 열이 있어야 합니다 |
+
+```yaml
+plot_type: correlation_scatter
+plot_params:
+  x_col: body_weight
+  y_col: fat_mass
+  group_col: diet
+  fit_x_col: fit_x
+  fit_y_col: fit_y
+  band_lower_col: ci_low
+  band_upper_col: ci_high
+  r_col: r
+  p_col: p_value
+```
+
 ## 검사
 
 `fa bundle check <번들>`이 오류로 보고하는 것:

@@ -130,6 +130,11 @@ CORE_CONTRACTS = [
              role_columns=(("category_col", "category"), ("group_col", "group"), ("value_col", "value")),
              role_optional=("pvalue_col",), doc="docs/contracts/table_bundle_contract.md",
              title="Two factors: one row per replicate (category, group, value), optional P value against a control"),
+    Contract("core.correlation_scatter", ("correlation_scatter",),
+             role_columns=(("x_col", "x"), ("y_col", "y")),
+             role_optional=("group_col", "fit_x_col", "fit_y_col", "band_lower_col", "band_upper_col", "r_col", "p_col"),
+             doc="docs/contracts/table_bundle_contract.md",
+             title="Two variables: one row per item (x, y), optional fit rows (line, band) and r and P from the analysis"),
 ]
 CORE_INGEST = {
     "venn": "fig_atlas.renderers:render_venn",
@@ -150,6 +155,7 @@ CORE_INGEST = {
     "pca": "fig_atlas.renderers:render_pca",
     "paired_plot": "fig_atlas.renderers:render_paired_plot",
     "grouped_bar": "fig_atlas.renderers:render_grouped_bar",
+    "correlation_scatter": "fig_atlas.renderers:render_correlation_scatter",
 }
 
 
