@@ -12,7 +12,7 @@ The agent starts this command as a child process and talks to it over standard i
 
 | Tool | What it does | Changes files? |
 |---|---|---|
-| `fa_list`, `fa_renderers`, `fa_bundle_contracts` | Lists projects, the figures that can be drawn, the bundle contracts | No |
+| `fa_list`, `fa_renderers`, `fa_layouts`, `fa_bundle_contracts` | Lists projects, the figures that can be drawn, the panel layouts, the bundle contracts | No |
 | `fa_bundle_check` | Checks a bundle against its contract | No |
 | `fa_status`, `fa_impact`, `fa_lineage` | Stale figures, what a file affects, where a figure came from | No |
 | `fa_lint`, `fa_claims` | Config keys never read and typos, hand-typed numbers | No |

@@ -22,6 +22,7 @@ AI에게 말로 시키는 일은 모두 아래 명령으로도 할 수 있습니
 | 번들을 패널로 붙이기 (+ 빌드) | `fa ingest bundle 번들폴더 --project 이름` | 4 |
 | 프로젝트 목록 | `fa list` | — |
 | 그릴 수 있는 그림 이름 | `fa renderers` | — |
+| 패널 배치(레이아웃) 목록, 또는 하나를 자세히 | `fa layouts` / `fa layouts stack` | — |
 
 ## 빌드와 검사
 

@@ -43,7 +43,7 @@ The [layout catalog](../reference/layouts.md) shows a picture of each layout, it
 
 The AI first shows the change: the layout line in the analysis script and the new values under `figures:`, each with its explaining comment. **Check that the shape is the one you asked for**, then tell it to go ahead. It builds the figure with the checks on and shows you the result.
 
-⌨ **Command:** `fa build first-figure --preflight` builds the figure again and reports overlaps and clipping.
+⌨ **Command:** `fa build first-figure --preflight` builds the figure again and reports overlaps and clipping. `fa layouts` lists the layouts, and `fa layouts wide_bottom` shows one with its shape and every value it reads; an AI assistant reads the same list.
 
 ✏ **Adjusting the shape yourself:** the values are under `figures:` in the config. This is the block of the `wide_bottom` example:
 

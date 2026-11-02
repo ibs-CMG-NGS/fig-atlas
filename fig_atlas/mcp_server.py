@@ -32,8 +32,10 @@ INSTRUCTIONS = (
     "fig-atlas manages publication figures as config-driven projects. Read AGENTS.md in the repository for the "
     "rules (raw data is read-only; every visual value lives in the project config with comments). Typical flow: "
     "fa_new_project -> fa_bundle_check -> fa_ingest_bundle -> fa_build (preflight) -> fa_figure_images -> "
-    "fa_verify; fa_promote / fa_retire move projects through the paper lifecycle. Tools that change files "
-    "return a dry-run diff unless apply is true: show the diff to the user and apply only with their consent.")
+    "fa_verify; fa_promote / fa_retire move projects through the paper lifecycle. For a figure whose panels are "
+    "not an equal grid, fa_layouts names the tested arrangements to call from the analysis script. Tools that "
+    "change files return a dry-run diff unless apply is true: show the diff to the user and apply only with "
+    "their consent.")
 
 
 @dataclass(frozen=True)
@@ -53,6 +55,10 @@ SPECS = (
     ToolSpec("fa_list", "list", description="List the projects (name, namespace, config)."),
     ToolSpec("fa_renderers", "renderers",
              description="Plot names a plots: block or fig_atlas.render() can draw: core, packs and recipes."),
+    ToolSpec("fa_layouts", "layouts",
+             description="Panel arrangements an analysis script can use (fig_atlas.layouts): without a name, "
+                         "one line each; with a name, its ASCII shape, call, usage and figures: config keys; "
+                         "'composition' for a layout inside a cell of another. Use it before writing layout code."),
     ToolSpec("fa_bundle_check", "bundle", ("check",),
              description="Check data bundles against the contract of their plot_type: structure, required "
                          "columns, the renderer that draws them. Run before fa_ingest_bundle."),

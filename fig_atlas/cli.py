@@ -711,6 +711,42 @@ def cmd_renderers(args, root: Path) -> int:
     return EXIT_OK
 
 
+def cmd_layouts(args, root: Path) -> int:
+    """`fa layouts [NAME]`: the panel arrangements of fig_atlas.layouts -- one line each, or one in full."""
+    from .layouts._catalog import catalog
+    info = catalog()
+    entries = info["layouts"]
+    if args.name:
+        entries = [e for e in entries if e["name"] == args.name]
+        if not entries and args.name != "composition":
+            names = ", ".join(e["name"] for e in info["layouts"])
+            print(f"fa layouts: no layout {args.name!r}; layouts: {names} (and composition)", file=sys.stderr)
+            return EXIT_USAGE
+    if args.json:
+        out = info if not args.name else (info["composition"] if args.name == "composition" else entries[0])
+        print(json.dumps(out, indent=1))
+        return EXIT_OK
+    if args.name == "composition":
+        comp = info["composition"]
+        print(f"{comp['summary']}\n\n" + "\n".join("    " + ln for ln in comp["example"].splitlines())
+              + f"\n\n{comp['rules']}\n\nReference: {comp['page']}")
+        return EXIT_OK
+    if args.name:
+        e = entries[0]
+        print(f"{e['name']}: {e['summary']}\n\n" + "\n".join("    " + ln for ln in e["shape"].splitlines())
+              + f"\n\n{e['call']}\n\n{e['usage']}\n\nConfig (figures:):")
+        for item in e["config"]:
+            print(f"  - {item['text']}")
+        print(f"\nExample: {e['example']}   Reference: {e['page']}")
+        return EXIT_OK
+    width = max(len(e["name"]) for e in entries)
+    for e in entries:
+        print(f"{e['name']:<{width}}  {e['summary']}")
+    print(f"\n{len(entries)} layouts. `fa layouts NAME` shows one in full (shape, call, config keys); "
+          f"`fa layouts composition` how to put a layout inside a cell of another. Then: {info['finish']}.")
+    return EXIT_OK
+
+
 def _plugin_commands(sub) -> dict:
     """Commands that installed packs add (fig_atlas.commands entry points)."""
     from .plugins import load_all
@@ -887,6 +923,11 @@ def build_parser() -> argparse.ArgumentParser:
     p = sub.add_parser("renderers", help="plot names fig_atlas.render() can draw: core, packs and recipes")
     p.add_argument("--json", action="store_true", help="machine-readable output")
 
+    p = sub.add_parser("layouts", help="panel arrangements a script can use (fig_atlas.layouts): shape, call, config")
+    p.add_argument("name", nargs="?", default=None,
+                   help="one layout in full (shape, call, config keys), or 'composition' for layouts in cells")
+    p.add_argument("--json", action="store_true", help="machine-readable output")
+
     p = sub.add_parser("bundle", help="data bundles: check them against their contract, or list the contracts")
     p.add_argument("action", choices=("check", "contracts"))
     p.add_argument("paths", nargs="*", metavar="BUNDLE", help="bundle folder(s) (default with check: every bundle under raw_data/)")
@@ -930,7 +971,7 @@ def main(argv: list[str] | None = None) -> int:
         handlers = {"list": cmd_list, "build": cmd_build, "verify": cmd_verify, "status": cmd_status,
                     "impact": cmd_impact, "lineage": cmd_lineage, "diff-figure": cmd_diff_figure,
                     "claims": cmd_claims, "export": cmd_export, "lint": cmd_lint,
-                    "param": cmd_param, "bundle": cmd_bundle, "renderers": cmd_renderers, "new": cmd_new, "retire": cmd_retire, "promote": cmd_promote, "ingest": cmd_ingest,
+                    "param": cmd_param, "bundle": cmd_bundle, "renderers": cmd_renderers, "layouts": cmd_layouts, "new": cmd_new, "retire": cmd_retire, "promote": cmd_promote, "ingest": cmd_ingest,
                     "mcp": cmd_mcp}
         return {**ap.plugin_handlers, **handlers}[args.command](args, root)
     except ProjectError as exc:
