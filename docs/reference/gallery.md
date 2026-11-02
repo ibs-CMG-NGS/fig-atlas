@@ -6,7 +6,7 @@
 
 Each picture below is drawn from a small synthetic data bundle in `examples/gallery/`, exactly as `fa ingest bundle` would draw it, at single-column size (85 mm). Pick the picture closest to the figure you need, copy its folder, replace `inputs/data.csv` with your table -- same column names, or name yours in `plot_params` -- and run the commands under it. The config block `fa ingest bundle` writes lists every setting with its unit and what it changes ([config reference](config.md)). A test builds every example and checks it with preflight. Pictures are grouped by what the plot *does*, not by the field or the package it came from (`fig_atlas/family.py`).
 
-Jump to: [Column](#column) | [XY](#xy) | [Grouped](#grouped) | [Survival](#survival) | [Parts of a whole](#parts-of-a-whole) | [Multiple variables](#multiple-variables) | [Image](#image) | [Schematic](#schematic) | [Field-specific](#field-specific).
+Jump to: [Column](#column) | [XY](#xy) | [Grouped](#grouped) | [Survival](#survival) | [Parts of a whole](#parts-of-a-whole) | [Multiple variables](#multiple-variables) | [Diagnostic](#diagnostic) | [Image](#image) | [Schematic](#schematic) | [Field-specific](#field-specific).
 
 ### Column
 
@@ -1306,6 +1306,55 @@ fa ingest bundle raw_data/<project>/peak_feature_enrichment --project <project>
 fa build <project> --preflight
 ```
 
+### Diagnostic
+
+How well a score separates two classes (ROC), and method agreement.
+
+#### roc_curve
+
+ROC: one row per curve point (fpr, tpr), optional marker, AUC and its interval from the analysis
+
+![roc_curve](gallery/examples/roc_curve.png)
+
+`inputs/data.csv`, first 5 of 242 rows (7 columns):
+
+```text
+marker,fpr,tpr,auc,auc_ci_low,auc_ci_high,youden
+marker A,0.0,0.0,0.8606,0.7905,0.917,False
+marker A,0.0,0.0167,0.8606,0.7905,0.917,False
+marker A,0.0,0.0333,0.8606,0.7905,0.917,False
+marker A,0.0,0.05,0.8606,0.7905,0.917,False
+marker A,0.0,0.0667,0.8606,0.7905,0.917,False
+```
+
+Inputs: `data.csv`. `metadata/metadata.yaml`:
+
+```yaml
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per curve point -- marker (group), fpr, tpr -- and each marker's AUC with its
+# 95% bootstrap interval (auc, auc_ci_low, auc_ci_high) and the Youden point (youden), all computed when
+# the data were made. The renderer draws them; it ranks nothing. With your data: keep these columns, or
+# name yours below.
+plot_type: roc_curve
+plot_params:
+  group_col: marker
+  group_colors: {"marker A": "#dc2626", "marker B": "#2563eb"}
+  auc_col: auc
+  auc_low_col: auc_ci_low       # 95% bootstrap interval -- say so in the legend
+  auc_high_col: auc_ci_high
+  operating_point_col: youden
+  legend_loc: "lower right"
+```
+
+Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
+
+```bash
+cp -r <fig-atlas>/examples/gallery/roc_curve raw_data/<project>/
+fa bundle check raw_data/<project>/roc_curve
+fa ingest bundle raw_data/<project>/roc_curve --project <project>
+fa build <project> --preflight
+```
+
 ### Image
 
 A microscope image, blot or gel, drawn with its scale bar.
@@ -1535,6 +1584,16 @@ One example per renderer (and per layout where a renderer has more than one), dr
 #### signed_heatmap
 
 ![signed_heatmap](gallery/signed_heatmap.png)
+
+### Diagnostic
+
+#### roc_curve
+
+![roc_curve](gallery/roc_curve.png)
+
+#### roc_curve_percent
+
+![roc_curve_percent](gallery/roc_curve_percent.png)
 
 ### Image
 

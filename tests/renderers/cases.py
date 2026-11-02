@@ -791,6 +791,38 @@ def column_scatter_aligned():
                                                  "labels_ylabel": "Level"})
     return fig
 
+
+def _roc(rng):
+    rows = []
+    for m, shift, auc in (("A", 1.5, 0.86), ("B", 0.5, 0.64)):
+        s = np.r_[rng.normal(shift, 1, 40), rng.normal(0, 1, 40)]
+        y = np.r_[np.ones(40), np.zeros(40)][np.argsort(-s)]
+        tpr, fpr = np.r_[0, np.cumsum(y) / 40], np.r_[0, np.cumsum(1 - y) / 40]
+        best = int(np.argmax(tpr - fpr))
+        rows += [{"marker": m, "fpr": f, "tpr": t, "auc": auc, "lo": auc - 0.08, "hi": auc + 0.06, "best": k == best}
+                 for k, (f, t) in enumerate(zip(fpr, tpr))]
+    return pd.DataFrame(rows)
+
+
+def roc_curve():
+    """PC-06: two markers, AUC with interval in the legend, Youden points."""
+    from fig_atlas.renderers import render_roc_curve
+    fig, ax = plt.subplots(figsize=(2.4, 2.4))
+    render_roc_curve(ax, _roc(_rng()), {**TYPO, "group_col": "marker", "auc_col": "auc", "auc_low_col": "lo",
+                                        "auc_high_col": "hi", "operating_point_col": "best",
+                                        "group_colors": {"A": "#dc2626", "B": "#2563eb"}, "legend_loc": "lower right"})
+    return fig
+
+
+def roc_curve_percent():
+    """PC-06: one curve, percent axes, AUC without an interval."""
+    from fig_atlas.renderers import render_roc_curve
+    df = _roc(_rng())
+    fig, ax = plt.subplots(figsize=(2.4, 2.4))
+    render_roc_curve(ax, df[df["marker"] == "A"], {**TYPO, "auc_col": "auc", "as_percent": True,
+                                                    "legend_loc": "lower right"})
+    return fig
+
 CASES = {
     "cross_condition_dotplot": cross_condition_dotplot,
     "cross_condition_heatmap": cross_condition_heatmap,
@@ -846,6 +878,8 @@ CASES = {
     "raincloud_vertical": raincloud_vertical,
     "column_scatter": column_scatter,
     "column_scatter_aligned": column_scatter_aligned,
+    "roc_curve": roc_curve,
+    "roc_curve_percent": roc_curve_percent,
 }
 
 # Gallery families (fig_atlas.family) for pictures that are not a renderer

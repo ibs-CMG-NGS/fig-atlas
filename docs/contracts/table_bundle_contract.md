@@ -169,6 +169,30 @@ plot_params:
   error: sd
 ```
 
+## `plot_type: roc_curve` — ROC curve (AUC and its interval)
+
+Draws one receiver operating characteristic curve per marker, the chance line, and each curve's AUC with its confidence interval in the legend (`render_roc_curve`). The curve and the numbers come from the analysis script ([analysis recipes](../howto/analysis_recipes.md), section 5).
+
+| Role (plot_params key) | Default column name | Required | Content |
+|---|---|---|---|
+| `fpr_col` | `fpr` | Yes | False positive rate (1 − specificity) of each curve point, from 0 to 1 |
+| `tpr_col` | `tpr` | Yes | True positive rate (sensitivity) of each curve point |
+| `group_col` | — | No | The marker (classifier) a curve point belongs to: one curve each |
+| `auc_col`, `auc_low_col`, `auc_high_col` | — | No | Each curve's AUC and its confidence interval (bootstrap or DeLong), repeated on its rows |
+| `operating_point_col` | — | No | True on the point to mark (a threshold the analysis picked, e.g. Youden's) |
+
+If a column is named, it must exist.
+
+```yaml
+plot_type: roc_curve
+plot_params:
+  group_col: marker
+  auc_col: auc
+  auc_low_col: auc_ci_low
+  auc_high_col: auc_ci_high
+  operating_point_col: youden
+```
+
 ## Checks
 
 `fa bundle check <bundle>` reports as errors:
