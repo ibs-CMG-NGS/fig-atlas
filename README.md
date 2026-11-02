@@ -34,13 +34,13 @@ package yet: install a release from GitHub into the environment you use for your
 
 ```bash
 conda create -n figures python=3.12 && conda activate figures      # or a venv
-pip install "git+https://github.com/ibs-CMG-NGS/fig-atlas@v0.2.0"
+pip install "git+https://github.com/ibs-CMG-NGS/fig-atlas@v0.2.1"
 fa --version
 ```
 
-Without Git: `pip install "https://github.com/ibs-CMG-NGS/fig-atlas/archive/refs/tags/v0.2.0.zip"`.
+Without Git: `pip install "https://github.com/ibs-CMG-NGS/fig-atlas/archive/refs/tags/v0.2.1.zip"`.
 Pin the release in your project repository's `requirements.txt`
-(`fig-atlas @ git+https://github.com/ibs-CMG-NGS/fig-atlas@v0.2.0`) so co-authors and reviewers
+(`fig-atlas @ git+https://github.com/ibs-CMG-NGS/fig-atlas@v0.2.1`) so co-authors and reviewers
 install the same version. The journal presets use Arial: macOS and Windows have it; on Linux
 install it (for example `ttf-mscorefonts-installer`), or preflight reports the substituted font.
 Rebuilds are byte-identical on one platform with one set of fonts, not across platforms.

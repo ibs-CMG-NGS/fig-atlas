@@ -6,6 +6,15 @@ All notable changes are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.2.1] — 2026-11-03
+
+### Fixed
+
+- **`fa layouts`, `fa renderers` and `fa bundle contracts` run outside a project repository.**
+  They only describe the installed package, so right after installing -- before `fa init` --
+  they now show what fig-atlas can draw and arrange instead of asking for a repository.
+  Every other command still needs one.
+
 ## [0.2.0] — 2026-11-02
 
 The first release. Install it with
