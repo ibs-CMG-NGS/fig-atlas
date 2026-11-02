@@ -1,0 +1,25 @@
+# Layout example: wide_bottom -- two panels over one full-width panel (fig_atlas/layouts/wide_bottom.py).
+# Copy the figures: keys into your project config; panels: and rc: only serve this example.
+figures:
+  width_mm: 180               # Figure width in mm (two journal columns); the cells divide it
+  height_mm: 120              # Figure height in mm
+  wspace: 0.15                # Gap between the top panels, fraction of the mean cell width; 0 = cells touch
+  hspace: 0.12                # Gap between the rows, fraction of the mean cell height
+  wide_bottom:                # [wide_bottom] the layout's own block
+    height_ratios: [1.0, 0.9] # Top row : bottom row; raise the second number to give the wide panel more height
+  panel_pad_mm: 1.0           # Margin in mm between a panel's outer edge (labels included) and its cell; raise for more air
+  tags:                       # Panel letters on the panels' outer bounding boxes (AGENTS.md 1.5)
+    show: true                # Draw the letters
+    size: 9.0                 # Letter size in pt
+    pad_pt: 2.0               # Gap in pt between a letter and its panel's outer edge
+panels:                     # letter -> example bundle in examples/gallery/ (stands in for your data)
+  a: column_scatter
+  b: correlation_scatter
+  c: dose_response
+rc:                         # print typography in pt (the fig-atlas print preset), set once before drawing
+  font.size: 7
+  axes.titlesize: 8
+  axes.labelsize: 7
+  xtick.labelsize: 6
+  ytick.labelsize: 6
+  legend.fontsize: 6

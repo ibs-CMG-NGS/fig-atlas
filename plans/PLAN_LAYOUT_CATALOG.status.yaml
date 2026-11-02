@@ -115,14 +115,14 @@ cards:
     kind: docs
     phase: 2
     priority: P1
-    status: todo
+    status: in_review
     depends_on: [L-03, L-04, L-05, L-06, L-07]
-    owner: null
-    branch: null
-    commits: []
+    owner: "claude-code 2026-11-02"
+    branch: "layout/L-08-examples"
+    commits: ["fig-atlas 4059419"]
     version: null
     review: null
-    notes: "examples/layouts/<name>/ (config + script + data), scripts/make_layout_gallery.py, the layouts writer in scripts/make_reference.py, docs/reference/layouts.md, tests/test_layouts_gallery.py"
+    notes: "examples/layouts/<name>/ (config + script + data), scripts/make_layout_gallery.py, the layouts writer in scripts/make_reference.py, docs/reference/layouts.md, tests/test_layouts_gallery.py. Delivered (2026-11-02): one example per layout (config.yaml + script.py, 20 lines of code each; build() draws the figure) with the gallery's synthetic bundles as panels through examples/layouts/_panels.py, and a small synthetic bundle for the matrix small multiples (examples/layouts/matrix/bundle); scripts/make_layout_gallery.py (pictures, layouts page) called by fa reference; nav entry in mkdocs.yml (outside the card's file list: the reference page needs it); tests/test_layouts_gallery.py (assets present, script <= 25 lines of code, every example builds with no preflight error or warning, tags a..). Found: an example that draws inside plt.rc_context and returns the figure gets its tick labels redrawn at the default size after the context closes, which pushed a y title off the canvas -- the scripts set rcParams once (AGENTS.md 1.4) and the tests wrap them in rc_context. Awaiting the visual review."
   - id: L-09a
     title: "renumber guide chapters 07-13 to 08-14 + chapter-number consistency test"
     kind: docs

@@ -1,0 +1,24 @@
+# Layout example: stack -- panels in one column (fig_atlas/layouts/stack.py).
+# Copy the figures: keys into your project config; panels: and rc: only serve this example.
+figures:
+  width_mm: 85                # Figure width in mm (one journal column)
+  height_mm: 170              # Figure height in mm
+  hspace: 0.12                # Gap between the rows, fraction of the mean row height; raise when x labels crowd the panel below
+  stack:                      # [stack] the layout's own block
+    height_ratios: [1.0, 1.0, 1.0]   # Row heights top to bottom, one number per panel
+  panel_pad_mm: 1.0           # Margin in mm between a panel's outer edge (labels included) and its cell; raise for more air
+  tags:                       # Panel letters on the panels' outer bounding boxes (AGENTS.md 1.5)
+    show: true                # Draw the letters
+    size: 9.0                 # Letter size in pt
+    pad_pt: 2.0               # Gap in pt between a letter and its panel's outer edge
+panels:                     # letter -> example bundle in examples/gallery/ (stands in for your data)
+  a: paired_plot
+  b: grouped_bar
+  c: raincloud
+rc:                         # print typography in pt (the fig-atlas print preset), set once before drawing
+  font.size: 7
+  axes.titlesize: 8
+  axes.labelsize: 7
+  xtick.labelsize: 6
+  ytick.labelsize: 6
+  legend.fontsize: 6

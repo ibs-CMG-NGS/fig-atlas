@@ -13,6 +13,9 @@
                              bundle` draws it at single-column size; then one picture per renderer
                              case of the snapshot tests (tests/renderers/cases.py); images in
                              docs/reference/gallery/
+- docs/reference/layouts.md  the layout catalog: one section and picture per layout in
+                             fig_atlas.layouts, drawn by its example in examples/layouts/
+                             (scripts/make_layout_gallery.py); images in docs/reference/gallery/layouts/
 - docs/tutorials/img/        the pictures a tutorial shows, made by running the tutorial as
                              written in a temporary project (fig_atlas.tools.tutorial) and
                              keeping the files TUTORIAL_PICTURES names
@@ -30,6 +33,9 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "scripts"))
+import make_layout_gallery  # noqa: E402  -- the layout catalog page and pictures
+
 REF = ROOT / "docs" / "reference"
 GALLERY = REF / "gallery"
 EXAMPLES = ROOT / "examples" / "gallery"
@@ -563,13 +569,15 @@ def main() -> int:
     args = ap.parse_args()
     cases, extra = _cases()
     pages = {REF / "cli.md": cli_page(), REF / "api.md": api_page(), REF / "config.md": config_page(),
-             REF / "gallery.md": gallery_page(cases, extra)}
+             REF / "gallery.md": gallery_page(cases, extra), REF / "layouts.md": make_layout_gallery.layouts_page()}
     if args.check:
         stale = [p.relative_to(ROOT).as_posix() for p, text in pages.items()
                  if not p.is_file() or p.read_text(encoding="utf-8") != text]
         missing = sorted(n for n in cases if not (GALLERY / f"{n}.png").is_file())
         missing += sorted(f"examples/{b.name}" for b in examples()
                           if not (GALLERY / "examples" / f"{b.name}.png").is_file())
+        missing += sorted(f"layouts/{n}" for n in make_layout_gallery.layout_names()
+                          if not (make_layout_gallery.PICTURES / f"{n}.png").is_file())
         for s in stale:
             print(f"out of date: {s}")
         for m in missing:
@@ -588,6 +596,7 @@ def main() -> int:
         print(f"wrote {path.relative_to(ROOT).as_posix()}")
     draw_gallery(cases)
     draw_examples()
+    make_layout_gallery.draw_layouts()
     draw_tutorial_pictures()
     draw_imaging_pictures()
     print(f"wrote {len(cases)} gallery pictures and {len(examples())} example pictures in docs/reference/gallery/")

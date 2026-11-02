@@ -1,0 +1,32 @@
+# Layout example: matrix -- a wall of small panels (fig_atlas/layouts/matrix.py).
+# Copy the figures: keys into your project config; panels: and rc: only serve this example.
+figures:
+  width_mm: 180               # Figure width in mm (two journal columns)
+  height_mm: 85               # Figure height in mm
+  matrix:                     # [matrix] the layout's own block
+    columns: 5                # Cells per row
+    wspace: 0.06              # Gap between columns, fraction of the mean cell width (small: the panels are small)
+    hspace: 0.12              # Gap between rows, fraction of the mean cell height
+  panel_pad_mm: 1.0           # Margin in mm between a panel's outer edge (labels included) and its cell; raise for more air
+  tags:                       # Panel letters on the panels' outer bounding boxes (AGENTS.md 1.5)
+    show: true                # Draw the letters
+    size: 9.0                 # Letter size in pt
+    pad_pt: 2.0               # Gap in pt between a letter and its panel's outer edge
+panels:                     # letter -> example bundle in examples/gallery/ (stands in for your data)
+  a: {bundle: layouts/matrix/bundle, where: {gene: Hmox1}, params: {labels_title: Hmox1}}
+  b: {bundle: layouts/matrix/bundle, where: {gene: Nqo1}, params: {labels_title: Nqo1}}
+  c: {bundle: layouts/matrix/bundle, where: {gene: Gclm}, params: {labels_title: Gclm}}
+  d: {bundle: layouts/matrix/bundle, where: {gene: Txnrd1}, params: {labels_title: Txnrd1}}
+  e: {bundle: layouts/matrix/bundle, where: {gene: Srxn1}, params: {labels_title: Srxn1}}
+  f: {bundle: layouts/matrix/bundle, where: {gene: Atf3}, params: {labels_title: Atf3}}
+  g: {bundle: layouts/matrix/bundle, where: {gene: Egr1}, params: {labels_title: Egr1}}
+  h: {bundle: layouts/matrix/bundle, where: {gene: Fos}, params: {labels_title: Fos}}
+  i: {bundle: layouts/matrix/bundle, where: {gene: Jun}, params: {labels_title: Jun}}
+  j: {bundle: layouts/matrix/bundle, where: {gene: Ddit3}, params: {labels_title: Ddit3}}
+rc:                         # print typography in pt (the fig-atlas print preset), set once before drawing
+  font.size: 7
+  axes.titlesize: 8
+  axes.labelsize: 7
+  xtick.labelsize: 6
+  ytick.labelsize: 6
+  legend.fontsize: 6

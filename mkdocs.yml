@@ -75,6 +75,7 @@ plugins:
             "Python functions (generated)": "파이썬 함수 (자동 생성)"
             "Config keys (generated)": "설정 키 (자동 생성)"
             "Renderer gallery (generated)": "렌더러 갤러리 (자동 생성)"
+            "Layout catalog (generated)": "레이아웃 카탈로그 (자동 생성)"
             "Where renderers are used": "렌더러 사용처"
             "Explanation": "설명"
             "Design decisions (ADR)": "설계 결정 (ADR)"
@@ -148,6 +149,7 @@ nav:
       - Python functions (generated): reference/api.md
       - Config keys (generated): reference/config.md
       - Renderer gallery (generated): reference/gallery.md
+      - Layout catalog (generated): reference/layouts.md
       - Where renderers are used: reference/renderer_inventory.md
   - Explanation:
       - Design decisions (ADR):

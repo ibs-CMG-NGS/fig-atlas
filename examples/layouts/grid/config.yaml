@@ -1,0 +1,27 @@
+# Layout example: grid -- equal rows x columns, one panel per cell (as draw_plots draws a project) (fig_atlas/layouts/grid.py).
+# Copy the figures: keys into your project config; panels: and rc: only serve this example.
+figures:
+  width_mm: 180               # Figure width in mm (two journal columns)
+  height_mm: 110              # Figure height in mm
+  columns: 3                  # Cells per row; the panels fill the rows left to right
+  wspace: 0.12                # Gap between columns, fraction of the mean cell width; 0 = the cells draw_plots makes
+  hspace: 0.12                # Gap between rows, fraction of the mean cell height
+  panel_pad_mm: 1.0           # Margin in mm between a panel's outer edge (labels included) and its cell; raise for more air
+  tags:                       # Panel letters on the panels' outer bounding boxes (AGENTS.md 1.5)
+    show: true                # Draw the letters
+    size: 9.0                 # Letter size in pt
+    pad_pt: 2.0               # Gap in pt between a letter and its panel's outer edge
+panels:                     # letter -> example bundle in examples/gallery/ (stands in for your data)
+  a: violin
+  b: histogram
+  c: column_scatter
+  d: correlation_scatter
+  e: bland_altman
+  f: paired_plot
+rc:                         # print typography in pt (the fig-atlas print preset), set once before drawing
+  font.size: 7
+  axes.titlesize: 8
+  axes.labelsize: 7
+  xtick.labelsize: 6
+  ytick.labelsize: 6
+  legend.fontsize: 6

@@ -1,0 +1,11 @@
+# Layout example data (examples/layouts/matrix): synthetic, not measurements.
+# inputs/data.csv: one row per replicate -- gene, hour (x), expression (y, fold over 0 h); the matrix
+# example draws one gene per panel.
+plot_type: line_band
+plot_params:
+  x_col: hour
+  y_col: expression
+  error: sd
+  marker_size: 2.0
+  labels_xlabel: "Time (h)"
+  labels_ylabel: "Fold change"
