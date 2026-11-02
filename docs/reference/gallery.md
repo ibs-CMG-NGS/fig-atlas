@@ -95,6 +95,53 @@ fa ingest bundle raw_data/<project>/boxplot --project <project>
 fa build <project> --preflight
 ```
 
+#### column_scatter
+
+Columns of points: one row per value (category, value), optional P value against a control category
+
+![column_scatter](gallery/examples/column_scatter.png)
+
+`inputs/data.csv`, first 5 of 48 rows (4 columns):
+
+```text
+treatment,mouse,il6_pg_ml,p_vs_vehicle
+sham,1,18.4,7.89e-13
+sham,2,21.1,7.89e-13
+sham,3,15.4,7.89e-13
+sham,4,25.1,7.89e-13
+sham,5,20.7,7.89e-13
+```
+
+Inputs: `data.csv`. `metadata/metadata.yaml`:
+
+```yaml
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per mouse -- treatment (category), il6_pg_ml (value), p_vs_vehicle (Dunnett P
+# against vehicle, computed when the data were made -- the renderer draws it, it runs no test). With your
+# data: keep these columns, or name yours below.
+plot_type: column_scatter
+plot_params:
+  category_col: treatment
+  value_col: il6_pg_ml
+  pvalue_col: p_vs_vehicle
+  control_category: vehicle
+  category_order: ["sham", "vehicle", "drug A", "drug B"]
+  category_colors: {"sham": "#9ca3af", "vehicle": "#111827", "drug A": "#2563eb", "drug B": "#93c5fd"}
+  point_layout: swarm           # or jitter, aligned
+  summary: mean
+  error: sd                     # sem, ci95, or iqr with summary: median -- say which in the legend
+  labels_ylabel: "Plasma IL-6 (pg/mL)"
+```
+
+Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
+
+```bash
+cp -r <fig-atlas>/examples/gallery/column_scatter raw_data/<project>/
+fa bundle check raw_data/<project>/column_scatter
+fa ingest bundle raw_data/<project>/column_scatter --project <project>
+fa build <project> --preflight
+```
+
 #### count_summary
 
 One row per (dataset, gene): log2FC and adjusted P
@@ -1304,6 +1351,14 @@ fa build <project> --preflight
 One example per renderer (and per layout where a renderer has more than one), drawn from small synthetic data by the renderer snapshot tests (`tests/renderers/cases.py`). Every renderer the package registers has a picture here or in the examples above (`tests/test_gallery_coverage.py` checks it). Parameters for each are in the [config reference](config.md).
 
 ### Column
+
+#### column_scatter
+
+![column_scatter](gallery/column_scatter.png)
+
+#### column_scatter_aligned
+
+![column_scatter_aligned](gallery/column_scatter_aligned.png)
 
 #### count_summary
 

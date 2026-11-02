@@ -58,6 +58,9 @@ of one manuscript before being published as a package. This first public tree co
   `band_upper_col`), and r and P per group from columns (`r_col`, `p_col`).
 - **PC-04 `raincloud`** (column): per category a half violin, a box and every value as a point,
   horizontal or vertical, and brackets against `control_category` from a P value column (`pvalue_col`).
+- **PC-05 `column_scatter`** (column): the values of each category as points -- swarm (no overlap),
+  jitter or aligned -- with a mean or median line and SD, SEM, 95% CI or IQR error bars, and brackets
+  against `control_category` from `pvalue_col`.
 - **Documentation**: a guide for researchers, tutorials run as tests (Case A, B and C worked
   examples among them), how-to guides, generated reference pages and a renderer gallery, design
   decision records, a documentation site (MkDocs) in English with a Korean version of every page
