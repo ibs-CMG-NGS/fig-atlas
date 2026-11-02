@@ -148,6 +148,11 @@ CORE_CONTRACTS = [
              role_optional=("group_col", "auc_col", "auc_low_col", "auc_high_col", "operating_point_col"),
              doc="docs/contracts/table_bundle_contract.md",
              title="ROC: one row per curve point (fpr, tpr), optional marker, AUC and its interval from the analysis"),
+    Contract("core.bland_altman", ("bland_altman",),
+             role_columns=(("a_col", "method_a"), ("b_col", "method_b")),
+             role_optional=("group_col", "bias_col", "loa_low_col", "loa_high_col"),
+             doc="docs/contracts/table_bundle_contract.md",
+             title="Agreement: one row per sample (two methods), optional bias and limits of agreement from the analysis"),
 ]
 CORE_INGEST = {
     "venn": "fig_atlas.renderers:render_venn",
@@ -172,6 +177,7 @@ CORE_INGEST = {
     "raincloud": "fig_atlas.renderers:render_raincloud",
     "column_scatter": "fig_atlas.renderers:render_column_scatter",
     "roc_curve": "fig_atlas.renderers:render_roc_curve",
+    "bland_altman": "fig_atlas.renderers:render_bland_altman",
 }
 
 

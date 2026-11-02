@@ -17,6 +17,7 @@ import sys
 import warnings
 
 from .bar_scatter import render_bar_scatter
+from .bland_altman import render_bland_altman
 from .boxplot import render_boxplot
 from .column_scatter import render_column_scatter
 from .correlation_scatter import render_correlation_scatter
@@ -58,6 +59,7 @@ __all__ = [
     "place_panel_tags",
     "align_title_to_labels",
     "render_bar_scatter",
+    "render_bland_altman",
     "render_boxplot",
     "render_column_scatter",
     "render_correlation_scatter",

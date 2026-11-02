@@ -193,6 +193,30 @@ plot_params:
   operating_point_col: youden
 ```
 
+## `plot_type: bland_altman` — Bland–Altman 그림 (두 측정법의 일치도)
+
+표본마다 두 측정법의 차이를 평균에 대해 그리고, 차이 없음 선, bias, 일치 한계(limits of agreement)를 오른쪽 끝의 값과 함께 그립니다(`render_bland_altman`). 점의 좌표는 두 측정값에서 바로 구하고, bias와 한계는 분석 스크립트가 열로 줍니다.
+
+| 역할 (plot_params 키) | 기본 열 이름 | 필수 | 내용 |
+|---|---|---|---|
+| `a_col` | `method_a` | 예 | 첫 번째 측정법의 표본별 측정값 |
+| `b_col` | `method_b` | 예 | 두 번째 측정법의 측정값 |
+| `group_col` | — | 아니오 | 점을 그룹별 색으로 나눕니다 |
+| `bias_col` | — | 아니오 | bias(차이의 평균), 모든 행에 반복 |
+| `loa_low_col`, `loa_high_col` | — | 아니오 | 일치 한계(예: bias ± 1.96 SD), 모든 행에 반복 |
+
+`difference: percent`는 100 × (a − b) / 평균을 그립니다. bias와 한계도 같은 방식으로 계산합니다. 열을 적으면 그 열이 있어야 합니다.
+
+```yaml
+plot_type: bland_altman
+plot_params:
+  a_col: hba1c_lab
+  b_col: hba1c_device
+  bias_col: bias
+  loa_low_col: loa_low
+  loa_high_col: loa_high
+```
+
 ## 검사
 
 `fa bundle check <번들>`이 오류로 보고하는 것:

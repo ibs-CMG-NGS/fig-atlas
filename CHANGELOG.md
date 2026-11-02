@@ -64,6 +64,9 @@ of one manuscript before being published as a package. This first public tree co
 - **PC-06 `roc_curve`** (diagnostic): one ROC curve per marker from fpr/tpr columns, the chance line,
   each curve's AUC and its interval in the legend (`auc_col`, `auc_low_col`, `auc_high_col`) and an
   operating point the analysis picked (`operating_point_col`).
+- **PC-07 `bland_altman`** (diagnostic): agreement of two methods -- each sample's difference (or
+  percent difference) against its mean, the bias and the limits of agreement from columns the
+  analysis writes (`bias_col`, `loa_low_col`, `loa_high_col`), labelled at the right edge.
 - **Documentation**: a guide for researchers, tutorials run as tests (Case A, B and C worked
   examples among them), how-to guides, generated reference pages and a renderer gallery, design
   decision records, a documentation site (MkDocs) in English with a Korean version of every page

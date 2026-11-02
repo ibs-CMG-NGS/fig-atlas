@@ -432,6 +432,21 @@ def roc_curve(rng):
                  for i, (f, t) in enumerate(zip(fpr, tpr))]
     return pd.DataFrame(rows)
 
+
+def bland_altman(rng):
+    """HbA1c of 40 patients by the laboratory method and a point-of-care device. The
+    bias (mean difference) and the 95% limits of agreement (bias +/- 1.96 SD of the
+    differences) are computed here, as an analysis script would; the renderer only
+    draws them."""
+    true = rng.uniform(5.0, 10.0, 40)
+    lab = true + rng.normal(0, 0.15, 40)
+    device = true + 0.12 + rng.normal(0, 0.25, 40)
+    diff = lab - device
+    bias, sd = float(diff.mean()), float(diff.std(ddof=1))
+    return pd.DataFrame({"patient": range(1, 41), "hba1c_lab": lab.round(2), "hba1c_device": device.round(2),
+                         "bias": round(bias, 4), "loa_low": round(bias - 1.96 * sd, 4),
+                         "loa_high": round(bias + 1.96 * sd, 4)})
+
 HEAD = "# Gallery example (examples/make_gallery.py): synthetic data, not measurements.\n"
 META = {
     "line_band": HEAD + """# inputs/data.csv: one row per replicate measurement -- strain (line), hour (x), od600 (y).
@@ -839,6 +854,19 @@ plot_params:
   operating_point_col: youden
   legend_loc: "lower right"
 """,
+    "bland_altman": HEAD + """# inputs/data.csv: one row per patient -- hba1c_lab and hba1c_device (the two methods) -- and the bias
+# and 95% limits of agreement (bias, loa_low, loa_high: bias +/- 1.96 SD of the differences), computed
+# when the data were made. The renderer draws them. With your data: keep these columns, or name yours below.
+plot_type: bland_altman
+plot_params:
+  a_col: hba1c_lab
+  b_col: hba1c_device
+  bias_col: bias
+  loa_low_col: loa_low
+  loa_high_col: loa_high
+  labels_xlabel: "Mean HbA1c (%)"
+  labels_ylabel: "Laboratory \u2212 device (%)"
+""",
 }
 
 
@@ -857,7 +885,8 @@ def main() -> None:
               # plot catalog (plans/PLAN_PLOT_CATALOG.md), appended in card order
               "paired_plot": paired_plot, "grouped_bar": grouped_bar,
               "correlation_scatter": correlation_scatter, "raincloud": raincloud,
-              "column_scatter": column_scatter, "roc_curve": roc_curve}
+              "column_scatter": column_scatter, "roc_curve": roc_curve,
+              "bland_altman": bland_altman}
     for name, make in makers.items():
         _write(name, make(rng), META[name])
     # The images get their own random stream, so adding a table example never changes their pixels.

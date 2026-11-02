@@ -193,6 +193,30 @@ plot_params:
   operating_point_col: youden
 ```
 
+## `plot_type: bland_altman` — Bland–Altman plot (agreement of two methods)
+
+Draws each sample's difference between two methods against their mean, the line of no difference, the bias and the limits of agreement, with their values at the right edge (`render_bland_altman`). The point coordinates are worked out from the two measurements; the bias and the limits come from the analysis script as columns.
+
+| Role (plot_params key) | Default column name | Required | Content |
+|---|---|---|---|
+| `a_col` | `method_a` | Yes | The first method's measurement of each sample |
+| `b_col` | `method_b` | Yes | The second method's measurement |
+| `group_col` | — | No | Colours the points by group |
+| `bias_col` | — | No | The bias (mean difference), repeated on every row |
+| `loa_low_col`, `loa_high_col` | — | No | The limits of agreement (e.g. bias ± 1.96 SD), repeated on every row |
+
+`difference: percent` plots 100 × (a − b) / mean; compute the bias and limits the same way. If a column is named, it must exist.
+
+```yaml
+plot_type: bland_altman
+plot_params:
+  a_col: hba1c_lab
+  b_col: hba1c_device
+  bias_col: bias
+  loa_low_col: loa_low
+  loa_high_col: loa_high
+```
+
 ## Checks
 
 `fa bundle check <bundle>` reports as errors:

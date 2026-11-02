@@ -823,6 +823,34 @@ def roc_curve_percent():
                                                     "legend_loc": "lower right"})
     return fig
 
+
+def _agreement(rng):
+    true = rng.uniform(20, 80, 36)
+    a = true + rng.normal(0, 2, 36)
+    b = true * 1.03 + rng.normal(0, 2.5, 36)
+    d = a - b
+    return pd.DataFrame({"ref": a, "new": b, "site": ["north", "south"] * 18, "bias": d.mean(),
+                         "lo": d.mean() - 1.96 * d.std(ddof=1), "hi": d.mean() + 1.96 * d.std(ddof=1)})
+
+
+def bland_altman():
+    """PC-07: difference against mean, bias and limits from columns, labels at the right edge."""
+    from fig_atlas.renderers import render_bland_altman
+    fig, ax = plt.subplots(figsize=(2.8, 2.2))
+    render_bland_altman(ax, _agreement(_rng()), {**TYPO, "a_col": "ref", "b_col": "new", "bias_col": "bias",
+                                                 "loa_low_col": "lo", "loa_high_col": "hi"})
+    return fig
+
+
+def bland_altman_percent():
+    """PC-07: percent difference, points coloured by site, no line labels."""
+    from fig_atlas.renderers import render_bland_altman
+    fig, ax = plt.subplots(figsize=(2.8, 2.2))
+    render_bland_altman(ax, _agreement(_rng()), {**TYPO, "a_col": "ref", "b_col": "new", "difference": "percent",
+                                                 "group_col": "site", "show_line_labels": False,
+                                                 "group_colors": {"north": "#2563eb", "south": "#f59e0b"}})
+    return fig
+
 CASES = {
     "cross_condition_dotplot": cross_condition_dotplot,
     "cross_condition_heatmap": cross_condition_heatmap,
@@ -880,6 +908,8 @@ CASES = {
     "column_scatter_aligned": column_scatter_aligned,
     "roc_curve": roc_curve,
     "roc_curve_percent": roc_curve_percent,
+    "bland_altman": bland_altman,
+    "bland_altman_percent": bland_altman_percent,
 }
 
 # Gallery families (fig_atlas.family) for pictures that are not a renderer
