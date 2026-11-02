@@ -2,7 +2,7 @@
 # One card per task; field meanings in the plan (section 8). Change a card when you claim, hand in or
 # finish a task (plan section 9); check the file against the package with
 #   python scripts/check_plan_layout_catalog.py
-plan_version: 1
+plan_version: 2                 # revision 2 (plan section 16): L-13..L-16, gate G5
 package_version: "0.1.0.dev0 on main (0.2.0.dev1 pending in PR #25); branch layout/catalog rebased on f97ef86, 2026-11-02"
 baseline:                       # what existed when the plan started (not tasks)
   layouts: 0                    # public layout functions in fig_atlas/layouts/
@@ -12,12 +12,15 @@ gates:                          # researcher decisions (plan section 11): pendin
   G2: pending                   # mosaic (figures.layout) -- only after L-10 measured the coverage
   G3: pending                   # new required dependencies (expected: none)
   G4: pending                   # release the catalog after L-09b is green
+  G5: pending                   # composition: build, shrink or drop -- after the L-14 spike (plan section 16)
 phase_gates:                    # a phase's cards can start only after these gates have passed
   0: [G1]
   1: [G1]
   2: [G1]
   3: [G1]
   4: [G1]
+  5: [G1]
+  6: [G1, G5]
 cards:
   - id: L-01
     title: "status file and checker script"
@@ -188,3 +191,55 @@ cards:
     version: null
     review: null
     notes: "lists name/shape/docstring/example; the MCP tool is generated from the CLI parser (fig_atlas/mcp_server.py ToolSpec), so the two cannot drift"
+  - id: L-13
+    title: "width_ratios / height_ratios on grid and matrix"
+    kind: code
+    phase: 5
+    priority: P1
+    status: todo
+    depends_on: [L-05, L-06]
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: "grid.py, matrix.py: ratios as arguments and from figures.grid / figures.matrix; equal by default (L-05 parity unchanged); wrong length raises; example configs and the guide's values table carry the keys; 13 measured scripts need it (plan section 1)"
+  - id: L-14
+    title: "composition spike: a layout in a cell of another; finish across two levels"
+    kind: spike
+    phase: 5
+    priority: P1
+    status: todo
+    depends_on: [L-02]
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: "throwaway script only; findings and a go/no-go with an L-15 estimate go into plan section 16; gate G5 decides"
+  - id: L-15
+    title: "composition: a layout on a cell; finish fits and tags both levels; values under the cell letter"
+    kind: code
+    phase: 6
+    priority: P1
+    status: todo
+    depends_on: [L-14]
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: "only after G5; one line per split cell, finish once, figures.cells.<letter>.<layout>.*, two levels at most, a preflight-clean example; 17 more measured scripts (plan section 1)"
+  - id: L-16
+    title: "optional: align and overlay helpers"
+    kind: code
+    phase: 6
+    priority: P3
+    status: todo
+    depends_on: [L-15]
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: "an axes lined up with another panel's box; a legend, banner or card over the panels; figures: keys only; 7 measured scripts (plan section 1)"

@@ -105,6 +105,8 @@ copy, safe to test, and citable in the method paper.
 **Out of scope (write these down as non-goals in the guide chapter)**
 
 - a mosaic/layout DSL in `figures:`, nested layouts in config, per-panel absolute positions
+  (revision 2 nests layouts **in code**: a layout called on a cell of another. The config only holds
+  values, under the cell's letter; it never describes the nesting -- section 16)
 - a `single` layout: one panel is `grid(columns=1)`, and a figure that draws itself on the canvas
   (a schematic) is a renderer with the `(fig, df)` shape, not a layout (G1, 2026-11-02)
 - automatic layout selection, or ingest writing layout code
@@ -127,6 +129,10 @@ reviewed on its own, but L-08/L-09a/L-09b are the cards that make a layout *usab
 | 6 | index entry | `docs/guide/07-layouts` + this plan section 6 | one table row: shape, letters, panels, config keys, example path |
 
 ## 5. API (frozen by card L-02; revisions need a plan edit)
+
+Revision 2 (section 16) changes two things, each by its card: `grid` and `matrix` take
+`width_ratios` / `height_ratios` (L-13), and every layout's first argument may be a cell of another
+layout instead of the figure, with `finish` still called once on the outer layout (L-15, after G5).
 
 ```python
 # fig_atlas/layouts/__init__.py
@@ -252,9 +258,14 @@ and the commands in `verify` pass. Effort is agent-days.
 | L-10 | coverage measurement + reported table | 3 | P2 | L-03..L-07 | `scripts/layout_coverage.py` (+ its README section) | 0.5 |
 | L-11 | method-paper inputs (coverage table, thumbnails, LOC deltas) | 4 | P2 | L-09b, L-10 | `cmg-figures docs/paper/` (separate repository; coordinate) | 1.0 |
 | L-12 | optional: `fa layouts` + `fa_layouts` MCP tool | 4 | P3 | L-08 | `fig_atlas/repo_commands.py`, `fig_atlas/mcp_server.py`, docs | 1.0 |
+| L-13 | `width_ratios` / `height_ratios` on `grid` and `matrix` | 5 | P1 | L-05, L-06 | `fig_atlas/layouts/grid.py`, `fig_atlas/layouts/matrix.py`, `tests/test_layouts_core.py`, `tests/layouts/test_matrix.py`, `examples/layouts/{grid,matrix}/config.yaml`, `docs/guide/07-layouts.*` (values table) | 0.5 |
+| L-14 | composition spike: a layout in a cell of another; `finish` across two levels | 5 | P1 | L-02 | plan section 16 (findings only; no package code lands) | 0.5 |
+| L-15 | composition: a layout on a cell; `finish` fits and tags both levels; values under the cell letter | 6 | P1 | L-14 | `fig_atlas/layouts/_core.py`, the five layout modules (first argument), `tests/layouts/test_compose.py`, `examples/layouts/compose/`, `docs/reference/layouts.md` (generated), `docs/guide/07-layouts.*` | 2.0 |
+| L-16 | optional: align and overlay helpers (an axes lined up with another panel; a legend or banner over the panels) | 6 | P3 | L-15 | `fig_atlas/layouts/` (new helper module), tests, docs | 1.0 |
 
 Phases: 0 infra, 1 core + first two shapes, 2 the rest, 3 documentation and evidence, 4 paper and
-surface. G1 passed 2026-11-02 (section 11), so Phase 1 may start.
+surface, 5 generalisation that needs no decision (ratios, the composition spike), 6 composition and
+helpers (after gate G5). G1 passed 2026-11-02 (section 11), so Phase 1 may start.
 
 `done_when` essentials (each card repeats these in its status entry):
 
@@ -276,6 +287,21 @@ surface. G1 passed 2026-11-02 (section 11), so Phase 1 may start.
 - L-11: the table and figure are reproducible from the CSV by a command in the paper's evidence file.
 - L-12: `fa layouts` lists name/shape/docstring/example; MCP tool generated from the parser
   (`fig_atlas/mcp_server.py:40-81` pattern), so CLI and MCP cannot drift.
+- L-13: `grid(..., width_ratios=None, height_ratios=None)` and the same on `matrix`, each also read
+  from the layout's own block (`figures.grid.*`, `figures.matrix.*`); equal by default, so the L-05
+  parity test is unchanged; a list of the wrong length raises with the expected count; the example
+  configs carry the keys with comments; `layout_coverage.py` reports the scripts it now reaches.
+- L-14: section 16 records, from a throwaway script, whether a layout called on a cell draws its
+  cells inside it, whether `fit_in_cells` and `place_panel_tags` can take both levels in one call, how
+  the tags of inner panels join the outer plumb lines, and how values are named; it ends with a
+  go/no-go and an effort estimate for L-15 (gate G5).
+- L-15: user code is one line per split cell; `finish` is called once; inner panels are fitted on
+  their outer bounding boxes and their letters share the outer column's plumb line (AGENTS 1.5);
+  values live under the cell's letter (`figures.cells.<letter>.<layout>.*`); two levels at most
+  (a third raises); an example that composes builds with no preflight error or warning;
+  `layout_coverage.py` counts the reached scripts as matched.
+- L-16: each helper reads only `figures:` keys, places nothing by bare numbers in code, and has a
+  preflight-clean example.
 
 ## 9. Collaboration protocol (agents)
 
@@ -346,6 +372,8 @@ waived (AGENTS 4.4).
   it before the measurement.
 - **G3 -- dependencies.** Expected: none new. Any new dependency stops the card and returns here.
 - **G4 -- release.** Ship the catalog in the next minor release only after L-09b (docs) is green.
+- **G5 -- composition.** After the L-14 spike: build composition (L-15), shrink it, or drop it.
+  Phase 6 cannot start before this gate.
 
 ## 12. Risks and how the plan handles them
 
@@ -409,7 +437,33 @@ semantics are frozen); making its spacing real is a separate decision, not a lay
 | 2 | L-06..L-08 (L-07 is 0.25) | 2.25 |
 | 3 | L-09a, L-09b, L-10 | 2.0 |
 | 4 | L-11, L-12 (optional) | 2.0 |
-| **total** | | **~9.25** |
+| 5 | L-13, L-14 | 1.0 |
+| 6 | L-15, L-16 (optional) | 3.0 |
+| **total** | | **~13.25** |
 
 L-03..L-07 can run in parallel after L-02 (one branch each); L-10 can start as soon as L-03 lands
 because it measures existing repositories, not the catalog.
+
+## 16. Revision 2 (2026-11-02): generalising by composition, not by more shapes
+
+**Why.** L-10 measured the repository (section 1). Of 83 scripts, 20 are drawn by one of the five
+layouts. Most of the rest are not a missing shape but a layout inside a cell of another: a stack
+whose rows hold their own panels, a row whose first cell spans the column, a row redrawn over a band
+of the outer grid. Composition would reach 37; `ratios` on `grid`/`matrix` and two small helpers 57.
+New layout names would reach almost none of them, and the five-layout cap (section 12) stays.
+
+**What changes.**
+
+- L-13 adds `width_ratios` / `height_ratios` to `grid` and `matrix` (13 scripts; small, no decision).
+- L-14 is a half-day spike that answers whether composition fits the `finish` design, before any
+  package code is written. G5 decides on its findings.
+- L-15 builds composition if G5 says so: a layout called on a cell, `finish` once, values under the
+  cell's letter, two levels at most.
+- L-16 (optional) adds align and overlay helpers (7 scripts), only after L-15.
+
+**What does not change.** Layouts stay functions (D2): nesting is written in code, never described
+in `figures:`. `draw_plots` keeps its semantics (D8). Gate G2 (mosaic) remains the researcher's
+decision; the measurement gives no case for it (2 scripts unmatched for a partial span; the unequal
+grids need `ratios`).
+
+**Findings of L-14.** (written by the spike)
