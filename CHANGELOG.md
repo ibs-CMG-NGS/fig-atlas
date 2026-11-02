@@ -4,7 +4,7 @@ All notable changes are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow
 [Semantic Versioning](https://semver.org/).
 
-## [Unreleased] — first public tree (0.1.0.dev0)
+## [Unreleased] — 0.2.0.dev1 (the first public tree was 0.1.0.dev0)
 
 fig-atlas was developed in a private research repository from July 2026 and used for the figures
 of one manuscript before being published as a package. This first public tree contains:
@@ -44,7 +44,7 @@ of one manuscript before being published as a package. This first public tree co
   test, post-hoc, correlation/regression, ROC/AUC, curve fit, contingency), and the project analysis
   template carries a commented case.
 
-### Added — plot types (plans/PLAN_PLOT_CATALOG.md)
+### Added — plot types (plans/PLAN_PLOT_CATALOG.md; 0.2.0.dev1)
 
 - **PC-01 `paired_plot`** (column): before and after -- one line per subject across conditions,
   optional mean or median -- a line joining the conditions or a bar per condition behind the subjects,

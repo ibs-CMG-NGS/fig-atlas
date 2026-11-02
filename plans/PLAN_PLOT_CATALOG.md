@@ -12,7 +12,7 @@
 |---|---|---|
 | 0 | 기반: 상태 파일·점검 스크립트, 갤러리 분류(family), 작업 카드 틀, 통계 경계 정리 I-03·I-04 (§2 원칙 3) | ✅ 완료 (2026-11-01): I-01 (`261f558`), I-02 (`50ab6eb`, G2 승인 2026-10-27), I-03 (`6593d5f`, G2 승인·CI green), I-04 (`dd238f6`+`ce843bd`+`a999abd`, PR #2·#3, 승인 2026-11-01) · ✅ I-05 (Prism 대조표, PR #6 `4e24d91`, G1 재검토 통과 2026-11-01) |
 | 1 | ~~통계 층 확장 S-01–S-06~~ → **폐지(v3)**: 검정은 분석 스크립트가 실행하고, 패키지는 표시·기록만 | ⬜ 없음 (S-01–S-06 `dropped`, 레시피는 I-04) |
-| 2 | 우선순위 1 그림 8종 (PC-01–PC-08) | 🔄 카드 8종 ✅ (2026-11-02, G2 두 묶음 승인): PC-01 `paired_plot` (PR #8), PC-02 `grouped_bar` (#11), PC-03 `correlation_scatter` (#13), PC-04 `raincloud` (#15), PC-05 `column_scatter` (#17), PC-06 `roc_curve` (#19), PC-07 `bland_altman` (#21), PC-08 `correlation_matrix` (#23). 남은 완료 기준: V10 실사용 1건, 버전 0.2.0.dev 기록(게이트 G4) |
+| 2 | 우선순위 1 그림 8종 (PC-01–PC-08) | 🔄 카드 8종 ✅ (2026-11-02, G2 두 묶음 승인): PC-01 `paired_plot` (PR #8), PC-02 `grouped_bar` (#11), PC-03 `correlation_scatter` (#13), PC-04 `raincloud` (#15), PC-05 `column_scatter` (#17), PC-06 `roc_curve` (#19), PC-07 `bland_altman` (#21), PC-08 `correlation_matrix` (#23). V10 실사용 ✅ (cmg-figures `kyg-mouse-tg-aldh1l1-wb-scatter`, `column_scatter`, `78eff68`), 버전 0.2.0.dev1 ✅. 남은 것: 게이트 G4 — 정식 0.2.0 릴리스 여부(사용자 결정) |
 | 3 | 기존 그림 고도화 E-01–E-06 (통계 괄호, 축 옵션 등) | ⬜ 대기 |
 | 4 | 우선순위 2 그림 (PC-09–PC-18) | ⬜ 대기 |
 | 5 | 우선순위 3 그림 + 릴리스 정리 (버전·CHANGELOG·갤러리 개편) | ⬜ 대기 |
