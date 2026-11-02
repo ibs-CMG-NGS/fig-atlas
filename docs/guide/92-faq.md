@@ -26,12 +26,12 @@ Each kind of figure has its own defaults. Set the value of the same name (`title
 Figures are drawn to the width of the page setting (style), so make a page setting with that journal's width and minimum text size and switch to it. Journal settings for Nature and Science are included ([Switch to a journal's format](../howto/journal_presets.md)); for another journal, make one from its rules and note their source and the date you checked them ([design decision 0001](../decisions/0001-final-size-rendering.md)). Preflight then checks again against the new limits.
 
 **Do I have to fix preflight warnings?**
-No. **Errors** must be fixed; **warnings** you read and judge. If it is an intended design, leave it (chapter 8).
+No. **Errors** must be fixed; **warnings** you read and judge. If it is an intended design, leave it (chapter 9).
 
 ## Data
 
 **I changed the raw data by mistake.**
-The raw data (`raw_data/`) are not uploaded to the repository (GitHub), so undo in git cannot restore them. Get the original again from the analysis pipeline or the collaborator who sent it. If the file you get is the same as the original, its fingerprint is the same and the figure shows as "fresh". If it differs, it shows as "stale", so you know at once (chapter 10).
+The raw data (`raw_data/`) are not uploaded to the repository (GitHub), so undo in git cannot restore them. Get the original again from the analysis pipeline or the collaborator who sent it. If the file you get is the same as the original, its fingerprint is the same and the figure shows as "fresh". If it differs, it shows as "stale", so you know at once (chapter 11).
 
 **The bundle check reports an error.**
 A column the figure needs is not in the table; the message says which. Do not edit the table (`data.csv`): check that the note points to the table's real column name, or ask for the data to be exported again (chapter 3).
@@ -40,7 +40,7 @@ A column the figure needs is not in the table; the message says which. Do not ed
 There are four cases. ① A contract error: a column the figure needs is missing — do not edit the table; fix the note's column name or get the data again (chapter 3). ② No renderer draws that `plot_type` — check `fa bundle contracts`, and make a new kind of figure as Case A·C in chapter 5. ③ A panel of the same name exists — give another name with `--name`. ④ The bundle is outside the repository — move it under `raw_data/`.
 
 **The data changed and I do not know which figures to redraw.**
-💬 "Check whether any figures are stale." You get the stale figures and the reasons (chapter 10).
+💬 "Check whether any figures are stale." You get the stale figures and the reasons (chapter 11).
 
 ## Build and environment
 

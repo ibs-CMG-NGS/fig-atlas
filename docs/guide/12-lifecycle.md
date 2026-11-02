@@ -1,5 +1,5 @@
 ---
-title: "11. Into the paper: a figure's life"
+title: "12. Into the paper: a figure's life"
 audience: researchers (no programming experience needed)
 reviewed: 2026-10-14
 ---
@@ -78,4 +78,4 @@ All the storyline's Figures in order in one PDF, for sharing with co-authors or 
 💬 **Strict mode:** "Compile the compendium in strict mode." If a figure is stale or has check errors, no PDF is made and you are told what is wrong.
 
 ---
-Previous: [10. When the data change](10-freshness.md) · Next: [12. Working with AI](12-ai.md)
+Previous: [11. When the data change](11-freshness.md) · Next: [13. Working with AI](13-ai.md)

@@ -54,11 +54,11 @@ Folders are divided by research unit (for example a researcher or a study) and b
 | paper | `configs/<unit>/paper/` | Paper Figures. The Figure number is in the name (e.g. `…-paper-main-fig2-…`) |
 | archive | `configs/<unit>/archive/` | Figures no longer used. Kept, not deleted, and they can be rebuilt any time |
 
-Moving an exploratory figure to the paper (**promote**) and archiving one (**retire**) are one command each. Chapter 11 covers them.
+Moving an exploratory figure to the paper (**promote**) and archiving one (**retire**) are one command each. Chapter 12 covers them.
 
 ## Where the rules are
 
-All rules (raw data are only read, every visual value is in the config, how to name things, ...) are in one place, [`AGENTS.md`](../../AGENTS.md) at the top of the repository. AI assistants read and follow the same file. Chapter 13 of this guide summarises them for researchers.
+All rules (raw data are only read, every visual value is in the config, how to name things, ...) are in one place, [`AGENTS.md`](../../AGENTS.md) at the top of the repository. AI assistants read and follow the same file. Chapter 14 of this guide summarises them for researchers.
 
 ---
 Previous: [1. Why a tool like this](01-why.md) · Next: [3. Preparing data: bundles](03-data-bundles.md)

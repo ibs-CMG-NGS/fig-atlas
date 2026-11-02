@@ -1,5 +1,5 @@
 ---
-title: 8. Reading the check results
+title: 9. Reading the check results
 audience: researchers (no programming experience needed)
 reviewed: 2026-10-14
 ---
@@ -58,9 +58,9 @@ Verify checks that the results are complete and agree with each other.
 |---|---|
 | Figure files | One of PNG, PDF and SVG is missing or empty |
 | The figure's README | The README is missing or lacks the panel notes |
-| Live numbers | A legend has a placeholder such as `{n_hits}` but the analysis recorded no value (chapter 9) |
-| Statistics tables | A figure with stars has no statistics table (chapter 9) |
-| Original images | A microscope image's original differs from its recorded fingerprint (chapter 9) |
+| Live numbers | A legend has a placeholder such as `{n_hits}` but the analysis recorded no value (chapter 10) |
+| Statistics tables | A figure with stars has no statistics table (chapter 10) |
+| Original images | A microscope image's original differs from its recorded fingerprint (chapter 10) |
 | Preflight | Reports the numbers of errors and warnings too |
 
 The result is **PASS / WARN / FAIL**. On FAIL the build ends as failed and tells you what is wrong.
@@ -83,4 +83,4 @@ The rules tell the AI to fix errors in the config but to **ask first before a ch
 - **Where the overlays are:** `outputs/preflight/project-name/`. The full list of findings is in `outputs/preflight/preflight_findings.csv`.
 
 ---
-Previous: [7. Checking the results](07-results.md) · Next: [9. Transparency in numbers, statistics and images](09-integrity.md)
+Previous: [8. Checking the results](08-results.md) · Next: [10. Transparency in numbers, statistics and images](10-integrity.md)

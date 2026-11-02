@@ -1,5 +1,5 @@
 ---
-title: 9. Transparency in numbers, statistics and images
+title: 10. Transparency in numbers, statistics and images
 audience: researchers (no programming experience needed)
 reviewed: 2026-10-14
 ---
@@ -23,7 +23,7 @@ Result numbers in a figure's title or panel notes (counts, percentages, statisti
 | When the data change, it stays and becomes wrong. | The value the analysis computed is filled in at the build. When the data change, it changes too. |
 
 - The analysis script records the value (`claims.record("n_concordant", n)`), and the legend writes its name in braces.
-- If a legend names a value that was not recorded, verify fails (chapter 8).
+- If a legend names a value that was not recorded, verify fails (chapter 9).
 - Thresholds (`P < 0.05`), other figure numbers and design values (times, doses) may be typed by hand: they are the design, not the results.
 - If hand-typed result numbers increase, CI (the repository's automatic checks) stops it.
 
@@ -56,7 +56,7 @@ Images go in **as their original files, and adjustments are made in the settings
 | Putting in a cropped copy | Writing the region to crop (pixel coordinates) in the config |
 | Drawing a scale bar by hand on the figure | Writing the pixel size (µm) in the note: an exact scale bar is drawn automatically |
 
-The build records the original files' fingerprints, the cropped region, the display range and colour per channel in the "Images" part of the README (chapter 7). If an original file changes, verify fails.
+The build records the original files' fingerprints, the cropped region, the display range and colour per channel in the "Images" part of the README (chapter 8). If an original file changes, verify fails.
 
 A nonlinear brightness adjustment (gamma ≠ 1) makes verify warn. Gamma adjustment is allowed, but under journals' image integrity rules **the legend must say so**.
 
@@ -67,4 +67,4 @@ A worked example: [the microscopy tutorial](../tutorials/imaging_figure.md)
 The rules of this chapter are not paperwork. They let you **answer from the record** to reviewers' questions, journals' requests for material and any suspicion of misconduct. You do not have to rely on remembering "how did I do that back then".
 
 ---
-Previous: [8. Reading the check results](08-checks.md) · Next: [10. When the data change](10-freshness.md)
+Previous: [9. Reading the check results](09-checks.md) · Next: [11. When the data change](11-freshness.md)

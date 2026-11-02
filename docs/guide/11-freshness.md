@@ -1,5 +1,5 @@
 ---
-title: 10. When the data change
+title: 11. When the data change
 audience: researchers (no programming experience needed)
 reviewed: 2026-10-14
 ---
@@ -39,8 +39,8 @@ Then build the stale figures again (💬 "rebuild all stale figures", or ⌨ che
 ## Good to know
 
 - **A file whose date alone changed is not stale.** If the content (the fingerprint) is the same, the figure is fresh. Copying or downloading a file again does not call for a redraw when its content is the same.
-- **You can keep stale figures out of the storyline PDF.** Built in strict mode, it refuses to make the PDF when a figure is stale or has check errors, and tells you (chapter 11).
+- **You can keep stale figures out of the storyline PDF.** Built in strict mode, it refuses to make the PDF when a figure is stale or has check errors, and tells you (chapter 12).
 - **Provenance left by the analysis pipeline carries on.** If a bundle's note names the tool and version that made the data, they go into the figure's provenance record too. The chain of sources does not break at the bundle.
 
 ---
-Previous: [9. Transparency in numbers, statistics and images](09-integrity.md) · Next: [11. Into the paper: a figure's life](11-lifecycle.md)
+Previous: [10. Transparency in numbers, statistics and images](10-integrity.md) · Next: [12. Into the paper: a figure's life](12-lifecycle.md)

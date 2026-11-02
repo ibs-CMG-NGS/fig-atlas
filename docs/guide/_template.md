@@ -10,7 +10,7 @@ Copy this file to add a chapter to the guide (`docs/guide/`). It does not appear
 
 ## File and table of contents
 
-1. The file name is `NN-short-english-name.md` (e.g. `07-results.md`). The number is the reading order. The English version (`NN-name.md`) is the source, and the Korean version (`NN-name.ko.md`) is written in the same commit (`tests/test_docs_i18n.py` compares their structure).
+1. The file name is `NN-short-english-name.md` (e.g. `08-results.md`). The number is the reading order. The English version (`NN-name.md`) is the source, and the Korean version (`NN-name.ko.md`) is written in the same commit (`tests/test_docs_i18n.py` compares their structure).
 2. In the front matter at the top, write `title` (the chapter title), `audience` and `reviewed` (the date its content was last checked).
 3. Add a line under `nav` → `Guide for researchers` in `mkdocs.yml` (with the English file name). The tests stop a chapter missing from the table of contents (`tests/test_guide.py`).
 4. Pictures go in `docs/guide/img/`. A picture that can be made from example data is added to `scripts/make_guide_images.py`, so the script makes it again.

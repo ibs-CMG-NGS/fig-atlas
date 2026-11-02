@@ -48,7 +48,7 @@ A component that draws the bundle's kind of figure (`plot_type`) must already ex
 Case B covers this much.
 
 - **It works when:** the bundle passes its contract, a renderer exists for its `plot_type`, and the panels form an equal grid of at most three per row. Set the layout with `figures:` `columns` (chapter 6).
-- **It needs a script when:** the layout nests panels of different sizes (assembling a paper figure, [chapter 11](11-lifecycle.md)), the panel prints a value that must be computed such as a test or a fit ([chapter 9](09-integrity.md)), or the kind of figure does not exist yet (Case A·C below).
+- **It needs a script when:** the layout nests panels of different sizes (assembling a paper figure, [chapter 12](12-lifecycle.md)), the panel prints a value that must be computed such as a test or a fit ([chapter 10](10-integrity.md)), or the kind of figure does not exist yet (Case A·C below).
 
 ## Case A: when you have plotting code you wrote
 
