@@ -169,6 +169,30 @@ plot_params:
   error: sd
 ```
 
+## `plot_type: roc_curve` — ROC 곡선 (AUC와 그 신뢰구간)
+
+표지자마다 ROC 곡선 하나, 우연 대각선, 범례에 각 곡선의 AUC와 신뢰구간을 그립니다(`render_roc_curve`). 곡선과 숫자는 분석 스크립트가 만듭니다([분석 레시피](../howto/analysis_recipes.md) 5절).
+
+| 역할 (plot_params 키) | 기본 열 이름 | 필수 | 내용 |
+|---|---|---|---|
+| `fpr_col` | `fpr` | 예 | 곡선 점마다의 위양성률(1 − 특이도), 0에서 1 |
+| `tpr_col` | `tpr` | 예 | 곡선 점마다의 진양성률(민감도) |
+| `group_col` | — | 아니오 | 곡선 점이 속한 표지자(분류기): 표지자마다 곡선 하나 |
+| `auc_col`, `auc_low_col`, `auc_high_col` | — | 아니오 | 곡선마다의 AUC와 신뢰구간(bootstrap 또는 DeLong), 그 곡선의 행에 반복 |
+| `operating_point_col` | — | 아니오 | 표시할 점에서 참(분석이 고른 기준점, 예: Youden) |
+
+열을 적으면 그 열이 있어야 합니다.
+
+```yaml
+plot_type: roc_curve
+plot_params:
+  group_col: marker
+  auc_col: auc
+  auc_low_col: auc_ci_low
+  auc_high_col: auc_ci_high
+  operating_point_col: youden
+```
+
 ## 검사
 
 `fa bundle check <번들>`이 오류로 보고하는 것:

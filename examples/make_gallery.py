@@ -399,6 +399,39 @@ def column_scatter(rng):
     return pd.DataFrame([{"treatment": t, "mouse": i, "il6_pg_ml": round(float(x), 1), "p_vs_vehicle": p[t]}
                          for t, v in il6.items() for i, x in enumerate(v, start=1)])
 
+
+def roc_curve(rng):
+    """Two blood markers for a disease, 60 cases and 60 controls. The curves, the
+    AUC (Mann-Whitney), its 95% bootstrap interval (1000 resamples) and the Youden
+    point are computed here, as an analysis script would
+    (docs/howto/analysis_recipes.md, section 5); the renderer only draws them."""
+    from scipy.stats import rankdata
+    labels = np.r_[np.ones(60), np.zeros(60)]
+
+    def auc(y, s):
+        r = rankdata(s)
+        n1 = y.sum()
+        return (r[y == 1].sum() - n1 * (n1 + 1) / 2) / (n1 * (len(y) - n1))
+
+    rows = []
+    for marker, shift in (("marker A", 1.4), ("marker B", 0.6)):
+        score = np.r_[rng.normal(shift, 1, 60), rng.normal(0, 1, 60)]
+        order = np.argsort(-score, kind="stable")
+        y = labels[order]
+        tpr = np.r_[0.0, np.cumsum(y) / y.sum()]
+        fpr = np.r_[0.0, np.cumsum(1 - y) / (1 - y).sum()]
+        boot = []
+        for _ in range(1000):
+            k = np.r_[rng.integers(0, 60, 60), 60 + rng.integers(0, 60, 60)]
+            boot.append(auc(labels[k], score[k]))
+        lo, hi = np.percentile(boot, [2.5, 97.5])
+        best = int(np.argmax(tpr - fpr))
+        rows += [{"marker": marker, "fpr": round(float(f), 4), "tpr": round(float(t), 4),
+                  "auc": round(float(auc(labels, score)), 4), "auc_ci_low": round(float(lo), 4),
+                  "auc_ci_high": round(float(hi), 4), "youden": i == best}
+                 for i, (f, t) in enumerate(zip(fpr, tpr))]
+    return pd.DataFrame(rows)
+
 HEAD = "# Gallery example (examples/make_gallery.py): synthetic data, not measurements.\n"
 META = {
     "line_band": HEAD + """# inputs/data.csv: one row per replicate measurement -- strain (line), hour (x), od600 (y).
@@ -792,6 +825,20 @@ plot_params:
   error: sd                     # sem, ci95, or iqr with summary: median -- say which in the legend
   labels_ylabel: "Plasma IL-6 (pg/mL)"
 """,
+    "roc_curve": HEAD + """# inputs/data.csv: one row per curve point -- marker (group), fpr, tpr -- and each marker's AUC with its
+# 95% bootstrap interval (auc, auc_ci_low, auc_ci_high) and the Youden point (youden), all computed when
+# the data were made. The renderer draws them; it ranks nothing. With your data: keep these columns, or
+# name yours below.
+plot_type: roc_curve
+plot_params:
+  group_col: marker
+  group_colors: {"marker A": "#dc2626", "marker B": "#2563eb"}
+  auc_col: auc
+  auc_low_col: auc_ci_low       # 95% bootstrap interval -- say so in the legend
+  auc_high_col: auc_ci_high
+  operating_point_col: youden
+  legend_loc: "lower right"
+""",
 }
 
 
@@ -810,7 +857,7 @@ def main() -> None:
               # plot catalog (plans/PLAN_PLOT_CATALOG.md), appended in card order
               "paired_plot": paired_plot, "grouped_bar": grouped_bar,
               "correlation_scatter": correlation_scatter, "raincloud": raincloud,
-              "column_scatter": column_scatter}
+              "column_scatter": column_scatter, "roc_curve": roc_curve}
     for name, make in makers.items():
         _write(name, make(rng), META[name])
     # The images get their own random stream, so adding a table example never changes their pixels.

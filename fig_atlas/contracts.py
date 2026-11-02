@@ -143,6 +143,11 @@ CORE_CONTRACTS = [
              role_columns=(("category_col", "group"), ("value_col", "value")),
              role_optional=("pvalue_col",), doc="docs/contracts/table_bundle_contract.md",
              title="Columns of points: one row per value (category, value), optional P value against a control category"),
+    Contract("core.roc_curve", ("roc_curve",),
+             role_columns=(("fpr_col", "fpr"), ("tpr_col", "tpr")),
+             role_optional=("group_col", "auc_col", "auc_low_col", "auc_high_col", "operating_point_col"),
+             doc="docs/contracts/table_bundle_contract.md",
+             title="ROC: one row per curve point (fpr, tpr), optional marker, AUC and its interval from the analysis"),
 ]
 CORE_INGEST = {
     "venn": "fig_atlas.renderers:render_venn",
@@ -166,6 +171,7 @@ CORE_INGEST = {
     "correlation_scatter": "fig_atlas.renderers:render_correlation_scatter",
     "raincloud": "fig_atlas.renderers:render_raincloud",
     "column_scatter": "fig_atlas.renderers:render_column_scatter",
+    "roc_curve": "fig_atlas.renderers:render_roc_curve",
 }
 
 

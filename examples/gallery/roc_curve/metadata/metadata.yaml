@@ -1,0 +1,14 @@
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per curve point -- marker (group), fpr, tpr -- and each marker's AUC with its
+# 95% bootstrap interval (auc, auc_ci_low, auc_ci_high) and the Youden point (youden), all computed when
+# the data were made. The renderer draws them; it ranks nothing. With your data: keep these columns, or
+# name yours below.
+plot_type: roc_curve
+plot_params:
+  group_col: marker
+  group_colors: {"marker A": "#dc2626", "marker B": "#2563eb"}
+  auc_col: auc
+  auc_low_col: auc_ci_low       # 95% bootstrap interval -- say so in the legend
+  auc_high_col: auc_ci_high
+  operating_point_col: youden
+  legend_loc: "lower right"

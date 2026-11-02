@@ -48,6 +48,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | [`peak_feature_composition`](#peak_feature_composition) | fig_atlas_omics.renderers | 32 |
 | [`peak_feature_enrichment`](#peak_feature_enrichment) | fig_atlas_omics.renderers | 32 |
 | [`raincloud`](#raincloud) | core | 55 |
+| [`roc_curve`](#roc_curve) | core | 38 |
 | [`sample_metric_bars`](#sample_metric_bars) | core | 22 |
 | [`segment_array`](#segment_array) | fig_atlas_omics.renderers | 68 |
 | [`signed_heatmap`](#signed_heatmap) | core | 34 |
@@ -1790,6 +1791,51 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `title_size` | number | `8.0` | pt | Panel title size |
 | `axes_label_size` | number | auto | pt | Axis title size (default: rcParams) |
 | `tick_label_size` | number | auto | pt | Tick label size (default: rcParams) |
+| `hide_top_right` | true / false | `True` |  | Hide the top and right axis lines |
+
+## roc_curve
+
+`fig_atlas.renderers:render_roc_curve`
+
+| Key | Type | Default | Unit | What it does |
+|---|---|---|---|---|
+| `group_col` | text | auto |  | Column splitting the data into coloured groups (default: one group) |
+| `group_order` | list | auto |  | Group order in drawing and legend (default: order in the data) |
+| `group_colors` | mapping | `{}` | hex color | Colour per group (default: matplotlib colour cycle) |
+| `group_labels` | mapping | `{}` |  | Legend label per group (default: the group value) |
+| `color` | colour | `#4b5563` | hex color | Colour when there is no group_col |
+| `labels_title` | text | auto |  | Panel title (none: no title) |
+| `labels_xlabel` | text | computed |  | x-axis title (default: the x column's name) |
+| `labels_ylabel` | text | computed |  | y-axis title (default: the y column's name) |
+| `title_size` | number | `8.0` | pt | Panel title size |
+| `title_pad` | number | auto | pt | Gap between panel title and plot |
+| `axes_label_size` | number | auto | pt | Axis title size (default: rcParams) |
+| `tick_label_size` | number | auto | pt | Tick label size (default: rcParams) |
+| `show_legend` | true / false | `True` |  | Show the group legend (only with a group_col) |
+| `legend_loc` | text | `best` |  | Legend location (matplotlib loc) |
+| `legend_fontsize` | number | auto | pt | Legend font size (none: tick_label_size) |
+| `legend_frameon` | true / false | `False` |  | Draw a frame around the legend |
+| `fpr_col` | text | `fpr` |  | Column with the false positive rate (1 - specificity) of each curve point |
+| `tpr_col` | text | `tpr` |  | Column with the true positive rate (sensitivity) of each curve point |
+| `auc_col` | text | auto |  | Column with each curve's AUC, from the analysis (default: no AUC in the legend) |
+| `auc_low_col` | text | auto |  | Column with the lower end of the AUC's confidence interval |
+| `auc_high_col` | text | auto |  | Column with the upper end of the AUC's confidence interval |
+| `operating_point_col` | text | auto |  | Column that is true on the curve point to mark (a threshold the analysis picked) |
+| `line_width` | number | `1.2` | pt | Curve width |
+| `line_style` | text | `-` |  | Curve style (matplotlib linestyle) |
+| `show_chance` | true / false | `True` |  | Draw the diagonal of a classifier no better than chance |
+| `chance_color` | colour | `#9ca3af` | hex color | Chance line colour |
+| `chance_width` | number | `0.7` | pt | Chance line width |
+| `chance_style` | text | `--` |  | Chance line style (matplotlib linestyle) |
+| `point_size` | number | `18.0` | pt^2 (marker area) | Operating point size |
+| `point_marker` | text | `o` |  | Operating point marker (matplotlib marker) |
+| `point_edge_color` | colour | `#ffffff` | hex color | Operating point outline colour |
+| `point_edge_width` | number | `0.6` | pt | Operating point outline width |
+| `legend_format` | text | `{label} (AUC {auc:.2f}, {low:.2f}–{high:.2f})` |  | Legend entry of a curve with an AUC and its interval; fields label, auc, low, high |
+| `legend_format_no_ci` | text | `{label} (AUC {auc:.2f})` |  | Legend entry of a curve with an AUC but no interval; fields label, auc |
+| `as_percent` | true / false | `False` |  | Show the rates as percentages (0-100) instead of fractions (0-1) |
+| `axis_pad` | number | `0.02` | fraction of the axis | Room beyond 0 and 1 so the curve's ends stay visible |
+| `square` | true / false | `True` |  | Draw the axes as a square (equal aspect) |
 | `hide_top_right` | true / false | `True` |  | Hide the top and right axis lines |
 
 ## sample_metric_bars

@@ -61,6 +61,9 @@ of one manuscript before being published as a package. This first public tree co
 - **PC-05 `column_scatter`** (column): the values of each category as points -- swarm (no overlap),
   jitter or aligned -- with a mean or median line and SD, SEM, 95% CI or IQR error bars, and brackets
   against `control_category` from `pvalue_col`.
+- **PC-06 `roc_curve`** (diagnostic): one ROC curve per marker from fpr/tpr columns, the chance line,
+  each curve's AUC and its interval in the legend (`auc_col`, `auc_low_col`, `auc_high_col`) and an
+  operating point the analysis picked (`operating_point_col`).
 - **Documentation**: a guide for researchers, tutorials run as tests (Case A, B and C worked
   examples among them), how-to guides, generated reference pages and a renderer gallery, design
   decision records, a documentation site (MkDocs) in English with a Korean version of every page
