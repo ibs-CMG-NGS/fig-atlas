@@ -466,4 +466,37 @@ in `figures:`. `draw_plots` keeps its semantics (D8). Gate G2 (mosaic) remains t
 decision; the measurement gives no case for it (2 scripts unmatched for a partial span; the unequal
 grids need `ratios`).
 
-**Findings of L-14.** (written by the spike)
+**Findings of L-14 (2026-11-02).** Script: `plans/spikes/L-14_compose.py` (matplotlib 3.10.9). Two
+figures from the measured shapes, drawn with the gallery bundles: a `stack` whose middle cell holds a
+`row` of three panels (the GO scripts' shape) and a `row` whose right cell holds a `stack` (the
+`gs[:, 0]` shape).
+
+1. **A layout called on a cell works unchanged.** The layout functions only call `add_gridspec` and
+   `add_subfigure`, which a SubFigure has; the inner cells lie inside the container's cell, and the
+   gaps (`wspace`, `hspace`) are fractions of the inner cells, as at the top level.
+2. **`finish` needs the levels flattened, nothing else.** A container cell has no axes of its own, so
+   `finish` on the outer layout alone would skip it. Splicing the inner layout into the outer one
+   before `finish` is enough: the container's letter is replaced, in its outer column and row, by the
+   inner layout's first column and first row; the inner layout's other columns and rows join as groups
+   of their own. `fit_in_cells` and `place_panel_tags` measure in display coordinates and handle a
+   SubFigure inside a SubFigure without change.
+3. **The tags come out right.** In the stack of rows, `a`, `b` and `e` share one plumb line and `b`,
+   `c`, `d` one baseline; in the row with a stack, `a` and `b` share a baseline and `b`, `c` a plumb
+   line. Both figures pass preflight with no error or warning.
+4. **Letters.** The container keeps its letter and the inner layout starts with it
+   (`stack(fig, ("a", "b", "e"))`, then `row(cells["b"], ("b", "c", "d"))`), so the figure reads
+   a-e. L-15 should require this and reject a letter used twice across the levels.
+5. **Telling `finish` about the inner layout.** Either the user passes it (`finish(..., inner={"b":
+   row_b})`, one more argument) or a layout called on a cell registers itself on that cell and
+   `finish` walks the cells. The second keeps user code at one line per split cell and is recommended.
+6. **Values.** The spike passed the same `figures:` block to both levels, so two `row`s in different
+   cells would share `figures.row.width_ratios`. For values under the cell's letter, the outer layout
+   marks each cell with its letter and an inner layout reads `figures.cells.<letter>` over the rest of
+   `figures:`; the call stays `row(cell, fcfg, letters)`.
+7. **Depth.** A cell can tell whether it is already inside a cell (the registration of 5), so a third
+   level can raise with a clear message.
+
+**Recommendation for G5: build (L-15).** Nothing in the spike asks for a change to the five layout
+functions beyond registering themselves; the work is in `_core.py` (registration, cell letters and
+values, splicing in `finish`, the depth check), tests for the two shapes above and a three-level
+error, one example and the docs. Estimate unchanged: 2.0 agent-days.
