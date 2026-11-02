@@ -25,7 +25,7 @@ reviewed: 2026-11-02
 
 | 레이아웃 | 모양 | 쓰는 곳 |
 |---|---|---|
-| `grid` | 같은 크기의 행과 열, 왼쪽에서 오른쪽으로 채움 | 무게가 같은 패널들 (스크립트 없이 그릴 때와 같은 칸) |
+| `grid` | 행과 열, 왼쪽에서 오른쪽으로 채움. 크기를 정하지 않으면 모두 같음 | 무게가 같은 패널들 (스크립트 없이 그릴 때와 같은 칸), 또는 한 열만 넓은 그리드 |
 | `wide_bottom` | 위에 패널 한 줄, 아래에 전체 폭 패널 하나 | 가장 흔한 논문 모양: 위에 세부, 아래에 전체 |
 | `stack` | 한 열, 패널을 위아래로 | 위에서 아래로 읽는 패널, 한 단 폭 그림 |
 | `row` | 한 줄, 나란히 | 왼쪽에서 오른쪽으로 비교하는 띠 |
@@ -67,8 +67,8 @@ figures:
 | 하고 싶은 것 | 바꿀 값 | 위치 |
 |---|---|---|
 | 패널 사이를 벌리거나 좁히기 | `wspace` (좌우), `hspace` (위아래) | `figures:` (`matrix`는 `figures.matrix`) |
-| 한 줄을 더 높게 | `height_ratios` (줄마다 숫자 하나) | `figures.wide_bottom` 또는 `figures.stack` |
-| 한 패널을 더 넓게 | `width_ratios` (패널마다 숫자 하나) | `figures.row` |
+| 한 줄을 더 높게 | `height_ratios` (줄마다 숫자 하나) | `figures.wide_bottom`, `figures.stack`, `figures.grid`, `figures.matrix` |
+| 한 열을 더 넓게 | `width_ratios` (열마다 숫자 하나) | `figures.row`, `figures.grid`, `figures.matrix` |
 | 한 줄의 패널 수 | `columns` | `figures:` (`grid`), `figures.matrix` |
 | 패널 둘레 여백 늘리기 | `panel_pad_mm` | `figures:` |
 | 패널 글자 바꾸기 | `tags.size`, `tags.show` | `figures:` |

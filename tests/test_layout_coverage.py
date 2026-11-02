@@ -29,7 +29,7 @@ CASES = {
     "nested-cell": ("gs = fig.add_gridspec(2, 1)\nsub = fig.add_subfigure(gs[0])\n"
                     "inner = sub.add_gridspec(1, 3)\n", "stack", ""),
     "partial-span": ("gs = fig.add_gridspec(2, 4)\na = fig.add_subplot(gs[0, 0:2])\n", "", "spans"),
-    "unequal-grid": ("gs = fig.add_gridspec(2, 2, width_ratios=[1, 2])\n", "", "unequal cells in a grid"),
+    "unequal-grid": ("gs = fig.add_gridspec(2, 2, width_ratios=[1, 2])\n", "grid", ""),
     "computed-shape": ("gs = fig.add_gridspec(4, ncols)\n", "", "shape computed at run time"),
     "by-hand": ("gs = fig.add_gridspec(1, 2)\nax = fig.add_axes([0.1, 0.1, 0.3, 0.3])\n", "", "manual placement"),
     "two-grids": ("outer = fig.add_gridspec(3, 1)\nover = fig.add_gridspec(1, 1, left=0.1, right=0.5)\n",
@@ -46,7 +46,6 @@ CASES = {
 COMPOSED = {
     "partial-span": ("stack", ""),                    # each row its own band of panels
     "computed-shape": ("stack", ""),
-    "unequal-grid": ("grid", "ratios"),
     "two-grids": ("", ""),                            # laid over by bare numbers: composition does not reach it
     "one-cell-grid": ("", ""),
     "by-hand": ("", ""),

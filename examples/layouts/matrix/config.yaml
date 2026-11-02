@@ -7,6 +7,8 @@ figures:
     columns: 5                # Cells per row
     wspace: 0.06              # Gap between columns, fraction of the mean cell width (small: the panels are small)
     hspace: 0.12              # Gap between rows, fraction of the mean cell height
+    width_ratios: [1.0, 1.0, 1.0, 1.0, 1.0]   # Column widths left to right, one number per column (e.g. a wider heatmap column)
+    height_ratios: [1.0, 1.0]                 # Row heights top to bottom, one number per row
   panel_pad_mm: 1.0           # Margin in mm between a panel's outer edge (labels included) and its cell; raise for more air
   tags:                       # Panel letters on the panels' outer bounding boxes (AGENTS.md 1.5)
     show: true                # Draw the letters

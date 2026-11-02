@@ -52,3 +52,11 @@ def test_finish_places_every_tag(fig, kit):
     kit.draw(lay)
     assert layouts.finish(fig, lay, {})
     assert kit.tags(fig) == sorted("abcdef")
+
+
+def test_ratios_size_the_wall(fig):
+    """A wider first column (a heatmap beside dot plots) keeps the wall's gaps (L-13)."""
+    lay = layouts.matrix(fig, {"matrix": {"width_ratios": [2, 1, 1]}}, "abcdef", columns=3)
+    a, b, c = lay.cells["a"], lay.cells["b"], lay.cells["c"]
+    assert a.bbox.width == pytest.approx(2 * b.bbox.width, rel=1e-6)
+    assert c.bbox.x0 - b.bbox.x1 > 0

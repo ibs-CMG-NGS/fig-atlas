@@ -8,7 +8,7 @@ Each picture is drawn by the layout's example in `examples/layouts/<name>/` (a c
 
 | layout | shape | example | script (lines of code) |
 |---|---|---|---|
-| [grid](#grid) | Equal grid of cells, filled left to right, top to bottom. | `examples/layouts/grid/` | 20 |
+| [grid](#grid) | A grid of cells, filled left to right, top to bottom. | `examples/layouts/grid/` | 20 |
 | [wide_bottom](#wide_bottom) | A row of panels with one full-width panel beneath it. | `examples/layouts/wide_bottom/` | 20 |
 | [stack](#stack) | One column of panels, one above another. | `examples/layouts/stack/` | 20 |
 | [matrix](#matrix) | Many small panels in a dense, even wall. | `examples/layouts/matrix/` | 20 |
@@ -16,7 +16,7 @@ Each picture is drawn by the layout's example in `examples/layouts/<name>/` (a c
 
 ## grid
 
-Equal grid of cells, filled left to right, top to bottom.
+A grid of cells, filled left to right, top to bottom.
 
 ```text
 +---+---+---+
@@ -30,7 +30,7 @@ Equal grid of cells, filled left to right, top to bottom.
 
 ![grid](gallery/layouts/grid.png)
 
-`grid(fig, fcfg: 'dict', letters, columns=None) -> 'Layout'`
+`grid(fig, fcfg: 'dict', letters, columns=None, width_ratios=None, height_ratios=None) -> 'Layout'`
 
 The example (`examples/layouts/grid/`, script 20 lines of code) calls `layouts.grid(fig, fcfg, letters="abcdef")`.
 
@@ -41,13 +41,17 @@ it), so a script can move from `draw_plots` to an explicit layout without the
 figure changing.
 
 Use it for panels of equal weight: a 2x2 of comparisons, a 5x3 wall of small
-multiples. Unequal panels: `wide_bottom` (a strip under a row), `stack`
-(a column), `row` (one band), `matrix` (dense small panels).
+multiples. Rows or columns of different sizes take `width_ratios` /
+`height_ratios`; panels that span cells: `wide_bottom` (a strip under a
+row), `stack` (a column), `row` (one band), `matrix` (dense small panels).
 
 Config (`figures:`) -- copy the keys into the project config with a comment;
 the values in brackets are the defaults:
 
 - `columns` [3, or the panel count when smaller] -- cells per row.
+- `grid.width_ratios` / `grid.height_ratios` [equal] -- one number per
+  column / per row, e.g. `[1.4, 1.0, 1.0]` widens the first column; equal
+  cells are the ones `draw_plots` makes.
 - `wspace` [0] / `hspace` [0] -- gaps between cells, in fractions of the
   mean cell width/height; 0 gives exactly the cells `draw_plots` makes, so
   raise them to separate panels that would otherwise share an edge.
@@ -153,7 +157,7 @@ Many small panels in a dense, even wall.
 
 ![matrix](gallery/layouts/matrix.png)
 
-`matrix(fig, fcfg: 'dict', letters, columns=None) -> 'Layout'`
+`matrix(fig, fcfg: 'dict', letters, columns=None, width_ratios=None, height_ratios=None) -> 'Layout'`
 
 The example (`examples/layouts/matrix/`, script 20 lines of code) calls `layouts.matrix(fig, fcfg, letters="abcdefghij")`.
 
@@ -174,6 +178,8 @@ values in brackets are the defaults:
   (fractions of the mean cell width/height); smaller than `grid`'s because
   the panels are small.
 - `matrix.columns` [5, or the panel count when smaller] -- cells per row.
+- `matrix.width_ratios` / `matrix.height_ratios` [equal] -- one number per
+  column / per row, e.g. a wider first column for a heatmap beside dot plots.
 - `panel_pad_mm` [1.0] -- padding inside each cell, millimetres; lower it
   (e.g. 0.5) to buy space for more cells.
 - `tags.show` [true], `tags.size` [9.0] (pt), `tags.pad_pt` [2.0] --

@@ -17,7 +17,7 @@ config's ``figures:`` block, with a default. A script reads
 |---------------|--------------------------------------------------|------------------------------------------|
 | `wide_bottom` | n columns on top, one panel spanning below        | the common publication shape             |
 | `stack`       | one column of n rows                              | panels read top to bottom                |
-| `grid`        | equal rows x columns, one panel per cell          | panels of equal weight (same as draw_plots) |
+| `grid`        | rows x columns, one panel per cell (ratios opt.)  | panels of equal weight (same as draw_plots) |
 | `matrix`      | dense rows x columns, tighter gaps                | small multiples, many small panels       |
 | `row`         | one row of n cells                                | one band compared left to right          |
 
