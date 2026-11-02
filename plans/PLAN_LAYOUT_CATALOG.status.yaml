@@ -144,26 +144,26 @@ cards:
     kind: docs
     phase: 3
     priority: P1
-    status: in_review
+    status: done
     depends_on: [L-08, L-09a]
     owner: "claude-code 2026-11-02"
     branch: "layout/L-09b-guide-chapter"
-    commits: ["fig-atlas 8c4d801", "fig-atlas 778bae6"]
-    version: null
-    review: null
+    commits: ["fig-atlas 8c4d801", "fig-atlas 778bae6", "PR #28 (merge 04d2d57)"]
+    version: "0.2.0.dev1"
+    review: "merged 2026-11-02 (user), PR #28; main CI 41415785339 success, Documentation site 41415785381 success"
     notes: "docs/guide/07-layouts.{md,ko.md}; cross-links from 06-config and 12-lifecycle; mkdocs.yml nav entry. Delivered (2026-11-02): docs/guide/07-layouts.{md,ko.md} (two ways to arrange panels, the five shapes, asking the AI, the figures: values, what a layout leaves alone; shows the wide_bottom picture of the layout catalog and links to it); nav after chapter 6; chapter 6 (values table + next link), 12 (promotion) and 8 (previous link) link to it. Found and fixed: L-09a left the page headings of 08-14 one number behind (\"# 7. Checking the results\"); tests/test_guide.py now compares file name, title and heading in both languages (commit 8c4d801, outside the card's files)."
   - id: L-10
     title: "coverage measurement + reported table"
     kind: tooling
     phase: 3
     priority: P2
-    status: in_review
+    status: done
     depends_on: [L-03, L-04, L-05, L-06, L-07]
     owner: "claude-code 2026-11-02"
     branch: "layout/L-10-coverage"
-    commits: ["fig-atlas d4af3cb"]
-    version: null
-    review: null
+    commits: ["fig-atlas d4af3cb", "PR #30 (merge db618ac)"]
+    version: "0.2.0.dev1"
+    review: "merged 2026-11-02 (user), PR #30; main CI 41428101285 success, Documentation site 41428101257 success"
     notes: "scripts/layout_coverage.py: project, level, grid, spans, nested, manual, matched_layout, loc_before, loc_after; reruns the plan section 1 numbers. Delivered (2026-11-02): scripts/layout_coverage.py (ast, no execution; only *_analysis.py are projects; columns of the card plus ratios, draw_plots, placement, reason, composed_layout, composed_needs); tests/test_layout_coverage.py (one synthetic script per rule). cmg-figures, 83 scripts: 20 drawn by a layout today (stack 7, grid 5, wide_bottom 4, row 4; median layout code 9 -> 5.5 lines), 37 with a layout inside a cell of another (composition), 57 adding ratios on grid/matrix (13), an align helper (6) and an overlay helper (2); not reached: 15 drawn by a helper module or on the canvas, 11 with a second grid placed by bare numbers. Plan sections 1 and 6 carry these numbers. The CSV names private projects, so it is not committed here. Gate G2: 2 scripts are unmatched for a partial span and the 13 unequal grids need ratios, not a mosaic -- the measurement gives no case for a mosaic in draw_plots. Next (user decision): composition in finish, ratios on grid/matrix, then align/overlay helpers -- new cards, not new layouts."
   - id: L-11
     title: "method-paper inputs (coverage table, thumbnails, LOC deltas)"
