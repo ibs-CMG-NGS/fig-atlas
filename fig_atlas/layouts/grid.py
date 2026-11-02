@@ -39,7 +39,7 @@ from __future__ import annotations
 
 import math
 
-from ._core import Layout, _block, _check_letters, _grid
+from ._core import Layout, _begin, _block, _grid, _register
 
 
 def _ratios(name: str, key: str, given, block: dict, count: int, what: str):
@@ -63,7 +63,7 @@ def grid(fig, fcfg: dict, letters, columns=None, width_ratios=None, height_ratio
     Draw each panel into ``layout.cells[letter]``, then call
     ``layouts.finish(fig, layout, fcfg)``.
     """
-    letters = _check_letters(letters)
+    letters, fcfg = _begin(fig, fcfg, letters)
     n = len(letters)
     cols = int(columns if columns is not None else (fcfg or {}).get("columns") or min(n, 3))
     if cols < 1:
@@ -76,5 +76,5 @@ def grid(fig, fcfg: dict, letters, columns=None, width_ratios=None, height_ratio
     cells = {letter: fig.add_subfigure(gs.at(i // cols, i % cols)) for i, letter in enumerate(letters)}
     tag_columns = [[l for i, l in enumerate(letters) if i % cols == c] for c in range(cols)]
     tag_rows = [[l for i, l in enumerate(letters) if i // cols == r] for r in range(rows)]
-    return Layout(cells, [g for g in tag_columns if g], [g for g in tag_rows if g],
-                  f"{rows}x{cols} {'equal grid' if widths is None and heights is None else 'grid'}")
+    return _register(fig, Layout(cells, [g for g in tag_columns if g], [g for g in tag_rows if g],
+                                  f"{rows}x{cols} {'equal grid' if widths is None and heights is None else 'grid'}"))

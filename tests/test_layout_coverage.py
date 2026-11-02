@@ -28,9 +28,9 @@ CASES = {
     "wall": ("gs = fig.add_gridspec(3, 5)\nax = fig.add_subplot(gs[0, 0])\n", "matrix", ""),
     "nested-cell": ("gs = fig.add_gridspec(2, 1)\nsub = fig.add_subfigure(gs[0])\n"
                     "inner = sub.add_gridspec(1, 3)\n", "stack", ""),
-    "partial-span": ("gs = fig.add_gridspec(2, 4)\na = fig.add_subplot(gs[0, 0:2])\n", "", "spans"),
+    "partial-span": ("gs = fig.add_gridspec(2, 4)\na = fig.add_subplot(gs[0, 0:2])\n", "stack", ""),
     "unequal-grid": ("gs = fig.add_gridspec(2, 2, width_ratios=[1, 2])\n", "grid", ""),
-    "computed-shape": ("gs = fig.add_gridspec(4, ncols)\n", "", "shape computed at run time"),
+    "computed-shape": ("gs = fig.add_gridspec(4, ncols)\n", "stack", ""),
     "by-hand": ("gs = fig.add_gridspec(1, 2)\nax = fig.add_axes([0.1, 0.1, 0.3, 0.3])\n", "", "manual placement"),
     "two-grids": ("outer = fig.add_gridspec(3, 1)\nover = fig.add_gridspec(1, 1, left=0.1, right=0.5)\n",
                   "", "several grids placed on the canvas"),
@@ -87,6 +87,11 @@ def test_each_arrangement_gets_its_layout_or_a_reason(repo):
         assert (rows[name].composed_layout, rows[name].composed_needs) == composed, name
     assert rows["band-row"].placement == "band" and rows["with-legend"].placement == "overlay"
     assert rows["aligned-in-cell"].placement == "" and rows["by-hand"].placement == "coordinates"
+    # matched through composition (L-15); a helper still missing leaves a script unmatched
+    matched = {name: (rows[name].matched_layout, rows[name].composed) for name in EXTRA}
+    assert matched == {"tall-left": ("row", 1), "band-row": ("stack", 1),
+                       "with-legend": ("", 0), "aligned-across": ("", 0)}
+    assert rows["partial-span"].composed == 1 and rows["equal-grid"].composed == 0
 
 
 def test_flags_and_lines(repo):
@@ -105,4 +110,4 @@ def test_command_writes_the_table(repo, tmp_path, capsys):
     assert len(table) == len(CASES) + len(EXTRA)
     assert list(table[0])[:2] == ["project", "level"] and "matched_layout" in table[0] and "loc_after" in table[0]
     printed = capsys.readouterr().out
-    assert "| wide_bottom | 1 |" in printed and "median lines" in printed and "+ composition" in printed
+    assert "| wide_bottom | 1 |" in printed and "median lines" in printed and "with composition" in printed

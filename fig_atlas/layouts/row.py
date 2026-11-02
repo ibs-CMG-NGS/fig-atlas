@@ -27,7 +27,7 @@ Adapt by editing those keys, not this file.
 """
 from __future__ import annotations
 
-from ._core import Layout, _block, _check_letters, _grid
+from ._core import Layout, _begin, _block, _grid, _register
 
 
 def row(fig, fcfg: dict, letters, width_ratios=None) -> Layout:
@@ -37,7 +37,7 @@ def row(fig, fcfg: dict, letters, width_ratios=None) -> Layout:
     cells. Draw each panel into ``layout.cells[letter]``, then call
     ``layouts.finish(fig, layout, fcfg)``.
     """
-    letters = _check_letters(letters)
+    letters, fcfg = _begin(fig, fcfg, letters)
     ratios = width_ratios if width_ratios is not None else _block(fcfg, "row").get("width_ratios")
     if ratios is not None:
         ratios = list(ratios)
@@ -46,5 +46,5 @@ def row(fig, fcfg: dict, letters, width_ratios=None) -> Layout:
                              f"not {len(ratios)}")
     gs = _grid(fig, fcfg, 1, len(letters), width_ratios=ratios)
     cells = {letter: fig.add_subfigure(gs.at(0, i)) for i, letter in enumerate(letters)}
-    return Layout(cells, [[letter] for letter in letters], [list(letters)],
-                  f"1x{len(letters)} row")
+    return _register(fig, Layout(cells, [[letter] for letter in letters], [list(letters)],
+                                  f"1x{len(letters)} row"))

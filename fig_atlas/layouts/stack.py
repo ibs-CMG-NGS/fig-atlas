@@ -30,7 +30,7 @@ Adapt by editing those keys, not this file.
 """
 from __future__ import annotations
 
-from ._core import Layout, _block, _check_letters, _grid
+from ._core import Layout, _begin, _block, _grid, _register
 
 
 def stack(fig, fcfg: dict, letters, height_ratios=None) -> Layout:
@@ -40,7 +40,7 @@ def stack(fig, fcfg: dict, letters, height_ratios=None) -> Layout:
     sizes the rows. Draw each panel into ``layout.cells[letter]``, then call
     ``layouts.finish(fig, layout, fcfg)``.
     """
-    letters = _check_letters(letters)
+    letters, fcfg = _begin(fig, fcfg, letters)
     ratios = height_ratios if height_ratios is not None else _block(fcfg, "stack").get("height_ratios")
     if ratios is not None:
         ratios = list(ratios)
@@ -49,5 +49,5 @@ def stack(fig, fcfg: dict, letters, height_ratios=None) -> Layout:
                              f"not {len(ratios)}")
     gs = _grid(fig, fcfg, len(letters), 1, height_ratios=ratios)
     cells = {letter: fig.add_subfigure(gs.at(i, 0)) for i, letter in enumerate(letters)}
-    return Layout(cells, [list(letters)], [[letter] for letter in letters],
-                  f"{len(letters)} stacked rows")
+    return _register(fig, Layout(cells, [list(letters)], [[letter] for letter in letters],
+                                  f"{len(letters)} stacked rows"))
