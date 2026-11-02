@@ -28,9 +28,9 @@ COMPOSED = ["compose"]               # examples of a layout inside a cell of ano
 
 
 def layout_names() -> list[str]:
-    """The public layouts, in the order ``fig_atlas.layouts.__all__`` gives them."""
+    """The public layouts, in the order ``fig_atlas.layouts.LAYOUTS`` gives them."""
     from fig_atlas import layouts
-    return [n for n in layouts.__all__ if n not in ("Layout", "finish")]
+    return list(layouts.LAYOUTS)
 
 
 def load_example(name: str):
@@ -126,7 +126,7 @@ def _composition_section() -> str:
     from fig_atlas.layouts import _core
     script = EXAMPLES / "compose" / "script.py"
     text = script.read_text(encoding="utf-8")
-    calls = re.findall(r"^\s*((?:lay|inner) = layouts\.\w+\([^\n]*\))", text, re.M)
+    calls = re.findall(r"^\s*((?:\w+ = )?layouts\.(?!finish)\w+\([^\n]*\))", text, re.M)
     rules = _md(_core.__doc__.split("Composition:", 1)[1].strip().split("\n\n")[-1])   # the paragraph after the code
     return ("## Composition\n\n"
             "A layout can be called on a cell of another layout to split that cell, so a shape not in the "

@@ -60,6 +60,39 @@ def bundle_data(bundle: Path, shape: tuple[str, str]):
     return pd.read_csv(bundle / "inputs" / "data.csv")
 
 
+def draw_plot(cell, name: str, block: dict, root: Path, load=None) -> list:
+    """Draw one ``plots.<name>`` block into ``cell`` (a subfigure, e.g. a cell
+    of a layout); returns the axes it drew. The block's ``renderer`` draws it;
+    its ``bundle`` gives the data, or ``load(name, block)`` when it has none.
+    With a layout (fig_atlas.layouts), call it per letter, then
+    ``layouts.finish``:
+
+        lay = layouts.wide_bottom(fig, fcfg, top=("a", "b"), bottom="c")
+        for letter, name in {"a": "dose_response", "b": "screen_hits", "c": "levels"}.items():
+            draw_plot(lay.cells[letter], name, CFG["plots"][name], CONFIG.project_root, load=load)
+        layouts.finish(fig, lay, fcfg)
+    """
+    block = dict(block)
+    if not block.get("renderer"):
+        raise ValueError(f"plots.{name} names no renderer")
+    fn = resolve(block.pop("renderer"))
+    bundle = block.pop("bundle", None)
+    shape = call_shape(fn)
+    if shape not in DRAWABLE:
+        raise ValueError(f"plots.{name}: {fn.__name__} takes {shape}; draw it in the analysis script")
+    if bundle:
+        data = bundle_data(Path(root) / bundle, shape)
+    elif load is not None:
+        data = load(name, block)
+    else:
+        raise ValueError(f"plots.{name} has no bundle and the script gives no load()")
+    if shape[0] in FIGURE_ARGS:
+        fn(cell, data, block)                     # lays out its own axes inside the cell
+    else:
+        fn(cell.add_subplot(1, 1, 1), data, block)
+    return list(cell.axes)                        # with any colourbar it added (fig.colorbar(ax=ax))
+
+
 def draw_plots(fig, plots: dict, root: Path, layout: dict | None = None, load=None) -> list:
     """Draw every ``plots:`` block that names a renderer; returns the
     ``place_panel_tags`` columns ([(letter, axes), ...] per grid column).
@@ -80,30 +113,12 @@ def draw_plots(fig, plots: dict, root: Path, layout: dict | None = None, load=No
     columns: dict[int, list] = {}
     fitted: list = []                                             # (subfigure, axes) to fit in their cells
     for i, name in enumerate(names):
-        block = dict(plots[name])
-        fn = resolve(block.pop("renderer"))
-        bundle = block.pop("bundle", None)
-        shape = call_shape(fn)
-        if shape not in DRAWABLE:
-            raise ValueError(f"plots.{name}: {fn.__name__} takes {shape}; draw it in the analysis script")
-        if bundle:
-            data = bundle_data(root / bundle, shape)
-        elif load is not None:
-            data = load(name, block)
-        else:
-            raise ValueError(f"plots.{name} has no bundle and the script gives no load()")
         # Every panel gets its own subfigure: renderers that place their axes
         # relative to "the figure" (to fit long labels, colourbars) then stay
         # inside their own cell instead of spreading over the whole figure.
         sf = fig.add_subfigure(gs[i // cols, i % cols])
-        if shape[0] in FIGURE_ARGS:
-            fn(sf, data, block)                   # lays out its own axes inside the subfigure
-            fitted.append((sf, list(sf.axes)))    # ...then all of them are fitted into the cell together
-        else:
-            ax = sf.add_subplot(1, 1, 1)
-            fn(ax, data, block)
-            fitted.append((sf, list(sf.axes)))    # with any colourbar it added (fig.colorbar(ax=ax)): moved together
-        axes = list(sf.axes)
+        axes = draw_plot(sf, name, plots[name], root, load=load)
+        fitted.append((sf, axes))                 # all of a panel's axes (and colourbars) fitted together
         columns.setdefault(i % cols, []).append((string.ascii_lowercase[i], axes))
     tags = layout.get("tags", {}) or {}
     top_pt = float(tags.get("size", 9.0)) + float(tags.get("pad_pt", 2.0)) if tags.get("show", True) else 0.0

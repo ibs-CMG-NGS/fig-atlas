@@ -37,7 +37,7 @@ import math
 import string
 from dataclasses import dataclass
 
-__all__ = ["Layout", "finish", "_grid", "_check_letters", "_block", "_begin", "_register"]
+__all__ = ["Layout", "finish", "panel_cells", "_grid", "_check_letters", "_block", "_begin", "_register"]
 
 MAX_DEPTH = 2                        # a layout in a cell of another, no deeper (plan section 16)
 ALIGN_MM = 0.5                       # inner columns/rows of sibling cells closer than this share tag lines
@@ -167,6 +167,13 @@ def _splice(layout: "Layout") -> "Layout":
     shape = layout.shape + "; " + ", ".join(f"cell {l}: {lay.shape}" for l, lay in inner.items())
     return Layout(cells, splice(layout.columns, lambda lay: lay.columns, lambda b: b.x0),
                   splice(layout.rows, lambda lay: lay.rows, lambda b: b.y1), shape)
+
+
+def panel_cells(layout: "Layout") -> dict:
+    """Every panel's cell by letter, including the cells of layouts drawn inside
+    a cell (composition) -- draw each panel into ``panel_cells(lay)[letter]``.
+    Call it after splitting the cells; a split cell itself is not a panel."""
+    return dict(_splice(layout).cells)
 
 
 def _block(fcfg: dict, name: str) -> dict:

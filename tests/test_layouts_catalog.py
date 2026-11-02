@@ -32,7 +32,8 @@ def _keys(block: dict, prefix: str = "") -> set[str]:
 
 
 def test_every_public_layout_is_listed():
-    assert NAMES == [n for n in layouts.__all__ if n not in ("Layout", "finish")]
+    assert NAMES == list(layouts.LAYOUTS)
+    assert set(layouts.__all__) == {"Layout", "finish", "panel_cells", *layouts.LAYOUTS}
 
 
 @pytest.mark.parametrize("entry", INFO["layouts"], ids=NAMES)

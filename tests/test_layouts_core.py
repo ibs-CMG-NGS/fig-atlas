@@ -194,3 +194,24 @@ def test_ratios_need_one_number_per_row_or_column(name):
     with pytest.raises(ValueError, match=r"one number per row \(2\)"):
         getattr(layouts, name)(fig, {name: {"height_ratios": [1]}}, "abcd", columns=2)
     plt.close(fig)
+
+
+def test_draw_plot_draws_one_block_into_a_layout_cell():
+    """draw_plot (what draw_plots does per panel) into a layout's cell: the data
+    from load() when the block has no bundle, the axes inside the cell."""
+    import pandas as pd
+    fig = plt.figure(figsize=(6, 3))
+    lay = layouts.row(fig, {}, "ab")
+    block = {"renderer": "fig_atlas.renderers:render_line_band", "x_col": "x", "y_col": "y"}
+    loaded = []
+
+    def load(name, blk):
+        loaded.append(name)
+        return pd.DataFrame({"x": [0, 1, 2, 0, 1, 2], "y": [1.0, 2.0, 3.0, 1.2, 2.1, 2.9]})
+
+    axes = bundle_figure.draw_plot(lay.cells["b"], "curve", block, Path("."), load=load)
+    assert loaded == ["curve"] and axes and all(ax.figure is lay.cells["b"] for ax in axes)
+    assert not list(lay.cells["a"].axes)
+    with pytest.raises(ValueError, match="names no renderer"):
+        bundle_figure.draw_plot(lay.cells["a"], "x", {}, Path("."))
+    plt.close(fig)

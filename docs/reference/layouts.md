@@ -234,7 +234,8 @@ The example (`examples/layouts/compose/`, script 22 lines of code) calls
 
 ```python
 lay = layouts.stack(fig, fcfg, letters=("a", "b", "e"))
-inner = layouts.row(lay.cells["b"], fcfg, letters=("b", "c", "d"))
+layouts.row(lay.cells["b"], fcfg, letters=("b", "c", "d"))
+cells = layouts.panel_cells(lay)
 ```
 
 and `layouts.finish(fig, lay, fcfg)` once, on the outer layout. The inner layout starts with the cell's letter, so the figure reads a, b, c,
