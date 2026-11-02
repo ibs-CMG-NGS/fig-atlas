@@ -196,14 +196,14 @@ cards:
     kind: code
     phase: 5
     priority: P1
-    status: claimed
+    status: in_review
     depends_on: [L-05, L-06]
     owner: "claude-code 2026-11-02"
     branch: "layout/L-13-ratios"
-    commits: []
+    commits: ["fig-atlas 65fba19"]
     version: null
     review: null
-    notes: "grid.py, matrix.py: ratios as arguments and from figures.grid / figures.matrix; equal by default (L-05 parity unchanged); wrong length raises; example configs and the guide's values table carry the keys; 13 measured scripts need it (plan section 1)"
+    notes: "grid.py, matrix.py: ratios as arguments and from figures.grid / figures.matrix; equal by default (L-05 parity unchanged); wrong length raises; example configs and the guide's values table carry the keys; 13 measured scripts need it (plan section 1). Delivered (2026-11-02): grid/matrix take width_ratios / height_ratios (argument, else figures.grid / figures.matrix); a shared _ratios check in grid.py raises with the expected count; tests in test_layouts_core.py (argument, config, argument wins, wrong length) and test_matrix.py; example configs carry the keys at equal values (pictures unchanged); chapter 7 values and shapes tables; layout_coverage.py drops the unequal-cells rule. cmg-figures: drawn by a layout today 20 -> 29 (matrix 6, grid +3), with composition 50, with the helpers 57."
   - id: L-14
     title: "composition spike: a layout in a cell of another; finish across two levels"
     kind: spike
