@@ -123,9 +123,9 @@ def render_roc_curve(ax, df, params):
         if params.get("title_pad") is not None:
             kw["pad"] = params.get("title_pad")
         ax.set_title(title, **kw)
-    ax.set_xlabel(text_param(params, "labels_xlabel", f"1 − specificity{pct}"),
+    ax.set_xlabel(text_param(params, "labels_xlabel", f"False positive rate{pct}"),
                   fontsize=params.get("axes_label_size"))
-    ax.set_ylabel(text_param(params, "labels_ylabel", f"Sensitivity{pct}"), fontsize=params.get("axes_label_size"))
+    ax.set_ylabel(text_param(params, "labels_ylabel", f"True positive rate{pct}"), fontsize=params.get("axes_label_size"))
     if params.get("tick_label_size") is not None:
         ax.tick_params(labelsize=params.get("tick_label_size"))
     if params.get("hide_top_right", True):

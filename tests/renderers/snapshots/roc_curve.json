@@ -217,7 +217,7 @@
   },
   {
    "kind": "Text",
-   "text": "1 − specificity",
+   "text": "False positive rate",
    "size": 7.0,
    "weight": "normal",
    "style": "normal",
@@ -226,9 +226,9 @@
    "ha": "center",
    "va": "top",
    "bbox_pt": [
-    63.53,
+    56.7,
     -4.57,
-    113.59,
+    120.42,
     2.2
    ]
   },
@@ -408,7 +408,7 @@
   },
   {
    "kind": "Text",
-   "text": "Sensitivity",
+   "text": "True positive rate",
    "size": 7.0,
    "weight": "normal",
    "style": "normal",
@@ -418,9 +418,9 @@
    "va": "bottom",
    "bbox_pt": [
     -5.28,
-    67.32,
+    55.01,
     1.49,
-    103.76
+    116.06
    ]
   },
   {

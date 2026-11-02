@@ -34,7 +34,7 @@ def test_one_curve_and_the_chance_line_by_default():
         assert len(ax.lines) == 2                                        # chance line + curve
         assert list(ax.lines[0].get_xdata()) == [0, 1]
         assert ax.get_legend() is None
-        assert ax.get_xlabel() == "1 − specificity" and ax.get_ylabel() == "Sensitivity"
+        assert ax.get_xlabel() == "False positive rate" and ax.get_ylabel() == "True positive rate"
         assert ax.get_xlim() == pytest.approx((-0.02, 1.02))
     finally:
         plt.close(fig)
@@ -61,7 +61,7 @@ def test_operating_point_and_percent_axes():
     try:
         pts = [tuple(c.get_offsets()[0]) for c in ax.collections]
         assert pts == [pytest.approx((10, 60)), pytest.approx((60, 70))]
-        assert ax.get_xlim()[1] == pytest.approx(102) and ax.get_ylabel() == "Sensitivity (%)"
+        assert ax.get_xlim()[1] == pytest.approx(102) and ax.get_ylabel() == "True positive rate (%)"
     finally:
         plt.close(fig)
 
