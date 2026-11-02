@@ -117,6 +117,7 @@ nav:
       - guide/04-first-figure.md
       - guide/05-entry-paths.md
       - guide/06-config.md
+      - guide/07-layouts.md
       - guide/08-results.md
       - guide/09-checks.md
       - guide/10-integrity.md

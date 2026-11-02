@@ -4,7 +4,7 @@ audience: researchers (no programming experience needed)
 reviewed: 2026-10-14
 ---
 
-# 7. Checking the results
+# 8. Checking the results
 
 > **Has this ever happened to you?** Uploading figures to a journal, you were asked separately for "Source Data files", "details of statistical tests" and "image processing", and stayed up the night before submission collecting them.
 
@@ -64,4 +64,4 @@ Open the PDF at 100 % and you see the size on paper. The figure is as wide as th
 - The verification table in `outputs/project-name/manifests/` records whether these results were all made (chapter 9).
 
 ---
-Previous: [6. Changing a figure: reading and writing the config](06-config.md) · Next: [9. Reading the check results](09-checks.md)
+Previous: [7. Arranging panels: layouts](07-layouts.md) · Next: [9. Reading the check results](09-checks.md)

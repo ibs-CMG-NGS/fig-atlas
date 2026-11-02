@@ -4,7 +4,7 @@ audience: researchers (no programming experience needed)
 reviewed: 2026-10-14
 ---
 
-# 9. Transparency in numbers, statistics and images
+# 10. Transparency in numbers, statistics and images
 
 > **Has this ever happened to you?**
 > - After a reanalysis the figure showed the new data, but the legend's "n = 1,212" was still the old number.

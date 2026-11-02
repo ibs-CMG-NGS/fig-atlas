@@ -129,6 +129,7 @@ If an edit breaks the build, the error message gives the line number. You can al
 | Criteria (thresholds) | `…_threshold` | the panel block |
 | Figure height | `height_mm` (the width is the A4 text width) | `figures:` |
 | Panels per row | `columns` (0: as many as panels, up to 3) | `figures:` |
+| Another arrangement (one wide panel, one column, many small panels) | a layout: [chapter 7](07-layouts.md) | `figures:` |
 | Space around a panel | `panel_pad_mm` | `figures:` |
 
 ## Words often found in the explanations
@@ -144,4 +145,4 @@ If an edit breaks the build, the error message gives the line number. You can al
 | raise / lower | Increase it / decrease it |
 
 ---
-Previous: [5. Three entry points](05-entry-paths.md) · Next: [8. Checking the results](08-results.md)
+Previous: [5. Three entry points](05-entry-paths.md) · Next: [7. Arranging panels: layouts](07-layouts.md)

@@ -4,7 +4,7 @@ audience: researchers (no programming experience needed)
 reviewed: 2026-10-14
 ---
 
-# 11. Into the paper: a figure's life
+# 12. Into the paper: a figure's life
 
 > **Has this ever happened to you?**
 > - Reorganising the paper, Figure 3 became Figure 4 and the old Figure 4 went to the supplement. Three months later you could not tell which figure the "Figure 3" of the meeting notes was.
@@ -29,6 +29,8 @@ flowchart LR
 💬 **Ask an AI:** "Promote the project lab-acute-1d to paper Figure 2, with the short name acute-comparison." It first shows the files that will move and what will change; once you confirm, it goes ahead.
 
 💬 **Ask an AI:** "Retire the old Figure 4 project."
+
+A paper figure often arranges its panels in a shape of its own: a wide panel below, one column, a wall of small panels. Choose the shape from the layouts of [chapter 7](07-layouts.md); its gaps and ratios stay in the config.
 
 ## The storyline documents
 

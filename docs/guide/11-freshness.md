@@ -4,7 +4,7 @@ audience: researchers (no programming experience needed)
 reviewed: 2026-10-14
 ---
 
-# 10. When the data change: provenance and freshness
+# 11. When the data change: provenance and freshness
 
 > **Has this ever happened to you?** A collaborator wrote "I changed the alignment criteria and sent the result files again". You had to find, one by one, how many figures used those files and which ones to redraw.
 

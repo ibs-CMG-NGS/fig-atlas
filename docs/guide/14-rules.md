@@ -4,7 +4,7 @@ audience: researchers (no programming experience needed)
 reviewed: 2026-10-14
 ---
 
-# 13. The rules on one page
+# 14. The rules on one page
 
 **The key idea:** there seem to be many rules, but they all serve one purpose: **"the figure and its record always agree, so you can show the basis for anything anyone asks"**. The full rules are in [`AGENTS.md`](../../AGENTS.md), and people and AI follow the same ones. The reasons behind the design are in the [design decisions](../decisions/README.md).
 
