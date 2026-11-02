@@ -141,10 +141,10 @@ cards:
     kind: docs
     phase: 3
     priority: P1
-    status: todo
+    status: claimed
     depends_on: [L-08, L-09a]
-    owner: null
-    branch: null
+    owner: "claude-code 2026-11-02"
+    branch: "layout/L-09b-guide-chapter"
     commits: []
     version: null
     review: null
