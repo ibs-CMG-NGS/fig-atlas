@@ -317,6 +317,51 @@ fa ingest bundle raw_data/<project>/paired_plot --project <project>
 fa build <project> --preflight
 ```
 
+#### raincloud
+
+Distributions: one row per value (category, value), optional P value against a control category
+
+![raincloud](gallery/examples/raincloud.png)
+
+`inputs/data.csv`, first 5 of 48 rows (4 columns):
+
+```text
+treatment,mouse,latency_s,p_vs_vehicle
+vehicle,1,23.3,
+vehicle,2,25.7,
+vehicle,3,18.6,
+vehicle,4,23.0,
+vehicle,5,28.3,
+```
+
+Inputs: `data.csv`. `metadata/metadata.yaml`:
+
+```yaml
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per mouse -- treatment (category), latency_s (value), p_vs_vehicle (each
+# dose's Dunnett P against vehicle, computed when the data were made -- the renderer draws it, it runs no
+# test). With your data: keep these columns, or name yours below.
+plot_type: raincloud
+plot_params:
+  category_col: treatment
+  value_col: latency_s
+  pvalue_col: p_vs_vehicle
+  control_category: vehicle
+  category_order: ["vehicle", "low dose", "high dose"]
+  category_colors: {"vehicle": "#9ca3af", "low dose": "#60a5fa", "high dose": "#1d4ed8"}
+  orientation: horizontal       # or vertical
+  labels_xlabel: "Escape latency (s)"
+```
+
+Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
+
+```bash
+cp -r <fig-atlas>/examples/gallery/raincloud raw_data/<project>/
+fa bundle check raw_data/<project>/raincloud
+fa ingest bundle raw_data/<project>/raincloud --project <project>
+fa build <project> --preflight
+```
+
 #### violin
 
 Distribution per category: one row per observation (category, value)
@@ -1279,6 +1324,14 @@ One example per renderer (and per layout where a renderer has more than one), dr
 #### paired_plot_grouped
 
 ![paired_plot_grouped](gallery/paired_plot_grouped.png)
+
+#### raincloud
+
+![raincloud](gallery/raincloud.png)
+
+#### raincloud_vertical
+
+![raincloud_vertical](gallery/raincloud_vertical.png)
 
 #### sample_metric_bars
 

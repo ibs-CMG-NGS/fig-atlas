@@ -135,6 +135,10 @@ CORE_CONTRACTS = [
              role_optional=("group_col", "fit_x_col", "fit_y_col", "band_lower_col", "band_upper_col", "r_col", "p_col"),
              doc="docs/contracts/table_bundle_contract.md",
              title="Two variables: one row per item (x, y), optional fit rows (line, band) and r and P from the analysis"),
+    Contract("core.raincloud", ("raincloud",),
+             role_columns=(("category_col", "group"), ("value_col", "value")),
+             role_optional=("pvalue_col",), doc="docs/contracts/table_bundle_contract.md",
+             title="Distributions: one row per value (category, value), optional P value against a control category"),
 ]
 CORE_INGEST = {
     "venn": "fig_atlas.renderers:render_venn",
@@ -156,6 +160,7 @@ CORE_INGEST = {
     "paired_plot": "fig_atlas.renderers:render_paired_plot",
     "grouped_bar": "fig_atlas.renderers:render_grouped_bar",
     "correlation_scatter": "fig_atlas.renderers:render_correlation_scatter",
+    "raincloud": "fig_atlas.renderers:render_raincloud",
 }
 
 

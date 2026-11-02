@@ -37,6 +37,7 @@ from .multi_group_heatmap import render_multi_group_heatmap
 from .paired_plot import render_paired_plot
 from .panels import align_title_to_labels, panel_label, place_panel_tags
 from .pca import render_pca
+from .raincloud import render_raincloud
 from .sample_metric_bars import render_sample_metric_bars
 from .signed_heatmap import render_signed_heatmap
 from .stacked_bar import render_stacked_bar
@@ -74,6 +75,7 @@ __all__ = [
     "render_paired_dumbbell",
     "render_paired_plot",
     "render_pca",
+    "render_raincloud",
     "render_sample_metric_bars",
     "render_signed_heatmap",
     "render_stacked_bar",

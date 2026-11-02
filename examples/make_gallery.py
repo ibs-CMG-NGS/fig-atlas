@@ -370,6 +370,20 @@ def correlation_scatter(rng):
                  for x, h in zip(grid, half)]
     return pd.concat([pd.DataFrame(rows), pd.DataFrame(fits)], ignore_index=True)
 
+
+def raincloud(rng):
+    """Escape latency of mice in a water maze: vehicle and two doses, 16 mice each
+    (the high dose skews long). Each dose is compared with vehicle by Dunnett's test,
+    as an analysis script would (docs/howto/analysis_recipes.md, section 3); the
+    renderer only draws the p_vs_vehicle column."""
+    from scipy.stats import dunnett
+    lat = {"vehicle": rng.normal(22, 5, 16), "low dose": rng.normal(27, 6, 16),
+           "high dose": 25 + rng.gamma(2.0, 6.0, 16)}
+    res = dunnett(lat["low dose"], lat["high dose"], control=lat["vehicle"], random_state=0)  # seeded integration
+    p = {"vehicle": None, "low dose": float(f"{res.pvalue[0]:.3g}"), "high dose": float(f"{res.pvalue[1]:.3g}")}
+    return pd.DataFrame([{"treatment": t, "mouse": i, "latency_s": round(float(x), 1), "p_vs_vehicle": p[t]}
+                         for t, v in lat.items() for i, x in enumerate(v, start=1)])
+
 HEAD = "# Gallery example (examples/make_gallery.py): synthetic data, not measurements.\n"
 META = {
     "line_band": HEAD + """# inputs/data.csv: one row per replicate measurement -- strain (line), hour (x), od600 (y).
@@ -733,6 +747,20 @@ plot_params:
   labels_xlabel: "Body weight (g)"
   labels_ylabel: "Fat mass (g)"
 """,
+    "raincloud": HEAD + """# inputs/data.csv: one row per mouse -- treatment (category), latency_s (value), p_vs_vehicle (each
+# dose's Dunnett P against vehicle, computed when the data were made -- the renderer draws it, it runs no
+# test). With your data: keep these columns, or name yours below.
+plot_type: raincloud
+plot_params:
+  category_col: treatment
+  value_col: latency_s
+  pvalue_col: p_vs_vehicle
+  control_category: vehicle
+  category_order: ["vehicle", "low dose", "high dose"]
+  category_colors: {"vehicle": "#9ca3af", "low dose": "#60a5fa", "high dose": "#1d4ed8"}
+  orientation: horizontal       # or vertical
+  labels_xlabel: "Escape latency (s)"
+""",
 }
 
 
@@ -750,7 +778,7 @@ def main() -> None:
               "peak_feature_enrichment": peak_feature_enrichment,
               # plot catalog (plans/PLAN_PLOT_CATALOG.md), appended in card order
               "paired_plot": paired_plot, "grouped_bar": grouped_bar,
-              "correlation_scatter": correlation_scatter}
+              "correlation_scatter": correlation_scatter, "raincloud": raincloud}
     for name, make in makers.items():
         _write(name, make(rng), META[name])
     # The images get their own random stream, so adding a table example never changes their pixels.

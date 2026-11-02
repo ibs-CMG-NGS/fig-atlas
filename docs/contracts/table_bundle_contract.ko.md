@@ -128,6 +128,26 @@ plot_params:
   p_col: p_value
 ```
 
+## `plot_type: raincloud` — raincloud (반쪽 violin, 박스, 점)
+
+범주마다 반쪽 violin(구름), 사분위와 수염을 보이는 박스, 모든 값을 점(비)으로 그립니다(`render_raincloud`). `orientation: horizontal`은 범주를 y축에 두고 첫 범주를 맨 위에, `vertical`은 x축에 둡니다. 괄호는 각 범주를 `control_category`와 비교합니다.
+
+| 역할 (plot_params 키) | 기본 열 이름 | 필수 | 내용 |
+|---|---|---|---|
+| `category_col` | `group` | 예 | 각 값의 범주 |
+| `value_col` | `value` | 예 | 값 |
+| `pvalue_col` | — | 아니오 | 범주의 행마다 그 범주의 `control_category` 대비 P 값. 분석 스크립트의 검정에서 구합니다([분석 레시피](../howto/analysis_recipes.md) 3절). 적으면 그 열이 있어야 합니다 |
+
+```yaml
+plot_type: raincloud
+plot_params:
+  category_col: treatment
+  value_col: latency
+  control_category: vehicle
+  pvalue_col: p_vs_vehicle
+  orientation: horizontal
+```
+
 ## 검사
 
 `fa bundle check <번들>`이 오류로 보고하는 것:
