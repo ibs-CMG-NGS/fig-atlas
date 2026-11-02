@@ -57,6 +57,15 @@ TEXT = Schema("basic_text", params=[
 SCHEMA = Schema("basic", extends=[GROUPS, X_AXIS, Y_AXIS, TEXT])
 
 
+class Signed(float):
+    """A number for str.format that writes its minus sign the way the axes do
+    (rcParams axes.unicode_minus), so a printed value matches the tick labels."""
+
+    def __format__(self, spec):
+        text = format(float(self), spec)
+        return text.replace("-", "−") if matplotlib.rcParams["axes.unicode_minus"] else text
+
+
 def with_roles(df: pd.DataFrame, params, roles: dict[str, tuple[str, str]], fill: dict | None = None) -> pd.DataFrame:
     """The columns a renderer reads, under the names its code uses: ``roles`` maps
     a parameter to (its default column, the internal name). Only those columns

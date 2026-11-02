@@ -20,6 +20,7 @@ from .bar_scatter import render_bar_scatter
 from .bland_altman import render_bland_altman
 from .boxplot import render_boxplot
 from .column_scatter import render_column_scatter
+from .correlation_matrix import render_correlation_matrix
 from .correlation_scatter import render_correlation_scatter
 from .dose_response import render_dose_response
 from .dot_matrix import render_dot_matrix
@@ -62,6 +63,7 @@ __all__ = [
     "render_bland_altman",
     "render_boxplot",
     "render_column_scatter",
+    "render_correlation_matrix",
     "render_correlation_scatter",
     "render_dose_response",
     "render_dot_matrix",

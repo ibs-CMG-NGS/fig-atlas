@@ -1,0 +1,16 @@
+var1,var2,r,p_value
+age,BMI,-0.0578,0.611
+age,SBP,0.379,0.000527
+age,glucose,0.0971,0.392
+age,HDL,-0.0141,0.901
+age,steps,-0.5836,1.33e-08
+BMI,SBP,0.3304,0.00276
+BMI,glucose,0.2679,0.0163
+BMI,HDL,-0.4499,2.83e-05
+BMI,steps,-0.1325,0.241
+SBP,glucose,0.12,0.289
+SBP,HDL,-0.0934,0.41
+SBP,steps,-0.1959,0.0816
+glucose,HDL,-0.2074,0.0648
+glucose,steps,-0.2333,0.0373
+HDL,steps,0.1932,0.0859

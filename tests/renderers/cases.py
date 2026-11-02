@@ -851,6 +851,33 @@ def bland_altman_percent():
                                                  "group_colors": {"north": "#2563eb", "south": "#f59e0b"}})
     return fig
 
+
+def _pairs(rng):
+    names = ["v1", "v2", "v3", "v4", "v5"]
+    rows = []
+    for i, a in enumerate(names):
+        for b in names[i + 1:]:
+            r = float(np.clip(rng.normal(0, 0.45), -0.95, 0.95))
+            rows.append({"var1": a, "var2": b, "r": r, "p": 10 ** (-6 * abs(r))})
+    return pd.DataFrame(rows)
+
+
+def correlation_matrix():
+    """PC-08: lower triangle of squares, r and stars in the cells, colourbar."""
+    from fig_atlas.renderers import render_correlation_matrix
+    fig, ax = plt.subplots(figsize=(2.8, 2.4))
+    render_correlation_matrix(ax, _pairs(_rng()), {**TYPO, "p_col": "p"})
+    return fig
+
+
+def correlation_matrix_circles():
+    """PC-08: full matrix of circles with the diagonal, cells with P >= 0.05 blank, no values."""
+    from fig_atlas.renderers import render_correlation_matrix
+    fig, ax = plt.subplots(figsize=(2.8, 2.4))
+    render_correlation_matrix(ax, _pairs(_rng()), {**TYPO, "p_col": "p", "triangle": "full", "show_diagonal": True,
+                                                   "mark": "circle", "hide_above_p": 0.05, "show_values": False})
+    return fig
+
 CASES = {
     "cross_condition_dotplot": cross_condition_dotplot,
     "cross_condition_heatmap": cross_condition_heatmap,
@@ -910,6 +937,8 @@ CASES = {
     "roc_curve_percent": roc_curve_percent,
     "bland_altman": bland_altman,
     "bland_altman_percent": bland_altman_percent,
+    "correlation_matrix": correlation_matrix,
+    "correlation_matrix_circles": correlation_matrix_circles,
 }
 
 # Gallery families (fig_atlas.family) for pictures that are not a renderer

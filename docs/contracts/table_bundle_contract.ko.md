@@ -217,6 +217,25 @@ plot_params:
   loa_high_col: loa_high
 ```
 
+## `plot_type: correlation_matrix` — 상관 행렬 (삼각형, 값, 별표)
+
+여러 변수 사이의 상관을 r로 색칠한 하삼각·상삼각·전체 칸으로 그립니다. 칸은 사각형, 또는 면적이 |r|을 따르는 원이고, 칸 안에 r과 유의성 별표를 쓰며 컬러바를 붙입니다(`render_correlation_matrix`). 쌍마다의 r과 P는 분석 스크립트가 긴 표로 줍니다([분석 레시피](../howto/analysis_recipes.md) 4절): 한 쌍에 한 행.
+
+| 역할 (plot_params 키) | 기본 열 이름 | 필수 | 내용 |
+|---|---|---|---|
+| `row_col` | `var1` | 예 | 쌍의 첫 번째 변수 |
+| `col_col` | `var2` | 예 | 두 번째 변수(한 번만 준 쌍도 대각선 양쪽에 그립니다) |
+| `r_col` | `r` | 예 | 쌍의 상관계수 |
+| `p_col` | — | 아니오 | 쌍의 P 값: 칸의 별표, 그리고 `hide_above_p`로 빈 칸. 적으면 그 열이 있어야 합니다 |
+
+```yaml
+plot_type: correlation_matrix
+plot_params:
+  p_col: p_value
+  triangle: lower
+  mark: square        # 또는 circle
+```
+
 ## 검사
 
 `fa bundle check <번들>`이 오류로 보고하는 것:

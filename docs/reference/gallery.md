@@ -957,6 +957,47 @@ fa build <project> --preflight
 
 A matrix or many variables at once: heatmaps, dot matrices, PCA.
 
+#### correlation_matrix
+
+Correlation matrix: one row per pair of variables with r and optional P from the analysis
+
+![correlation_matrix](gallery/examples/correlation_matrix.png)
+
+`inputs/data.csv`, first 5 of 15 rows (4 columns):
+
+```text
+var1,var2,r,p_value
+age,BMI,-0.0578,0.611
+age,SBP,0.379,0.000527
+age,glucose,0.0971,0.392
+age,HDL,-0.0141,0.901
+age,steps,-0.5836,1.33e-08
+```
+
+Inputs: `data.csv`. `metadata/metadata.yaml`:
+
+```yaml
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per pair of variables -- var1, var2, r, p_value (Pearson, computed when the
+# data were made from 80 patients). The renderer draws them; it correlates nothing. With your data: keep
+# these columns, or name yours below.
+plot_type: correlation_matrix
+plot_params:
+  p_col: p_value
+  variable_order: ["age", "BMI", "SBP", "glucose", "HDL", "steps"]
+  triangle: lower
+  mark: square                  # or circle
+```
+
+Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
+
+```bash
+cp -r <fig-atlas>/examples/gallery/correlation_matrix raw_data/<project>/
+fa bundle check raw_data/<project>/correlation_matrix
+fa ingest bundle raw_data/<project>/correlation_matrix --project <project>
+fa build <project> --preflight
+```
+
 #### cross_condition_dotplot
 
 Long format: one row per significant (term, condition)
@@ -1576,6 +1617,14 @@ One example per renderer (and per layout where a renderer has more than one), dr
 #### clustered_go_heatmap
 
 ![clustered_go_heatmap](gallery/clustered_go_heatmap.png)
+
+#### correlation_matrix
+
+![correlation_matrix](gallery/correlation_matrix.png)
+
+#### correlation_matrix_circles
+
+![correlation_matrix_circles](gallery/correlation_matrix_circles.png)
 
 #### cross_condition_dotplot
 
