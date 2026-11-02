@@ -266,16 +266,16 @@ cards:
     kind: plot
     phase: 2
     priority: P1
-    status: claimed
+    status: in_review
     depends_on: []
     plot_type: roc_curve
     data: "label, score, optional marker"
     owner: "claude-code 2026-11-02"
     branch: "plot/PC-06-roc-curve"
-    commits: []
+    commits: ["fig-atlas b1b759f"]
     version: null
     review: null
-    notes: "plan v3: fpr, tpr, auc and auc_ci come from the analysis script (recipe I-04); the renderer draws the curve, the diagonal and the legend values."
+    notes: "plan v3: fpr, tpr, auc and auc_ci come from the analysis script (recipe I-04); the renderer draws the curve, the diagonal and the legend values. Delivered (2026-11-02): fig_atlas/renderers/roc_curve.py (diagnostic family; fpr/tpr roles, one curve per group, chance line, AUC and its interval in the legend from auc_col/auc_low_col/auc_high_col with legend_format, operating point from operating_point_col, fraction or percent axes), contract core.roc_curve + table contract docs (en/ko), example bundle examples/gallery/roc_curve (curves, AUC, bootstrap interval and Youden point in the generator), snapshot cases roc_curve and roc_curve_percent, tests/renderers/test_roc_curve.py. Evidence: full pytest exit 0; fa reference --check, fa inventory --check, fa lint --hardcoded --check, fa claims --check exit 0; example preflight clean at 85 mm; other examples and snapshots unchanged (V8). Awaiting G2."
   - id: PC-07
     title: "Bland-Altman plot"
     kind: plot
