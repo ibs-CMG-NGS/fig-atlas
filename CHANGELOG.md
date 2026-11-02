@@ -6,6 +6,16 @@ All notable changes are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- **Tutorial: arrange the panels with a layout** (`docs/tutorials/layouts.md`, English and Korean;
+  run by CI as written): a three-panel project moved from the even grid to `wide_bottom`, then to a
+  `stack` whose second row is split by a `row`; the checks go from 1 error to none.
+- **`fig_atlas.bundle_figure.draw_plot(cell, name, block, root, load=None)`**: draws one `plots:`
+  block into one cell (of a layout); `draw_plots` now uses it, unchanged.
+- **`layouts.panel_cells(lay)`**: every panel's cell by letter, the cells of split cells included,
+  so a composed figure is drawn with one loop; `layouts.LAYOUTS` names the five layouts.
+
 ## [0.2.1] — 2026-11-03
 
 ### Fixed

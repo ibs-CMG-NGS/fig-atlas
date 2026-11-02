@@ -52,6 +52,11 @@ TUTORIAL_PICTURES = {
             "first_figure_preflight.png": "outputs/preflight/first-figure/figure1_main.png"},
         2: {"first_figure_fixed.png": "outputs/first-figure/figures/figure_01_main/figure_01.png"},
     },
+    "layouts.md": {
+        1: {"layouts_one_row.png": "outputs/panel-layout/figures/figure_01_main/figure_01.png"},
+        2: {"layouts_wide_bottom.png": "outputs/panel-layout/figures/figure_01_main/figure_01.png"},
+        3: {"layouts_composed.png": "outputs/panel-layout/figures/figure_01_main/figure_01.png"},
+    },
     "case_a_port_script.md": {
         1: {"case_a_ported.png": "outputs/qpcr-antioxidant/figures/figure_01_main/figure_01.png"},
     },

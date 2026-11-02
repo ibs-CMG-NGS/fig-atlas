@@ -83,7 +83,7 @@ figures:
         width_ratios: [1.0, 1.0, 1.0]   # widths of b, c and d
 ```
 
-💬 **Ask an AI:** "In first-figure, split the middle row into three panels." The example is in `examples/layouts/compose/`. Layouts nest two levels at most.
+💬 **Ask an AI:** "In first-figure, split the middle row into three panels." The example is in `examples/layouts/compose/`; [Tutorial: arrange the panels with a layout](../tutorials/layouts.md) does it step by step. Layouts nest two levels at most.
 
 ## Values often changed
 

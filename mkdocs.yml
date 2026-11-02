@@ -59,6 +59,7 @@ plugins:
             "Appendix": "부록"
             "Tutorials": "튜토리얼"
             "First figure (15 min)": "첫 그림 (15분)"
+            "Arrange the panels with a layout (15 min)": "레이아웃으로 패널 배치하기 (15분)"
             "Port a script you wrote (Case A)": "내가 짠 스크립트 옮기기 (Case A)"
             "From a sketch and a table (Case C)": "스케치와 데이터로 그림 만들기 (Case C)"
             "A microscopy figure": "현미경 이미지 그림"
@@ -133,6 +134,7 @@ nav:
           - guide/94-reading.md
   - Tutorials:
       - First figure (15 min): tutorials/first_figure.md
+      - Arrange the panels with a layout (15 min): tutorials/layouts.md
       - Port a script you wrote (Case A): tutorials/case_a_port_script.md
       - From a sketch and a table (Case C): tutorials/case_c_from_sketch.md
       - A microscopy figure: tutorials/imaging_figure.md
