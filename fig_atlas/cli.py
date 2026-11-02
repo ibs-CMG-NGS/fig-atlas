@@ -751,10 +751,22 @@ PASSTHROUGH = {
 
 
 # -------------------------------------------------------------------- parser --
+def _installed_version() -> str:
+    """The fig-atlas version pip installed (pyproject.toml), and where the package is imported from."""
+    from importlib.metadata import PackageNotFoundError, version
+    try:
+        number = version("fig-atlas")
+    except PackageNotFoundError:
+        number = "(not installed; running from a source tree)"
+    return f"{number} ({Path(__file__).resolve().parent.parent})"
+
+
 def build_parser() -> argparse.ArgumentParser:
     ap = argparse.ArgumentParser(prog="fa", description=__doc__.split("\n\n")[0],
                                  epilog="Run `fa <command> -h` for a command's options.")
     ap.add_argument("--root", type=Path, help="repository root (default: found from the working directory)")
+    ap.add_argument("--version", action="version", version=f"fa {_installed_version()}",
+                    help="the installed fig-atlas version (record it with your figures)")
     sub = ap.add_subparsers(dest="command", metavar="<command>")
 
     p = sub.add_parser("list", help="list projects")

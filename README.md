@@ -29,17 +29,33 @@ pack (`fig_atlas_omics`: volcano, MA, GO enrichment, motifs, ...) is included.
 
 ## Install
 
-Python 3.10+ on Linux, macOS or Windows (CI tests all three). The journal presets use Arial:
-macOS and Windows have it; on Linux install it (for example `ttf-mscorefonts-installer`), or
-preflight reports the substituted font. Rebuilds are byte-identical on one platform with one set
-of fonts, not across platforms.
+Python 3.10+ on Linux, macOS or Windows (CI tests all three, on Python 3.12). There is no PyPI
+package yet: install a release from GitHub into the environment you use for your figures.
 
 ```bash
-git clone https://github.com/ibs-cmg-ngs/fig-atlas
+conda create -n figures python=3.12 && conda activate figures      # or a venv
+pip install "git+https://github.com/ibs-CMG-NGS/fig-atlas@v0.2.0"
+fa --version
+```
+
+Without Git: `pip install "https://github.com/ibs-CMG-NGS/fig-atlas/archive/refs/tags/v0.2.0.zip"`.
+Pin the release in your project repository's `requirements.txt`
+(`fig-atlas @ git+https://github.com/ibs-CMG-NGS/fig-atlas@v0.2.0`) so co-authors and reviewers
+install the same version. The journal presets use Arial: macOS and Windows have it; on Linux
+install it (for example `ttf-mscorefonts-installer`), or preflight reports the substituted font.
+Rebuilds are byte-identical on one platform with one set of fonts, not across platforms.
+
+**The full guide** -- venv, optional parts, upgrading, troubleshooting, in English and Korean:
+[docs/howto/install.md](docs/howto/install.md), online at
+https://ibs-cmg-ngs.github.io/fig-atlas/howto/install/.
+
+To change fig-atlas itself, install a copy of the source *editable*:
+
+```bash
+git clone https://github.com/ibs-CMG-NGS/fig-atlas
 cd fig-atlas
 pip install -r requirements.txt
-pip install -e .            # add [docs] for the documentation site
-fa --help
+pip install -e ".[docs,test]"
 ```
 
 With conda: `conda env create -f environment.yml` creates the environment `fig-atlas` with this

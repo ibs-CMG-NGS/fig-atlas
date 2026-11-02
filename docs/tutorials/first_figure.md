@@ -8,7 +8,7 @@ You make one two-panel figure from start to finish with the example data in the 
 
 ## Before you start
 
-Create and activate the environment as in [the README's installation section](../../README.md) (`conda activate fig-atlas`), and start at the repository root. When `fa --help` lists the commands, you are ready.
+This tutorial uses the example data in a copy of the fig-atlas repository: set it up as in [Install fig-atlas](../howto/install.md), section "Develop fig-atlas itself" (`conda activate fig-atlas`), and start at the repository root. When `fa --help` lists the commands, you are ready.
 
 The example data are in [`examples/`](../../examples/README.md): two bundles made by simulation (not measurements).
 
