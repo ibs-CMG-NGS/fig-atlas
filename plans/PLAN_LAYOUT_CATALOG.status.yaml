@@ -209,10 +209,10 @@ cards:
     kind: spike
     phase: 5
     priority: P1
-    status: todo
+    status: claimed
     depends_on: [L-02]
-    owner: null
-    branch: null
+    owner: "claude-code 2026-11-02"
+    branch: "layout/L-14-compose-spike"
     commits: []
     version: null
     review: null
