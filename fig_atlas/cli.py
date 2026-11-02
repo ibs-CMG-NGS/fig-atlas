@@ -786,6 +786,13 @@ PASSTHROUGH = {
 }
 
 
+def _describes_package(args) -> bool:
+    """Commands that only describe the installed package -- what it can draw and
+    arrange -- so they also run outside a project repository (e.g. right after
+    installing, before `fa init`)."""
+    return args.command in ("renderers", "layouts") or (args.command == "bundle" and args.action == "contracts")
+
+
 # -------------------------------------------------------------------- parser --
 def _installed_version() -> str:
     """The fig-atlas version pip installed (pyproject.toml), and where the package is imported from."""
@@ -979,7 +986,12 @@ def main(argv: list[str] | None = None) -> int:
         ap.print_help()
         return EXIT_USAGE
     try:
-        root = find_root(args.root)
+        try:
+            root = find_root(args.root)
+        except ProjectError:
+            if not _describes_package(args):
+                raise
+            root = None                                 # no repository needed (see _describes_package)
         handlers = {"list": cmd_list, "build": cmd_build, "verify": cmd_verify, "status": cmd_status,
                     "impact": cmd_impact, "lineage": cmd_lineage, "diff-figure": cmd_diff_figure,
                     "claims": cmd_claims, "export": cmd_export, "lint": cmd_lint,
