@@ -128,14 +128,14 @@ cards:
     kind: docs
     phase: 3
     priority: P1
-    status: todo
+    status: done
     depends_on: []
-    owner: null
-    branch: null
+    owner: "opencode 2026-11-02"
+    branch: "layout/catalog"
     commits: []
     version: null
     review: null
-    notes: "rename-only commit (14 files, ko+en), titles, front matter, nav, links and the prose numbers ('chapter N', 'N장'); adds the existence test to tests/test_guide.py; measured cost in plan section 14"
+    notes: "renamed 07-results..13-rules to 08-results..14-rules (ko+en, git mv), shifted the numbers the pages use: front-matter titles, chapter N (41), Korean N장 (43), link text [N. ...], link targets, the mkdocs nav and docs/index.md; tests/test_guide.py gained test_chapter_number_matches_the_title and test_navigation_lists_the_chapters_in_number_order"
   - id: L-09b
     title: "new chapter 07 layouts (ko/en) + nav + cross-links"
     kind: docs

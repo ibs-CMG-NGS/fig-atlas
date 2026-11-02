@@ -62,9 +62,9 @@ A bundle's table stays **exactly as the analysis produced it**. Most changes you
 | shorten sample names (`Chronic_24H_vs_Control` → `24 h`) | the renaming tables in the settings (`…_rename_map`, `group_labels`) |
 | cut an axis range | `x_min`, `x_max` and the like in the settings |
 | draw only some items | order and selection values in the settings (`group_order`, top N, ...) |
-| recalculate values (normalisation, another criterion) | export a **new bundle** from the analysis pipeline, and record what changed in a request document (chapter 11). |
+| recalculate values (normalisation, another criterion) | export a **new bundle** from the analysis pipeline, and record what changed in a request document (chapter 12). |
 
-The reason is that **you must always be able to show which data a figure came from**. A build records a fingerprint of each bundle file (a value that changes if even one byte of the content changes). If the raw data change, you are told that the figure is stale (chapter 10).
+The reason is that **you must always be able to show which data a figure came from**. A build records a fingerprint of each bundle file (a value that changes if even one byte of the content changes). If the raw data change, you are told that the figure is stale (chapter 11).
 
 ## Checking a bundle
 

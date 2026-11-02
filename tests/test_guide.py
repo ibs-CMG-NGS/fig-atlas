@@ -37,15 +37,20 @@ def _body(page: Path) -> str:
 
 
 def _nav_pages() -> set[str]:
+    return set(_nav_order())
+
+
+def _nav_order() -> list[str]:
+    """The navigation entries, in the order mkdocs.yml lists them."""
     class Loader(yaml.SafeLoader):
         pass
     Loader.add_multi_constructor("tag:yaml.org,2002:python/", lambda *a: None)    # mkdocs.yml python tags
     nav = yaml.load((ROOT / "mkdocs.yml").read_text(encoding="utf-8"), Loader=Loader)["nav"]
-    found = set()
+    found = []
 
     def walk(x):
         if isinstance(x, str):
-            found.add(x)
+            found.append(x)
         elif isinstance(x, list):
             for i in x:
                 walk(i)
@@ -62,6 +67,29 @@ def test_chapters_are_numbered_and_in_the_navigation():
     missing = [p.name for p in CHAPTERS if f"guide/{p.name}" not in nav]
     assert not missing, f"guide pages not in mkdocs.yml nav: {missing}"
     assert all(re.match(r"^\d\d-[a-z0-9-]+\.md$", p.name) for p in CHAPTERS)
+
+
+def test_chapter_number_matches_the_title():
+    """The file name's number and the title's number are the same: inserting a
+    chapter (L-09a renumbered 07-13 to 08-14) cannot leave one of them behind."""
+    for page in CHAPTERS:
+        number = int(page.name[:2])
+        title = str(_front_matter(page)["title"])
+        if number < 90:
+            assert title.startswith(f"{number}. "), \
+                f"{page.name}: title {title!r} does not start with '{number}.'"
+        else:
+            assert re.match(r"^(Appendix|부록)", title), f"{page.name}: appendix title {title!r}"
+
+
+def test_navigation_lists_the_chapters_in_number_order():
+    """A chapter added to the navigation out of order, or given a number that
+    contradicts its position, fails here."""
+    order = [p for p in _nav_order() if p.startswith("guide/") and (p.endswith(".md"))
+             and "*" not in p and (ROOT / "docs" / p).is_file()]
+    numbers = [int(Path(p).name[:2]) for p in order]
+    assert numbers == sorted(numbers), f"mkdocs.yml nav order: {order}"
+    assert set(order) == {f"guide/{p.name}" for p in CHAPTERS}
 
 
 @pytest.mark.parametrize("page", PAGES, ids=lambda p: p.name)
