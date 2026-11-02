@@ -1,0 +1,171 @@
+"""The layout core: letters, cells, tags, and parity with ``draw_plots``.
+
+``layouts.grid`` must build the same cells ``fig_atlas.bundle_figure.draw_plots``
+builds from the same panel count and ``figures.columns`` -- that parity is what
+lets a script move from ``draw_plots`` to an explicit layout without the figure
+changing (plans/PLAN_LAYOUT_CATALOG.md, card L-05).
+"""
+from __future__ import annotations
+
+from pathlib import Path
+
+import matplotlib
+import pytest
+
+matplotlib.use("Agg")
+
+import matplotlib.pyplot as plt  # noqa: E402
+
+from fig_atlas import bundle_figure, layouts  # noqa: E402
+from fig_atlas.renderers.panels import PANEL_TAG_GID  # noqa: E402
+
+
+def _bounds(sf) -> list:
+    return [sf.bbox.x0, sf.bbox.y0, sf.bbox.width, sf.bbox.height]
+
+
+def _draw(cell, title: str = "") -> None:
+    ax = cell.add_subplot(1, 1, 1)
+    ax.plot([0, 1], [1, 0])
+    if title:
+        ax.set_title(title)
+
+
+def _tags(fig) -> list:
+    return [t.get_text() for t in fig.texts if t.get_gid() == PANEL_TAG_GID]
+
+
+@pytest.mark.parametrize("letters", ["", ("a", "a"), ("a", "A"), ("aa",), ("1",), (1,)])
+def test_letters_are_validated(letters):
+    fig = plt.figure()
+    with pytest.raises(ValueError):
+        layouts.grid(fig, {}, letters)
+    plt.close(fig)
+
+
+@pytest.mark.parametrize("name", ["grid", "stack", "matrix", "row"])
+def test_shape_and_cells(name):
+    fig = plt.figure(figsize=(6, 4))
+    lay = getattr(layouts, name)(fig, {}, "abcd")
+    assert sorted(lay.cells) == ["a", "b", "c", "d"]
+    assert isinstance(lay.shape, str) and lay.shape
+    assert sorted(l for group in lay.columns for l in group) == ["a", "b", "c", "d"]
+    plt.close(fig)
+
+
+def test_grid_columns_default_and_argument():
+    fig = plt.figure(figsize=(6, 4))
+    lay = layouts.grid(fig, {}, "abcdefgh")
+    assert lay.shape == "3x3 equal grid"            # default: 3 columns
+    lay = layouts.grid(fig, {"columns": 4}, "abcdefgh")
+    assert lay.shape == "2x4 equal grid"            # the config sets it
+    lay = layouts.grid(fig, {"columns": 4}, "abcdefgh", columns=2)
+    assert lay.shape == "4x2 equal grid"            # the argument wins
+    plt.close(fig)
+
+
+def test_grid_one_panel():
+    """A single panel is grid(columns=1), not a layout of its own (G1)."""
+    fig = plt.figure(figsize=(3, 3))
+    lay = layouts.grid(fig, {}, "a", columns=1)
+    assert lay.shape == "1x1 equal grid"
+    assert lay.columns == [["a"]] and lay.rows == [["a"]]
+    plt.close(fig)
+
+
+def test_finish_places_tags():
+    fig = plt.figure(figsize=(6, 4))
+    lay = layouts.grid(fig, {}, "ab")
+    for cell in lay.cells.values():
+        _draw(cell, title="panel")
+    tags = layouts.finish(fig, lay, {})
+    assert sorted(_tags(fig)) == ["a", "b"]
+    assert len(tags) == 2
+    plt.close(fig)
+
+
+def test_finish_honours_tag_config():
+    fig = plt.figure(figsize=(6, 4))
+    fcfg = {"tags": {"show": False}}
+    lay = layouts.grid(fig, fcfg, "ab")
+    for cell in lay.cells.values():
+        _draw(cell)
+    assert layouts.finish(fig, lay, fcfg) == []
+    assert _tags(fig) == []
+    plt.close(fig)
+
+
+def test_finish_moves_axes_inside_the_cell():
+    """fit_in_cells runs: every drawn axes stays inside its subfigure's cell."""
+    fig = plt.figure(figsize=(6, 4))
+    lay = layouts.grid(fig, {}, "ab")
+    for cell in lay.cells.values():
+        ax = cell.add_subplot(1, 1, 1)
+        ax.plot([0, 1], [0, 1])
+        ax.set_xlabel("a long axis title that needs the outer bounding box")
+    layouts.finish(fig, lay, {})
+    for letter, cell in lay.cells.items():
+        for ax in cell.axes:
+            box = ax.get_window_extent()                 # display pixels, like cell.bbox
+            assert cell.bbox.x0 - 1e-6 <= box.x0 and box.x1 <= cell.bbox.x1 + 1e-6, letter
+            assert cell.bbox.y0 - 1e-6 <= box.y0 and box.y1 <= cell.bbox.y1 + 1e-6, letter
+    plt.close(fig)
+
+
+def test_grid_matches_draw_plots(monkeypatch):
+    """Same cells, same tag groups as draw_plots (the migration path)."""
+
+    def painter(ax, df, params):                     # shape ("ax", "df"): drawable
+        ax.plot([0, 1], [1, 0])
+
+    monkeypatch.setattr(bundle_figure, "resolve", lambda target: painter)
+    fcfg = {"columns": 3}
+    plots = {f"p{i}": {"renderer": "stub:painter"} for i in range(7)}
+
+    fig_a = plt.figure(figsize=(6, 4))
+    columns = bundle_figure.draw_plots(fig_a, plots, Path("."), fcfg,
+                                       load=lambda name, block: None)
+    fig_b = plt.figure(figsize=(6, 4))
+    lay = layouts.grid(fig_b, fcfg, "abcdefg")
+
+    assert len(fig_a.subfigs) == len(fig_b.subfigs) == 7
+    for sf_a, sf_b in zip(fig_a.subfigs, fig_b.subfigs):
+        assert _bounds(sf_a) == pytest.approx(_bounds(sf_b), abs=1e-9)
+    assert [[letter for letter, axes in column] for column in columns] == lay.columns
+    plt.close(fig_a)
+    plt.close(fig_b)
+
+
+def test_grid_parity_with_four_columns(monkeypatch):
+    def painter(ax, df, params):
+        ax.plot([0, 1], [0, 1])
+
+    monkeypatch.setattr(bundle_figure, "resolve", lambda target: painter)
+    fcfg = {"columns": 4}
+    plots = {f"p{i}": {"renderer": "stub:x"} for i in range(5)}
+
+    fig_a = plt.figure(figsize=(6, 4))
+    bundle_figure.draw_plots(fig_a, plots, Path("."), fcfg, load=lambda name, block: None)
+    fig_b = plt.figure(figsize=(6, 4))
+    lay = layouts.grid(fig_b, fcfg, "abcde")
+    for sf_a, sf_b in zip(fig_a.subfigs, fig_b.subfigs):
+        assert _bounds(sf_a) == pytest.approx(_bounds(sf_b), abs=1e-9)
+    plt.close(fig_a)
+    plt.close(fig_b)
+
+
+def test_gaps_are_real_and_follow_the_gridspec_convention():
+    """matplotlib ignores wspace on a SubFigure, so layouts make the gap a
+    separator row/column of ``wspace * mean(cell)`` (as add_subplot would)."""
+    fig = plt.figure(figsize=(6, 4))
+    plain = layouts.grid(fig, {}, "ab", columns=2)
+    gap = plain.cells["b"].bbox.x0 - plain.cells["a"].bbox.x1
+    assert gap == pytest.approx(0.0, abs=1e-9)          # default: draw_plots' cells
+
+    fig2 = plt.figure(figsize=(6, 4))
+    spaced = layouts.grid(fig2, {"wspace": 0.25}, "ab", columns=2)
+    a, b = spaced.cells["a"], spaced.cells["b"]
+    gap = b.bbox.x0 - a.bbox.x1
+    assert gap == pytest.approx(0.25 * a.bbox.width, rel=1e-6)
+    plt.close(fig)
+    plt.close(fig2)
