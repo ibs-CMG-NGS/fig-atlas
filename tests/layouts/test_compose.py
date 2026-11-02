@@ -60,6 +60,24 @@ def test_row_with_a_stack(fig):
     assert boxes["a"].y0 == pytest.approx(boxes["b"].y0)    # a and b head the same row
 
 
+def test_sibling_cells_split_alike_share_tag_lines(fig):
+    """Rows f|g, h|i, j|k in one stack: g, i, k start at the same left edge, so
+    their letters share one plumb line (found porting a real GO figure)."""
+    outer = layouts.stack(fig, FCFG, letters=("a", "f", "h", "j"))
+    inner = {**layouts.row(outer.cells["a"], FCFG, letters="abc").cells}
+    for first, second in (("f", "g"), ("h", "i"), ("j", "k")):
+        inner.update(layouts.row(outer.cells[first], FCFG, letters=(first, second)).cells)
+    _draw(inner, "abcfghijk")
+    narrow = inner["i"].axes[0]                      # a fixed aspect keeps i's box from filling its cell
+    narrow.plot([0, 1], [0, 8])                      # (as a treemap does), so its left edge moves in
+    narrow.set_aspect("equal", adjustable="box")
+    layouts.finish(fig, outer, FCFG)
+    boxes = _tag_boxes(fig)
+    assert boxes["g"].x0 == pytest.approx(boxes["i"].x0) == pytest.approx(boxes["k"].x0)
+    assert boxes["a"].x0 == pytest.approx(boxes["f"].x0) == pytest.approx(boxes["j"].x0)
+    assert boxes["b"].x0 != pytest.approx(boxes["g"].x0, abs=1.0)    # a different column: not joined
+
+
 def test_values_under_the_cell_letter(fig):
     """Two cells split the same way keep their own numbers; nothing leaks between levels."""
     fcfg = {"cells": {"a": {"row": {"width_ratios": [2, 1]}},

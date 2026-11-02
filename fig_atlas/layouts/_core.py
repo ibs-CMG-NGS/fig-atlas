@@ -40,6 +40,7 @@ from dataclasses import dataclass
 __all__ = ["Layout", "finish", "_grid", "_check_letters", "_block", "_begin", "_register"]
 
 MAX_DEPTH = 2                        # a layout in a cell of another, no deeper (plan section 16)
+ALIGN_MM = 0.5                       # inner columns/rows of sibling cells closer than this share tag lines
 
 
 @dataclass(frozen=True)
@@ -119,7 +120,10 @@ def _splice(layout: "Layout") -> "Layout":
 
     A split cell's letter is replaced, in its outer column and row, by the
     inner layout's first column and first row; the inner layout's other
-    columns and rows join as groups of their own.
+    columns and rows join as groups of their own. Cells split alike in one
+    outer column (or row) line up: their other columns that start at the same
+    left edge (rows: the same top edge) become one group, so their letters
+    share a plumb line too (AGENTS.md 1.5).
     """
     inner = {letter: cell._fa_layout for letter, cell in layout.cells.items()
              if getattr(cell, "_fa_layout", None) is not None}
@@ -132,7 +136,21 @@ def _splice(layout: "Layout") -> "Layout":
                 raise ValueError(f"panel letter {name!r} is used twice (a layout in cell {letter!r} repeats it)")
             cells[name] = sub
 
-    def splice(groups, inner_groups):
+    tol = ALIGN_MM / 25.4 * next(iter(cells.values())).dpi       # display px
+
+    def aligned(groups, edge):
+        """Join groups whose first cells start at the same ``edge`` (within ``ALIGN_MM``)."""
+        out = []
+        for group in groups:
+            here = edge(cells[group[0]].bbox)
+            match = next((g for g in out if abs(edge(cells[g[0]].bbox) - here) <= tol), None)
+            if match is None:
+                out.append(list(group))
+            else:
+                match += group
+        return out
+
+    def splice(groups, inner_groups, edge):
         out = []
         for group in groups:
             joined, extra = [], []
@@ -143,12 +161,12 @@ def _splice(layout: "Layout") -> "Layout":
                     extra += rest
                 else:
                     joined.append(letter)
-            out += [joined] + extra
+            out += [joined] + aligned(extra, edge)
         return out
 
     shape = layout.shape + "; " + ", ".join(f"cell {l}: {lay.shape}" for l, lay in inner.items())
-    return Layout(cells, splice(layout.columns, lambda lay: lay.columns),
-                  splice(layout.rows, lambda lay: lay.rows), shape)
+    return Layout(cells, splice(layout.columns, lambda lay: lay.columns, lambda b: b.x0),
+                  splice(layout.rows, lambda lay: lay.rows, lambda b: b.y1), shape)
 
 
 def _block(fcfg: dict, name: str) -> dict:
