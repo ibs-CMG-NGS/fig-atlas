@@ -8,6 +8,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 |---|---|---|
 | [`bar_scatter`](#bar_scatter) | core | 50 |
 | [`binary_motif_heatmap`](#binary_motif_heatmap) | fig_atlas_omics.renderers | 62 |
+| [`bland_altman`](#bland_altman) | core | 45 |
 | [`boxplot`](#boxplot) | core | 13 |
 | [`chromosome_ideogram`](#chromosome_ideogram) | fig_atlas_omics.renderers | 42 |
 | [`cis_linkage_panel`](#cis_linkage_panel) | fig_atlas_omics.renderers | 20 |
@@ -192,6 +193,58 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `gs_top` | number | computed | [0-1] figure fraction | Top edge of the grid (0.90 vertical / 0.94 horizontal) |
 | `gs_bottom` | number | computed | [0-1] figure fraction | Bottom edge of the grid (0.25 vertical / 0.15 horizontal) |
 | `gs_space` | number | computed | fraction of the grid | Gap between tier stripe and matrix |
+
+## bland_altman
+
+`fig_atlas.renderers:render_bland_altman`
+
+| Key | Type | Default | Unit | What it does |
+|---|---|---|---|---|
+| `group_col` | text | auto |  | Column splitting the data into coloured groups (default: one group) |
+| `group_order` | list | auto |  | Group order in drawing and legend (default: order in the data) |
+| `group_colors` | mapping | `{}` | hex color | Colour per group (default: matplotlib colour cycle) |
+| `group_labels` | mapping | `{}` |  | Legend label per group (default: the group value) |
+| `color` | colour | `#4b5563` | hex color | Colour when there is no group_col |
+| `labels_title` | text | auto |  | Panel title (none: no title) |
+| `labels_xlabel` | text | computed |  | x-axis title (default: the x column's name) |
+| `labels_ylabel` | text | computed |  | y-axis title (default: the y column's name) |
+| `title_size` | number | `8.0` | pt | Panel title size |
+| `title_pad` | number | auto | pt | Gap between panel title and plot |
+| `axes_label_size` | number | auto | pt | Axis title size (default: rcParams) |
+| `tick_label_size` | number | auto | pt | Tick label size (default: rcParams) |
+| `show_legend` | true / false | `True` |  | Show the group legend (only with a group_col) |
+| `legend_loc` | text | `best` |  | Legend location (matplotlib loc) |
+| `legend_fontsize` | number | auto | pt | Legend font size (none: tick_label_size) |
+| `legend_frameon` | true / false | `False` |  | Draw a frame around the legend |
+| `a_col` | text | `method_a` |  | Column with the first method's measurement of each sample |
+| `b_col` | text | `method_b` |  | Column with the second method's measurement of each sample |
+| `difference` | one of `difference`, `percent` | `difference` |  | y axis: a - b, or 100 * (a - b) / mean of a and b (use the same in the analysis) |
+| `bias_col` | text | auto |  | Column with the bias (mean difference), from the analysis (default: no line) |
+| `loa_low_col` | text | auto |  | Column with the lower limit of agreement, from the analysis |
+| `loa_high_col` | text | auto |  | Column with the upper limit of agreement, from the analysis |
+| `point_size` | number | `12.0` | pt^2 (marker area) | Point size |
+| `point_alpha` | number | `0.8` | [0-1] opacity | Point opacity |
+| `point_edge_color` | colour | `#ffffff` | hex color | Point outline colour |
+| `point_edge_width` | number | `0.3` | pt | Point outline width (0: none) |
+| `bias_color` | colour | `#111827` | hex color | Bias line colour |
+| `bias_width` | number | `1.0` | pt | Bias line width |
+| `bias_style` | text | `-` |  | Bias line style (matplotlib linestyle) |
+| `loa_color` | colour | `#6b7280` | hex color | Limits of agreement colour |
+| `loa_width` | number | `0.8` | pt | Limits of agreement line width |
+| `loa_style` | text | `--` |  | Limits of agreement line style (matplotlib linestyle) |
+| `show_zero` | true / false | `True` |  | Draw the line of no difference |
+| `zero_color` | colour | `#d1d5db` | hex color | Line of no difference colour |
+| `zero_width` | number | `0.6` | pt | Line of no difference width |
+| `show_line_labels` | true / false | `True` |  | Write each line's value at its right end |
+| `bias_label` | text | `Mean {value:.2f}` |  | Bias label; field value |
+| `loa_high_label` | text | `+1.96 SD {value:.2f}` |  | Upper limit label; field value (say how the analysis made the limit) |
+| `loa_low_label` | text | `−1.96 SD {value:.2f}` |  | Lower limit label; field value |
+| `line_label_size` | number | auto | pt | Label size (default: tick_label_size) |
+| `line_label_pad` | number | `1.5` | pt | Gap between a label and its line |
+| `y_pad` | number | `0.12` | fraction of the y range | Room below and above the points and lines — raise if a label touches the axes edge |
+| `y_min` | number | auto | data coords | Lower y limit (default: the drawing less y_pad) |
+| `y_max` | number | auto | data coords | Upper y limit (default: the drawing plus y_pad) |
+| `hide_top_right` | true / false | `True` |  | Hide the top and right axis lines |
 
 ## boxplot
 

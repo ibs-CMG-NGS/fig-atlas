@@ -281,16 +281,16 @@ cards:
     kind: plot
     phase: 2
     priority: P1
-    status: todo
+    status: in_review
     depends_on: []
     plot_type: bland_altman
     data: "method_a, method_b"
-    owner: null
-    branch: null
-    commits: []
+    owner: "claude-code 2026-11-02"
+    branch: "plot/PC-07-bland-altman"
+    commits: ["fig-atlas 3ba5e78"]
     version: null
     review: null
-    notes: "plan v3: bias and limits of agreement come from the analysis script (recipe I-04); the renderer draws the scatter and the lines."
+    notes: "plan v3: bias and limits of agreement come from the analysis script (recipe I-04); the renderer draws the scatter and the lines. Delivered (2026-11-02): fig_atlas/renderers/bland_altman.py (diagnostic family; a/b method roles, difference or percent difference against the mean, groups by colour, zero line, bias and limits of agreement from bias_col/loa_low_col/loa_high_col labelled at the right edge), contract core.bland_altman + table contract docs (en/ko), example bundle examples/gallery/bland_altman (bias +/- 1.96 SD in the generator), snapshot cases bland_altman and bland_altman_percent, tests/renderers/test_bland_altman.py. Evidence: full pytest exit 0; fa reference --check, fa inventory --check, fa lint --hardcoded --check, fa claims --check exit 0; example preflight clean at 85 mm; other examples and snapshots unchanged (V8). Awaiting G2."
   - id: PC-08
     title: "correlation matrix (triangle, values, significance)"
     kind: plot

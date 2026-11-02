@@ -1,0 +1,13 @@
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per patient -- hba1c_lab and hba1c_device (the two methods) -- and the bias
+# and 95% limits of agreement (bias, loa_low, loa_high: bias +/- 1.96 SD of the differences), computed
+# when the data were made. The renderer draws them. With your data: keep these columns, or name yours below.
+plot_type: bland_altman
+plot_params:
+  a_col: hba1c_lab
+  b_col: hba1c_device
+  bias_col: bias
+  loa_low_col: loa_low
+  loa_high_col: loa_high
+  labels_xlabel: "Mean HbA1c (%)"
+  labels_ylabel: "Laboratory − device (%)"

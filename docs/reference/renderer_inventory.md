@@ -22,6 +22,7 @@ Compendium projects: none.
 | 4 | `describe_stars` | `fig_atlas_omics/renderers/tf_expression_bars.py` | 0 | — | — |
 | 4 | `panel_label` | `fig_atlas/renderers/panels.py` | 0 | — | — |
 | 4 | `render_binary_motif_heatmap` | `fig_atlas_omics/renderers/binary_motif_heatmap.py` | 0 | — | — |
+| 4 | `render_bland_altman` | `fig_atlas/renderers/bland_altman.py` | 0 | — | — |
 | 4 | `render_boxplot` | `fig_atlas/renderers/boxplot.py` | 0 | — | — |
 | 4 | `render_chromosome_ideogram` | `fig_atlas_omics/renderers/chromosome_ideogram.py` | 0 | — | — |
 | 4 | `render_cis_linkage_panel` | `fig_atlas_omics/renderers/cis_linkage.py` | 0 | — | — |
@@ -79,4 +80,4 @@ Compendium projects: none.
 | 4 | `render_violin` | `fig_atlas/renderers/violin.py` | 0 | — | — |
 | 4 | `render_volcano` | `fig_atlas_omics/renderers/volcano.py` | 0 | — | — |
 
-Summary: tier 2 active — 4, tier 4 unused — 61.
+Summary: tier 2 active — 4, tier 4 unused — 62.

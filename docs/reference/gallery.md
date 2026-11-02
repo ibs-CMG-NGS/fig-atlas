@@ -1310,6 +1310,50 @@ fa build <project> --preflight
 
 How well a score separates two classes (ROC), and method agreement.
 
+#### bland_altman
+
+Agreement: one row per sample (two methods), optional bias and limits of agreement from the analysis
+
+![bland_altman](gallery/examples/bland_altman.png)
+
+`inputs/data.csv`, first 5 of 40 rows (6 columns):
+
+```text
+patient,hba1c_lab,hba1c_device,bias,loa_low,loa_high
+1,6.16,6.09,-0.134,-0.7357,0.4677
+2,6.14,6.9,-0.134,-0.7357,0.4677
+3,9.93,9.85,-0.134,-0.7357,0.4677
+4,6.19,6.26,-0.134,-0.7357,0.4677
+5,6.05,6.35,-0.134,-0.7357,0.4677
+```
+
+Inputs: `data.csv`. `metadata/metadata.yaml`:
+
+```yaml
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per patient -- hba1c_lab and hba1c_device (the two methods) -- and the bias
+# and 95% limits of agreement (bias, loa_low, loa_high: bias +/- 1.96 SD of the differences), computed
+# when the data were made. The renderer draws them. With your data: keep these columns, or name yours below.
+plot_type: bland_altman
+plot_params:
+  a_col: hba1c_lab
+  b_col: hba1c_device
+  bias_col: bias
+  loa_low_col: loa_low
+  loa_high_col: loa_high
+  labels_xlabel: "Mean HbA1c (%)"
+  labels_ylabel: "Laboratory − device (%)"
+```
+
+Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
+
+```bash
+cp -r <fig-atlas>/examples/gallery/bland_altman raw_data/<project>/
+fa bundle check raw_data/<project>/bland_altman
+fa ingest bundle raw_data/<project>/bland_altman --project <project>
+fa build <project> --preflight
+```
+
 #### roc_curve
 
 ROC: one row per curve point (fpr, tpr), optional marker, AUC and its interval from the analysis
@@ -1586,6 +1630,14 @@ One example per renderer (and per layout where a renderer has more than one), dr
 ![signed_heatmap](gallery/signed_heatmap.png)
 
 ### Diagnostic
+
+#### bland_altman
+
+![bland_altman](gallery/bland_altman.png)
+
+#### bland_altman_percent
+
+![bland_altman_percent](gallery/bland_altman_percent.png)
 
 #### roc_curve
 
