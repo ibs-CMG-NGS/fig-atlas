@@ -222,14 +222,14 @@ cards:
     kind: code
     phase: 6
     priority: P1
-    status: in_review
+    status: done
     depends_on: [L-14]
     owner: "claude-code 2026-11-02"
     branch: "layout/L-15-composition"
-    commits: ["fig-atlas b86cecf"]
-    version: null
-    review: null
-    notes: "only after G5; one line per split cell, finish once, figures.cells.<letter>.<layout>.*, two levels at most, a preflight-clean example; 17 more measured scripts (plan section 1). Delivered (2026-11-02): _core.py _begin (letters; in a cell: the cell letter first, one layout per cell, two levels at most, figures.cells.<letter> over the rest) and _register (cells marked, the inner layout recorded on its cell); finish splices the inner layouts before fitting and tagging; the five layouts call _begin/_register (two lines each). tests/layouts/test_compose.py (8 tests); examples/layouts/compose/ (preflight clean) with its picture and a Composition section in docs/reference/layouts.md (make_layout_gallery.py COMPOSED); chapter 7 section (en/ko); layout_coverage.py counts composed scripts as matched and adds a composed column. cmg-figures: 50 of 83 drawn by layouts (29 at one level, 21 through composition), 57 with the align and overlay helpers (L-16)."
+    commits: ["fig-atlas b86cecf", "PR #34 (merge 5c30067)"]
+    version: "0.2.0.dev1"
+    review: "merged 2026-11-02 (user), PR #34; main CI 41452445406 success, Documentation site 41452445422 success"
+    notes: "only after G5; one line per split cell, finish once, figures.cells.<letter>.<layout>.*, two levels at most, a preflight-clean example; 17 more measured scripts (plan section 1). Delivered (2026-11-02): _core.py _begin (letters; in a cell: the cell letter first, one layout per cell, two levels at most, figures.cells.<letter> over the rest) and _register (cells marked, the inner layout recorded on its cell); finish splices the inner layouts before fitting and tagging; the five layouts call _begin/_register (two lines each). tests/layouts/test_compose.py (8 tests); examples/layouts/compose/ (preflight clean) with its picture and a Composition section in docs/reference/layouts.md (make_layout_gallery.py COMPOSED); chapter 7 section (en/ko); layout_coverage.py counts composed scripts as matched and adds a composed column. cmg-figures: 50 of 83 drawn by layouts (29 at one level, 21 through composition), 57 with the align and overlay helpers (L-16). Real-use check 2026-11-02 (plan section 16): two cmg-figures scripts redrawn with layouts; one defect found and fixed on branch layout/L-15-sibling-tags (sibling cells split alike now share inner tag lines); porting needs a re-tuning pass."
   - id: L-16
     title: "optional: align and overlay helpers"
     kind: code

@@ -101,6 +101,7 @@ figures:
 
 - **The gaps are fractions, not millimetres.** `wspace: 0.15` means 15% of the average panel width. The same value keeps the same look when the figure gets wider.
 - **A shape not in the catalog** is usually two layouts, one inside a cell of the other (above), or starts from the closest example: ask the AI "which layouts make this sketch?". A panel that draws on the whole canvas (a schematic, a timeline) is a kind of figure, not a layout (chapter 5).
+- **Moving an existing figure to a layout takes a short re-tuning pass.** The layout fits each panel to its cell, so ratios tuned for the old placement change, and labels a script placed outside the axes by fractions of the axes move closer. Build with the checks on and adjust the ratios.
 - **Changing the layout does not touch the data or the panel values.** Only where the panels sit changes, so you can try several shapes and keep the one you like.
 - **Paper figures** are where layouts are used most: an exploratory figure promoted to the paper (chapter 12) is often rearranged into one of these shapes.
 

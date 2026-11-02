@@ -506,3 +506,35 @@ error, one example and the docs. Estimate unchanged: 2.0 agent-days.
 six `5x3` walls) and 21 through composition (17 a `stack` of rows, 4 a `grid` with split cells). The
 align and overlay helpers (L-16) would add 7; the other 26 are drawn by a helper module or on the
 canvas (15) or lay a second grid over the first by bare numbers (11).
+
+**Real-use check of L-13/L-15 (2026-11-02).** Two cmg-figures scripts were redrawn with layouts by a
+comparison script that reuses each original's loaders, renderers and config (outputs redirected; the
+originals unchanged), and both versions were run through preflight.
+
+| figure | layouts | original preflight | with layouts |
+|---|---|---|---|
+| exploratory GO figure: a 5-panel row over three rows of two treemaps | `stack` + a `row` in each cell | 0 errors, 47 warnings (39 text overlaps; tags a/f/h/j 6 mm apart) | 0 errors, 36 warnings (29 text overlaps; tags aligned) after the fix below |
+| paper figure: two stacked panels, the first a column of eight tracks | `stack`, the tracks as panel a's own grid | 0 findings | 0 findings after re-tuning `stack.height_ratios` |
+
+Findings:
+
+1. **Defect, fixed:** cells split alike in one outer column (rows `f|g`, `h|i`, `j|k`) left `g`, `i`, `k`
+   in separate tag groups, so when a panel cannot fill its cell (a treemap keeps its aspect) their
+   letters stood up to 4 mm apart. `finish` now joins inner columns of sibling cells that start at the
+   same left edge (rows: the same top edge), within 0.5 mm; a test reproduces it with a fixed-aspect
+   panel.
+2. **The matplotlib problem the GO script works around did not appear.** Its comment says SubFigures
+   on grids of different shapes in one figure make the first row overlap, so it builds one 1000-column
+   grid with computed spans (a 25-line helper). A 5-cell row and 2-cell rows in one figure draw
+   correctly with composition; the helper and the flat grid go away (about six layout lines remain).
+3. **Values do not carry over one to one.** The paper figure's margins and `hspace` were tuned for
+   fixed axes; with panels fitted to their cells, panel b (bars with a bracket and text above them)
+   came out squeezed until its row was given more height. Moving a tuned figure to a layout means
+   re-tuning its ratios, then checking with preflight.
+4. **Labels placed outside the axes in axes fractions move.** Fitting scales a panel's axes so its
+   labels fit the cell; a label at `x = -0.12` in axes coordinates then lands closer in millimetres
+   while its text keeps its size (the paper figure's group labels slid toward the track names). Such
+   labels need re-tuning after a move, or an offset in points. The guide (chapter 7) says so.
+
+So layouts suit new figures directly; an existing hand-tuned figure moves with a short re-tuning pass,
+which preflight makes visible.

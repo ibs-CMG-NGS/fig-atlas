@@ -89,6 +89,8 @@ of one manuscript before being published as a package. This first public tree co
   called once on the outer layout, fits the inner panels and lines their letters up with the rest.
   The inner layout's values sit under the cell's letter (`figures.cells.<letter>`); two levels at
   most. Example `examples/layouts/compose/` and a "Composition" section on the layout catalog page.
+  Cells split alike in one column (or row) share their inner tag lines, so letters stay aligned
+  when a panel cannot fill its cell (found redrawing a real figure with layouts).
 - **`scripts/layout_coverage.py --repo <project repository>`**: reads the projects' analysis scripts
   without running them and names the layout that draws each one's arrangement, or why none does
   (manual placement, a grid laid over another, a shape computed at run time, ...), with the lines
