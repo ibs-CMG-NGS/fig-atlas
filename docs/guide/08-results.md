@@ -64,4 +64,4 @@ Open the PDF at 100 % and you see the size on paper. The figure is as wide as th
 - The verification table in `outputs/project-name/manifests/` records whether these results were all made (chapter 9).
 
 ---
-Previous: [6. Changing a figure: reading and writing the config](06-config.md) · Next: [9. Reading the check results](09-checks.md)
+Previous: [7. Arranging panels: layouts](07-layouts.md) · Next: [9. Reading the check results](09-checks.md)

@@ -30,6 +30,8 @@ flowchart LR
 
 💬 **Ask an AI:** "Retire the old Figure 4 project."
 
+A paper figure often arranges its panels in a shape of its own: a wide panel below, one column, a wall of small panels. Choose the shape from the layouts of [chapter 7](07-layouts.md); its gaps and ratios stay in the config.
+
 ## The storyline documents
 
 The paper's figure plan and story are under `docs/storylines/`.
