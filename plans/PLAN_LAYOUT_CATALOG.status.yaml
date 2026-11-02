@@ -154,10 +154,10 @@ cards:
     kind: tooling
     phase: 3
     priority: P2
-    status: todo
+    status: claimed
     depends_on: [L-03, L-04, L-05, L-06, L-07]
-    owner: null
-    branch: null
+    owner: "claude-code 2026-11-02"
+    branch: "layout/L-10-coverage"
     commits: []
     version: null
     review: null
