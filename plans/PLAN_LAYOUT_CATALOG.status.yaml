@@ -183,10 +183,10 @@ cards:
     kind: surface
     phase: 4
     priority: P3
-    status: todo
+    status: claimed
     depends_on: [L-08]
-    owner: null
-    branch: null
+    owner: "claude-code 2026-11-02"
+    branch: "layout/L-12-fa-layouts"
     commits: []
     version: null
     review: null
