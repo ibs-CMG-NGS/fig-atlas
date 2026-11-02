@@ -62,6 +62,29 @@ figures:
 
 Raise the second number of `height_ratios` to give the wide panel more height; raise `wspace` to move the top panels apart. Build again to see the change.
 
+## Splitting a cell: a layout inside a layout
+
+When no single shape fits -- say three rows where the middle row holds three panels -- split one cell with a second layout. The second layout is called on the cell instead of on the figure, and starts with that cell's letter:
+
+```python
+lay = layouts.stack(fig, fcfg, letters=("a", "b", "e"))
+layouts.row(lay.cells["b"], fcfg, letters=("b", "c", "d"))   # cell b becomes b | c | d
+```
+
+![A stack of three rows whose middle row is split into three panels, lettered a to e](../reference/gallery/layouts/compose.png)
+
+The figure reads a, b, c, d, e, and the letters line up across both levels on their own. The values of the inner layout go under the cell's letter, so two cells split the same way keep their own numbers:
+
+```yaml
+figures:
+  cells:
+    b:                                  # the layout that splits cell b
+      row:
+        width_ratios: [1.0, 1.0, 1.0]   # widths of b, c and d
+```
+
+💬 **Ask an AI:** "In first-figure, split the middle row into three panels." The example is in `examples/layouts/compose/`. Layouts nest two levels at most.
+
 ## Values often changed
 
 | You want to | Change | Where |
@@ -70,13 +93,14 @@ Raise the second number of `height_ratios` to give the wide panel more height; r
 | Give one row more height | `height_ratios` (one number per row) | `figures.wide_bottom`, `figures.stack`, `figures.grid` or `figures.matrix` |
 | Make one column wider | `width_ratios` (one number per column) | `figures.row`, `figures.grid` or `figures.matrix` |
 | Change the panels per row | `columns` | `figures:` (`grid`), `figures.matrix` |
+| Change a split cell | the same keys | `figures.cells.<letter>` |
 | Leave more air around each panel | `panel_pad_mm` | `figures:` |
 | Change the letters | `tags.size`, `tags.show` | `figures:` |
 
 ## Good to know
 
 - **The gaps are fractions, not millimetres.** `wspace: 0.15` means 15% of the average panel width. The same value keeps the same look when the figure gets wider.
-- **A shape not in the catalog** starts from the closest example: ask the AI "which layout is closest to this sketch?". A panel that draws on the whole canvas (a schematic, a timeline) is a kind of figure, not a layout (chapter 5).
+- **A shape not in the catalog** is usually two layouts, one inside a cell of the other (above), or starts from the closest example: ask the AI "which layouts make this sketch?". A panel that draws on the whole canvas (a schematic, a timeline) is a kind of figure, not a layout (chapter 5).
 - **Changing the layout does not touch the data or the panel values.** Only where the panels sit changes, so you can try several shapes and keep the one you like.
 - **Paper figures** are where layouts are used most: an exploratory figure promoted to the paper (chapter 12) is often rearranged into one of these shapes.
 

@@ -30,7 +30,7 @@ Adapt by editing those keys, not this file.
 """
 from __future__ import annotations
 
-from ._core import Layout, _block, _check_letters, _grid
+from ._core import Layout, _begin, _block, _grid, _register
 
 
 def wide_bottom(fig, fcfg: dict, top, bottom) -> Layout:
@@ -40,7 +40,7 @@ def wide_bottom(fig, fcfg: dict, top, bottom) -> Layout:
     ``layouts.finish(fig, layout, fcfg)``.
     """
     top = tuple(top)
-    letters = _check_letters(top + (bottom,))
+    letters, fcfg = _begin(fig, fcfg, top + (bottom,))
     if len(top) < 2:
         raise ValueError("wide_bottom needs at least two top panels; "
                          "for one top panel and one below, use stack")
@@ -55,5 +55,5 @@ def wide_bottom(fig, fcfg: dict, top, bottom) -> Layout:
     cells[bottom] = fig.add_subfigure(gs.span_row(1))
     tag_columns = [[letter] for letter in top]
     tag_columns[0] = [top[0], bottom]          # the wide panel starts in column 0
-    return Layout(cells, tag_columns, [list(top), [bottom]],
-                  f"{len(top)} columns + full-width bottom row")
+    return _register(fig, Layout(cells, tag_columns, [list(top), [bottom]],
+                                  f"{len(top)} columns + full-width bottom row"))

@@ -500,3 +500,9 @@ figures from the measured shapes, drawn with the gallery bundles: a `stack` whos
 functions beyond registering themselves; the work is in `_core.py` (registration, cell letters and
 values, splicing in `finish`, the depth check), tests for the two shapes above and a three-level
 error, one example and the docs. Estimate unchanged: 2.0 agent-days.
+
+**Result of L-13 and L-15 (2026-11-02).** `python scripts/layout_coverage.py --repo ../cmg-figures`:
+50 of the 83 scripts are drawn by the layouts -- 29 at one level (L-13's `ratios` brought `matrix` its
+six `5x3` walls) and 21 through composition (17 a `stack` of rows, 4 a `grid` with split cells). The
+align and overlay helpers (L-16) would add 7; the other 26 are drawn by a helper module or on the
+canvas (15) or lay a second grid over the first by bare numbers (11).

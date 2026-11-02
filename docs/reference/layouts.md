@@ -224,3 +224,22 @@ values in brackets are the defaults:
 
 Adapt by editing those keys, not this file.
 
+## Composition
+
+A layout can be called on a cell of another layout to split that cell, so a shape not in the table is usually two of them, one inside the other.
+
+![compose](gallery/layouts/compose.png)
+
+The example (`examples/layouts/compose/`, script 22 lines of code) calls
+
+```python
+lay = layouts.stack(fig, fcfg, letters=("a", "b", "e"))
+inner = layouts.row(lay.cells["b"], fcfg, letters=("b", "c", "d"))
+```
+
+and `layouts.finish(fig, lay, fcfg)` once, on the outer layout. The inner layout starts with the cell's letter, so the figure reads a, b, c,
+d, e. It registers itself on the cell, and `finish` splices it in: its
+panels are fitted like the others and their letters join the outer plumb
+lines and rows. Its values come from `figures.cells.<letter>` over the
+rest of `figures:` (e.g. `figures.cells.b.row.width_ratios`), so two
+cells split the same way keep their own numbers. Two levels at most.

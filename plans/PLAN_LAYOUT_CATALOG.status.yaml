@@ -12,7 +12,7 @@ gates:                          # researcher decisions (plan section 11): pendin
   G2: pending                   # mosaic (figures.layout) -- only after L-10 measured the coverage
   G3: pending                   # new required dependencies (expected: none)
   G4: pending                   # release the catalog after L-09b is green
-  G5: pending                   # composition: build, shrink or drop -- after the L-14 spike (plan section 16)
+  G5: "passed 2026-11-02 (user: build composition, L-15, as recommended in plan section 16)"
 phase_gates:                    # a phase's cards can start only after these gates have passed
   0: [G1]
   1: [G1]
@@ -196,40 +196,40 @@ cards:
     kind: code
     phase: 5
     priority: P1
-    status: in_review
+    status: done
     depends_on: [L-05, L-06]
     owner: "claude-code 2026-11-02"
     branch: "layout/L-13-ratios"
-    commits: ["fig-atlas 65fba19"]
-    version: null
-    review: null
+    commits: ["fig-atlas 65fba19", "PR #32 (merge e138e09)"]
+    version: "0.2.0.dev1"
+    review: "merged 2026-11-02 (user), PR #32; main CI 41442193233 success"
     notes: "grid.py, matrix.py: ratios as arguments and from figures.grid / figures.matrix; equal by default (L-05 parity unchanged); wrong length raises; example configs and the guide's values table carry the keys; 13 measured scripts need it (plan section 1). Delivered (2026-11-02): grid/matrix take width_ratios / height_ratios (argument, else figures.grid / figures.matrix); a shared _ratios check in grid.py raises with the expected count; tests in test_layouts_core.py (argument, config, argument wins, wrong length) and test_matrix.py; example configs carry the keys at equal values (pictures unchanged); chapter 7 values and shapes tables; layout_coverage.py drops the unequal-cells rule. cmg-figures: drawn by a layout today 20 -> 29 (matrix 6, grid +3), with composition 50, with the helpers 57."
   - id: L-14
     title: "composition spike: a layout in a cell of another; finish across two levels"
     kind: spike
     phase: 5
     priority: P1
-    status: in_review
+    status: done
     depends_on: [L-02]
     owner: "claude-code 2026-11-02"
     branch: "layout/L-14-compose-spike"
-    commits: ["fig-atlas a479cc6"]
-    version: null
-    review: null
+    commits: ["fig-atlas a479cc6", "PR #33 (merge bf8ef31)"]
+    version: "0.2.0.dev1"
+    review: "merged 2026-11-02 (user), PR #33; main CI 41442214386 success, Documentation site 41442214124 success"
     notes: "throwaway script only; findings and a go/no-go with an L-15 estimate go into plan section 16; gate G5 decides. Delivered (2026-11-02): plans/spikes/L-14_compose.py (two composed figures, preflight clean, tags on shared plumb lines and baselines); findings 1-7 and a recommendation (build, 2.0 days) in plan section 16. Waiting for G5."
   - id: L-15
     title: "composition: a layout on a cell; finish fits and tags both levels; values under the cell letter"
     kind: code
     phase: 6
     priority: P1
-    status: todo
+    status: in_review
     depends_on: [L-14]
-    owner: null
-    branch: null
-    commits: []
+    owner: "claude-code 2026-11-02"
+    branch: "layout/L-15-composition"
+    commits: ["fig-atlas b86cecf"]
     version: null
     review: null
-    notes: "only after G5; one line per split cell, finish once, figures.cells.<letter>.<layout>.*, two levels at most, a preflight-clean example; 17 more measured scripts (plan section 1)"
+    notes: "only after G5; one line per split cell, finish once, figures.cells.<letter>.<layout>.*, two levels at most, a preflight-clean example; 17 more measured scripts (plan section 1). Delivered (2026-11-02): _core.py _begin (letters; in a cell: the cell letter first, one layout per cell, two levels at most, figures.cells.<letter> over the rest) and _register (cells marked, the inner layout recorded on its cell); finish splices the inner layouts before fitting and tagging; the five layouts call _begin/_register (two lines each). tests/layouts/test_compose.py (8 tests); examples/layouts/compose/ (preflight clean) with its picture and a Composition section in docs/reference/layouts.md (make_layout_gallery.py COMPOSED); chapter 7 section (en/ko); layout_coverage.py counts composed scripts as matched and adds a composed column. cmg-figures: 50 of 83 drawn by layouts (29 at one level, 21 through composition), 57 with the align and overlay helpers (L-16)."
   - id: L-16
     title: "optional: align and overlay helpers"
     kind: code

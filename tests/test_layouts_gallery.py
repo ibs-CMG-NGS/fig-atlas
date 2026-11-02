@@ -40,7 +40,15 @@ def test_layout_has_its_assets(name):
     assert f"\n## {name}\n" in page and f"gallery/layouts/{name}.png" in page
 
 
-@pytest.mark.parametrize("name", NAMES)
+def test_composition_has_its_example_picture_and_section():
+    script = gallery.EXAMPLES / "compose" / "script.py"
+    assert script.is_file() and gallery.code_lines(script) <= MAX_SCRIPT_LINES
+    assert (gallery.PICTURES / "compose.png").is_file()
+    page = (ROOT / "docs" / "reference" / "layouts.md").read_text(encoding="utf-8")
+    assert "\n## Composition\n" in page and "gallery/layouts/compose.png" in page
+
+
+@pytest.mark.parametrize("name", NAMES + gallery.COMPOSED)
 def test_example_builds_clean(name):
     with plt.rc_context():
         fig = gallery.load_example(name).build()

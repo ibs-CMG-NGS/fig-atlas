@@ -29,10 +29,11 @@ Per script (CSV columns):
   of the first, to give that row its own columns or width), ``canvas`` (an axes
   over the whole figure), ``coordinates`` (anything else placed by numbers).
 - ``matched_layout`` -- the layout of ``fig_atlas.layouts`` that draws the same
-  top-level arrangement today, or empty; ``reason`` says why none does. A cell
-  that holds its own grid (``nested``) still matches: the layout gives the
-  cells, and the inner grid stays the panel's own code.
-- ``composed_layout`` -- the outer layout if layouts could be put inside a cell
+  top-level arrangement, or empty; ``reason`` says why none does. A cell that
+  holds its own grid (``nested``) still matches: the layout gives the cells,
+  and the inner grid stays the panel's own code. ``composed`` is 1 when the
+  match needs a layout inside a cell of another (composition, card L-15).
+- ``composed_layout`` -- the outer layout once layouts are put inside a cell
   of another (composition): a band grid becomes a layout in that band, and a
   grid whose panels each sit in one row (``gs[r, c0:c1]``, also when the number
   of columns is computed) becomes a ``stack`` of rows, one whose panels each sit
@@ -94,6 +95,7 @@ class Row:
     reason: str = ""
     composed_layout: str = ""
     composed_needs: str = ""
+    composed: int = 0
     loc_before: int = 0
     loc_after: str = ""
 
@@ -234,6 +236,10 @@ def measure(path: Path, level: str) -> Row:
     if row.matched_layout:
         row.loc_after = str(2 + cells + sum(_code_lines(s, source) for s in inner_stmts))
     row.composed_layout, row.composed_needs = _compose(row, shape, spans, full_last, row_only, col_only, by_hand)
+    if not row.matched_layout and row.composed_layout and not row.composed_needs:
+        # composition (L-15): each inner or band grid becomes one layout call on its cell
+        row.matched_layout, row.reason, row.composed = row.composed_layout, "", 1
+        row.loc_after = str(2 + cells + len(inner_stmts) + len(figure_grids) - 1)
     return row
 
 
@@ -313,12 +319,13 @@ def summary(rows: list[Row], levels: list[str]) -> str:
         before = statistics.median(r.loc_before for r in matched)
         after = statistics.median(int(r.loc_after) for r in matched)
         out += ["", f"Layout code of the matched scripts, median lines: {before:g} before, {after:g} with the layout."]
-    composed = [r for r in rows if r.composed_layout and not r.composed_needs]
     helped = [r for r in rows if r.composed_layout and r.composed_needs]
-    out += ["", "| scripts covered | today | + composition | + composition and helpers |", "|---|---|---|---|",
-            f"| of {len(rows)} | {len(matched)} | {len(composed)} | {len(composed) + len(helped)} |"]
-    out += ["", "| composed: outer layout | scripts |", "|---|---|"] + \
-        _count([r for r in rows if r.composed_layout and not r.matched_layout], lambda r: r.composed_layout)
+    out += ["", "| scripts covered | one level | with composition | + align and overlay helpers |",
+            "|---|---|---|---|",
+            f"| of {len(rows)} | {len(matched) - sum(r.composed for r in rows)} | {len(matched)} "
+            f"| {len(matched) + len(helped)} |"]
+    out += ["", "| matched through composition: outer layout | scripts |", "|---|---|"] + \
+        _count([r for r in rows if r.composed], lambda r: r.matched_layout)
     out += ["", "| still needed | scripts |", "|---|---|"] + _count(helped, lambda r: r.composed_needs)
     out += ["", "| placement by coordinates does | scripts |", "|---|---|"]
     for kind in ("align", "overlay", "band", "canvas", "coordinates"):

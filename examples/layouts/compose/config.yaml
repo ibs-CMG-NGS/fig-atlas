@@ -1,0 +1,32 @@
+# Layout example: compose -- a layout inside a cell of another (fig_atlas/layouts/_core.py, "Composition").
+# A stack of three rows whose middle row is split into three panels: the figure reads a, b | c | d, e.
+# Copy the figures: keys into your project config; panels: and rc: only serve this example.
+figures:
+  width_mm: 180               # Figure width in mm (two journal columns)
+  height_mm: 150              # Figure height in mm
+  hspace: 0.12                # Gap between the stack's rows, fraction of the mean row height
+  stack:                      # [stack] the outer layout's own block
+    height_ratios: [1.0, 1.0, 1.1]   # Row heights top to bottom: a, the split row, e
+  cells:                      # Values for a layout drawn inside a cell, under the cell's letter
+    b:                        # [cell b] read over the rest of figures: by the row that splits cell b
+      wspace: 0.1             # Gap between b, c and d, fraction of their mean width
+      row:
+        width_ratios: [1.0, 1.0, 1.0]   # Widths of b, c, d left to right; raise one to widen that panel
+  panel_pad_mm: 1.0           # Margin in mm between a panel's outer edge (labels included) and its cell; raise for more air
+  tags:                       # Panel letters on the panels' outer bounding boxes (AGENTS.md 1.5)
+    show: true                # Draw the letters
+    size: 9.0                 # Letter size in pt
+    pad_pt: 2.0               # Gap in pt between a letter and its panel's outer edge
+panels:                     # letter -> example bundle in examples/gallery/ (stands in for your data)
+  a: dose_response
+  b: violin
+  c: histogram
+  d: column_scatter
+  e: correlation_scatter
+rc:                         # print typography in pt (the fig-atlas print preset), set once before drawing
+  font.size: 7
+  axes.titlesize: 8
+  axes.labelsize: 7
+  xtick.labelsize: 6
+  ytick.labelsize: 6
+  legend.fontsize: 6

@@ -21,6 +21,8 @@ config's ``figures:`` block, with a default. A script reads
 | `matrix`      | dense rows x columns, tighter gaps                | small multiples, many small panels       |
 | `row`         | one row of n cells                                | one band compared left to right          |
 
+A shape not in the table is usually two of them: call a layout on a cell of
+another to split that cell (composition, two levels at most; see ``_core``).
 A one-panel figure is ``grid(..., columns=1)``. A figure that draws itself on
 the canvas (a schematic, a timeline) is a renderer with the ``(fig, df)``
 shape, not a layout. Nothing here imports matplotlib at package load: the

@@ -84,6 +84,11 @@ of one manuscript before being published as a package. This first public tree co
 - **Guide chapter 7, "Arranging panels: layouts"** (English and Korean), linked from chapters 6, 8 and 12.
 - **`width_ratios` / `height_ratios` on `layouts.grid` and `layouts.matrix`**, as arguments or from
   `figures.grid` / `figures.matrix`; equal by default, so the cells `draw_plots` makes are unchanged.
+- **Composition: a layout inside a cell of another.** Call a layout on a cell instead of the figure
+  (`layouts.row(lay.cells["b"], fcfg, letters=("b", "c", "d"))`) to split that cell; `layouts.finish`,
+  called once on the outer layout, fits the inner panels and lines their letters up with the rest.
+  The inner layout's values sit under the cell's letter (`figures.cells.<letter>`); two levels at
+  most. Example `examples/layouts/compose/` and a "Composition" section on the layout catalog page.
 - **`scripts/layout_coverage.py --repo <project repository>`**: reads the projects' analysis scripts
   without running them and names the layout that draws each one's arrangement, or why none does
   (manual placement, a grid laid over another, a shape computed at run time, ...), with the lines
