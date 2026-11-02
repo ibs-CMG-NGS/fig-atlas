@@ -35,22 +35,33 @@ The repository's own evidence says that boundary is where most real figures live
 
 | | scripts | `add_gridspec` | height/width ratios | spans | nested | manual placement | `draw_plots` |
 |---|---|---|---|---|---|---|---|
-| exploratory (cmg-figures) | 54 | 51 | 48 | 29 | 13 | 21 | 2 |
-| paper (cmg-figures) | 29 | 15 | 14 | 4 | 10 | 13 | 0 |
+| exploratory (cmg-figures) | 54 | 51 | 48 | 29 | 16 | 10 | 2 |
+| paper (cmg-figures) | 29 | 15 | 14 | 4 | 15 | 16 | 0 |
 
 Measured 2026-11-02 by `python scripts/layout_coverage.py --repo ../cmg-figures` (card L-10), which
 reads the projects' `*_analysis.py` scripts without running them; its docstring defines each column.
 The first draft of this table counted by text search and differs where the definitions tightened:
-helper modules beside the scripts are no longer counted as projects (paper 32 -> 29); a panel spanning
-part of a row (`gs[0, 0:2]`) is a span as well as a full-row one (exploratory 13 -> 29); and a
-subfigure that takes one cell is a panel, not nesting (16 -> 13, 11 -> 10).
+helper modules beside the scripts are no longer projects (paper 32 -> 29); a panel spanning part of a
+row (`gs[0, 0:2]`) is a span as well as a full-row one (exploratory 13 -> 29); a subfigure taking one
+cell is a panel, while a second grid on the figure is nesting; and an axes placed or lined up inside a
+cell is the panel's own business, not manual placement.
 
-What the five layouts cover (same run): 20 of the 83 scripts draw an arrangement one layout makes
-(`stack` 7, `grid` 5, `wide_bottom` 4, `row` 4, `matrix` 0), with layout code falling from a median of
-9 lines to 5.5 (an estimate: the layout call, `finish`, one line per cell, inner grids kept). The 63
-others: placed by hand (`add_axes`/`set_position`, 16), a second grid laid over the first by
-coordinates (13), a grid shape computed at run time (15, the `4 x ncols` GO scripts), no grid in the
-script because a helper or the canvas draws it (15), a partial span (2), unequal cells in a grid (2).
+What the layouts cover (same run, 83 scripts):
+
+| | scripts |
+|---|---|
+| drawn by one of the five layouts today | 20 (`stack` 7, `grid` 5, `wide_bottom` 4, `row` 4) |
+| + a layout inside a cell of another (composition) | 37 |
+| + `ratios` on `grid`/`matrix` (13), an align helper (6), an overlay helper (2) | 57 |
+| not reached: drawn by a helper module or on the canvas | 15 |
+| not reached: a second grid placed over the first by bare numbers | 11 |
+
+Layout code of the 20 matched today falls from a median of 9 lines to 5.5 (an estimate: the layout
+call, `finish`, one line per cell, inner grids kept). Composition is what the unmatched scripts
+mostly lack -- a stack whose rows hold their own panels (`gs[r, c0:c1]`, the GO scripts with a computed
+column count), a row whose first cell spans the column (`gs[:, 0]`), a row redrawn over a band of the
+outer grid -- not a sixth shape. Adding names would not reach them; letting a cell hold a layout
+(and `finish` fit and tag through the levels) would.
 
 So today "structure is code" is true, but the code is retyped every time, unconventionally, and the
 non-obvious parts (outer-bbox fitting, panel-tag plumb lines) are the parts most often wrong.
@@ -180,8 +191,8 @@ Evidence is the count of the first draft (text search over `analysis/*/{explorat
 | `matrix` | many small panels, `rows x cols`, uniform | `letters`, `columns=` | 6 (5x3) / 0 | `matrix.wspace/hspace`, `matrix.columns` |
 | `row` | one row, `n` cells | `letters` | 4 (1x2, 1x3, 1x5) / 4 | `row.width_ratios` |
 
-The gap between evidence and matched is the scripts that also place a panel by hand or lay a second
-grid over the first: all six `5x3` scripts do, so `matrix` matches none of them today.
+The gap between evidence and matched is mostly composition (section 1). `matrix` matches none today
+because all six `5x3` scripts give their rows and columns unequal sizes; with `ratios` they would.
 
 Every layout's gaps default to 0 -- cells exactly as `draw_plots` makes them -- except `matrix`
 (0.06 / 0.12), so a dense wall is separated without retuning the rest of the project.

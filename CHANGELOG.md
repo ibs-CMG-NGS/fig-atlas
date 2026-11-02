@@ -85,7 +85,9 @@ of one manuscript before being published as a package. This first public tree co
 - **`scripts/layout_coverage.py --repo <project repository>`**: reads the projects' analysis scripts
   without running them and names the layout that draws each one's arrangement, or why none does
   (manual placement, a grid laid over another, a shape computed at run time, ...), with the lines
-  of layout code before and with the layout; `--csv` writes one row per script.
+  of layout code before and with the layout, and how many more a layout inside a cell of another
+  (composition), `ratios` on `grid`/`matrix`, or an align/overlay helper would reach; `--csv` writes
+  one row per script.
 - **Documentation**: a guide for researchers, tutorials run as tests (Case A, B and C worked
   examples among them), how-to guides, generated reference pages and a renderer gallery, design
   decision records, a documentation site (MkDocs) in English with a Korean version of every page
