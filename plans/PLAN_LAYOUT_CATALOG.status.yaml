@@ -209,14 +209,14 @@ cards:
     kind: spike
     phase: 5
     priority: P1
-    status: claimed
+    status: in_review
     depends_on: [L-02]
     owner: "claude-code 2026-11-02"
     branch: "layout/L-14-compose-spike"
-    commits: []
+    commits: ["fig-atlas a479cc6"]
     version: null
     review: null
-    notes: "throwaway script only; findings and a go/no-go with an L-15 estimate go into plan section 16; gate G5 decides"
+    notes: "throwaway script only; findings and a go/no-go with an L-15 estimate go into plan section 16; gate G5 decides. Delivered (2026-11-02): plans/spikes/L-14_compose.py (two composed figures, preflight clean, tags on shared plumb lines and baselines); findings 1-7 and a recommendation (build, 2.0 days) in plan section 16. Waiting for G5."
   - id: L-15
     title: "composition: a layout on a cell; finish fits and tags both levels; values under the cell letter"
     kind: code
