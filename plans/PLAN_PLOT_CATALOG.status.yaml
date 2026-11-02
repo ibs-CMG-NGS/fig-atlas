@@ -251,16 +251,16 @@ cards:
     kind: plot
     phase: 2
     priority: P1
-    status: in_review
+    status: done
     depends_on: []
     plot_type: column_scatter
     data: "group, value"
     owner: "claude-code 2026-11-02"
     branch: "plot/PC-05-column-scatter"
-    commits: ["fig-atlas 0a5cf0d"]
-    version: null
-    review: null
-    notes: "I-05 scope: aligned dot style as an option. Delivered (2026-11-02): fig_atlas/renderers/column_scatter.py (column family; category/value roles, point_layout swarm|jitter|aligned -- swarm without overlap at true values, squeezed to max_spread; summary mean|median|none, error none|sd|sem|ci95|iqr; brackets against control_category from pvalue_col, stacked), contract core.column_scatter + table contract docs (en/ko), example bundle examples/gallery/column_scatter (seeded Dunnett in the generator), snapshot cases column_scatter and column_scatter_aligned, tests/renderers/test_column_scatter.py. Evidence: full pytest exit 0; fa reference --check, fa inventory --check, fa lint --hardcoded --check, fa claims --check exit 0; example preflight clean at 85 mm; other examples and snapshots unchanged (V8). Awaiting G2."
+    commits: ["fig-atlas 0a5cf0d", "PR #17 (merge eefdded)"]
+    version: "unreleased (on fig-atlas main)"
+    review: "G2 approved 2026-11-02 (user); PR #17 merged; main CI 41369768811 success, Documentation site 41369768701 success"
+    notes: "I-05 scope: aligned dot style as an option. Delivered (2026-11-02): fig_atlas/renderers/column_scatter.py (column family; category/value roles, point_layout swarm|jitter|aligned -- swarm without overlap at true values, squeezed to max_spread; summary mean|median|none, error none|sd|sem|ci95|iqr; brackets against control_category from pvalue_col, stacked), contract core.column_scatter + table contract docs (en/ko), example bundle examples/gallery/column_scatter (seeded Dunnett in the generator), snapshot cases column_scatter and column_scatter_aligned, tests/renderers/test_column_scatter.py. Evidence: full pytest exit 0; fa reference --check, fa inventory --check, fa lint --hardcoded --check, fa claims --check exit 0; example preflight clean at 85 mm; other examples and snapshots unchanged (V8)."
   - id: PC-06
     title: "ROC curve with AUC"
     kind: plot
