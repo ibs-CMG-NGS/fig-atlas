@@ -3,7 +3,7 @@
 # finish a task (plan section 9); check the file against the package with
 #   python scripts/check_plan_layout_catalog.py
 plan_version: 2                 # revision 2 (plan section 16): L-13..L-16, gate G5
-package_version: "0.1.0.dev0 on main (0.2.0.dev1 pending in PR #25); branch layout/catalog rebased on f97ef86, 2026-11-02"
+package_version: "0.2.0 (released 2026-11-02 with the layout catalog, composition and fa layouts)"
 baseline:                       # what existed when the plan started (not tasks)
   layouts: 0                    # public layout functions in fig_atlas/layouts/
   layout_examples: 0            # example projects under examples/layouts/
@@ -11,7 +11,7 @@ gates:                          # researcher decisions (plan section 11): pendin
   G1: "passed 2026-11-02 (name `layouts`; `matrix` in v1; `single` dropped -- a one-panel figure is grid(columns=1); the new chapter is inserted after 06 as 07 and 07-13 renumber to 08-14)"
   G2: pending                   # mosaic (figures.layout) -- only after L-10 measured the coverage
   G3: pending                   # new required dependencies (expected: none)
-  G4: pending                   # release the catalog after L-09b is green
+  G4: "passed 2026-11-02 (user: released in 0.2.0 -- L-09b and the guide chapter green)"
   G5: "passed 2026-11-02 (user: build composition, L-15, as recommended in plan section 16)"
 phase_gates:                    # a phase's cards can start only after these gates have passed
   0: [G1]
