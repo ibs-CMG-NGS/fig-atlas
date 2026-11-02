@@ -70,14 +70,18 @@ def test_chapters_are_numbered_and_in_the_navigation():
 
 
 def test_chapter_number_matches_the_title():
-    """The file name's number and the title's number are the same: inserting a
-    chapter (L-09a renumbered 07-13 to 08-14) cannot leave one of them behind."""
-    for page in CHAPTERS:
+    """The file name's number, the title's number and the page heading's number
+    are the same, in both languages: inserting a chapter (L-09a renumbered 07-13
+    to 08-14) cannot leave one of them behind."""
+    for page in PAGES:
         number = int(page.name[:2])
         title = str(_front_matter(page)["title"])
         if number < 90:
             assert title.startswith(f"{number}. "), \
                 f"{page.name}: title {title!r} does not start with '{number}.'"
+            heading = re.search(r"^# (.+)$", _body(page), re.M).group(1)
+            assert heading.startswith(f"{number}. "), \
+                f"{page.name}: heading {heading!r} does not start with '{number}.'"
         else:
             assert re.match(r"^(Appendix|부록)", title), f"{page.name}: appendix title {title!r}"
 

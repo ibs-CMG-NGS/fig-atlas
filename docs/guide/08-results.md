@@ -4,7 +4,7 @@ audience: researchers (no programming experience needed)
 reviewed: 2026-10-14
 ---
 
-# 7. Checking the results
+# 8. Checking the results
 
 > **Has this ever happened to you?** Uploading figures to a journal, you were asked separately for "Source Data files", "details of statistical tests" and "image processing", and stayed up the night before submission collecting them.
 

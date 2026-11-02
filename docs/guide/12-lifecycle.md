@@ -4,7 +4,7 @@ audience: researchers (no programming experience needed)
 reviewed: 2026-10-14
 ---
 
-# 11. Into the paper: a figure's life
+# 12. Into the paper: a figure's life
 
 > **Has this ever happened to you?**
 > - Reorganising the paper, Figure 3 became Figure 4 and the old Figure 4 went to the supplement. Three months later you could not tell which figure the "Figure 3" of the meeting notes was.

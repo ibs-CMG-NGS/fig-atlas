@@ -4,7 +4,7 @@ audience: researchers (no programming experience needed)
 reviewed: 2026-10-14
 ---
 
-# 8. Reading the check results
+# 9. Reading the check results
 
 > **Has this ever happened to you?** Only at the proofs did you see that tick numbers overlapped, a panel title was cut off, and lines told apart only by red and green could not be told apart in black and white.
 
