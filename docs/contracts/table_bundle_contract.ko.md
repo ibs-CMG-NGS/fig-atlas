@@ -148,6 +148,27 @@ plot_params:
   orientation: horizontal
 ```
 
+## `plot_type: column_scatter` — 열 산점도 (점, 평균 또는 중앙값, 오차)
+
+범주마다 값을 점으로 찍고 평균 또는 중앙값 선과 오차 막대를 그립니다(`render_column_scatter`; Prism의 scatter dot plot). `point_layout: swarm`은 점을 실제 값에 둔 채 겹치지 않게 옆으로 펼치고, `jitter`는 무작위로 흩고, `aligned`는 한 세로줄에 둡니다. 괄호는 각 범주를 `control_category`와 비교합니다.
+
+| 역할 (plot_params 키) | 기본 열 이름 | 필수 | 내용 |
+|---|---|---|---|
+| `category_col` | `group` | 예 | 각 값의 범주 |
+| `value_col` | `value` | 예 | 값 |
+| `pvalue_col` | — | 아니오 | 범주의 행마다 그 범주의 `control_category` 대비 P 값. 분석 스크립트의 검정에서 구합니다([분석 레시피](../howto/analysis_recipes.md) 3절). 적으면 그 열이 있어야 합니다 |
+
+```yaml
+plot_type: column_scatter
+plot_params:
+  category_col: treatment
+  value_col: il6
+  control_category: vehicle
+  pvalue_col: p_vs_vehicle
+  summary: mean
+  error: sd
+```
+
 ## 검사
 
 `fa bundle check <번들>`이 오류로 보고하는 것:

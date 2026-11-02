@@ -139,6 +139,10 @@ CORE_CONTRACTS = [
              role_columns=(("category_col", "group"), ("value_col", "value")),
              role_optional=("pvalue_col",), doc="docs/contracts/table_bundle_contract.md",
              title="Distributions: one row per value (category, value), optional P value against a control category"),
+    Contract("core.column_scatter", ("column_scatter",),
+             role_columns=(("category_col", "group"), ("value_col", "value")),
+             role_optional=("pvalue_col",), doc="docs/contracts/table_bundle_contract.md",
+             title="Columns of points: one row per value (category, value), optional P value against a control category"),
 ]
 CORE_INGEST = {
     "venn": "fig_atlas.renderers:render_venn",
@@ -161,6 +165,7 @@ CORE_INGEST = {
     "grouped_bar": "fig_atlas.renderers:render_grouped_bar",
     "correlation_scatter": "fig_atlas.renderers:render_correlation_scatter",
     "raincloud": "fig_atlas.renderers:render_raincloud",
+    "column_scatter": "fig_atlas.renderers:render_column_scatter",
 }
 
 

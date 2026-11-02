@@ -18,6 +18,7 @@ import warnings
 
 from .bar_scatter import render_bar_scatter
 from .boxplot import render_boxplot
+from .column_scatter import render_column_scatter
 from .correlation_scatter import render_correlation_scatter
 from .dose_response import render_dose_response
 from .dot_matrix import render_dot_matrix
@@ -57,6 +58,7 @@ __all__ = [
     "align_title_to_labels",
     "render_bar_scatter",
     "render_boxplot",
+    "render_column_scatter",
     "render_correlation_scatter",
     "render_dose_response",
     "render_dot_matrix",

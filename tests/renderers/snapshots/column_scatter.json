@@ -1,0 +1,470 @@
+{
+ "freetype": "2.14.3",
+ "figsize_in": [
+  2.6,
+  2.2
+ ],
+ "artists": [
+  {
+   "kind": "Rectangle",
+   "fc": "#ffffffff",
+   "ec": "#ffffffff",
+   "lw": 0.0,
+   "bbox_pt": [
+    0.0,
+    0.0,
+    187.2,
+    158.4
+   ]
+  },
+  {
+   "kind": "Rectangle",
+   "fc": "#ffffffff",
+   "ec": "#00000000",
+   "lw": 0.0,
+   "bbox_pt": [
+    23.4,
+    17.42,
+    168.48,
+    139.39
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "374708fff7719dd5",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "3",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "vehicle",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "center",
+   "va": "top",
+   "bbox_pt": [
+    39.92,
+    4.62,
+    61.28,
+    10.42
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "3239b05c38b825eb",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "3",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "drug",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "center",
+   "va": "top",
+   "bbox_pt": [
+    88.99,
+    4.62,
+    102.89,
+    10.42
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "d48b908d1d6ca42c",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "3",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "drug + inhibitor",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "center",
+   "va": "top",
+   "bbox_pt": [
+    117.46,
+    4.62,
+    165.1,
+    10.42
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "8ad7cebeafce3e73",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "0",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "20",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "right",
+   "va": "center_baseline",
+   "bbox_pt": [
+    8.77,
+    21.63,
+    16.4,
+    27.43
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "c47c6be87d2d68fb",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "0",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "30",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "right",
+   "va": "center_baseline",
+   "bbox_pt": [
+    8.77,
+    48.64,
+    16.4,
+    54.45
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "1fb9f41de8b71184",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "0",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "40",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "right",
+   "va": "center_baseline",
+   "bbox_pt": [
+    8.77,
+    75.65,
+    16.4,
+    81.46
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "2fba37c16dc3dd4e",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "0",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "50",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "right",
+   "va": "center_baseline",
+   "bbox_pt": [
+    8.77,
+    102.67,
+    16.4,
+    108.47
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "a62e150c0caad0fc",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "0",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "60",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "right",
+   "va": "center_baseline",
+   "bbox_pt": [
+    8.77,
+    129.68,
+    16.4,
+    135.49
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "Level",
+   "size": 7.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 90.0,
+   "color": "#000000ff",
+   "ha": "center",
+   "va": "bottom",
+   "bbox_pt": [
+    -2.0,
+    69.15,
+    4.77,
+    87.67
+   ]
+  },
+  {
+   "kind": "PathCollection",
+   "n": 14,
+   "offsets": "063f6e43d168a0e1",
+   "paths": 1,
+   "fc": [
+    "#111827d9"
+   ],
+   "ec": [
+    "#ffffffd9"
+   ],
+   "lw": [
+    0.0
+   ],
+   "sizes": [
+    10.0
+   ]
+  },
+  {
+   "kind": "PathCollection",
+   "n": 14,
+   "offsets": "6f0eab085680c911",
+   "paths": 1,
+   "fc": [
+    "#2563ebd9"
+   ],
+   "ec": [
+    "#ffffffd9"
+   ],
+   "lw": [
+    0.0
+   ],
+   "sizes": [
+    10.0
+   ]
+  },
+  {
+   "kind": "PathCollection",
+   "n": 14,
+   "offsets": "f3a530017ac3b27c",
+   "paths": 1,
+   "fc": [
+    "#f59e0bd9"
+   ],
+   "ec": [
+    "#ffffffd9"
+   ],
+   "lw": [
+    0.0
+   ],
+   "sizes": [
+    10.0
+   ]
+  },
+  {
+   "kind": "Spine",
+   "fc": "#00000000",
+   "ec": "#000000ff",
+   "lw": 0.8,
+   "bbox_pt": [
+    19.9,
+    17.42,
+    23.4,
+    139.39
+   ]
+  },
+  {
+   "kind": "Spine",
+   "fc": "#00000000",
+   "ec": "#000000ff",
+   "lw": 0.8,
+   "bbox_pt": [
+    23.4,
+    13.92,
+    168.48,
+    17.42
+   ]
+  },
+  {
+   "kind": "LineCollection",
+   "n": 1,
+   "offsets": "374708fff7719dd5",
+   "paths": 3,
+   "fc": [],
+   "ec": [
+    "#111827ff"
+   ],
+   "lw": [
+    1.2
+   ],
+   "sizes": []
+  },
+  {
+   "kind": "LineCollection",
+   "n": 1,
+   "offsets": "374708fff7719dd5",
+   "paths": 3,
+   "fc": [],
+   "ec": [
+    "#111827ff"
+   ],
+   "lw": [
+    0.8
+   ],
+   "sizes": []
+  },
+  {
+   "kind": "Line2D",
+   "n": 3,
+   "data": "232508424f2519bd",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "_",
+   "ms": 6.0,
+   "mec": "#111827ff",
+   "mfc": null
+  },
+  {
+   "kind": "Line2D",
+   "n": 3,
+   "data": "f941963acd8cf472",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "_",
+   "ms": 6.0,
+   "mec": "#111827ff",
+   "mfc": null
+  },
+  {
+   "kind": "Line2D",
+   "n": 4,
+   "data": "84878ec1dacf2245",
+   "color": "#333333ff",
+   "lw": 0.8,
+   "ls": "-",
+   "marker": "None",
+   "ms": 6.0,
+   "mec": null,
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "***",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#333333ff",
+   "ha": "center",
+   "va": "bottom",
+   "bbox_pt": [
+    68.77,
+    120.74,
+    77.78,
+    126.55
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 4,
+   "data": "0eced7966e2820ce",
+   "color": "#333333ff",
+   "lw": 0.8,
+   "ls": "-",
+   "marker": "None",
+   "ms": 6.0,
+   "mec": null,
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "ns",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#333333ff",
+   "ha": "center",
+   "va": "bottom",
+   "bbox_pt": [
+    92.48,
+    128.97,
+    99.4,
+    134.77
+   ]
+  }
+ ]
+}

@@ -12,6 +12,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | [`chromosome_ideogram`](#chromosome_ideogram) | fig_atlas_omics.renderers | 42 |
 | [`cis_linkage_panel`](#cis_linkage_panel) | fig_atlas_omics.renderers | 20 |
 | [`clustered_go_heatmap`](#clustered_go_heatmap) | fig_atlas_omics.renderers | 21 |
+| [`column_scatter`](#column_scatter) | core | 45 |
 | [`correlation_scatter`](#correlation_scatter) | core | 55 |
 | [`count_summary`](#count_summary) | fig_atlas_omics.renderers | 20 |
 | [`cross_condition_dotplot`](#cross_condition_dotplot) | fig_atlas_omics.renderers | 62 |
@@ -314,6 +315,58 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `divider_lw` | number | `1.4` | pt | Width of the line between conditions |
 | `species_divider_color` | colour | `#CBD5E1` | hex color | Line between the two species of a condition |
 | `species_divider_lw` | number | `0.7` | pt | Width of the species divider |
+
+## column_scatter
+
+`fig_atlas.renderers:render_column_scatter`
+
+| Key | Type | Default | Unit | What it does |
+|---|---|---|---|---|
+| `category_col` | text | `group` |  | Column with the categories (one column of points each) |
+| `value_col` | text | `value` |  | Column with the values |
+| `pvalue_col` | text | auto |  | Column with each category's P value against control_category, from the analysis (default: none) |
+| `control_category` | text | auto |  | The category the brackets compare against (needed with pvalue_col) |
+| `category_order` | list | auto |  | Categories left to right (default: order in the data) |
+| `category_labels` | mapping | `{}` |  | Tick label per category (default: the value) |
+| `category_colors` | mapping | `{}` | hex color | Point colour per category (default: matplotlib colour cycle) |
+| `point_layout` | one of `swarm`, `jitter`, `aligned` | `swarm` |  | swarm: spread sideways without overlap; jitter: random spread; aligned: one vertical line |
+| `point_size` | number | `10.0` | pt^2 (marker area) | Point size — lower when a swarm grows wider than its column |
+| `point_alpha` | number | `0.85` | [0-1] opacity | Point opacity |
+| `point_edge_color` | colour | `#ffffff` | hex color | Point outline colour |
+| `point_edge_width` | number | `0.0` | pt | Point outline width (0: none) |
+| `point_marker` | text | `o` |  | Point marker (matplotlib marker) |
+| `swarm_spacing` | number | `1.05` | multiple of the point diameter | Distance kept between neighbouring points in a swarm — raise for more air between points |
+| `max_spread` | number | `0.8` | x units (categories are 1 apart) | Widest a swarm may grow; a wider one is squeezed (points then overlap) |
+| `point_jitter` | number | `0.15` | x units | Half-width of the random spread (jitter) |
+| `point_seed` | integer | `0` | random seed | Seed of the jitter (fixed: the same picture every build) |
+| `summary` | one of `mean`, `median`, `none` | `mean` |  | Horizontal line at each category's mean or median |
+| `error` | one of `none`, `sd`, `sem`, `ci95`, `iqr` | `sd` |  | Error bar: SD, SEM, 95% t-interval of the mean, or interquartile range (state it in the legend) |
+| `summary_width` | number | `0.5` | x units | Length of the summary line |
+| `summary_color` | colour | `#111827` | hex color | Summary line and error bar colour |
+| `summary_line_width` | number | `1.2` | pt | Summary line width |
+| `error_width` | number | `0.8` | pt | Error bar line width |
+| `error_cap_size` | number | `3.0` | pt | Error bar cap length (0: no caps) |
+| `show_significance` | true / false | `True` |  | Draw brackets when pvalue_col and control_category are given |
+| `sig_thresholds` | list | `[[0.001, '***'], [0.01, '**'], [0.05, '*']]` | P value | [threshold, symbol] pairs, P < threshold gets the symbol (state the rule in the legend) |
+| `sig_ns_display` | text | `ns` |  | Text for a P at or above every threshold ('' to draw no bracket) |
+| `sig_gap` | number | `0.05` | fraction of the y range | Gap between the highest point and a bracket |
+| `sig_tick` | number | `0.02` | fraction of the y range | Height of a bracket's end ticks |
+| `sig_step` | number | `0.09` | fraction of the y range | Vertical distance between stacked brackets — raise if the stars of stacked brackets touch |
+| `sig_line_color` | colour | `#333333` | hex color | Bracket colour |
+| `sig_line_width` | number | `0.8` | pt | Bracket line width |
+| `sig_font_size` | number | computed | pt | Star size (default: tick_label_size) |
+| `y_min` | number | auto | data coords | Lower y limit (default: the data less y_pad) |
+| `y_max` | number | auto | data coords | Upper y limit (default: the drawing plus y_pad) |
+| `y_pad` | number | `0.06` | fraction of the y range | Room below and above the marks |
+| `x_margin` | number | `0.1` | x units | Room left of the first and right of the last column |
+| `labels_title` | text | auto |  | Panel title (none: no title) |
+| `labels_xlabel` | text | `` |  | x-axis title (default: none; the ticks name the categories) |
+| `labels_ylabel` | text | computed |  | y-axis title (default: value_col) |
+| `title_size` | number | `8.0` | pt | Panel title size |
+| `axes_label_size` | number | auto | pt | Axis title size (default: rcParams) |
+| `tick_label_size` | number | auto | pt | Tick label size (default: rcParams) |
+| `xtick_rotation` | number | `0.0` | degrees | Rotation of the category labels — 45 for long names |
+| `hide_top_right` | true / false | `True` |  | Hide the top and right axis lines |
 
 ## correlation_scatter
 

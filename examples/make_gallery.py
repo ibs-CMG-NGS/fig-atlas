@@ -384,6 +384,21 @@ def raincloud(rng):
     return pd.DataFrame([{"treatment": t, "mouse": i, "latency_s": round(float(x), 1), "p_vs_vehicle": p[t]}
                          for t, v in lat.items() for i, x in enumerate(v, start=1)])
 
+
+def column_scatter(rng):
+    """Plasma IL-6 of mice: sham, vehicle and two drugs, 12 mice each. Sham and each
+    drug are compared with vehicle by Dunnett's test, as an analysis script would
+    (docs/howto/analysis_recipes.md, section 3); the renderer only draws the
+    p_vs_vehicle column."""
+    from scipy.stats import dunnett
+    il6 = {"sham": rng.normal(18, 4, 12), "vehicle": rng.normal(42, 9, 12),
+           "drug A": rng.normal(27, 7, 12), "drug B": rng.normal(38, 9, 12)}
+    others = ["sham", "drug A", "drug B"]
+    res = dunnett(*(il6[k] for k in others), control=il6["vehicle"], random_state=0)  # seeded integration
+    p = {"vehicle": None, **{k: float(f"{pv:.3g}") for k, pv in zip(others, res.pvalue)}}
+    return pd.DataFrame([{"treatment": t, "mouse": i, "il6_pg_ml": round(float(x), 1), "p_vs_vehicle": p[t]}
+                         for t, v in il6.items() for i, x in enumerate(v, start=1)])
+
 HEAD = "# Gallery example (examples/make_gallery.py): synthetic data, not measurements.\n"
 META = {
     "line_band": HEAD + """# inputs/data.csv: one row per replicate measurement -- strain (line), hour (x), od600 (y).
@@ -761,6 +776,22 @@ plot_params:
   orientation: horizontal       # or vertical
   labels_xlabel: "Escape latency (s)"
 """,
+    "column_scatter": HEAD + """# inputs/data.csv: one row per mouse -- treatment (category), il6_pg_ml (value), p_vs_vehicle (Dunnett P
+# against vehicle, computed when the data were made -- the renderer draws it, it runs no test). With your
+# data: keep these columns, or name yours below.
+plot_type: column_scatter
+plot_params:
+  category_col: treatment
+  value_col: il6_pg_ml
+  pvalue_col: p_vs_vehicle
+  control_category: vehicle
+  category_order: ["sham", "vehicle", "drug A", "drug B"]
+  category_colors: {"sham": "#9ca3af", "vehicle": "#111827", "drug A": "#2563eb", "drug B": "#93c5fd"}
+  point_layout: swarm           # or jitter, aligned
+  summary: mean
+  error: sd                     # sem, ci95, or iqr with summary: median -- say which in the legend
+  labels_ylabel: "Plasma IL-6 (pg/mL)"
+""",
 }
 
 
@@ -778,7 +809,8 @@ def main() -> None:
               "peak_feature_enrichment": peak_feature_enrichment,
               # plot catalog (plans/PLAN_PLOT_CATALOG.md), appended in card order
               "paired_plot": paired_plot, "grouped_bar": grouped_bar,
-              "correlation_scatter": correlation_scatter, "raincloud": raincloud}
+              "correlation_scatter": correlation_scatter, "raincloud": raincloud,
+              "column_scatter": column_scatter}
     for name, make in makers.items():
         _write(name, make(rng), META[name])
     # The images get their own random stream, so adding a table example never changes their pixels.

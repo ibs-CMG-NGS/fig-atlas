@@ -148,6 +148,27 @@ plot_params:
   orientation: horizontal
 ```
 
+## `plot_type: column_scatter` — column scatter (points, mean or median, error)
+
+Draws the values of each category as points with a mean or median line and error bars (`render_column_scatter`; Prism's scatter dot plot). `point_layout: swarm` spreads the points sideways without overlap at their true values, `jitter` scatters them at random, `aligned` puts them on one vertical line. Brackets compare each category with `control_category`.
+
+| Role (plot_params key) | Default column name | Required | Content |
+|---|---|---|---|
+| `category_col` | `group` | Yes | The category of each value |
+| `value_col` | `value` | Yes | The values |
+| `pvalue_col` | — | No | On each category's rows, its P value against `control_category`, from a test run in the analysis script ([analysis recipes](../howto/analysis_recipes.md), section 3). If given, the column must exist |
+
+```yaml
+plot_type: column_scatter
+plot_params:
+  category_col: treatment
+  value_col: il6
+  control_category: vehicle
+  pvalue_col: p_vs_vehicle
+  summary: mean
+  error: sd
+```
+
 ## Checks
 
 `fa bundle check <bundle>` reports as errors:

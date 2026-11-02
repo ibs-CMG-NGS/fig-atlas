@@ -763,6 +763,34 @@ def raincloud_vertical():
                                          "orientation": "vertical", "labels_ylabel": "Score"})
     return fig
 
+
+def _columns(rng):
+    return pd.DataFrame({"arm": ["vehicle"] * 14 + ["drug"] * 14 + ["drug + inhibitor"] * 14,
+                         "level": np.r_[rng.normal(40, 8, 14), rng.normal(25, 6, 14), rng.normal(37, 8, 14)],
+                         "p": [None] * 14 + [0.0001] * 14 + [0.4] * 14})
+
+
+def column_scatter():
+    """PC-05: swarm, mean +/- SD, brackets against vehicle (stacked)."""
+    from fig_atlas.renderers import render_column_scatter
+    fig, ax = plt.subplots(figsize=(2.6, 2.2))
+    render_column_scatter(ax, _columns(_rng()), {**TYPO, "category_col": "arm", "value_col": "level",
+                                                 "pvalue_col": "p", "control_category": "vehicle",
+                                                 "category_colors": {"vehicle": "#111827", "drug": "#2563eb",
+                                                                     "drug + inhibitor": "#f59e0b"},
+                                                 "labels_ylabel": "Level"})
+    return fig
+
+
+def column_scatter_aligned():
+    """PC-05 scope: aligned dots, median and interquartile range."""
+    from fig_atlas.renderers import render_column_scatter
+    fig, ax = plt.subplots(figsize=(2.6, 2.2))
+    render_column_scatter(ax, _columns(_rng()), {**TYPO, "category_col": "arm", "value_col": "level",
+                                                 "point_layout": "aligned", "summary": "median", "error": "iqr",
+                                                 "labels_ylabel": "Level"})
+    return fig
+
 CASES = {
     "cross_condition_dotplot": cross_condition_dotplot,
     "cross_condition_heatmap": cross_condition_heatmap,
@@ -816,6 +844,8 @@ CASES = {
     "correlation_scatter_pooled": correlation_scatter_pooled,
     "raincloud": raincloud,
     "raincloud_vertical": raincloud_vertical,
+    "column_scatter": column_scatter,
+    "column_scatter_aligned": column_scatter_aligned,
 }
 
 # Gallery families (fig_atlas.family) for pictures that are not a renderer
