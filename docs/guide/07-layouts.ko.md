@@ -83,7 +83,7 @@ figures:
         width_ratios: [1.0, 1.0, 1.0]   # b, c, d의 폭
 ```
 
-💬 **AI에게 말하기:** "first-figure에서 가운데 줄을 패널 세 개로 나눠 줘." 예제는 `examples/layouts/compose/`에 있습니다. 레이아웃은 두 단계까지만 겹칩니다.
+💬 **AI에게 말하기:** "first-figure에서 가운데 줄을 패널 세 개로 나눠 줘." 예제는 `examples/layouts/compose/`에 있고, [튜토리얼: 레이아웃으로 패널 배치하기](../tutorials/layouts.md)가 한 단계씩 해 봅니다. 레이아웃은 두 단계까지만 겹칩니다.
 
 ## 자주 바꾸는 값
 

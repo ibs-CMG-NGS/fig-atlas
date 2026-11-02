@@ -57,9 +57,7 @@ def catalog() -> dict:
     from . import _core
 
     entries = []
-    for name in layouts.__all__:
-        if name in ("Layout", "finish"):
-            continue
+    for name in layouts.LAYOUTS:
         fn = getattr(layouts, name)
         info = _parse(sys.modules[fn.__module__].__doc__ or "")
         entries.append({"name": name, "call": f"layouts.{name}{inspect.signature(fn)}", **info,

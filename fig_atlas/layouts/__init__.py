@@ -28,11 +28,12 @@ the canvas (a schematic, a timeline) is a renderer with the ``(fig, df)``
 shape, not a layout. Nothing here imports matplotlib at package load: the
 drawing helpers are imported inside ``finish``.
 """
-from ._core import Layout, finish
+from ._core import Layout, finish, panel_cells
 from .grid import grid
 from .matrix import matrix
 from .row import row
 from .stack import stack
 from .wide_bottom import wide_bottom
 
-__all__ = ["Layout", "finish", "grid", "wide_bottom", "stack", "matrix", "row"]
+LAYOUTS = ("grid", "wide_bottom", "stack", "matrix", "row")      # the layouts; the rest are helpers
+__all__ = ["Layout", "finish", "panel_cells", *LAYOUTS]

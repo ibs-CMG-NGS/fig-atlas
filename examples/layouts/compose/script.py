@@ -22,8 +22,8 @@ def build():
     plt.rcParams.update(CFG["rc"])          # once, before drawing (AGENTS.md 1.4)
     fig = plt.figure(figsize=(fcfg["width_mm"] / 25.4, fcfg["height_mm"] / 25.4))
     lay = layouts.stack(fig, fcfg, letters=("a", "b", "e"))
-    inner = layouts.row(lay.cells["b"], fcfg, letters=("b", "c", "d"))    # split cell b into b | c | d
-    cells = {**lay.cells, **inner.cells}
+    layouts.row(lay.cells["b"], fcfg, letters=("b", "c", "d"))    # split cell b into b | c | d
+    cells = layouts.panel_cells(lay)        # every panel's cell, the split ones included
     for letter, panel in CFG["panels"].items():
         draw(cells[letter], panel)
     layouts.finish(fig, lay, fcfg)          # once, on the outer layout

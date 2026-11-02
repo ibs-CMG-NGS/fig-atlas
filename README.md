@@ -87,6 +87,7 @@ and open http://127.0.0.1:8000.
 - **Guide for researchers** (`docs/guide/`, English with a Korean version): what the tool does and how a figure flows from data
   to paper, for scientists with no programming background.
 - **Tutorials**: [first figure](docs/tutorials/first_figure.md) (run by CI as written),
+  [arrange the panels with a layout](docs/tutorials/layouts.md),
   [imaging figure](docs/tutorials/imaging_figure.md).
 - **How-to**: [connect AI agents](docs/howto/ai_agents.md), [write a domain pack](docs/howto/new_domain_pack.md).
 - **Reference** (generated from the code): [commands](docs/reference/cli.md), [Python functions](docs/reference/api.md),

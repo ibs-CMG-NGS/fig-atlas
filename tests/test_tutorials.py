@@ -38,6 +38,23 @@ def test_first_figure_tutorial(tmp_path):
     assert "Two compounds lower viability" in (figure / "README.md").read_text(encoding="utf-8")
 
 
+def test_layouts_tutorial(tmp_path):
+    """Three panels in one row, then wide_bottom, then a stack with a split row:
+    the checks go from the tick-label error to clean (the colour warning stays,
+    as the page says), and the last script draws through panel_cells."""
+    doc = ROOT / "docs" / "tutorials" / "layouts.md"
+    _copy_repo(tmp_path)
+    outputs = _run_tutorial(doc, tmp_path)
+    preflights = [o for o in outputs if "error(s)," in o]
+    assert len(preflights) == 3
+    assert "1 error(s), 3 warning(s)" in preflights[0] and "tick_label_collision" in preflights[0]
+    for later in preflights[1:]:
+        assert "0 error(s), 1 warning(s)" in later and "cvd_indistinct" in later
+    script = (tmp_path / "analysis" / "panel-layout_analysis.py").read_text(encoding="utf-8")
+    assert "layouts.panel_cells(lay)" in script and "draw_plots(" not in script
+    assert (tmp_path / "outputs" / "panel-layout" / "figures" / "figure_01_main" / "figure_01.png").is_file()
+
+
 def test_data_change_tutorial(tmp_path):
     """Promotion, a storyline, a changed delivery found by status and impact,
     a rebuild and a revision: two compendium snapshots, the diff names the input."""

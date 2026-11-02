@@ -126,3 +126,15 @@ def test_finish_without_composition_is_unchanged(fig, kit):
     kit.draw(lay)
     layouts.finish(fig, lay, {})
     assert kit.tags(fig) == list("abcd")
+
+
+def test_panel_cells_collects_every_panel(fig):
+    """The cells to draw into: the outer ones and those of the split cells, not the split cells."""
+    outer = layouts.stack(fig, FCFG, letters=("a", "b", "e"))
+    inner = layouts.row(outer.cells["b"], FCFG, letters=("b", "c", "d"))
+    cells = layouts.panel_cells(outer)
+    assert sorted(cells) == list("abcde")
+    assert cells["a"] is outer.cells["a"] and cells["e"] is outer.cells["e"]
+    assert cells["b"] is inner.cells["b"] and cells["b"] is not outer.cells["b"]
+    plain = layouts.grid(fig, {}, "ab", columns=2)
+    assert layouts.panel_cells(plain) == plain.cells                       # nothing split: the layout's own
