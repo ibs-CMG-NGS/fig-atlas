@@ -12,7 +12,7 @@ gates:                          # researcher decisions (plan section 11): pendin
   G2: pending                   # mosaic (figures.layout) -- only after L-10 measured the coverage
   G3: pending                   # new required dependencies (expected: none)
   G4: pending                   # release the catalog after L-09b is green
-  G5: pending                   # composition: build, shrink or drop -- after the L-14 spike (plan section 16)
+  G5: "passed 2026-11-02 (user: build composition, L-15, as recommended in plan section 16)"
 phase_gates:                    # a phase's cards can start only after these gates have passed
   0: [G1]
   1: [G1]
@@ -222,10 +222,10 @@ cards:
     kind: code
     phase: 6
     priority: P1
-    status: todo
+    status: claimed
     depends_on: [L-14]
-    owner: null
-    branch: null
+    owner: "claude-code 2026-11-02"
+    branch: "layout/L-15-composition"
     commits: []
     version: null
     review: null
