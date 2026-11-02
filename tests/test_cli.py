@@ -58,6 +58,21 @@ def test_find_root_outside_repo_fails(tmp_path):
         find_root(tmp_path)
 
 
+@pytest.mark.parametrize("argv", [["layouts"], ["renderers"], ["bundle", "contracts"]])
+def test_package_listings_run_outside_a_repository(tmp_path, monkeypatch, capsys, argv):
+    """What the package can draw and arrange is shown right after installing, before `fa init`."""
+    monkeypatch.chdir(tmp_path)
+    assert main(argv) == EXIT_OK
+    assert capsys.readouterr().out.strip()
+
+
+def test_repository_commands_still_need_a_repository(tmp_path, monkeypatch, capsys):
+    monkeypatch.chdir(tmp_path)
+    assert main(["list"]) == EXIT_USAGE
+    assert main(["bundle", "check", str(tmp_path)]) == EXIT_USAGE
+    assert "no fig-atlas project repository" in capsys.readouterr().err
+
+
 def test_list_and_find(repo):
     names = {p.name: p for p in list_projects(repo)}
     assert set(names) == {"good", "broken", "old"}
