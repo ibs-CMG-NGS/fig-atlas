@@ -1,0 +1,24 @@
+# Layout example: row -- panels side by side in one row (fig_atlas/layouts/row.py).
+# Copy the figures: keys into your project config; panels: and rc: only serve this example.
+figures:
+  width_mm: 180               # Figure width in mm (two journal columns)
+  height_mm: 60               # Figure height in mm
+  wspace: 0.1                 # Gap between the panels, fraction of the mean width
+  row:                        # [row] the layout's own block
+    width_ratios: [1.0, 1.3, 1.0]    # Panel widths left to right; the middle one is wider for its legend
+  panel_pad_mm: 1.0           # Margin in mm between a panel's outer edge (labels included) and its cell; raise for more air
+  tags:                       # Panel letters on the panels' outer bounding boxes (AGENTS.md 1.5)
+    show: true                # Draw the letters
+    size: 9.0                 # Letter size in pt
+    pad_pt: 2.0               # Gap in pt between a letter and its panel's outer edge
+panels:                     # letter -> example bundle in examples/gallery/ (stands in for your data)
+  a: correlation_scatter
+  b: survival
+  c: dose_response
+rc:                         # print typography in pt (the fig-atlas print preset), set once before drawing
+  font.size: 7
+  axes.titlesize: 8
+  axes.labelsize: 7
+  xtick.labelsize: 6
+  ytick.labelsize: 6
+  legend.fontsize: 6
