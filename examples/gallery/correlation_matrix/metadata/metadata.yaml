@@ -1,0 +1,10 @@
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per pair of variables -- var1, var2, r, p_value (Pearson, computed when the
+# data were made from 80 patients). The renderer draws them; it correlates nothing. With your data: keep
+# these columns, or name yours below.
+plot_type: correlation_matrix
+plot_params:
+  p_col: p_value
+  variable_order: ["age", "BMI", "SBP", "glucose", "HDL", "steps"]
+  triangle: lower
+  mark: square                  # or circle

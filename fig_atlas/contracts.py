@@ -153,6 +153,10 @@ CORE_CONTRACTS = [
              role_optional=("group_col", "bias_col", "loa_low_col", "loa_high_col"),
              doc="docs/contracts/table_bundle_contract.md",
              title="Agreement: one row per sample (two methods), optional bias and limits of agreement from the analysis"),
+    Contract("core.correlation_matrix", ("correlation_matrix",),
+             role_columns=(("row_col", "var1"), ("col_col", "var2"), ("r_col", "r")),
+             role_optional=("p_col",), doc="docs/contracts/table_bundle_contract.md",
+             title="Correlation matrix: one row per pair of variables with r and optional P from the analysis"),
 ]
 CORE_INGEST = {
     "venn": "fig_atlas.renderers:render_venn",
@@ -178,6 +182,7 @@ CORE_INGEST = {
     "column_scatter": "fig_atlas.renderers:render_column_scatter",
     "roc_curve": "fig_atlas.renderers:render_roc_curve",
     "bland_altman": "fig_atlas.renderers:render_bland_altman",
+    "correlation_matrix": "fig_atlas.renderers:render_correlation_matrix",
 }
 
 

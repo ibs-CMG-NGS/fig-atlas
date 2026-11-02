@@ -14,6 +14,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | [`cis_linkage_panel`](#cis_linkage_panel) | fig_atlas_omics.renderers | 20 |
 | [`clustered_go_heatmap`](#clustered_go_heatmap) | fig_atlas_omics.renderers | 21 |
 | [`column_scatter`](#column_scatter) | core | 45 |
+| [`correlation_matrix`](#correlation_matrix) | core | 37 |
 | [`correlation_scatter`](#correlation_scatter) | core | 55 |
 | [`count_summary`](#count_summary) | fig_atlas_omics.renderers | 20 |
 | [`cross_condition_dotplot`](#cross_condition_dotplot) | fig_atlas_omics.renderers | 62 |
@@ -421,6 +422,50 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `tick_label_size` | number | auto | pt | Tick label size (default: rcParams) |
 | `xtick_rotation` | number | `0.0` | degrees | Rotation of the category labels — 45 for long names |
 | `hide_top_right` | true / false | `True` |  | Hide the top and right axis lines |
+
+## correlation_matrix
+
+`fig_atlas.renderers:render_correlation_matrix`
+
+| Key | Type | Default | Unit | What it does |
+|---|---|---|---|---|
+| `row_col` | text | `var1` |  | Column with the first variable of each pair |
+| `col_col` | text | `var2` |  | Column with the second variable of each pair |
+| `r_col` | text | `r` |  | Column with the pair's correlation, from the analysis |
+| `p_col` | text | auto |  | Column with the pair's P value, from the analysis (default: no stars) |
+| `variable_order` | list | auto |  | Variables in order, top to bottom and left to right (default: data) |
+| `variable_labels` | mapping | `{}` |  | Shown name per variable (default: the name) |
+| `triangle` | one of `lower`, `upper`, `full` | `lower` |  | Which cells to draw |
+| `show_diagonal` | true / false | `False` |  | Draw the diagonal (r = 1 unless the table gives it) |
+| `mark` | one of `square`, `circle` | `square` |  | square: filled cell; circle: area proportional to \|r\| |
+| `circle_scale` | number | `0.95` | fraction of the cell | Diameter of a circle with \|r\| = 1 |
+| `cmap` | colormap | `RdBu_r` |  | Diverging colormap of r |
+| `r_min` | number | `-1.0` | r | r at the low end of the colormap |
+| `r_max` | number | `1.0` | r | r at the high end of the colormap |
+| `cell_edge_color` | colour | `#ffffff` | hex color | Line between cells |
+| `cell_edge_width` | number | `0.8` | pt | Width of the line between cells |
+| `hide_above_p` | number | auto | P value | Leave a cell blank when its P is at or above this (default: draw every cell) |
+| `blank_color` | colour | `#f3f4f6` | hex color | Fill of a blank cell |
+| `show_values` | true / false | `True` |  | Write r (and the stars) in each cell |
+| `value_format` | text | `{r:.2f} {stars}` |  | Cell text; fields r, p and stars (a newline puts the stars under r; empty lines are dropped) |
+| `value_size` | number | computed | pt | Cell text size (default: tick_label_size) |
+| `value_line_spacing` | number | `1.0` | multiple of the font size | Spacing of the lines of a cell text |
+| `value_light_color` | colour | `#ffffff` | hex color | Text colour on dark cells |
+| `value_dark_color` | colour | `#111827` | hex color | Text colour on light cells |
+| `sig_thresholds` | list | `[[0.001, '***'], [0.01, '**'], [0.05, '*']]` | P value | [threshold, symbol] pairs for the stars field (state the rule in the legend) |
+| `show_colorbar` | true / false | `True` |  | Show the colourbar |
+| `colorbar_label` | text | `r` |  | Colourbar title |
+| `colorbar_loc` | one of `right`, `left`, `top`, `bottom` | `right` |  | Side of the colourbar |
+| `colorbar_shrink` | number | `0.8` | fraction of the axes | Colourbar length |
+| `colorbar_fraction` | number | `0.05` | fraction of the axes | Colourbar thickness |
+| `colorbar_pad` | number | `0.04` | fraction of the axes | Gap to the colourbar |
+| `colorbar_ticks` | list | `[-1, -0.5, 0, 0.5, 1]` | r | Colourbar ticks |
+| `labels_title` | text | auto |  | Panel title (none: no title) |
+| `title_size` | number | `8.0` | pt | Panel title size |
+| `axes_label_size` | number | auto | pt | Colourbar title size (default: rcParams) |
+| `tick_label_size` | number | auto | pt | Variable name size (default: rcParams) |
+| `tick_length` | number | `0.0` | pt | Tick mark length beside the names (0: none) |
+| `xtick_rotation` | number | `45.0` | degrees | Rotation of the column names — 90 for long names |
 
 ## correlation_scatter
 

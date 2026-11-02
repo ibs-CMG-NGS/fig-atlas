@@ -67,6 +67,9 @@ of one manuscript before being published as a package. This first public tree co
 - **PC-07 `bland_altman`** (diagnostic): agreement of two methods -- each sample's difference (or
   percent difference) against its mean, the bias and the limits of agreement from columns the
   analysis writes (`bias_col`, `loa_low_col`, `loa_high_col`), labelled at the right edge.
+- **PC-08 `correlation_matrix`** (multivariate): a lower, upper or full triangle of cells coloured by r
+  -- squares, or circles with area following |r| -- from a long table of pairs the analysis writes,
+  r and stars in the cells, blank cells above a P cut-off (`hide_above_p`), and a colourbar.
 - **Documentation**: a guide for researchers, tutorials run as tests (Case A, B and C worked
   examples among them), how-to guides, generated reference pages and a renderer gallery, design
   decision records, a documentation site (MkDocs) in English with a Korean version of every page

@@ -296,16 +296,16 @@ cards:
     kind: plot
     phase: 2
     priority: P1
-    status: todo
+    status: in_review
     depends_on: []
     plot_type: correlation_matrix
-    data: "wide table: one column per variable"
-    owner: null
-    branch: null
-    commits: []
+    data: "long table of pairs: var1, var2, r, optional p (from the analysis)"
+    owner: "claude-code 2026-11-02"
+    branch: "plot/PC-08-correlation-matrix"
+    commits: ["fig-atlas 136b695"]
     version: null
     review: null
-    notes: "plan v3: the r matrix and p values come from the analysis script (recipe I-04); the renderer draws the triangle and the value labels."
+    notes: "plan v3: the r matrix and p values come from the analysis script (recipe I-04); the renderer draws the triangle and the value labels. Delivered (2026-11-02): fig_atlas/renderers/correlation_matrix.py (multivariate family; input is a long table of pairs -- var1, var2, r, optional p -- rather than the wide table first written in data, since the renderer must not correlate; triangle lower|upper|full, optional diagonal, mark square|circle (area ~ |r|), r and stars in the cells, blank cells above hide_above_p, colourbar), contract core.correlation_matrix + table contract docs (en/ko), example bundle examples/gallery/correlation_matrix (Pearson r and P per pair in the generator), snapshot cases correlation_matrix and correlation_matrix_circles, tests/renderers/test_correlation_matrix.py; the bland_altman minus-sign helper moved to _basic.Signed. Evidence: full pytest exit 0; fa reference --check, fa inventory --check, fa lint --hardcoded --check, fa claims --check exit 0; example preflight clean at 85 mm; other examples and snapshots unchanged (V8). Awaiting G2."
   - id: E-01
     title: "statistical brackets and stars on column graphs"
     kind: enhance

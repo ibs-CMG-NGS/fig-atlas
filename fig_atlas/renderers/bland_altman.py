@@ -16,14 +16,13 @@ fig_atlas.source_data.add.
 """
 from __future__ import annotations
 
-import matplotlib
 import numpy as np
 import pandas as pd
 
 from fig_atlas.params import text_param
 from fig_atlas.schema import Param, Schema, uses_schema
 
-from ._basic import GROUPS, TEXT, groups, legend
+from ._basic import GROUPS, TEXT, Signed, groups, legend
 
 FAMILY = "diagnostic"    # gallery family (fig_atlas/family.py): the shape this module draws
 
@@ -78,14 +77,6 @@ def _first(df: pd.DataFrame, col: str | None):
     return float(vals.iloc[0]) if len(vals) else None
 
 
-class _Signed(float):
-    """A value that formats its minus sign the way the axes do (axes.unicode_minus)."""
-
-    def __format__(self, spec):
-        text = format(float(self), spec)
-        return text.replace("-", "−") if matplotlib.rcParams["axes.unicode_minus"] else text
-
-
 @uses_schema(SCHEMA)
 def render_bland_altman(ax, df, params):
     """Draw the Bland-Altman plot onto ``ax``; returns the points drawn."""
@@ -128,7 +119,7 @@ def render_bland_altman(ax, df, params):
                    linestyle=params.get(f"{kind}_style", "-" if kind == "bias" else "--"), zorder=2)
         if params.get("show_line_labels", True):
             below = key == "loa_low"                       # the lower limit's label sits under its line
-            ax.annotate(params.get(f"{key}_label", default).format(value=_Signed(value)), xy=(1, value),
+            ax.annotate(params.get(f"{key}_label", default).format(value=Signed(value)), xy=(1, value),
                         xycoords=("axes fraction", "data"), xytext=(-pad, -pad if below else pad),
                         textcoords="offset points", ha="right", va="top" if below else "bottom", color=color,
                         zorder=4, **({} if size is None else {"fontsize": size}))

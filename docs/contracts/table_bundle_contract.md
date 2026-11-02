@@ -217,6 +217,25 @@ plot_params:
   loa_high_col: loa_high
 ```
 
+## `plot_type: correlation_matrix` — correlation matrix (triangle, values, stars)
+
+Draws the correlations among a set of variables as a lower, upper or full triangle of cells coloured by r -- squares, or circles whose area follows |r| -- with r and significance stars in the cells and a colourbar (`render_correlation_matrix`). The r and P of every pair come from the analysis script ([analysis recipes](../howto/analysis_recipes.md), section 4) as a long table: one row per pair.
+
+| Role (plot_params key) | Default column name | Required | Content |
+|---|---|---|---|
+| `row_col` | `var1` | Yes | The first variable of the pair |
+| `col_col` | `var2` | Yes | The second variable (a pair given once is drawn on both sides of the diagonal) |
+| `r_col` | `r` | Yes | The pair's correlation |
+| `p_col` | — | No | The pair's P value: stars in the cells, and blank cells with `hide_above_p`. If given, the column must exist |
+
+```yaml
+plot_type: correlation_matrix
+plot_params:
+  p_col: p_value
+  triangle: lower
+  mark: square        # or circle
+```
+
 ## Checks
 
 `fa bundle check <bundle>` reports as errors:

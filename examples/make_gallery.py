@@ -447,6 +447,28 @@ def bland_altman(rng):
                          "bias": round(bias, 4), "loa_low": round(bias - 1.96 * sd, 4),
                          "loa_high": round(bias + 1.96 * sd, 4)})
 
+
+def correlation_matrix(rng):
+    """Six clinical variables of 80 patients. Pearson r and P of every pair are
+    computed here, as an analysis script would (docs/howto/analysis_recipes.md,
+    section 4), and written one row per pair; the renderer only draws them."""
+    from scipy.stats import pearsonr
+    n = 80
+    age = rng.normal(55, 10, n)
+    bmi = rng.normal(27, 4, n)
+    sbp = 90 + 0.6 * age + 0.8 * bmi + rng.normal(0, 8, n)
+    glucose = 70 + 0.5 * bmi + 0.2 * age + rng.normal(0, 8, n)
+    hdl = 75 - 0.9 * bmi + rng.normal(0, 7, n)
+    steps = 12000 - 60 * age - 120 * bmi + rng.normal(0, 1500, n)
+    wide = {"age": age, "BMI": bmi, "SBP": sbp, "glucose": glucose, "HDL": hdl, "steps": steps}
+    names = list(wide)
+    rows = []
+    for i, a in enumerate(names):
+        for b in names[i + 1:]:
+            r, p = pearsonr(wide[a], wide[b])
+            rows.append({"var1": a, "var2": b, "r": round(float(r), 4), "p_value": float(f"{p:.3g}")})
+    return pd.DataFrame(rows)
+
 HEAD = "# Gallery example (examples/make_gallery.py): synthetic data, not measurements.\n"
 META = {
     "line_band": HEAD + """# inputs/data.csv: one row per replicate measurement -- strain (line), hour (x), od600 (y).
@@ -867,6 +889,16 @@ plot_params:
   labels_xlabel: "Mean HbA1c (%)"
   labels_ylabel: "Laboratory \u2212 device (%)"
 """,
+    "correlation_matrix": HEAD + """# inputs/data.csv: one row per pair of variables -- var1, var2, r, p_value (Pearson, computed when the
+# data were made from 80 patients). The renderer draws them; it correlates nothing. With your data: keep
+# these columns, or name yours below.
+plot_type: correlation_matrix
+plot_params:
+  p_col: p_value
+  variable_order: ["age", "BMI", "SBP", "glucose", "HDL", "steps"]
+  triangle: lower
+  mark: square                  # or circle
+""",
 }
 
 
@@ -886,7 +918,7 @@ def main() -> None:
               "paired_plot": paired_plot, "grouped_bar": grouped_bar,
               "correlation_scatter": correlation_scatter, "raincloud": raincloud,
               "column_scatter": column_scatter, "roc_curve": roc_curve,
-              "bland_altman": bland_altman}
+              "bland_altman": bland_altman, "correlation_matrix": correlation_matrix}
     for name, make in makers.items():
         _write(name, make(rng), META[name])
     # The images get their own random stream, so adding a table example never changes their pixels.
