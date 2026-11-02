@@ -33,10 +33,24 @@ size ratios, nested grids -- needs a layout script.
 
 The repository's own evidence says that boundary is where most real figures live:
 
-| | scripts | `add_gridspec` | height/width ratios | spans | nested (`subgridspec`) | manual placement | `draw_plots` |
+| | scripts | `add_gridspec` | height/width ratios | spans | nested | manual placement | `draw_plots` |
 |---|---|---|---|---|---|---|---|
-| exploratory (cmg-figures) | 53 | 51 | 48 | 13 | 16 | 21 | 1 |
-| paper (cmg-figures) | 32 | 15 | 14 | 4 | 11 | 14 | 0 |
+| exploratory (cmg-figures) | 54 | 51 | 48 | 29 | 13 | 21 | 2 |
+| paper (cmg-figures) | 29 | 15 | 14 | 4 | 10 | 13 | 0 |
+
+Measured 2026-11-02 by `python scripts/layout_coverage.py --repo ../cmg-figures` (card L-10), which
+reads the projects' `*_analysis.py` scripts without running them; its docstring defines each column.
+The first draft of this table counted by text search and differs where the definitions tightened:
+helper modules beside the scripts are no longer counted as projects (paper 32 -> 29); a panel spanning
+part of a row (`gs[0, 0:2]`) is a span as well as a full-row one (exploratory 13 -> 29); and a
+subfigure that takes one cell is a panel, not nesting (16 -> 13, 11 -> 10).
+
+What the five layouts cover (same run): 20 of the 83 scripts draw an arrangement one layout makes
+(`stack` 7, `grid` 5, `wide_bottom` 4, `row` 4, `matrix` 0), with layout code falling from a median of
+9 lines to 5.5 (an estimate: the layout call, `finish`, one line per cell, inner grids kept). The 63
+others: placed by hand (`add_axes`/`set_position`, 16), a second grid laid over the first by
+coordinates (13), a grid shape computed at run time (15, the `4 x ncols` GO scripts), no grid in the
+script because a helper or the canvas draws it (15), a partial span (2), unequal cells in a grid (2).
 
 So today "structure is code" is true, but the code is retyped every time, unconventionally, and the
 non-obvious parts (outer-bbox fitting, panel-tag plumb lines) are the parts most often wrong.
@@ -155,15 +169,19 @@ Rules the implementation must follow:
 
 ## 6. The five layouts (v1) and why each exists
 
-Counts are from `analysis/*/{exploratory,paper}/*.py` in `cmg-figures` (card L-10 reproduces them).
+Evidence is the count of the first draft (text search over `analysis/*/{exploratory,paper}/*.py` in
+`cmg-figures`); "matched" is what `scripts/layout_coverage.py` assigns to the layout (L-10, section 1).
 
-| name | shape | cells / letters | evidence (scripts) | config sub-block |
+| name | shape | cells / letters | evidence (scripts) / matched | config sub-block |
 |---|---|---|---|---|
-| `wide_bottom` | `n x 2` grid + one panel spanning the last row | `top=(...), bottom="x"` | 14 (2x2 with `gs[1, :]`) | `wide_bottom.height_ratios` |
-| `stack` | one column, `n` rows | `letters=("a","b",...)` | 14 (2x1, 3x1, 4x1) | `stack.height_ratios` |
-| `grid` | equal `rows x cols`, one panel per cell (same as `draw_plots`) | `letters` or `columns=` | all equal-grid figures | -- (reads `columns`, `wspace`, `hspace`) |
-| `matrix` | many small panels, `rows x cols`, uniform | `letters`, `columns=` | 6 (5x3) | `matrix.wspace/hspace`, `matrix.columns` |
-| `row` | one row, `n` cells | `letters` | 4 (1x2, 1x3, 1x5) | `row.width_ratios` |
+| `wide_bottom` | `n x 2` grid + one panel spanning the last row | `top=(...), bottom="x"` | 14 (2x2 with `gs[1, :]`) / 4 | `wide_bottom.height_ratios` |
+| `stack` | one column, `n` rows | `letters=("a","b",...)` | 14 (2x1, 3x1, 4x1) / 7 | `stack.height_ratios` |
+| `grid` | equal `rows x cols`, one panel per cell (same as `draw_plots`) | `letters` or `columns=` | all equal-grid figures / 5 | -- (reads `columns`, `wspace`, `hspace`) |
+| `matrix` | many small panels, `rows x cols`, uniform | `letters`, `columns=` | 6 (5x3) / 0 | `matrix.wspace/hspace`, `matrix.columns` |
+| `row` | one row, `n` cells | `letters` | 4 (1x2, 1x3, 1x5) / 4 | `row.width_ratios` |
+
+The gap between evidence and matched is the scripts that also place a panel by hand or lay a second
+grid over the first: all six `5x3` scripts do, so `matrix` matches none of them today.
 
 Every layout's gaps default to 0 -- cells exactly as `draw_plots` makes them -- except `matrix`
 (0.06 / 0.12), so a dense wall is separated without retuning the rest of the project.
