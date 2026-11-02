@@ -196,10 +196,10 @@ cards:
     kind: code
     phase: 5
     priority: P1
-    status: todo
+    status: claimed
     depends_on: [L-05, L-06]
-    owner: null
-    branch: null
+    owner: "claude-code 2026-11-02"
+    branch: "layout/L-13-ratios"
     commits: []
     version: null
     review: null
