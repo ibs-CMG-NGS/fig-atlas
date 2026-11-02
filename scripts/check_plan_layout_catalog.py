@@ -11,8 +11,9 @@ plans/PLAN_LAYOUT_CATALOG.md section 8) and reports:
   from the status file (the two must agree);
 - a done card whose asset is not in the package (a layout module, an example,
   the guide chapter, ...);
-- a card claimed or further along before its dependencies are done, or before
-  the gates of its phase have passed;
+- a card in review before its dependencies are in review or done, a done card
+  before its dependencies are done, or any card before the gates of its phase
+  have passed;
 - dependency cycles.
 
 Exit code 1 when anything disagrees.
@@ -126,8 +127,10 @@ def main() -> int:
                 if not state.startswith("passed"):
                     problems.append(f"card {cid}: phase {c.get('phase')} needs gate {gate} ({state})")
         if status in DONE_OR_LATER:
+            # a done card needs its dependencies done; cards in review may be reviewed together
+            allowed = {"done"} if status == "done" else DONE_OR_LATER
             for dep in c.get("depends_on") or []:
-                if by_id.get(dep, {}).get("status") != "done":
+                if by_id.get(dep, {}).get("status") not in allowed:
                     problems.append(f"card {cid}: is {status} but dependency {dep} is "
                                     f"{by_id.get(dep, {}).get('status')!r}")
         if status == "done":

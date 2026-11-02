@@ -266,7 +266,7 @@ surface. G1 passed 2026-11-02 (section 11), so Phase 1 may start.
 6. **Verify before handoff** (section 10) and record the exact commands and results in your card's
    `handoff` note, with the commit sha.
 7. **Handoff format** in `status.yaml`:
-   `status: in-review`, `handoff: "<sha>; tests: <command> -> <result>; open: <question or none>"`.
+   `status: in_review`, `handoff: "<sha>; tests: <command> -> <result>; open: <question or none>"`.
 8. **Definition of done** is the card's `done_when` plus: tests green, docs bilingual, checker script
    green, no unrelated diff (`git diff --stat` reviewed), and the plan's evidence numbers still true.
 

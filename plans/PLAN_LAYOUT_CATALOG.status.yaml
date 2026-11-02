@@ -3,7 +3,7 @@
 # finish a task (plan section 9); check the file against the package with
 #   python scripts/check_plan_layout_catalog.py
 plan_version: 1
-package_version: "0.1.0.dev0 (fig-atlas ae6e3b7 on main, checked 2026-11-02)"
+package_version: "0.1.0.dev0 on main (0.2.0.dev1 pending in PR #25); branch layout/catalog rebased on f97ef86, 2026-11-02"
 baseline:                       # what existed when the plan started (not tasks)
   layouts: 0                    # public layout functions in fig_atlas/layouts/
   layout_examples: 0            # example projects under examples/layouts/
@@ -24,92 +24,92 @@ cards:
     kind: infra
     phase: 0
     priority: P1
-    status: done
+    status: in_review
     depends_on: []
     owner: "opencode 2026-11-02"
     branch: "layout/catalog"
-    commits: ["fig-atlas layout/catalog"]
+    commits: ["fig-atlas 4446ae7"]
     version: "plan v1"
     review: null
-    notes: "status file written with the cards of plan section 8; the checker validates ids, fields, dependencies and that the plan's card table and this file agree"
+    notes: "status file written with the cards of plan section 8; the checker validates ids, fields, dependencies and that the plan's card table and this file agree Written by opencode on layout/catalog; taken over by claude-code 2026-11-02, set back to in_review until the user's review and merge."
   - id: L-02
     title: "core API: Layout, _grid, finish, exports, parity test skeleton"
     kind: code
     phase: 1
     priority: P1
-    status: done
+    status: in_review
     depends_on: [L-01]
     owner: "opencode 2026-11-02"
     branch: "layout/catalog"
-    commits: []
+    commits: ["fig-atlas 4446ae7"]
     version: null
     review: null
-    notes: "fig_atlas/layouts/_core.py: Layout (cells/columns/rows/shape), _check_letters, _block, _grid (Cells helper; gaps are separator rows/columns because a SubFigure ignores GridSpec wspace/hspace -- plan section 14, implementation note), finish (fit_in_cells + place_panel_tags; tags.show false places none); layouts/__init__.py exports the frozen API; tests/test_layouts_core.py covers letters, shapes, tags, fitting inside the cell and draw_plots parity"
+    notes: "fig_atlas/layouts/_core.py: Layout (cells/columns/rows/shape), _check_letters, _block, _grid (Cells helper; gaps are separator rows/columns because a SubFigure ignores GridSpec wspace/hspace -- plan section 14, implementation note), finish (fit_in_cells + place_panel_tags; tags.show false places none); layouts/__init__.py exports the frozen API; tests/test_layouts_core.py covers letters, shapes, tags, fitting inside the cell and draw_plots parity Written by opencode on layout/catalog; taken over by claude-code 2026-11-02, set back to in_review until the user's review and merge."
   - id: L-03
     title: "wide_bottom"
     kind: code
     phase: 1
     priority: P1
-    status: done
+    status: in_review
     depends_on: [L-02]
     owner: "opencode 2026-11-02"
     branch: "layout/catalog"
-    commits: []
+    commits: ["fig-atlas 4446ae7"]
     version: null
     review: null
-    notes: "fig_atlas/layouts/wide_bottom.py: two rows, the bottom panel spanning every column (grid row 1); height_ratios from figures.wide_bottom; the wide panel's tag joins column 0; tests/layouts/test_wide_bottom.py"
+    notes: "fig_atlas/layouts/wide_bottom.py: two rows, the bottom panel spanning every column (grid row 1); height_ratios from figures.wide_bottom; the wide panel's tag joins column 0; tests/layouts/test_wide_bottom.py Written by opencode on layout/catalog; taken over by claude-code 2026-11-02, set back to in_review until the user's review and merge."
   - id: L-04
     title: "stack"
     kind: code
     phase: 1
     priority: P1
-    status: done
+    status: in_review
     depends_on: [L-02]
     owner: "opencode 2026-11-02"
     branch: "layout/catalog"
-    commits: []
+    commits: ["fig-atlas 4446ae7"]
     version: null
     review: null
-    notes: "fig_atlas/layouts/stack.py: one column of n rows, height_ratios from figures.stack, one plumb line for the cluster; tests/layouts/test_stack.py"
+    notes: "fig_atlas/layouts/stack.py: one column of n rows, height_ratios from figures.stack, one plumb line for the cluster; tests/layouts/test_stack.py Written by opencode on layout/catalog; taken over by claude-code 2026-11-02, set back to in_review until the user's review and merge."
   - id: L-05
     title: "grid + parity with draw_plots"
     kind: code
     phase: 1
     priority: P1
-    status: done
+    status: in_review
     depends_on: [L-02]
     owner: "opencode 2026-11-02"
     branch: "layout/catalog"
-    commits: []
+    commits: ["fig-atlas 4446ae7"]
     version: null
     review: null
-    notes: "fig_atlas/layouts/grid.py: equal rows x cols, columns= or figures.columns (3, or the panel count when smaller); the parity test (tests/test_layouts_core.py) draws the same panels through bundle_figure.draw_plots with a monkeypatched resolve and compares subfigure rectangles and tag groups -- identical with the default gaps of 0"
+    notes: "fig_atlas/layouts/grid.py: equal rows x cols, columns= or figures.columns (3, or the panel count when smaller); the parity test (tests/test_layouts_core.py) draws the same panels through bundle_figure.draw_plots with a monkeypatched resolve and compares subfigure rectangles and tag groups -- identical with the default gaps of 0 Written by opencode on layout/catalog; taken over by claude-code 2026-11-02, set back to in_review until the user's review and merge."
   - id: L-06
     title: "matrix"
     kind: code
     phase: 2
     priority: P2
-    status: done
+    status: in_review
     depends_on: [L-02, L-03]
     owner: "opencode 2026-11-02"
     branch: "layout/catalog"
-    commits: []
+    commits: ["fig-atlas 4446ae7"]
     version: null
     review: null
-    notes: "fig_atlas/layouts/matrix.py: dense wall, 5 columns by default, gaps of its own (figures.matrix.wspace/hspace, 0.06/0.12) realized as separator rows/columns; tests/layouts/test_matrix.py"
+    notes: "fig_atlas/layouts/matrix.py: dense wall, 5 columns by default, gaps of its own (figures.matrix.wspace/hspace, 0.06/0.12) realized as separator rows/columns; tests/layouts/test_matrix.py Written by opencode on layout/catalog; taken over by claude-code 2026-11-02, set back to in_review until the user's review and merge."
   - id: L-07
     title: "row"
     kind: code
     phase: 2
     priority: P2
-    status: done
+    status: in_review
     depends_on: [L-02, L-03]
     owner: "opencode 2026-11-02"
     branch: "layout/catalog"
-    commits: []
+    commits: ["fig-atlas 4446ae7"]
     version: null
     review: null
-    notes: "fig_atlas/layouts/row.py: one row of n cells, width_ratios from figures.row, one align_rows group; tests/layouts/test_row.py"
+    notes: "fig_atlas/layouts/row.py: one row of n cells, width_ratios from figures.row, one align_rows group; tests/layouts/test_row.py Written by opencode on layout/catalog; taken over by claude-code 2026-11-02, set back to in_review until the user's review and merge."
   - id: L-08
     title: "examples + gallery page + coverage test"
     kind: docs
@@ -128,14 +128,14 @@ cards:
     kind: docs
     phase: 3
     priority: P1
-    status: done
+    status: in_review
     depends_on: []
     owner: "opencode 2026-11-02"
     branch: "layout/catalog"
-    commits: []
+    commits: ["fig-atlas 2b12f01"]
     version: null
     review: null
-    notes: "renamed 07-results..13-rules to 08-results..14-rules (ko+en, git mv), shifted the numbers the pages use: front-matter titles, chapter N (41), Korean N장 (43), link text [N. ...], link targets, the mkdocs nav and docs/index.md; tests/test_guide.py gained test_chapter_number_matches_the_title and test_navigation_lists_the_chapters_in_number_order"
+    notes: "renamed 07-results..13-rules to 08-results..14-rules (ko+en, git mv), shifted the numbers the pages use: front-matter titles, chapter N (41), Korean N장 (43), link text [N. ...], link targets, the mkdocs nav and docs/index.md; tests/test_guide.py gained test_chapter_number_matches_the_title and test_navigation_lists_the_chapters_in_number_order Written by opencode on layout/catalog; taken over by claude-code 2026-11-02, set back to in_review until the user's review and merge."
   - id: L-09b
     title: "new chapter 07 layouts (ko/en) + nav + cross-links"
     kind: docs
