@@ -3,14 +3,14 @@
 # finish a task (section 8.1); check the file against the package with
 #   python scripts/check_plan_plot_catalog.py
 plan_version: 5
-package_version: "0.2.0.dev1 (Phase 2 plot types PC-01..08; recorded 2026-11-02)"
+package_version: "0.2.0 (released 2026-11-02, tag v0.2.0 on GitHub; no PyPI package -- install with pip from the tag)"
 baseline:                       # what existed when the plan started (not tasks)
   plot_types: 25                # plot types fa ingest bundle draws, each with an example bundle and a contract
   renderers: 54                 # registered renderer names (two omics recipes share a pack renderer's name), each with a gallery picture
 gates:                          # researcher decisions (plan section 11): pending | passed | <date and note>
   G1: "passed 2026-10-27 (scope fixed: strict separation -- the analysis script runs the tests, the package draws and records them; S-01..S-06 dropped, R reference tool no longer needed; PC-17 donut/pie deferred to the Phase 5 recheck); recheck passed 2026-11-01 (I-05: 14 cards PC-23..PC-30, E-07..E-12 accepted with the proposed priorities)"   # candidate list, priorities, scope
   G3: pending                   # new required dependencies (only when a task needs one)
-  G4: pending                   # release 0.2.0 after Phase 2; 0.2.0.dev1 recorded 2026-11-02, the formal 0.2.0 release (tag, publication) is the user's decision
+  G4: "passed 2026-11-02 (user: release 0.2.0 -- version, CHANGELOG, tag v0.2.0 and a GitHub release; PyPI waits for roadmap gate G3)"
 phase_gates:                    # a phase's cards can start only after these gates have passed
   1: [G1]
   2: [G1]

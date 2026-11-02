@@ -63,6 +63,7 @@ plugins:
             "From a sketch and a table (Case C)": "스케치와 데이터로 그림 만들기 (Case C)"
             "A microscopy figure": "현미경 이미지 그림"
             "After the data change (promotion, storyline revision)": "데이터가 바뀐 뒤 (승격·스토리라인 개편)"
+            "Install fig-atlas": "fig-atlas 설치"
             "Connect AI agents (fa mcp)": "AI 에이전트 연결 (fa mcp)"
             "Write a domain pack": "새 분야 팩 만들기"
             "Switch to a journal's format": "저널 규격으로 바꾸기"
@@ -137,6 +138,7 @@ nav:
       - A microscopy figure: tutorials/imaging_figure.md
       - After the data change (promotion, storyline revision): tutorials/data_change.md
   - How-to:
+      - Install fig-atlas: howto/install.md
       - Connect AI agents (fa mcp): howto/ai_agents.md
       - Write a domain pack: howto/new_domain_pack.md
       - Switch to a journal's format: howto/journal_presets.md

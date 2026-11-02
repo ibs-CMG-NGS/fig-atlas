@@ -4,7 +4,19 @@ All notable changes are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow
 [Semantic Versioning](https://semver.org/).
 
-## [Unreleased] — 0.2.0.dev1 (the first public tree was 0.1.0.dev0)
+## [Unreleased]
+
+## [0.2.0] — 2026-11-02
+
+The first release. Install it with
+`pip install "git+https://github.com/ibs-CMG-NGS/fig-atlas@v0.2.0"` (no PyPI package yet; see
+[docs/howto/install.md](docs/howto/install.md)). It contains the first public tree (0.1.0.dev0, below),
+the plot catalog's phase 2 (eight plot types), the layout catalog with composition, and:
+
+- **Install guide** (`docs/howto/install.md`, English and Korean) and a rewritten README install
+  section: install a tagged release with pip (with or without Git), pin it in a project
+  repository, upgrade, or develop fig-atlas itself.
+- **`fa --version`**: the installed version and where the package is imported from.
 
 fig-atlas was developed in a private research repository from July 2026 and used for the figures
 of one manuscript before being published as a package. This first public tree contains:
