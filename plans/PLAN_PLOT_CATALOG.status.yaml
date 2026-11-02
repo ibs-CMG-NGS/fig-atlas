@@ -3,14 +3,14 @@
 # finish a task (section 8.1); check the file against the package with
 #   python scripts/check_plan_plot_catalog.py
 plan_version: 5
-package_version: "0.1.0.dev0 (fig-atlas 3219e67 on main, checked 2026-11-01)"
+package_version: "0.2.0.dev1 (Phase 2 plot types PC-01..08; recorded 2026-11-02)"
 baseline:                       # what existed when the plan started (not tasks)
   plot_types: 25                # plot types fa ingest bundle draws, each with an example bundle and a contract
   renderers: 54                 # registered renderer names (two omics recipes share a pack renderer's name), each with a gallery picture
 gates:                          # researcher decisions (plan section 11): pending | passed | <date and note>
   G1: "passed 2026-10-27 (scope fixed: strict separation -- the analysis script runs the tests, the package draws and records them; S-01..S-06 dropped, R reference tool no longer needed; PC-17 donut/pie deferred to the Phase 5 recheck); recheck passed 2026-11-01 (I-05: 14 cards PC-23..PC-30, E-07..E-12 accepted with the proposed priorities)"   # candidate list, priorities, scope
   G3: pending                   # new required dependencies (only when a task needs one)
-  G4: pending                   # release 0.2.0 after Phase 2
+  G4: pending                   # release 0.2.0 after Phase 2; 0.2.0.dev1 recorded 2026-11-02, the formal 0.2.0 release (tag, publication) is the user's decision
 phase_gates:                    # a phase's cards can start only after these gates have passed
   1: [G1]
   2: [G1]
@@ -198,7 +198,7 @@ cards:
     owner: "claude-code 2026-11-01"
     branch: "plot/PC-01-paired-plot"
     commits: ["fig-atlas ad6248b", "fig-atlas 93def58", "PR #8 (merge 3219e67)"]
-    version: "unreleased (on fig-atlas main)"
+    version: "0.2.0.dev1"
     review: "G2 approved 2026-11-01 (user, round 2 after the bar summary); PR #8 merged; main CI 41317980460 success, Documentation site 41317980447 success"
     notes: "plan v3: the paired test runs in the analysis script (recipe I-04); the renderer draws the paired points and the bracket from a p_value column. I-05 scope: also grouped before-after (pairs within each group of a second factor). Delivered (2026-11-01): fig_atlas/renderers/paired_plot.py (column family; subject/condition/value roles, group side by side, line_color_by group|direction, summary mean|median, bracket from pvalue_col), contract core.paired_plot + table contract docs (en/ko), example bundle examples/gallery/paired_plot (paired t-test in the generator), snapshot cases paired_plot and paired_plot_grouped, tests/renderers/test_paired_plot.py. Evidence: full pytest exit 0; fa reference --check, fa inventory --check, fa lint --hardcoded --check, fa claims --check exit 0; example preflight clean at 85 mm; existing examples and snapshots unchanged (V8). G2 round 1 (user, 2026-11-01): add the mean as a bar per condition -- done: summary_style line|bar, summary_error none|sd|sem|ci95 (display arithmetic from line_band.summarise), axis from 0 with bars; the example now uses bar + SEM; snapshot case paired_plot_bar."
   - id: PC-02
@@ -213,7 +213,7 @@ cards:
     owner: "claude-code 2026-11-01"
     branch: "plot/PC-02-grouped-bar"
     commits: ["fig-atlas 96820d8", "fig-atlas 078ff36", "PR #11 (merge 9e29927)"]
-    version: "unreleased (on fig-atlas main)"
+    version: "0.2.0.dev1"
     review: "G2 approved 2026-11-02 (user); PR #11 merged; main CI 41357869609 success, Documentation site 41357869759 success"
     notes: "plan v3: post-hoc comparisons run in the analysis script (recipe I-04); the renderer draws brackets from p_value/padj columns. I-05 scope: interleaved and separated bar arrangements. Delivered (2026-11-02): fig_atlas/renderers/grouped_bar.py (grouped family; category/group/value roles, arrangement interleaved|separated, summary mean|median, error none|sd|sem|ci95, jittered replicates, brackets from control_group to each group from pvalue_col, stacked when they overlap; all-pairs comparisons left for E-01), contract core.grouped_bar + table contract docs (en/ko), example bundle examples/gallery/grouped_bar (Dunnett's test in the generator), snapshot cases grouped_bar and grouped_bar_separated, tests/renderers/test_grouped_bar.py. Evidence: full pytest exit 0; fa reference --check, fa inventory --check, fa lint --hardcoded --check, fa claims --check exit 0; example preflight clean at 85 mm; existing examples and snapshots unchanged (V8). Also fixed in PR #11: paired_plot error bars take numpy arrays (pandas FutureWarning), pictures unchanged."
   - id: PC-03
@@ -228,7 +228,7 @@ cards:
     owner: "claude-code 2026-11-02"
     branch: "plot/PC-03-correlation-scatter"
     commits: ["fig-atlas b90f3ba", "PR #13 (merge f8890ca)"]
-    version: "unreleased (on fig-atlas main)"
+    version: "0.2.0.dev1"
     review: "G2 approved 2026-11-02 (user); PR #13 merged; main CI 41361377655 success; Documentation site run 41361377849 cancelled (superseded), 41361394658 on 9cbcab8 success"
     notes: "plan v3: regression line/band coordinates and r/p come from the analysis script (recipe I-04); the renderer draws them. Delivered (2026-11-02): fig_atlas/renderers/correlation_scatter.py (xy family; x/y roles, groups by colour, line and band from fit rows in the same table -- fit_x_col, fit_y_col, band_lower_col, band_upper_col; a fit row without a group is a line over all points -- r and P per group from r_col/p_col, text fields r, r2, p, p_text, n, group, P floor), contract core.correlation_scatter + table contract docs (en/ko), example bundle examples/gallery/correlation_scatter (least squares, 95% confidence band, Pearson r in the generator), snapshot cases correlation_scatter and correlation_scatter_pooled, tests/renderers/test_correlation_scatter.py. Also: the gallery generator seeds Dunnett (random_state=0), whose P values changed every run (grouped_bar example data, stars unchanged). Evidence: full pytest exit 0; fa reference --check, fa inventory --check, fa lint --hardcoded --check, fa claims --check exit 0; example preflight clean at 85 mm; other examples and snapshots unchanged (V8)."
   - id: PC-04
@@ -243,7 +243,7 @@ cards:
     owner: "claude-code 2026-11-02"
     branch: "plot/PC-04-raincloud"
     commits: ["fig-atlas b1a3bfe", "PR #15 (merge fe75ac1)"]
-    version: "unreleased (on fig-atlas main)"
+    version: "0.2.0.dev1"
     review: "G2 approved 2026-11-02 (user); PR #15 merged; main CI 41367181289 success, Documentation site 41367181290 success"
     notes: "Delivered (2026-11-02): fig_atlas/renderers/raincloud.py (column family; category/value roles, orientation horizontal|vertical, flip, cloud = Gaussian KDE with tails cloud_cut kernel widths past the data, box with whisker_range, jittered rain, brackets against control_category from pvalue_col, stacked, clearing the cloud tails), contract core.raincloud + table contract docs (en/ko), example bundle examples/gallery/raincloud (Dunnett in the generator, seeded), snapshot cases raincloud and raincloud_vertical, tests/renderers/test_raincloud.py. Evidence: full pytest exit 0; fa reference --check, fa inventory --check, fa lint --hardcoded --check, fa claims --check exit 0; example preflight clean at 85 mm; other examples and snapshots unchanged (V8)."
   - id: PC-05
@@ -258,9 +258,9 @@ cards:
     owner: "claude-code 2026-11-02"
     branch: "plot/PC-05-column-scatter"
     commits: ["fig-atlas 0a5cf0d", "PR #17 (merge eefdded)"]
-    version: "unreleased (on fig-atlas main)"
+    version: "0.2.0.dev1"
     review: "G2 approved 2026-11-02 (user); PR #17 merged; main CI 41369768811 success, Documentation site 41369768701 success"
-    notes: "I-05 scope: aligned dot style as an option. Delivered (2026-11-02): fig_atlas/renderers/column_scatter.py (column family; category/value roles, point_layout swarm|jitter|aligned -- swarm without overlap at true values, squeezed to max_spread; summary mean|median|none, error none|sd|sem|ci95|iqr; brackets against control_category from pvalue_col, stacked), contract core.column_scatter + table contract docs (en/ko), example bundle examples/gallery/column_scatter (seeded Dunnett in the generator), snapshot cases column_scatter and column_scatter_aligned, tests/renderers/test_column_scatter.py. Evidence: full pytest exit 0; fa reference --check, fa inventory --check, fa lint --hardcoded --check, fa claims --check exit 0; example preflight clean at 85 mm; other examples and snapshots unchanged (V8)."
+    notes: "I-05 scope: aligned dot style as an option. Delivered (2026-11-02): fig_atlas/renderers/column_scatter.py (column family; category/value roles, point_layout swarm|jitter|aligned -- swarm without overlap at true values, squeezed to max_spread; summary mean|median|none, error none|sd|sem|ci95|iqr; brackets against control_category from pvalue_col, stacked), contract core.column_scatter + table contract docs (en/ko), example bundle examples/gallery/column_scatter (seeded Dunnett in the generator), snapshot cases column_scatter and column_scatter_aligned, tests/renderers/test_column_scatter.py. Evidence: full pytest exit 0; fa reference --check, fa inventory --check, fa lint --hardcoded --check, fa claims --check exit 0; example preflight clean at 85 mm; other examples and snapshots unchanged (V8). V10 (Phase 2 real-data check, 2026-11-02): cmg-figures project kyg-mouse-tg-aldh1l1-wb-scatter (commit 78eff68) draws the Aldh1L1-CreERT2 western blot quantification, WT vs Tg, from the delivered bundle with this renderer and no code; fa build --preflight 0 errors, 0 warnings, verify 5/5. Finding: the bundle metadata named no plot_type, so fa ingest bundle could not choose the renderer; the plots block was written by hand and completed from fa param scaffold (fa param sync does not add renderer keys that were never read)."
   - id: PC-06
     title: "ROC curve with AUC"
     kind: plot
@@ -273,7 +273,7 @@ cards:
     owner: "claude-code 2026-11-02"
     branch: "plot/PC-06-roc-curve"
     commits: ["fig-atlas b1b759f", "fig-atlas 0e14841", "PR #19 (merge 99dbe47)"]
-    version: "unreleased (on fig-atlas main)"
+    version: "0.2.0.dev1"
     review: "G2 approved 2026-11-02 (user, after the axis-title change); PR #19 merged; main CI 41372943821 success, Documentation site 41372943620 success"
     notes: "plan v3: fpr, tpr, auc and auc_ci come from the analysis script (recipe I-04); the renderer draws the curve, the diagonal and the legend values. Delivered (2026-11-02): fig_atlas/renderers/roc_curve.py (diagnostic family; fpr/tpr roles, one curve per group, chance line, AUC and its interval in the legend from auc_col/auc_low_col/auc_high_col with legend_format, operating point from operating_point_col, fraction or percent axes), contract core.roc_curve + table contract docs (en/ko), example bundle examples/gallery/roc_curve (curves, AUC, bootstrap interval and Youden point in the generator), snapshot cases roc_curve and roc_curve_percent, tests/renderers/test_roc_curve.py. Evidence: full pytest exit 0; fa reference --check, fa inventory --check, fa lint --hardcoded --check, fa claims --check exit 0; example preflight clean at 85 mm; other examples and snapshots unchanged (V8). G2 round 1 (user, 2026-11-02): default axis titles False positive rate / True positive rate -- done (0e14841)."
   - id: PC-07
@@ -288,7 +288,7 @@ cards:
     owner: "claude-code 2026-11-02"
     branch: "plot/PC-07-bland-altman"
     commits: ["fig-atlas 3ba5e78", "PR #21 (merge ae6e3b7)"]
-    version: "unreleased (on fig-atlas main)"
+    version: "0.2.0.dev1"
     review: "G2 approved 2026-11-02 (user); PR #21 merged; main CI 41377371604 success, Documentation site 41377371373 success"
     notes: "plan v3: bias and limits of agreement come from the analysis script (recipe I-04); the renderer draws the scatter and the lines. Delivered (2026-11-02): fig_atlas/renderers/bland_altman.py (diagnostic family; a/b method roles, difference or percent difference against the mean, groups by colour, zero line, bias and limits of agreement from bias_col/loa_low_col/loa_high_col labelled at the right edge), contract core.bland_altman + table contract docs (en/ko), example bundle examples/gallery/bland_altman (bias +/- 1.96 SD in the generator), snapshot cases bland_altman and bland_altman_percent, tests/renderers/test_bland_altman.py. Evidence: full pytest exit 0; fa reference --check, fa inventory --check, fa lint --hardcoded --check, fa claims --check exit 0; example preflight clean at 85 mm; other examples and snapshots unchanged (V8)."
   - id: PC-08
@@ -303,7 +303,7 @@ cards:
     owner: "claude-code 2026-11-02"
     branch: "plot/PC-08-correlation-matrix"
     commits: ["fig-atlas 136b695", "PR #23 (merge 0bd7200)"]
-    version: "unreleased (on fig-atlas main)"
+    version: "0.2.0.dev1"
     review: "G2 approved 2026-11-02 (user); PR #23 merged; main CI 41394661557 success, Documentation site 41394661583 success"
     notes: "plan v3: the r matrix and p values come from the analysis script (recipe I-04); the renderer draws the triangle and the value labels. Delivered (2026-11-02): fig_atlas/renderers/correlation_matrix.py (multivariate family; input is a long table of pairs -- var1, var2, r, optional p -- rather than the wide table first written in data, since the renderer must not correlate; triangle lower|upper|full, optional diagonal, mark square|circle (area ~ |r|), r and stars in the cells, blank cells above hide_above_p, colourbar), contract core.correlation_matrix + table contract docs (en/ko), example bundle examples/gallery/correlation_matrix (Pearson r and P per pair in the generator), snapshot cases correlation_matrix and correlation_matrix_circles, tests/renderers/test_correlation_matrix.py; the bland_altman minus-sign helper moved to _basic.Signed. Evidence: full pytest exit 0; fa reference --check, fa inventory --check, fa lint --hardcoded --check, fa claims --check exit 0; example preflight clean at 85 mm; other examples and snapshots unchanged (V8)."
   - id: E-01
