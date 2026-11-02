@@ -251,12 +251,12 @@ cards:
     kind: plot
     phase: 2
     priority: P1
-    status: todo
+    status: claimed
     depends_on: []
     plot_type: column_scatter
     data: "group, value"
-    owner: null
-    branch: null
+    owner: "claude-code 2026-11-02"
+    branch: "plot/PC-05-column-scatter"
     commits: []
     version: null
     review: null
