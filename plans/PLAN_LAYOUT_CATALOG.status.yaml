@@ -183,14 +183,14 @@ cards:
     kind: surface
     phase: 4
     priority: P3
-    status: claimed
+    status: in_review
     depends_on: [L-08]
     owner: "claude-code 2026-11-02"
     branch: "layout/L-12-fa-layouts"
-    commits: []
+    commits: ["fig-atlas 934c86e"]
     version: null
     review: null
-    notes: "lists name/shape/docstring/example; the MCP tool is generated from the CLI parser (fig_atlas/mcp_server.py ToolSpec), so the two cannot drift"
+    notes: "lists name/shape/docstring/example; the MCP tool is generated from the CLI parser (fig_atlas/mcp_server.py ToolSpec), so the two cannot drift Delivered (2026-11-02): fig_atlas/layouts/_catalog.py (catalog() from the layout docstrings, no matplotlib); fa layouts [NAME|composition] [--json] in cli.py; ToolSpec fa_layouts in mcp_server.py and a pointer in its instructions; tests/test_layouts_catalog.py (listing, entries, documented keys = example keys, composition, command, MCP spec, no matplotlib); docs: cli.md (generated), Appendix C and the AI-agents how-to (en/ko), chapter 7."
   - id: L-13
     title: "width_ratios / height_ratios on grid and matrix"
     kind: code
