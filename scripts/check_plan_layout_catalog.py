@@ -121,7 +121,7 @@ def main() -> int:
 
     for cid, c in by_id.items():
         status = c.get("status")
-        if status in ("todo", "claimed", "in_review", "done"):
+        if status in ("claimed", "in_review", "done"):          # a todo card waits; it is only not ready
             for gate in phase_gates.get(c.get("phase"), []):
                 state = str(gates.get(gate, "pending"))
                 if not state.startswith("passed"):

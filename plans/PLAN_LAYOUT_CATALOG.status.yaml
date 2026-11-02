@@ -2,7 +2,7 @@
 # One card per task; field meanings in the plan (section 8). Change a card when you claim, hand in or
 # finish a task (plan section 9); check the file against the package with
 #   python scripts/check_plan_layout_catalog.py
-plan_version: 1
+plan_version: 2                 # revision 2 (plan section 16): L-13..L-16, gate G5
 package_version: "0.1.0.dev0 on main (0.2.0.dev1 pending in PR #25); branch layout/catalog rebased on f97ef86, 2026-11-02"
 baseline:                       # what existed when the plan started (not tasks)
   layouts: 0                    # public layout functions in fig_atlas/layouts/
@@ -12,12 +12,15 @@ gates:                          # researcher decisions (plan section 11): pendin
   G2: pending                   # mosaic (figures.layout) -- only after L-10 measured the coverage
   G3: pending                   # new required dependencies (expected: none)
   G4: pending                   # release the catalog after L-09b is green
+  G5: pending                   # composition: build, shrink or drop -- after the L-14 spike (plan section 16)
 phase_gates:                    # a phase's cards can start only after these gates have passed
   0: [G1]
   1: [G1]
   2: [G1]
   3: [G1]
   4: [G1]
+  5: [G1]
+  6: [G1, G5]
 cards:
   - id: L-01
     title: "status file and checker script"
@@ -141,26 +144,26 @@ cards:
     kind: docs
     phase: 3
     priority: P1
-    status: in_review
+    status: done
     depends_on: [L-08, L-09a]
     owner: "claude-code 2026-11-02"
     branch: "layout/L-09b-guide-chapter"
-    commits: ["fig-atlas 8c4d801", "fig-atlas 778bae6"]
-    version: null
-    review: null
+    commits: ["fig-atlas 8c4d801", "fig-atlas 778bae6", "PR #28 (merge 04d2d57)"]
+    version: "0.2.0.dev1"
+    review: "merged 2026-11-02 (user), PR #28; main CI 41415785339 success, Documentation site 41415785381 success"
     notes: "docs/guide/07-layouts.{md,ko.md}; cross-links from 06-config and 12-lifecycle; mkdocs.yml nav entry. Delivered (2026-11-02): docs/guide/07-layouts.{md,ko.md} (two ways to arrange panels, the five shapes, asking the AI, the figures: values, what a layout leaves alone; shows the wide_bottom picture of the layout catalog and links to it); nav after chapter 6; chapter 6 (values table + next link), 12 (promotion) and 8 (previous link) link to it. Found and fixed: L-09a left the page headings of 08-14 one number behind (\"# 7. Checking the results\"); tests/test_guide.py now compares file name, title and heading in both languages (commit 8c4d801, outside the card's files)."
   - id: L-10
     title: "coverage measurement + reported table"
     kind: tooling
     phase: 3
     priority: P2
-    status: in_review
+    status: done
     depends_on: [L-03, L-04, L-05, L-06, L-07]
     owner: "claude-code 2026-11-02"
     branch: "layout/L-10-coverage"
-    commits: ["fig-atlas d4af3cb"]
-    version: null
-    review: null
+    commits: ["fig-atlas d4af3cb", "PR #30 (merge db618ac)"]
+    version: "0.2.0.dev1"
+    review: "merged 2026-11-02 (user), PR #30; main CI 41428101285 success, Documentation site 41428101257 success"
     notes: "scripts/layout_coverage.py: project, level, grid, spans, nested, manual, matched_layout, loc_before, loc_after; reruns the plan section 1 numbers. Delivered (2026-11-02): scripts/layout_coverage.py (ast, no execution; only *_analysis.py are projects; columns of the card plus ratios, draw_plots, placement, reason, composed_layout, composed_needs); tests/test_layout_coverage.py (one synthetic script per rule). cmg-figures, 83 scripts: 20 drawn by a layout today (stack 7, grid 5, wide_bottom 4, row 4; median layout code 9 -> 5.5 lines), 37 with a layout inside a cell of another (composition), 57 adding ratios on grid/matrix (13), an align helper (6) and an overlay helper (2); not reached: 15 drawn by a helper module or on the canvas, 11 with a second grid placed by bare numbers. Plan sections 1 and 6 carry these numbers. The CSV names private projects, so it is not committed here. Gate G2: 2 scripts are unmatched for a partial span and the 13 unequal grids need ratios, not a mosaic -- the measurement gives no case for a mosaic in draw_plots. Next (user decision): composition in finish, ratios on grid/matrix, then align/overlay helpers -- new cards, not new layouts."
   - id: L-11
     title: "method-paper inputs (coverage table, thumbnails, LOC deltas)"
@@ -188,3 +191,55 @@ cards:
     version: null
     review: null
     notes: "lists name/shape/docstring/example; the MCP tool is generated from the CLI parser (fig_atlas/mcp_server.py ToolSpec), so the two cannot drift"
+  - id: L-13
+    title: "width_ratios / height_ratios on grid and matrix"
+    kind: code
+    phase: 5
+    priority: P1
+    status: todo
+    depends_on: [L-05, L-06]
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: "grid.py, matrix.py: ratios as arguments and from figures.grid / figures.matrix; equal by default (L-05 parity unchanged); wrong length raises; example configs and the guide's values table carry the keys; 13 measured scripts need it (plan section 1)"
+  - id: L-14
+    title: "composition spike: a layout in a cell of another; finish across two levels"
+    kind: spike
+    phase: 5
+    priority: P1
+    status: todo
+    depends_on: [L-02]
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: "throwaway script only; findings and a go/no-go with an L-15 estimate go into plan section 16; gate G5 decides"
+  - id: L-15
+    title: "composition: a layout on a cell; finish fits and tags both levels; values under the cell letter"
+    kind: code
+    phase: 6
+    priority: P1
+    status: todo
+    depends_on: [L-14]
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: "only after G5; one line per split cell, finish once, figures.cells.<letter>.<layout>.*, two levels at most, a preflight-clean example; 17 more measured scripts (plan section 1)"
+  - id: L-16
+    title: "optional: align and overlay helpers"
+    kind: code
+    phase: 6
+    priority: P3
+    status: todo
+    depends_on: [L-15]
+    owner: null
+    branch: null
+    commits: []
+    version: null
+    review: null
+    notes: "an axes lined up with another panel's box; a legend, banner or card over the panels; figures: keys only; 7 measured scripts (plan section 1)"
