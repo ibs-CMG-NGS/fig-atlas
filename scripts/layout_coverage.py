@@ -38,11 +38,11 @@ Per script (CSV columns):
   of columns is computed) becomes a ``stack`` of rows, one whose panels each sit
   in one column (``gs[:, 0]``) a ``row`` of columns, and a count computed at run
   time is no obstacle (a layout takes its letters at run time). ``composed_needs``
-  lists what it would still take: ``ratios`` (a ``grid``/``matrix`` of unequal
-  rows or columns), ``align`` / ``overlay`` helpers; empty when the composition
-  alone is enough. A ``set_position`` on an axes made inside a cell lines up two
-  axes of one panel: it is the panel's own business, not ``align``. Empty ``composed_layout`` with a reason in
-  ``reason`` means composition does not reach it either.
+  lists what it would still take: ``align`` / ``overlay`` helpers; empty when
+  the composition alone is enough. A ``set_position`` on an axes made inside a
+  cell lines up two axes of one panel: it is the panel's own business, not
+  ``align``. Empty ``composed_layout`` with a reason in ``reason`` means
+  composition does not reach it either.
 - ``loc_before`` -- lines of layout code: the statements that build grids,
   take a cell (``add_subplot``), place axes by hand, or fit and tag the panels.
 - ``loc_after`` -- for a script matched today, the same work with the layout:
@@ -54,9 +54,8 @@ coordinates or several grids on the figure -> none; a shape computed at run
 time -> none; ``1x1`` -> ``grid``, unless its one cell holds a grid (then the
 layout adds nothing: none); one row -> ``row``; one column -> ``stack``; two
 rows whose second row is one full-width panel -> ``wide_bottom``; any other
-span -> none; ratios on a grid of several rows and columns -> none (``grid``
-and ``matrix`` cells are equal); ten cells or more -> ``matrix``; otherwise
-``grid``.
+span -> none; ten cells or more -> ``matrix``; otherwise ``grid`` (both take
+``width_ratios`` / ``height_ratios``, so unequal rows or columns still match).
 """
 from __future__ import annotations
 
@@ -78,7 +77,6 @@ MATRIX_CELLS = 10                    # a grid of this many cells or more is a wa
 OVERLAY = re.compile(r"legend|banner|card|cbar|colorbar|cb_|title|key", re.I)
 BOX = {"x0", "x1", "y0", "y1", "width", "height"}
 HELPERS = {"align", "overlay"}       # placements a small helper could take over; the rest stay by hand
-# composed_needs may also name "ratios": a grid of unequal rows or columns (grid/matrix take equal cells today)
 
 
 @dataclass
@@ -261,8 +259,6 @@ def _match(row: Row, shape, spans: int, full_last: int, several: bool, by_hand: 
         if rows == 2 and spans == full_last == 1:
             return "wide_bottom", ""
         return "", "spans"
-    if row.ratios:
-        return "", "unequal cells in a grid"
     return ("matrix", "") if rows * cols >= MATRIX_CELLS else ("grid", "")
 
 
@@ -289,7 +285,7 @@ def _compose(row: Row, shape, spans: int, full_last: int, row_only: bool, col_on
         return "row", needs                                 # each column its own band: a row of columns
     if not spans:                                           # a count computed at run time is fine: letters are too
         name = "matrix" if rows and cols and rows * cols >= MATRIX_CELLS else "grid"
-        return name, ";".join(sorted({*filter(None, needs.split(";")), *(["ratios"] if row.ratios else [])}))
+        return name, needs
     return "", ""
 
 
@@ -319,7 +315,7 @@ def summary(rows: list[Row], levels: list[str]) -> str:
         out += ["", f"Layout code of the matched scripts, median lines: {before:g} before, {after:g} with the layout."]
     composed = [r for r in rows if r.composed_layout and not r.composed_needs]
     helped = [r for r in rows if r.composed_layout and r.composed_needs]
-    out += ["", "| scripts covered | today | + composition | + composition, ratios and helpers |", "|---|---|---|---|",
+    out += ["", "| scripts covered | today | + composition | + composition and helpers |", "|---|---|---|---|",
             f"| of {len(rows)} | {len(matched)} | {len(composed)} | {len(composed) + len(helped)} |"]
     out += ["", "| composed: outer layout | scripts |", "|---|---|"] + \
         _count([r for r in rows if r.composed_layout and not r.matched_layout], lambda r: r.composed_layout)

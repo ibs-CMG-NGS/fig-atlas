@@ -169,3 +169,28 @@ def test_gaps_are_real_and_follow_the_gridspec_convention():
     assert gap == pytest.approx(0.25 * a.bbox.width, rel=1e-6)
     plt.close(fig)
     plt.close(fig2)
+
+
+def test_grid_ratios_from_argument_and_config():
+    """Rows and columns of different sizes (L-13); unset, the cells stay equal."""
+    fig = plt.figure(figsize=(6, 4))
+    lay = layouts.grid(fig, {}, "abcd", columns=2, width_ratios=[2, 1], height_ratios=[1, 3])
+    a, b, c = lay.cells["a"], lay.cells["b"], lay.cells["c"]
+    assert a.bbox.width == pytest.approx(2 * b.bbox.width, rel=1e-6)
+    assert c.bbox.height == pytest.approx(3 * a.bbox.height, rel=1e-6)
+    assert lay.shape == "2x2 grid"
+    from_config = layouts.grid(fig, {"grid": {"width_ratios": [2, 1]}}, "abcd", columns=2)
+    assert from_config.cells["a"].bbox.width == pytest.approx(2 * from_config.cells["b"].bbox.width, rel=1e-6)
+    argument_wins = layouts.grid(fig, {"grid": {"width_ratios": [2, 1]}}, "abcd", columns=2, width_ratios=[1, 1])
+    assert argument_wins.cells["a"].bbox.width == pytest.approx(argument_wins.cells["b"].bbox.width, rel=1e-6)
+    plt.close(fig)
+
+
+@pytest.mark.parametrize("name", ["grid", "matrix"])
+def test_ratios_need_one_number_per_row_or_column(name):
+    fig = plt.figure(figsize=(6, 4))
+    with pytest.raises(ValueError, match=r"one number per column \(2\)"):
+        getattr(layouts, name)(fig, {}, "abcd", columns=2, width_ratios=[1, 1, 1])
+    with pytest.raises(ValueError, match=r"one number per row \(2\)"):
+        getattr(layouts, name)(fig, {name: {"height_ratios": [1]}}, "abcd", columns=2)
+    plt.close(fig)

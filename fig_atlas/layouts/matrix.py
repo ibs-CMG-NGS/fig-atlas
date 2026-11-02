@@ -25,6 +25,8 @@ values in brackets are the defaults:
   (fractions of the mean cell width/height); smaller than ``grid``'s because
   the panels are small.
 - ``matrix.columns`` [5, or the panel count when smaller] -- cells per row.
+- ``matrix.width_ratios`` / ``matrix.height_ratios`` [equal] -- one number per
+  column / per row, e.g. a wider first column for a heatmap beside dot plots.
 - ``panel_pad_mm`` [1.0] -- padding inside each cell, millimetres; lower it
   (e.g. 0.5) to buy space for more cells.
 - ``tags.show`` [true], ``tags.size`` [9.0] (pt), ``tags.pad_pt`` [2.0] --
@@ -37,13 +39,15 @@ from __future__ import annotations
 import math
 
 from ._core import Layout, _block, _check_letters, _grid
+from .grid import _ratios
 
 
-def matrix(fig, fcfg: dict, letters, columns=None) -> Layout:
+def matrix(fig, fcfg: dict, letters, columns=None, width_ratios=None, height_ratios=None) -> Layout:
     """A dense wall of ``letters`` (``columns`` wide, 5 by default).
 
-    Draw each panel into ``layout.cells[letter]``, then call
-    ``layouts.finish(fig, layout, fcfg)``.
+    ``width_ratios`` / ``height_ratios`` (arguments, else ``figures.matrix.*``)
+    size the columns and rows; unset, the cells are equal. Draw each panel into
+    ``layout.cells[letter]``, then call ``layouts.finish(fig, layout, fcfg)``.
     """
     letters = _check_letters(letters)
     n = len(letters)
@@ -52,7 +56,9 @@ def matrix(fig, fcfg: dict, letters, columns=None) -> Layout:
     if cols < 1:
         raise ValueError(f"matrix columns must be at least 1, not {cols}")
     rows = math.ceil(n / cols)
-    gs = _grid(fig, fcfg, rows, cols,
+    widths = _ratios("matrix", "width_ratios", width_ratios, block, cols, "column")
+    heights = _ratios("matrix", "height_ratios", height_ratios, block, rows, "row")
+    gs = _grid(fig, fcfg, rows, cols, width_ratios=widths, height_ratios=heights,
                wspace=block.get("wspace", 0.06), hspace=block.get("hspace", 0.12))
     cells = {letter: fig.add_subfigure(gs.at(i // cols, i % cols)) for i, letter in enumerate(letters)}
     tag_columns = [[l for i, l in enumerate(letters) if i % cols == c] for c in range(cols)]

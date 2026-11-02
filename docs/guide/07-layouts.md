@@ -25,7 +25,7 @@ Either way, the panel letters (a, b, c, …) are placed on each panel's outer ed
 
 | Layout | Shape | Use it for |
 |---|---|---|
-| `grid` | Equal rows and columns, filled left to right | Panels of equal weight (the same cells as without a script) |
+| `grid` | Rows and columns, filled left to right; equal unless you set their sizes | Panels of equal weight (the same cells as without a script), or a grid with one wider column |
 | `wide_bottom` | A row of panels, one full-width panel beneath | The most common paper shape: details on top, the overview below |
 | `stack` | One column, one panel above another | Panels read top to bottom; a one-column figure |
 | `row` | One row, side by side | One band compared left to right |
@@ -67,8 +67,8 @@ Raise the second number of `height_ratios` to give the wide panel more height; r
 | You want to | Change | Where |
 |---|---|---|
 | Move panels apart or closer | `wspace` (side by side), `hspace` (above and below) | `figures:` (`figures.matrix` for `matrix`) |
-| Give one row more height | `height_ratios` (one number per row) | `figures.wide_bottom` or `figures.stack` |
-| Make one panel wider | `width_ratios` (one number per panel) | `figures.row` |
+| Give one row more height | `height_ratios` (one number per row) | `figures.wide_bottom`, `figures.stack`, `figures.grid` or `figures.matrix` |
+| Make one column wider | `width_ratios` (one number per column) | `figures.row`, `figures.grid` or `figures.matrix` |
 | Change the panels per row | `columns` | `figures:` (`grid`), `figures.matrix` |
 | Leave more air around each panel | `panel_pad_mm` | `figures:` |
 | Change the letters | `tags.size`, `tags.show` | `figures:` |
