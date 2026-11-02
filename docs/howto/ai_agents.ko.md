@@ -12,7 +12,7 @@ fa mcp                     # 또는: python -m fig_atlas mcp [--root <저장소>
 
 | 도구 | 하는 일 | 파일을 바꾸나 |
 |---|---|---|
-| `fa_list`, `fa_renderers`, `fa_bundle_contracts` | 프로젝트, 그릴 수 있는 그림, 번들 계약 목록 | 아니오 |
+| `fa_list`, `fa_renderers`, `fa_layouts`, `fa_bundle_contracts` | 프로젝트, 그릴 수 있는 그림, 패널 배치(레이아웃), 번들 계약 목록 | 아니오 |
 | `fa_bundle_check` | 번들을 계약으로 검사 | 아니오 |
 | `fa_status`, `fa_impact`, `fa_lineage` | 낡은 그림, 파일의 영향 범위, 그림의 출처 | 아니오 |
 | `fa_lint`, `fa_claims` | 안 읽힌 config 키·오타, 손으로 쓴 수치 | 아니오 |

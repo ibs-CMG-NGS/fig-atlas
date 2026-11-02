@@ -17,6 +17,7 @@ Every command of the `fa` tool. `fa <command> --help` shows the same. Commands t
 | [`fa ingest`](#fa-ingest) | add a data bundle to a project: check it, write its full plots block, build |
 | [`fa init`](#fa-init) | make a project repository here (or in PATH): folders, marker, rules, .gitignore |
 | [`fa inventory`](#fa-inventory) | regenerate (or --check) docs/reference/renderer_inventory.md |
+| [`fa layouts`](#fa-layouts) | panel arrangements a script can use (fig_atlas.layouts): shape, call, config |
 | [`fa lineage`](#fa-lineage) | a published figure's upstream: outputs <- run <- config <- code <- data |
 | [`fa lint`](#fa-lint) | config keys the build never read, likely typos, and defaults used |
 | [`fa list`](#fa-list) | list projects |
@@ -178,6 +179,19 @@ fa init [-h] [--dry-run] [--json] [path]
 regenerate (or --check) docs/reference/renderer_inventory.md
 
 Runs `fig_atlas.tools.renderer_inventory`; its own options: `fa inventory --help`.
+
+## fa layouts
+
+panel arrangements a script can use (fig_atlas.layouts): shape, call, config
+
+```
+fa layouts [-h] [--json] [name]
+```
+
+| Argument | Meaning |
+|---|---|
+| `name` | one layout in full (shape, call, config keys), or 'composition' for layouts in cells |
+| `--json` | machine-readable output |
 
 ## fa lineage
 

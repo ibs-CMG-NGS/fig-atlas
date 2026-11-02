@@ -22,6 +22,7 @@ Everything you can ask an AI to do can also be done with the commands below. Use
 | Attach a bundle as a panel (+ build) | `fa ingest bundle bundle-folder --project name` | 4 |
 | List projects | `fa list` | — |
 | See the names of figures that can be drawn | `fa renderers` | — |
+| See the panel arrangements (layouts), or one in full | `fa layouts` / `fa layouts stack` | — |
 
 ## Building and checking
 
