@@ -24,117 +24,117 @@ cards:
     kind: infra
     phase: 0
     priority: P1
-    status: in_review
+    status: done
     depends_on: []
     owner: "opencode 2026-11-02"
-    branch: "layout/catalog"
-    commits: ["fig-atlas 4446ae7"]
+    branch: "layout/L-01-core-and-five-layouts"
+    commits: ["fig-atlas 4446ae7", "PR #26 (merge 2fb1038)"]
     version: "plan v1"
-    review: null
+    review: "merged 2026-11-02 (user), PR #26; main CI 41413134324 success"
     notes: "status file written with the cards of plan section 8; the checker validates ids, fields, dependencies and that the plan's card table and this file agree Written by opencode on layout/catalog; taken over by claude-code 2026-11-02, set back to in_review until the user's review and merge."
   - id: L-02
     title: "core API: Layout, _grid, finish, exports, parity test skeleton"
     kind: code
     phase: 1
     priority: P1
-    status: in_review
+    status: done
     depends_on: [L-01]
     owner: "opencode 2026-11-02"
-    branch: "layout/catalog"
-    commits: ["fig-atlas 4446ae7"]
-    version: null
-    review: null
+    branch: "layout/L-01-core-and-five-layouts"
+    commits: ["fig-atlas 4446ae7", "PR #26 (merge 2fb1038)"]
+    version: "0.2.0.dev1"
+    review: "merged 2026-11-02 (user), PR #26; main CI 41413134324 success"
     notes: "fig_atlas/layouts/_core.py: Layout (cells/columns/rows/shape), _check_letters, _block, _grid (Cells helper; gaps are separator rows/columns because a SubFigure ignores GridSpec wspace/hspace -- plan section 14, implementation note), finish (fit_in_cells + place_panel_tags; tags.show false places none); layouts/__init__.py exports the frozen API; tests/test_layouts_core.py covers letters, shapes, tags, fitting inside the cell and draw_plots parity Written by opencode on layout/catalog; taken over by claude-code 2026-11-02, set back to in_review until the user's review and merge."
   - id: L-03
     title: "wide_bottom"
     kind: code
     phase: 1
     priority: P1
-    status: in_review
+    status: done
     depends_on: [L-02]
     owner: "opencode 2026-11-02"
-    branch: "layout/catalog"
-    commits: ["fig-atlas 4446ae7"]
-    version: null
-    review: null
+    branch: "layout/L-01-core-and-five-layouts"
+    commits: ["fig-atlas 4446ae7", "PR #26 (merge 2fb1038)"]
+    version: "0.2.0.dev1"
+    review: "merged 2026-11-02 (user), PR #26; main CI 41413134324 success"
     notes: "fig_atlas/layouts/wide_bottom.py: two rows, the bottom panel spanning every column (grid row 1); height_ratios from figures.wide_bottom; the wide panel's tag joins column 0; tests/layouts/test_wide_bottom.py Written by opencode on layout/catalog; taken over by claude-code 2026-11-02, set back to in_review until the user's review and merge."
   - id: L-04
     title: "stack"
     kind: code
     phase: 1
     priority: P1
-    status: in_review
+    status: done
     depends_on: [L-02]
     owner: "opencode 2026-11-02"
-    branch: "layout/catalog"
-    commits: ["fig-atlas 4446ae7"]
-    version: null
-    review: null
+    branch: "layout/L-01-core-and-five-layouts"
+    commits: ["fig-atlas 4446ae7", "PR #26 (merge 2fb1038)"]
+    version: "0.2.0.dev1"
+    review: "merged 2026-11-02 (user), PR #26; main CI 41413134324 success"
     notes: "fig_atlas/layouts/stack.py: one column of n rows, height_ratios from figures.stack, one plumb line for the cluster; tests/layouts/test_stack.py Written by opencode on layout/catalog; taken over by claude-code 2026-11-02, set back to in_review until the user's review and merge."
   - id: L-05
     title: "grid + parity with draw_plots"
     kind: code
     phase: 1
     priority: P1
-    status: in_review
+    status: done
     depends_on: [L-02]
     owner: "opencode 2026-11-02"
-    branch: "layout/catalog"
-    commits: ["fig-atlas 4446ae7"]
-    version: null
-    review: null
+    branch: "layout/L-01-core-and-five-layouts"
+    commits: ["fig-atlas 4446ae7", "PR #26 (merge 2fb1038)"]
+    version: "0.2.0.dev1"
+    review: "merged 2026-11-02 (user), PR #26; main CI 41413134324 success"
     notes: "fig_atlas/layouts/grid.py: equal rows x cols, columns= or figures.columns (3, or the panel count when smaller); the parity test (tests/test_layouts_core.py) draws the same panels through bundle_figure.draw_plots with a monkeypatched resolve and compares subfigure rectangles and tag groups -- identical with the default gaps of 0 Written by opencode on layout/catalog; taken over by claude-code 2026-11-02, set back to in_review until the user's review and merge."
   - id: L-06
     title: "matrix"
     kind: code
     phase: 2
     priority: P2
-    status: in_review
+    status: done
     depends_on: [L-02, L-03]
     owner: "opencode 2026-11-02"
-    branch: "layout/catalog"
-    commits: ["fig-atlas 4446ae7"]
-    version: null
-    review: null
+    branch: "layout/L-01-core-and-five-layouts"
+    commits: ["fig-atlas 4446ae7", "PR #26 (merge 2fb1038)"]
+    version: "0.2.0.dev1"
+    review: "merged 2026-11-02 (user), PR #26; main CI 41413134324 success"
     notes: "fig_atlas/layouts/matrix.py: dense wall, 5 columns by default, gaps of its own (figures.matrix.wspace/hspace, 0.06/0.12) realized as separator rows/columns; tests/layouts/test_matrix.py Written by opencode on layout/catalog; taken over by claude-code 2026-11-02, set back to in_review until the user's review and merge."
   - id: L-07
     title: "row"
     kind: code
     phase: 2
     priority: P2
-    status: in_review
+    status: done
     depends_on: [L-02, L-03]
     owner: "opencode 2026-11-02"
-    branch: "layout/catalog"
-    commits: ["fig-atlas 4446ae7"]
-    version: null
-    review: null
+    branch: "layout/L-01-core-and-five-layouts"
+    commits: ["fig-atlas 4446ae7", "PR #26 (merge 2fb1038)"]
+    version: "0.2.0.dev1"
+    review: "merged 2026-11-02 (user), PR #26; main CI 41413134324 success"
     notes: "fig_atlas/layouts/row.py: one row of n cells, width_ratios from figures.row, one align_rows group; tests/layouts/test_row.py Written by opencode on layout/catalog; taken over by claude-code 2026-11-02, set back to in_review until the user's review and merge."
   - id: L-08
     title: "examples + gallery page + coverage test"
     kind: docs
     phase: 2
     priority: P1
-    status: in_review
+    status: done
     depends_on: [L-03, L-04, L-05, L-06, L-07]
     owner: "claude-code 2026-11-02"
     branch: "layout/L-08-examples"
-    commits: ["fig-atlas 4059419"]
-    version: null
-    review: null
+    commits: ["fig-atlas 4059419", "PR #27 (merge 247166a)"]
+    version: "0.2.0.dev1"
+    review: "pictures offered for visual review, merged 2026-11-02 (user), PR #27; main CI 41413171384 success, Documentation site 41413171414 success"
     notes: "examples/layouts/<name>/ (config + script + data), scripts/make_layout_gallery.py, the layouts writer in scripts/make_reference.py, docs/reference/layouts.md, tests/test_layouts_gallery.py. Delivered (2026-11-02): one example per layout (config.yaml + script.py, 20 lines of code each; build() draws the figure) with the gallery's synthetic bundles as panels through examples/layouts/_panels.py, and a small synthetic bundle for the matrix small multiples (examples/layouts/matrix/bundle); scripts/make_layout_gallery.py (pictures, layouts page) called by fa reference; nav entry in mkdocs.yml (outside the card's file list: the reference page needs it); tests/test_layouts_gallery.py (assets present, script <= 25 lines of code, every example builds with no preflight error or warning, tags a..). Found: an example that draws inside plt.rc_context and returns the figure gets its tick labels redrawn at the default size after the context closes, which pushed a y title off the canvas -- the scripts set rcParams once (AGENTS.md 1.4) and the tests wrap them in rc_context. Awaiting the visual review."
   - id: L-09a
     title: "renumber guide chapters 07-13 to 08-14 + chapter-number consistency test"
     kind: docs
     phase: 3
     priority: P1
-    status: in_review
+    status: done
     depends_on: []
     owner: "opencode 2026-11-02"
-    branch: "layout/catalog"
-    commits: ["fig-atlas 2b12f01"]
-    version: null
-    review: null
+    branch: "layout/L-01-core-and-five-layouts"
+    commits: ["fig-atlas 2b12f01", "PR #26 (merge 2fb1038)"]
+    version: "0.2.0.dev1"
+    review: "merged 2026-11-02 (user), PR #26; main CI 41413134324 success"
     notes: "renamed 07-results..13-rules to 08-results..14-rules (ko+en, git mv), shifted the numbers the pages use: front-matter titles, chapter N (41), Korean N장 (43), link text [N. ...], link targets, the mkdocs nav and docs/index.md; tests/test_guide.py gained test_chapter_number_matches_the_title and test_navigation_lists_the_chapters_in_number_order Written by opencode on layout/catalog; taken over by claude-code 2026-11-02, set back to in_review until the user's review and merge."
   - id: L-09b
     title: "new chapter 07 layouts (ko/en) + nav + cross-links"
