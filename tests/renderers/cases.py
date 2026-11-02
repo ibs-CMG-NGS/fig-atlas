@@ -736,6 +736,33 @@ def correlation_scatter_pooled():
         "stats_format": "R² = {r2:.2f}, {p_text}, n = {n}"})
     return fig
 
+
+def _rain(rng):
+    return pd.DataFrame({"arm": ["vehicle"] * 15 + ["drug"] * 15 + ["drug + inhibitor"] * 15,
+                         "score": np.r_[rng.normal(10, 2, 15), rng.normal(14, 2.5, 15), 9 + rng.gamma(2, 1.5, 15)],
+                         "p": [None] * 15 + [0.0006] * 15 + [0.2] * 15})
+
+
+def raincloud():
+    """PC-04: horizontal, cloud above and rain below, brackets against vehicle (stacked)."""
+    from fig_atlas.renderers import render_raincloud
+    fig, ax = plt.subplots(figsize=(2.8, 2.2))
+    render_raincloud(ax, _rain(_rng()), {**TYPO, "category_col": "arm", "value_col": "score", "pvalue_col": "p",
+                                         "control_category": "vehicle",
+                                         "category_colors": {"vehicle": "#9ca3af", "drug": "#2563eb",
+                                                             "drug + inhibitor": "#f59e0b"},
+                                         "labels_xlabel": "Score"})
+    return fig
+
+
+def raincloud_vertical():
+    """PC-04: vertical, cloud to the right, no brackets."""
+    from fig_atlas.renderers import render_raincloud
+    fig, ax = plt.subplots(figsize=(2.6, 2.2))
+    render_raincloud(ax, _rain(_rng()), {**TYPO, "category_col": "arm", "value_col": "score",
+                                         "orientation": "vertical", "labels_ylabel": "Score"})
+    return fig
+
 CASES = {
     "cross_condition_dotplot": cross_condition_dotplot,
     "cross_condition_heatmap": cross_condition_heatmap,
@@ -787,6 +814,8 @@ CASES = {
     "grouped_bar_separated": grouped_bar_separated,
     "correlation_scatter": correlation_scatter,
     "correlation_scatter_pooled": correlation_scatter_pooled,
+    "raincloud": raincloud,
+    "raincloud_vertical": raincloud_vertical,
 }
 
 # Gallery families (fig_atlas.family) for pictures that are not a renderer

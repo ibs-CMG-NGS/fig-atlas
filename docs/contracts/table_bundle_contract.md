@@ -128,6 +128,26 @@ plot_params:
   p_col: p_value
 ```
 
+## `plot_type: raincloud` — raincloud (half violin, box and points)
+
+Draws per category a half violin (the cloud), a box with the quartiles and whiskers, and every value as a point (the rain) (`render_raincloud`). `orientation: horizontal` puts the categories on the y axis, first at the top; `vertical` puts them on the x axis. Brackets compare each category with `control_category`.
+
+| Role (plot_params key) | Default column name | Required | Content |
+|---|---|---|---|
+| `category_col` | `group` | Yes | The category of each value |
+| `value_col` | `value` | Yes | The values |
+| `pvalue_col` | — | No | On each category's rows, its P value against `control_category`, from a test run in the analysis script ([analysis recipes](../howto/analysis_recipes.md), section 3). If given, the column must exist |
+
+```yaml
+plot_type: raincloud
+plot_params:
+  category_col: treatment
+  value_col: latency
+  control_category: vehicle
+  pvalue_col: p_vs_vehicle
+  orientation: horizontal
+```
+
 ## Checks
 
 `fa bundle check <bundle>` reports as errors:

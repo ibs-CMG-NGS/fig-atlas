@@ -1,0 +1,682 @@
+{
+ "freetype": "2.14.3",
+ "figsize_in": [
+  2.8,
+  2.2
+ ],
+ "artists": [
+  {
+   "kind": "Rectangle",
+   "fc": "#ffffffff",
+   "ec": "#ffffffff",
+   "lw": 0.0,
+   "bbox_pt": [
+    0.0,
+    0.0,
+    201.6,
+    158.4
+   ]
+  },
+  {
+   "kind": "Rectangle",
+   "fc": "#ffffffff",
+   "ec": "#00000000",
+   "lw": 0.0,
+   "bbox_pt": [
+    25.2,
+    17.42,
+    181.44,
+    139.39
+   ]
+  },
+  {
+   "kind": "FillBetweenPolyCollection",
+   "n": 1,
+   "offsets": "374708fff7719dd5",
+   "paths": 1,
+   "fc": [
+    "#9ca3af99"
+   ],
+   "ec": [
+    "#37415199"
+   ],
+   "lw": [
+    0.5
+   ],
+   "sizes": []
+  },
+  {
+   "kind": "FillBetweenPolyCollection",
+   "n": 1,
+   "offsets": "374708fff7719dd5",
+   "paths": 1,
+   "fc": [
+    "#2563eb99"
+   ],
+   "ec": [
+    "#37415199"
+   ],
+   "lw": [
+    0.5
+   ],
+   "sizes": []
+  },
+  {
+   "kind": "FillBetweenPolyCollection",
+   "n": 1,
+   "offsets": "374708fff7719dd5",
+   "paths": 1,
+   "fc": [
+    "#f59e0b99"
+   ],
+   "ec": [
+    "#37415199"
+   ],
+   "lw": [
+    0.5
+   ],
+   "sizes": []
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "1cee94368510ac07",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "3",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "5",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "center",
+   "va": "top",
+   "bbox_pt": [
+    25.92,
+    4.62,
+    29.73,
+    10.42
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "6dffccd4ceccbeda",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "3",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "10",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "center",
+   "va": "top",
+   "bbox_pt": [
+    55.58,
+    4.62,
+    63.21,
+    10.42
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "7d4ce5b518074431",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "3",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "15",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "center",
+   "va": "top",
+   "bbox_pt": [
+    87.15,
+    4.62,
+    94.78,
+    10.42
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "6439ba4cf74a0293",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "3",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "20",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "center",
+   "va": "top",
+   "bbox_pt": [
+    118.72,
+    4.62,
+    126.35,
+    10.42
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "da64715dfbb0aab4",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "3",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "25",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "center",
+   "va": "top",
+   "bbox_pt": [
+    150.29,
+    4.62,
+    157.92,
+    10.42
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "Score",
+   "size": 7.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "center",
+   "va": "top",
+   "bbox_pt": [
+    93.53,
+    -6.15,
+    113.11,
+    0.62
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "374708fff7719dd5",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "0",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "vehicle",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "right",
+   "va": "center_baseline",
+   "bbox_pt": [
+    -3.16,
+    112.94,
+    18.2,
+    118.75
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "fc62429c3e69001d",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "0",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "drug",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "right",
+   "va": "center_baseline",
+   "bbox_pt": [
+    4.31,
+    69.69,
+    18.2,
+    75.5
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 1,
+   "data": "0827fd05442d5279",
+   "color": null,
+   "lw": 1.5,
+   "ls": "None",
+   "marker": "0",
+   "ms": 3.5,
+   "mec": "#000000ff",
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "drug + inhibitor",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#000000ff",
+   "ha": "right",
+   "va": "center_baseline",
+   "bbox_pt": [
+    -29.44,
+    26.44,
+    18.2,
+    32.24
+   ]
+  },
+  {
+   "kind": "PathCollection",
+   "n": 15,
+   "offsets": "ecac9004102399aa",
+   "paths": 1,
+   "fc": [
+    "#9ca3afb2"
+   ],
+   "ec": [
+    "#9ca3afb2"
+   ],
+   "lw": [
+    0.0
+   ],
+   "sizes": [
+    6.0
+   ]
+  },
+  {
+   "kind": "PathCollection",
+   "n": 15,
+   "offsets": "990d3bb2846970e0",
+   "paths": 1,
+   "fc": [
+    "#2563ebb2"
+   ],
+   "ec": [
+    "#2563ebb2"
+   ],
+   "lw": [
+    0.0
+   ],
+   "sizes": [
+    6.0
+   ]
+  },
+  {
+   "kind": "PathCollection",
+   "n": 15,
+   "offsets": "53f61874588fad97",
+   "paths": 1,
+   "fc": [
+    "#f59e0bb2"
+   ],
+   "ec": [
+    "#f59e0bb2"
+   ],
+   "lw": [
+    0.0
+   ],
+   "sizes": [
+    6.0
+   ]
+  },
+  {
+   "kind": "Spine",
+   "fc": "#00000000",
+   "ec": "#000000ff",
+   "lw": 0.8,
+   "bbox_pt": [
+    21.7,
+    17.42,
+    25.2,
+    139.39
+   ]
+  },
+  {
+   "kind": "Spine",
+   "fc": "#00000000",
+   "ec": "#000000ff",
+   "lw": 0.8,
+   "bbox_pt": [
+    25.2,
+    13.92,
+    181.44,
+    17.42
+   ]
+  },
+  {
+   "kind": "PathPatch",
+   "fc": "#ffffffff",
+   "ec": "#111827ff",
+   "lw": 0.7,
+   "bbox_pt": [
+    54.16,
+    114.31,
+    68.18,
+    118.63
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 2,
+   "data": "7684491d61ea529c",
+   "color": "#111827ff",
+   "lw": 0.7,
+   "ls": "-",
+   "marker": "",
+   "ms": 6.0,
+   "mec": null,
+   "mfc": null
+  },
+  {
+   "kind": "Line2D",
+   "n": 2,
+   "data": "3a1de9341edda3de",
+   "color": "#111827ff",
+   "lw": 0.7,
+   "ls": "-",
+   "marker": "",
+   "ms": 6.0,
+   "mec": null,
+   "mfc": null
+  },
+  {
+   "kind": "Line2D",
+   "n": 2,
+   "data": "89c3c2a12da45426",
+   "color": "#111827ff",
+   "lw": 0.7,
+   "ls": "-",
+   "marker": "",
+   "ms": 6.0,
+   "mec": null,
+   "mfc": null
+  },
+  {
+   "kind": "Line2D",
+   "n": 2,
+   "data": "f3ade955371472db",
+   "color": "#111827ff",
+   "lw": 0.7,
+   "ls": "-",
+   "marker": "",
+   "ms": 6.0,
+   "mec": null,
+   "mfc": null
+  },
+  {
+   "kind": "PathPatch",
+   "fc": "#ffffffff",
+   "ec": "#111827ff",
+   "lw": 0.7,
+   "bbox_pt": [
+    79.24,
+    71.06,
+    108.74,
+    75.38
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 2,
+   "data": "351a817aaebe7a53",
+   "color": "#111827ff",
+   "lw": 0.7,
+   "ls": "-",
+   "marker": "",
+   "ms": 6.0,
+   "mec": null,
+   "mfc": null
+  },
+  {
+   "kind": "Line2D",
+   "n": 2,
+   "data": "818151f5d40e6502",
+   "color": "#111827ff",
+   "lw": 0.7,
+   "ls": "-",
+   "marker": "",
+   "ms": 6.0,
+   "mec": null,
+   "mfc": null
+  },
+  {
+   "kind": "Line2D",
+   "n": 2,
+   "data": "c308cda2245c7262",
+   "color": "#111827ff",
+   "lw": 0.7,
+   "ls": "-",
+   "marker": "",
+   "ms": 6.0,
+   "mec": null,
+   "mfc": null
+  },
+  {
+   "kind": "Line2D",
+   "n": 2,
+   "data": "2497c9f579d2b33f",
+   "color": "#111827ff",
+   "lw": 0.7,
+   "ls": "-",
+   "marker": "",
+   "ms": 6.0,
+   "mec": null,
+   "mfc": null
+  },
+  {
+   "kind": "PathPatch",
+   "fc": "#ffffffff",
+   "ec": "#111827ff",
+   "lw": 0.7,
+   "bbox_pt": [
+    62.92,
+    27.8,
+    77.38,
+    32.13
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 2,
+   "data": "ecbf950d7b555afa",
+   "color": "#111827ff",
+   "lw": 0.7,
+   "ls": "-",
+   "marker": "",
+   "ms": 6.0,
+   "mec": null,
+   "mfc": null
+  },
+  {
+   "kind": "Line2D",
+   "n": 2,
+   "data": "e5c21bef8485f506",
+   "color": "#111827ff",
+   "lw": 0.7,
+   "ls": "-",
+   "marker": "",
+   "ms": 6.0,
+   "mec": null,
+   "mfc": null
+  },
+  {
+   "kind": "Line2D",
+   "n": 2,
+   "data": "3601383cafbb9c3a",
+   "color": "#111827ff",
+   "lw": 0.7,
+   "ls": "-",
+   "marker": "",
+   "ms": 6.0,
+   "mec": null,
+   "mfc": null
+  },
+  {
+   "kind": "Line2D",
+   "n": 2,
+   "data": "f25d904c60e308e5",
+   "color": "#111827ff",
+   "lw": 0.7,
+   "ls": "-",
+   "marker": "",
+   "ms": 6.0,
+   "mec": null,
+   "mfc": null
+  },
+  {
+   "kind": "Line2D",
+   "n": 2,
+   "data": "88eea081c8646651",
+   "color": "#111827ff",
+   "lw": 1.0,
+   "ls": "-",
+   "marker": "",
+   "ms": 6.0,
+   "mec": null,
+   "mfc": null
+  },
+  {
+   "kind": "Line2D",
+   "n": 2,
+   "data": "7300b985e3ed478f",
+   "color": "#111827ff",
+   "lw": 1.0,
+   "ls": "-",
+   "marker": "",
+   "ms": 6.0,
+   "mec": null,
+   "mfc": null
+  },
+  {
+   "kind": "Line2D",
+   "n": 2,
+   "data": "1f752069fbdfa1ed",
+   "color": "#111827ff",
+   "lw": 1.0,
+   "ls": "-",
+   "marker": "",
+   "ms": 6.0,
+   "mec": null,
+   "mfc": null
+  },
+  {
+   "kind": "Line2D",
+   "n": 4,
+   "data": "e08d29b88ef7471d",
+   "color": "#333333ff",
+   "lw": 0.8,
+   "ls": "-",
+   "marker": "None",
+   "ms": 6.0,
+   "mec": null,
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "***",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#333333ff",
+   "ha": "left",
+   "va": "center",
+   "bbox_pt": [
+    156.85,
+    91.94,
+    165.86,
+    97.75
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 4,
+   "data": "86c2ec776f5c5394",
+   "color": "#333333ff",
+   "lw": 0.8,
+   "ls": "-",
+   "marker": "None",
+   "ms": 6.0,
+   "mec": null,
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "ns",
+   "size": 6.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#333333ff",
+   "ha": "left",
+   "va": "center",
+   "bbox_pt": [
+    167.33,
+    70.32,
+    174.26,
+    76.12
+   ]
+  }
+ ]
+}

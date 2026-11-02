@@ -58,6 +58,7 @@ Compendium projects: none.
 | 4 | `render_pca` | `fig_atlas/renderers/pca.py` | 0 | — | — |
 | 4 | `render_peak_feature_composition` | `fig_atlas_omics/renderers/peak_feature_enrichment.py` | 0 | — | — |
 | 4 | `render_peak_feature_enrichment` | `fig_atlas_omics/renderers/peak_feature_enrichment.py` | 0 | — | — |
+| 4 | `render_raincloud` | `fig_atlas/renderers/raincloud.py` | 0 | — | — |
 | 4 | `render_sample_metric_bars` | `fig_atlas/renderers/sample_metric_bars.py` | 0 | — | — |
 | 4 | `render_segment_array` | `fig_atlas_omics/renderers/segment_array.py` | 0 | — | — |
 | 4 | `render_signed_heatmap` | `fig_atlas/renderers/signed_heatmap.py` | 0 | — | — |
@@ -76,4 +77,4 @@ Compendium projects: none.
 | 4 | `render_violin` | `fig_atlas/renderers/violin.py` | 0 | — | — |
 | 4 | `render_volcano` | `fig_atlas_omics/renderers/volcano.py` | 0 | — | — |
 
-Summary: tier 2 active — 4, tier 4 unused — 58.
+Summary: tier 2 active — 4, tier 4 unused — 59.

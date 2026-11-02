@@ -1,0 +1,49 @@
+treatment,mouse,latency_s,p_vs_vehicle
+vehicle,1,23.3,
+vehicle,2,25.7,
+vehicle,3,18.6,
+vehicle,4,23.0,
+vehicle,5,28.3,
+vehicle,6,17.2,
+vehicle,7,12.0,
+vehicle,8,18.9,
+vehicle,9,15.6,
+vehicle,10,18.8,
+vehicle,11,17.3,
+vehicle,12,26.7,
+vehicle,13,21.2,
+vehicle,14,22.2,
+vehicle,15,25.4,
+vehicle,16,16.4,
+low dose,1,29.5,0.0992
+low dose,2,26.3,0.0992
+low dose,3,26.1,0.0992
+low dose,4,29.3,0.0992
+low dose,5,21.0,0.0992
+low dose,6,34.3,0.0992
+low dose,7,20.5,0.0992
+low dose,8,23.0,0.0992
+low dose,9,26.8,0.0992
+low dose,10,19.3,0.0992
+low dose,11,22.2,0.0992
+low dose,12,20.4,0.0992
+low dose,13,30.1,0.0992
+low dose,14,34.6,0.0992
+low dose,15,19.5,0.0992
+low dose,16,32.0,0.0992
+high dose,1,68.1,1.4e-08
+high dose,2,40.1,1.4e-08
+high dose,3,33.2,1.4e-08
+high dose,4,31.7,1.4e-08
+high dose,5,28.8,1.4e-08
+high dose,6,33.7,1.4e-08
+high dose,7,58.0,1.4e-08
+high dose,8,41.2,1.4e-08
+high dose,9,35.2,1.4e-08
+high dose,10,51.2,1.4e-08
+high dose,11,28.3,1.4e-08
+high dose,12,40.3,1.4e-08
+high dose,13,32.1,1.4e-08
+high dose,14,36.5,1.4e-08
+high dose,15,30.2,1.4e-08
+high dose,16,43.8,1.4e-08

@@ -46,6 +46,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | [`pca`](#pca) | core | 16 |
 | [`peak_feature_composition`](#peak_feature_composition) | fig_atlas_omics.renderers | 32 |
 | [`peak_feature_enrichment`](#peak_feature_enrichment) | fig_atlas_omics.renderers | 32 |
+| [`raincloud`](#raincloud) | core | 55 |
 | [`sample_metric_bars`](#sample_metric_bars) | core | 22 |
 | [`segment_array`](#segment_array) | fig_atlas_omics.renderers | 68 |
 | [`signed_heatmap`](#signed_heatmap) | core | 34 |
@@ -1675,6 +1676,68 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `title_size` | number | `13` | pt | Title font size |
 | `axes_label_size` | number | `11` | pt | Axis title font size |
 | `tick_label_size` | number | `8` | pt | Tick label font size |
+
+## raincloud
+
+`fig_atlas.renderers:render_raincloud`
+
+| Key | Type | Default | Unit | What it does |
+|---|---|---|---|---|
+| `category_col` | text | `group` |  | Column with the categories (one raincloud each) |
+| `value_col` | text | `value` |  | Column with the values |
+| `pvalue_col` | text | auto |  | Column with each category's P value against control_category, from the analysis (default: none) |
+| `control_category` | text | auto |  | The category the brackets compare against (needed with pvalue_col) |
+| `category_order` | list | auto |  | Categories in drawing order (default: order in the data) |
+| `category_labels` | mapping | `{}` |  | Tick label per category (default: the value) |
+| `orientation` | one of `horizontal`, `vertical` | `horizontal` |  | horizontal: categories on the y axis, first at the top; vertical: categories on the x axis |
+| `flip` | true / false | `False` |  | Swap the sides of the cloud and the rain |
+| `category_colors` | mapping | `{}` | hex color | Colour per category (default: matplotlib colour cycle) |
+| `show_cloud` | true / false | `True` |  | Draw the half violin |
+| `cloud_width` | number | `0.4` | category units (categories are 1 apart) | Height of the cloud at its widest — lower if neighbouring clouds touch |
+| `cloud_offset` | number | `0.08` | category units | Gap between the box's centre and the cloud's base |
+| `cloud_alpha` | number | `0.6` | [0-1] opacity | Cloud fill opacity |
+| `cloud_edge_color` | colour | `#374151` | hex color | Cloud outline colour |
+| `cloud_edge_width` | number | `0.5` | pt | Cloud outline width |
+| `bandwidth` | number | auto | multiple of the data's SD (kernel width) | Smoothing of the cloud outline (default: Scott's rule, n^-1/5) — lower to follow the data more closely, raise for a smoother outline |
+| `cloud_cut` | number | `2.0` | kernel widths | How far the cloud's tails reach beyond the lowest and highest value — 0 ends it at the data |
+| `cloud_points` | integer | `128` | points along the value axis | Smoothness of the cloud outline |
+| `show_box` | true / false | `True` |  | Draw the box (quartiles, median, whiskers) |
+| `box_width` | number | `0.1` | category units | Box width |
+| `box_color` | colour | `#ffffff` | hex color | Box fill colour |
+| `box_edge_color` | colour | `#111827` | hex color | Box outline, whisker and cap colour |
+| `box_line_width` | number | `0.7` | pt | Box outline and whisker width |
+| `median_color` | colour | `#111827` | hex color | Median line colour |
+| `median_line_width` | number | `1.0` | pt | Median line width |
+| `whisker_range` | number | `1.5` | multiple of the IQR | Whiskers reach the furthest value within this many IQRs of the box (state it in the legend) |
+| `show_points` | true / false | `True` |  | Draw every value as a point |
+| `point_color` | colour | auto | hex color | Point colour (default: the category's colour) |
+| `point_size` | number | `6.0` | pt^2 (marker area) | Point size |
+| `point_alpha` | number | `0.7` | [0-1] opacity | Point opacity |
+| `point_edge_width` | number | `0.0` | pt | Point outline width (0: none) |
+| `rain_offset` | number | `0.18` | category units | Distance of the rain's centre from the box's centre |
+| `rain_jitter` | number | `0.06` | category units | Scatter of the points across the rain band — 0 puts them on one line |
+| `point_seed` | integer | `0` | random seed | Seed of the jitter (fixed: the same picture every build) |
+| `category_margin` | number | `0.05` | category units | Room beyond the outermost cloud or rain |
+| `show_significance` | true / false | `True` |  | Draw brackets when pvalue_col and control_category are given |
+| `sig_thresholds` | list | `[[0.001, '***'], [0.01, '**'], [0.05, '*']]` | P value | [threshold, symbol] pairs, P < threshold gets the symbol (state the rule in the legend) |
+| `sig_ns_display` | text | `ns` |  | Text for a P at or above every threshold ('' to draw no bracket) |
+| `sig_gap` | number | `0.04` | fraction of the value range | Gap between the highest value and a bracket |
+| `sig_tick` | number | `0.02` | fraction of the value range | Length of a bracket's end ticks |
+| `sig_step` | number | `0.09` | fraction of the value range | Distance between stacked brackets — raise if the stars of stacked brackets touch |
+| `sig_line_color` | colour | `#333333` | hex color | Bracket colour |
+| `sig_line_width` | number | `0.8` | pt | Bracket line width |
+| `sig_font_size` | number | computed | pt | Star size (default: tick_label_size) |
+| `sig_text_pad` | number | `1.5` | pt | Gap between a bracket and its star |
+| `value_min` | number | auto | data coords | Lower limit of the value axis (default: the data) |
+| `value_max` | number | auto | data coords | Upper limit of the value axis (default: the data, plus room for brackets) |
+| `value_headroom` | number | `0.08` | fraction of the value range | Room beyond the highest bracket |
+| `labels_title` | text | auto |  | Panel title (none: no title) |
+| `labels_xlabel` | text | computed |  | x-axis title (default: value_col when horizontal, none when vertical) |
+| `labels_ylabel` | text | computed |  | y-axis title (default: none when horizontal, value_col when vertical) |
+| `title_size` | number | `8.0` | pt | Panel title size |
+| `axes_label_size` | number | auto | pt | Axis title size (default: rcParams) |
+| `tick_label_size` | number | auto | pt | Tick label size (default: rcParams) |
+| `hide_top_right` | true / false | `True` |  | Hide the top and right axis lines |
 
 ## sample_metric_bars
 
