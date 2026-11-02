@@ -72,7 +72,7 @@ When the user requests custom plot ingestion (e.g., "Ingest this custom script",
 
 ## 4. Manuscript Figure Assembly Protocol (3-Phase Lifecycle)
 
-When the user asks for paper storylines, figure candidate screening, or assembling multi-panel manuscript figures (e.g., "논문 스토리라인 짜줘", "Main Figure 1 합성해줘"), all agents must follow the 3-phase lifecycle described in the researcher guide (`docs/guide/11-lifecycle.md`) and the assemble skill (`.agents/skills/assemble_figure/SKILL.md`):
+When the user asks for paper storylines, figure candidate screening, or assembling multi-panel manuscript figures (e.g., "논문 스토리라인 짜줘", "Main Figure 1 합성해줘"), all agents must follow the 3-phase lifecycle described in the researcher guide (`docs/guide/12-lifecycle.md`) and the assemble skill (`.agents/skills/assemble_figure/SKILL.md`):
 1. **Phase 1 (Exploratory)**: Conditions explored via atomic 1-Figure projects with clean manifests.
 2. **Phase 2 (Screening & Storyline)**: Read `outputs/clean_atlas_manifest.csv` and `figure_specs/*.py`, propose a hypothesis-driven figure assignment plan in `docs/storylines/figure_plan_<topic>.md`, and obtain user approval.
 3. **Phase 3 (Paper Assembly)**: Synthesize composite publication-grade figures (a paper project per figure, `<domain>-paper-main-fig<N>-<slug>` in `configs/`, `analysis/` and `figure_specs/` under `<domain>/paper/` -- usually an exploratory project promoted with `fa promote`) by reusing modular data loaders and the renderers (`fig_atlas/renderers/*`, `fig_atlas_omics/renderers/*`) under unified `GridSpec` layouts.

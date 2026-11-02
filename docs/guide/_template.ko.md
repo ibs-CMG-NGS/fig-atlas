@@ -10,7 +10,7 @@ reviewed: 2026-10-08
 
 ## 파일과 목차
 
-1. 파일 이름은 `NN-짧은-영문-이름.md`입니다(예: `07-results.md`). 번호가 읽는 순서입니다. 영어판(`NN-name.md`)이 정본이고, 한국어판(`NN-name.ko.md`)을 같은 커밋에서 함께 씁니다(`tests/test_docs_i18n.py`가 둘의 구조를 대조합니다).
+1. 파일 이름은 `NN-짧은-영문-이름.md`입니다(예: `08-results.md`). 번호가 읽는 순서입니다. 영어판(`NN-name.md`)이 정본이고, 한국어판(`NN-name.ko.md`)을 같은 커밋에서 함께 씁니다(`tests/test_docs_i18n.py`가 둘의 구조를 대조합니다).
 2. 맨 위 머리말에 `title`(장 제목), `audience`, `reviewed`(마지막으로 내용을 확인한 날짜)를 씁니다.
 3. `mkdocs.yml`의 `nav` → `Guide for researchers` 아래에 한 줄을 더합니다(영어판 파일 이름으로). 목차에 없는 장은 테스트가 막습니다(`tests/test_guide.py`).
 4. 그림은 `docs/guide/img/`에 둡니다. 예제 데이터로 만들 수 있는 그림은 `scripts/make_guide_images.py`에 추가해 스크립트가 다시 만들게 합니다.

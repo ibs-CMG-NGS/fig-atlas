@@ -17,7 +17,7 @@ A tool that **draws paper figures from a config, checks them before print, recor
 | make a figure of microscope or blot images | [Tutorial: a microscopy figure](tutorials/imaging_figure.md) |
 | use it with an AI agent | [Connect AI agents](howto/ai_agents.md) |
 | use it in another field | [Write a domain pack](howto/new_domain_pack.md) |
-| assemble paper figures | [A figure's life](guide/11-lifecycle.md) |
+| assemble paper figures | [A figure's life](guide/12-lifecycle.md) |
 | know why it is designed this way | [Design decisions (ADR)](decisions/README.md) |
 
 `fa --help` lists every command. The repository's rules, for people and AI alike, are in [`AGENTS.md`](../AGENTS.md).

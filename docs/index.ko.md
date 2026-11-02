@@ -17,7 +17,7 @@
 | 현미경·블롯 이미지 그림 | [튜토리얼: 현미경 이미지 그림](tutorials/imaging_figure.md) |
 | AI 에이전트와 함께 쓴다 | [AI 에이전트 연결](howto/ai_agents.md) |
 | 다른 분야에 쓴다 | [새 분야 팩 만들기](howto/new_domain_pack.md) |
-| 논문 그림을 조립한다 | [그림의 생애주기](guide/11-lifecycle.md) |
+| 논문 그림을 조립한다 | [그림의 생애주기](guide/12-lifecycle.md) |
 | 왜 이렇게 설계했나 | [설계 결정 (ADR)](decisions/README.md) |
 
 명령은 `fa --help`로 모두 볼 수 있습니다. 저장소의 규칙(사람과 AI 모두에게)은 [`AGENTS.md`](../AGENTS.md)에 있습니다.

@@ -144,4 +144,4 @@ If an edit breaks the build, the error message gives the line number. You can al
 | raise / lower | Increase it / decrease it |
 
 ---
-Previous: [5. Three entry points](05-entry-paths.md) · Next: [7. Checking the results](07-results.md)
+Previous: [5. Three entry points](05-entry-paths.md) · Next: [8. Checking the results](08-results.md)

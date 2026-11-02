@@ -1,5 +1,5 @@
 ---
-title: 7. Checking the results
+title: 8. Checking the results
 audience: researchers (no programming experience needed)
 reviewed: 2026-10-14
 ---
@@ -35,11 +35,11 @@ The README is a human-readable summary the build writes. This is how a real one 
 |---|---|---|
 | Title | `Figure 1: Wortmannin drives FKHR-GFP into the nucleus…` | `title` in the figure spec |
 | Panel-level analysis notes | What each panel shows, n, error bars, tests | `panel_notes` in the figure spec |
-| Statistics | The statistics table files and which tests they are | The tables the analysis recorded (chapter 9) |
+| Statistics | The statistics table files and which tests they are | The tables the analysis recorded (chapter 10) |
 | Source data | A table of the values each panel shows | The values the analysis recorded |
-| Images | A microscope image's original files, the cropped region, the brightness range | Recorded by the image panel (chapter 9) |
+| Images | A microscope image's original files, the cropped region, the brightness range | Recorded by the image panel (chapter 10) |
 | Claim boundary | What the figure can and cannot claim | `claim_boundary` in the figure spec |
-| Provenance | When it was built, software versions, fingerprints of the config and of the data files read | Recorded automatically (chapter 10) |
+| Provenance | When it was built, software versions, fingerprints of the config and of the data files read | Recorded automatically (chapter 11) |
 
 The title, panel notes and claim boundary are written by the researcher in the figure spec (under `figure_specs/`). The build fills in the rest.
 
@@ -61,7 +61,7 @@ Open the PDF at 100 % and you see the size on paper. The figure is as wide as th
 
 - The `outputs/` folder is not uploaded to the repository (GitHub): with the config and the data, the same figure can be made again any time.
 - Building again from the same data and config gives **files that are the same down to the last byte**. "I rebuilt it and it came out slightly different" does not happen.
-- The verification table in `outputs/project-name/manifests/` records whether these results were all made (chapter 8).
+- The verification table in `outputs/project-name/manifests/` records whether these results were all made (chapter 9).
 
 ---
-Previous: [6. Changing a figure: reading and writing the config](06-config.md) · Next: [8. Reading the check results](08-checks.md)
+Previous: [6. Changing a figure: reading and writing the config](06-config.md) · Next: [9. Reading the check results](09-checks.md)

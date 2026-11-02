@@ -44,7 +44,7 @@ The figure is made in `outputs/first-figure/figures/figure_01_main/` as PNG (for
 
 - The figure is as wide as the A4 text width (184.6 mm) and **prints at exactly this size**. It is not shrunk or enlarged afterwards.
 - The panel tags a and b are placed automatically on each panel's outer edge (including its tick labels and axis titles).
-- `README.md` in the same folder has the figure title, the panel notes and the list of data used (chapter 7).
+- `README.md` in the same folder has the figure title, the panel notes and the list of data used (chapter 8).
 
 This build ends with **one warning**: the orange and green of panel a look alike to colour-blind readers. Fixing that warning in the config is the first example of the next chapter.
 
@@ -52,7 +52,7 @@ This build ends with **one warning**: the orange and green of panel a look alike
 
 - **Naming:** a practice project can have any name. For real research, also tell the AI the research unit and stage, for example "make it an exploratory project of the unit `lab`". It is then filed under that unit's exploratory folder (`configs/<unit>/exploratory/`; chapter 2).
 - **Panel layout:** panels become a, b, c, ... in the order you attach the bundles, up to three in a row. You change the layout in the config (chapter 6).
-- **If a kind of figure cannot be drawn,** the AI tells you. A new kind of figure can be made together with the AI, but you must confirm the shape you want (chapter 12).
+- **If a kind of figure cannot be drawn,** the AI tells you. A new kind of figure can be made together with the AI, but you must confirm the shape you want (chapter 13).
 - **To learn by doing:** [Tutorial: first figure](../tutorials/first_figure.md) goes through the same process step by step with commands.
 
 ---
