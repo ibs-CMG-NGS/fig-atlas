@@ -58,7 +58,8 @@ SPECS = (
     ToolSpec("fa_layouts", "layouts",
              description="Panel arrangements an analysis script can use (fig_atlas.layouts): without a name, "
                          "one line each; with a name, its ASCII shape, call, usage and figures: config keys; "
-                         "'composition' for a layout inside a cell of another. Use it before writing layout code."),
+                         "'composition' for a layout inside a cell of another; 'fixed_size' for a panel kept "
+                         "at its printed size. Use it before writing layout code."),
     ToolSpec("fa_bundle_check", "bundle", ("check",),
              description="Check data bundles against the contract of their plot_type: structure, required "
                          "columns, the renderer that draws them. Run before fa_ingest_bundle."),

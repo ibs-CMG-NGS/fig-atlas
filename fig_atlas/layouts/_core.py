@@ -16,6 +16,16 @@ are, and every number it uses (ratios, gaps, padding, tag size) comes from
 a figure that draws itself on the canvas (a schematic) is a renderer with the
 ``(fig, df)`` shape, not a layout.
 
+Fixed size: ``finish`` scales each panel to fill its cell. A panel that must
+keep its printed size -- a diagram drawn in millimetres, a matrix of square
+cells, an image or a panel shown at the size it is printed -- names that size
+under its letter, ``figures.cells.<letter>.size_mm: [width, height]`` (mm,
+the data area of all the panel's axes together): ``finish`` places it at the
+cell's top-left corner and does not rescale it, so its tag keeps the column's
+plumb line. Give the cell room for it and its labels (ratios, gaps, canvas
+size); a panel larger than its cell overlaps its neighbour, which preflight
+reports.
+
 Composition: a layout can be called on a cell of another layout instead of
 the figure, to split that cell (plans/PLAN_LAYOUT_CATALOG.md section 16):
 
@@ -169,6 +179,20 @@ def _splice(layout: "Layout") -> "Layout":
                   splice(layout.rows, lambda lay: lay.rows, lambda b: b.y1), shape)
 
 
+def _size_mm(fcfg: dict, letter: str):
+    """``figures.cells.<letter>.size_mm`` as ``(width, height)`` in mm, or None (fit to the cell)."""
+    size = _block(_block(fcfg, "cells"), letter).get("size_mm")
+    if size is None:
+        return None
+    try:
+        w, h = (float(v) for v in size)
+    except (TypeError, ValueError):
+        raise ValueError(f"figures.cells.{letter}.size_mm must be [width, height] in mm, not {size!r}") from None
+    if w <= 0 or h <= 0:
+        raise ValueError(f"figures.cells.{letter}.size_mm must be positive, not {size!r}")
+    return w, h
+
+
 def panel_cells(layout: "Layout") -> dict:
     """Every panel's cell by letter, including the cells of layouts drawn inside
     a cell (composition) -- draw each panel into ``panel_cells(lay)[letter]``.
@@ -257,7 +281,8 @@ def finish(fig, layout: Layout, fcfg: dict) -> list:
 
     Call it once, on the outermost layout: layouts drawn in its cells are
     spliced in, so their panels are fitted and tagged with the rest
-    (``panel_pad_mm`` and ``tags`` come from this ``fcfg``).
+    (``panel_pad_mm`` and ``tags`` come from this ``fcfg``). A panel with
+    ``figures.cells.<letter>.size_mm`` keeps that size (see "Fixed size").
     """
     from ..bundle_figure import fit_in_cells                    # lazy: no matplotlib at import
     from ..renderers.panels import place_panel_tags
@@ -268,7 +293,8 @@ def finish(fig, layout: Layout, fcfg: dict) -> list:
     size = float(tags.get("size", 9.0))
     pad_pt = float(tags.get("pad_pt", 2.0))
     top_pt = size + pad_pt if show else 0.0
-    panels = [(cell, list(cell.axes)) for cell in layout.cells.values() if list(cell.axes)]
+    panels = [(cell, list(cell.axes), _size_mm(fcfg, letter))
+              for letter, cell in layout.cells.items() if list(cell.axes)]
     fit_in_cells(fig, panels, pad_mm=float((fcfg or {}).get("panel_pad_mm", 1.0)),
                  top_reserve_pt=top_pt)
     if not show:

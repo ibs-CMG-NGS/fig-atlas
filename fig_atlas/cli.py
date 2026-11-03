@@ -718,18 +718,23 @@ def cmd_layouts(args, root: Path) -> int:
     entries = info["layouts"]
     if args.name:
         entries = [e for e in entries if e["name"] == args.name]
-        if not entries and args.name != "composition":
+        if not entries and args.name not in ("composition", "fixed_size"):
             names = ", ".join(e["name"] for e in info["layouts"])
-            print(f"fa layouts: no layout {args.name!r}; layouts: {names} (and composition)", file=sys.stderr)
+            print(f"fa layouts: no layout {args.name!r}; layouts: {names} (and composition, fixed_size)",
+                  file=sys.stderr)
             return EXIT_USAGE
     if args.json:
-        out = info if not args.name else (info["composition"] if args.name == "composition" else entries[0])
+        out = info if not args.name else (info.get(args.name) or entries[0])
         print(json.dumps(out, indent=1))
         return EXIT_OK
     if args.name == "composition":
         comp = info["composition"]
         print(f"{comp['summary']}\n\n" + "\n".join("    " + ln for ln in comp["example"].splitlines())
               + f"\n\n{comp['rules']}\n\nReference: {comp['page']}")
+        return EXIT_OK
+    if args.name == "fixed_size":
+        fixed = info["fixed_size"]
+        print(f"{fixed['summary']}\n\nReference: {fixed['page']}")
         return EXIT_OK
     if args.name:
         e = entries[0]
@@ -743,7 +748,8 @@ def cmd_layouts(args, root: Path) -> int:
     for e in entries:
         print(f"{e['name']:<{width}}  {e['summary']}")
     print(f"\n{len(entries)} layouts. `fa layouts NAME` shows one in full (shape, call, config keys); "
-          f"`fa layouts composition` how to put a layout inside a cell of another. Then: {info['finish']}.")
+          f"`fa layouts composition` how to put a layout inside a cell of another; `fa layouts fixed_size` "
+          f"how to keep a panel at its printed size. Then: {info['finish']}.")
     return EXIT_OK
 
 
@@ -944,7 +950,8 @@ def build_parser() -> argparse.ArgumentParser:
 
     p = sub.add_parser("layouts", help="panel arrangements a script can use (fig_atlas.layouts): shape, call, config")
     p.add_argument("name", nargs="?", default=None,
-                   help="one layout in full (shape, call, config keys), or 'composition' for layouts in cells")
+                   help="one layout in full (shape, call, config keys), 'composition' for layouts in cells, "
+                        "or 'fixed_size' for a panel kept at its printed size")
     p.add_argument("--json", action="store_true", help="machine-readable output")
 
     p = sub.add_parser("bundle", help="data bundles: check them against their contract, or list the contracts")

@@ -538,3 +538,22 @@ Findings:
 
 So layouts suit new figures directly; an existing hand-tuned figure moves with a short re-tuning pass,
 which preflight makes visible.
+
+## 17. Fixed-size cells (card L-17, 2026-11-03)
+
+**Why.** Moving the method paper's own figures onto layouts (fig-atlas-paper) found three that could not
+move: Fig. 4 and Fig. 5 show panels at their printed size, and Fig. 6 draws an evidence chain in
+millimetre coordinates (`render_flow_diagram`, `units_per_mm: 1`) beside a matrix of square cells.
+`finish` scales every panel to fill its cell, which breaks all three, so each script placed its axes
+by hand (`mm_axes`, written four times).
+
+**What.** `figures.cells.<letter>.size_mm: [width, height]` (mm, the data area of all the panel's axes
+together). `finish` passes it to `fit_in_cells`, which places that panel's outer box at the cell's
+top-left corner (inside `panel_pad_mm`, below the tag reserve) and sets the axes to that size instead of
+scaling them; the other panels are fitted as before. The tag keeps its column's plumb line. A panel
+larger than its cell is not shrunk: it overlaps, and preflight reports the overlap.
+
+**Done when.** A test measures the kept size and the cell corner, and that the neighbours are still
+fitted; bad values raise; `fa layouts fixed_size`, the MCP tool and the reference page describe it from
+the `_core` docstring; `examples/layouts/fixed_size/` draws it. Then the paper's Figs. 4-6 move onto
+layouts with it.

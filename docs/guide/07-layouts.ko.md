@@ -95,6 +95,7 @@ figures:
 | 한 줄의 패널 수 | `columns` | `figures:` (`grid`), `figures.matrix` |
 | 나눈 칸의 값 | 같은 키 | `figures.cells.<글자>` |
 | 패널 둘레 여백 늘리기 | `panel_pad_mm` | `figures:` |
+| 한 패널을 인쇄 크기 그대로 두기 (mm로 그린 도식, 정사각 칸) | `size_mm: [가로, 세로]` (mm) | `figures.cells.<letter>` |
 | 패널 글자 바꾸기 | `tags.size`, `tags.show` | `figures:` |
 
 ## 알아 두면 좋은 것

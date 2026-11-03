@@ -153,7 +153,14 @@ def fit_in_cells(fig, panels: list, pad_mm: float = 1.0, top_reserve_pt: float =
     inside the edges, with ``top_reserve_pt`` kept free above it for the panel
     tag (AGENTS.md 1.5). Nothing is cut off at the canvas edge, and panels in
     one column start on the same line. A few passes, since tick labels can
-    change when the axes change size."""
+    change when the axes change size.
+
+    A panel given as ``(cell, axes, (w_mm, h_mm))`` keeps that printed size
+    instead: its axes (all of them together) measure ``w_mm`` x ``h_mm`` and
+    its outer box starts at the cell's top-left corner, so a diagram drawn in
+    millimetres or a panel shown at printed size is moved, never rescaled.
+    If it is larger than its cell it overlaps a neighbour; preflight reports
+    that."""
     if not panels:
         return
     from matplotlib.transforms import Bbox
@@ -162,17 +169,23 @@ def fit_in_cells(fig, panels: list, pad_mm: float = 1.0, top_reserve_pt: float =
     for _ in range(passes):
         fig.canvas.draw()
         renderer = fig.canvas.get_renderer()
-        for sf, axes in panels:
+        for sf, axes, *fixed in panels:
             group = [a for a in (axes if isinstance(axes, list) else [axes]) if a.get_visible()]
             if not group:
                 continue
             cell = sf.bbox
             outer = Bbox.union([a.get_tightbbox(renderer) for a in group])
             box = Bbox.union([a.get_window_extent(renderer) for a in group])
-            x0 = box.x0 + (cell.x0 + pad - outer.x0)
-            x1 = box.x1 + (cell.x1 - pad - outer.x1)
-            y0 = box.y0 + (cell.y0 + pad - outer.y0)
-            y1 = box.y1 + (cell.y1 - pad - top - outer.y1)
+            if fixed and fixed[0] is not None:    # printed size kept: place it, do not scale it to the cell
+                w, h = (v / 25.4 * fig.dpi for v in fixed[0])
+                x0 = cell.x0 + pad + (box.x0 - outer.x0)
+                y1 = cell.y1 - pad - top - (outer.y1 - box.y1)
+                x1, y0 = x0 + w, y1 - h
+            else:
+                x0 = box.x0 + (cell.x0 + pad - outer.x0)
+                x1 = box.x1 + (cell.x1 - pad - outer.x1)
+                y0 = box.y0 + (cell.y0 + pad - outer.y0)
+                y1 = box.y1 + (cell.y1 - pad - top - outer.y1)
             if x1 - x0 < pad or y1 - y0 < pad:
                 continue                          # labels larger than the cell: leave it to preflight
             sx, sy = (x1 - x0) / box.width, (y1 - y0) / box.height
