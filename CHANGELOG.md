@@ -6,6 +6,9 @@ All notable changes are documented here. The format follows
 
 ## [Unreleased]
 
+Between releases the package reports `0.3.0.dev0` (`fa --version`), so a figure built from an
+unreleased commit is not recorded as built with the last release.
+
 ### Added
 
 - **Fixed-size panels in layouts** (`figures.cells.<letter>.size_mm: [width, height]`): `layouts.finish`
