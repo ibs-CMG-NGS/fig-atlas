@@ -6,8 +6,11 @@ All notable changes are documented here. The format follows
 
 ## [Unreleased]
 
-Between releases the package reports `0.3.0.dev0` (`fa --version`), so a figure built from an
-unreleased commit is not recorded as built with the last release.
+## [0.3.0] — 2026-11-04
+
+Panels kept at their printed size in layouts (`size_mm`, `layouts.mm_axes`), one-cell drawing for
+scripts that use layouts (`draw_plot`, `layouts.panel_cells`) and a layout tutorial; CI for new
+project repositories (`fa init`); a domain-neutral compendium cover; `[error]` for preflight errors.
 
 ### Added
 
@@ -36,6 +39,9 @@ unreleased commit is not recorded as built with the last release.
 
 ### Changed
 
+- **Between releases `main` reports the next version as a development release** (`0.3.0.dev0`
+  before this one), so a figure built from an unreleased commit is not recorded as built with the
+  last release.
 - **The compendium cover is domain-neutral and says only what is true.** Its table heading, fallback
   title and footer no longer use the first study's wording ("Biological Role", an ATAC title,
   "Template Automation Suite"); the notes give the page and content size from the page preset and
