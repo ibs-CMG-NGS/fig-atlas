@@ -71,6 +71,7 @@ Compendium projects: none.
 | 4 | `render_stacked_bar` | `fig_atlas/renderers/stacked_bar.py` | 0 | — | — |
 | 4 | `render_stacked_share_hbar` | `fig_atlas/renderers/stacked_share_hbar.py` | 0 | — | — |
 | 4 | `render_survival` | `fig_atlas/renderers/survival.py` | 0 | — | — |
+| 4 | `render_table` | `fig_atlas/renderers/table.py` | 0 | — | — |
 | 4 | `render_tf_expression_scatter_grid` | `fig_atlas_omics/renderers/tf_expression_bars.py` | 0 | — | — |
 | 4 | `render_threshold_scatter` | `fig_atlas/renderers/threshold_scatter.py` | 0 | — | — |
 | 4 | `render_tier_hbar` | `fig_atlas/renderers/tier_hbar.py` | 0 | — | — |
@@ -81,4 +82,4 @@ Compendium projects: none.
 | 4 | `render_violin` | `fig_atlas/renderers/violin.py` | 0 | — | — |
 | 4 | `render_volcano` | `fig_atlas_omics/renderers/volcano.py` | 0 | — | — |
 
-Summary: tier 2 active — 4, tier 4 unused — 63.
+Summary: tier 2 active — 4, tier 4 unused — 64.
