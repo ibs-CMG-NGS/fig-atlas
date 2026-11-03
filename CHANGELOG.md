@@ -11,6 +11,16 @@ unreleased commit is not recorded as built with the last release.
 
 ### Added
 
+- **`table` renderer** (`fig_atlas.render("table", ...)`, `fa new renderer --family table`): a classic
+  summary table drawn at print size -- three horizontal rules, no vertical rules, no fills -- from a
+  DataFrame. Per-column order, headings, format, alignment and width; spanning headings with their own
+  partial rule; column widths measured from the content, with each column keeping at least its longest
+  word; cells wrapped to `max_lines` and marked when cut; a row limit with a note counting what was
+  dropped; title and footnotes. The shipped preset `styles/table_classic.yaml` holds the look as 24
+  commented keys. It returns the printed rows with `attrs["height_pt"]`, so a caller laying out pages
+  can size its axes to the content. A rendered table is for reading and for slides, not for journal
+  submission -- the CSV stays the table of record.
+
 - **Fixed-size panels in layouts** (`figures.cells.<letter>.size_mm: [width, height]`): `layouts.finish`
   places that panel at its cell's top-left corner and keeps its printed size instead of scaling it to
   the cell -- for a diagram drawn in millimetres, a matrix of square cells, or a panel shown at printed

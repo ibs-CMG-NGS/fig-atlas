@@ -59,6 +59,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | [`stacked_bar`](#stacked_bar) | core | 34 |
 | [`stacked_share_hbar`](#stacked_share_hbar) | core | 28 |
 | [`survival`](#survival) | core | 33 |
+| [`table`](#table) | core | 35 |
 | [`tf_expression_scatter_grid`](#tf_expression_scatter_grid) | fig_atlas_omics.renderers | 36 |
 | [`threshold_scatter`](#threshold_scatter) | core | 61 |
 | [`tier_hbar`](#tier_hbar) | core | 16 |
@@ -2276,6 +2277,48 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `show_censored` | true / false | `True` |  | Mark censored subjects with a tick on the curve |
 | `censor_marker` | text | `\|` |  | Censor mark (matplotlib marker) |
 | `censor_size` | number | `5.0` | pt | Censor mark size |
+
+## table
+
+`fig_atlas.renderers:render_table`
+
+| Key | Type | Default | Unit | What it does |
+|---|---|---|---|---|
+| `columns` | list | auto |  | Columns to print, in order (default: every column of the data, in its order) |
+| `column_labels` | mapping | `{}` |  | Heading text per column (default: the column name as it is in the data) |
+| `column_align` | mapping | `{}` |  | Alignment per column: 'left', 'right' or 'center' (default: numeric columns right, the rest left) |
+| `column_format` | mapping | `{}` |  | Python format spec per column, applied to each value ('.3f', ',.0f', '.2e'; default: str()) — set it on every numeric column, or the table prints raw float repr next to short integers |
+| `column_width` | mapping | `{}` | [0-1] fraction of the table width | Width per column (default: measured from the widest cell and the heading) |
+| `column_groups` | list | auto |  | Spanning headings above the columns, as [{'label': str, 'columns': [names]}] (default: none) |
+| `na_text` | text | style `table.na_text` (else `--`) |  | What a missing value prints as |
+| `max_rows` | integer | `40` | rows | Rows printed at most; the rest are dropped and counted in the truncation note — a table of more than about 40 rows stops being readable on a page -- keep the full table as CSV |
+| `truncation_note` | text | `... and {n} more rows (full table in the source data)` |  | Note printed under a truncated table; {n} is the number of rows dropped |
+| `row_stripe` | true / false | style `table.row_stripe` (else `False`) |  | Shade every other row (off in the publication convention; on for a screen table) |
+| `row_stripe_color` | colour | style `table.row_stripe_color` (else `#f8fafc`) | hex color | Shading colour of the striped rows |
+| `rule_color` | colour | style `table.rule_color` (else `#111827`) | hex color | Colour of the horizontal rules |
+| `rule_top_width` | number | style `table.rule_top_width` (else `1.0`) | pt | Rule above the headings (0 hides it) |
+| `rule_header_width` | number | style `table.rule_header_width` (else `0.6`) | pt | Rule between the headings and the first row (0 hides it) |
+| `rule_bottom_width` | number | style `table.rule_bottom_width` (else `1.0`) | pt | Rule under the last row (0 hides it) |
+| `rule_group_width` | number | style `table.rule_group_width` (else `0.5`) | pt | Rule under a spanning heading, over its own columns only (0 hides it) |
+| `font_family` | text | auto |  | Font of the table text (default: the figure's font) |
+| `header_size` | number | style `table.header_size` (else `6.0`) | pt | Heading font size — lower if a heading wraps to three lines |
+| `cell_size` | number | style `table.cell_size` (else `5.5`) | pt | Cell font size — the print floor is 5.0 pt (print_check.min_font_pt) |
+| `header_weight` | text | style `table.header_weight` (else `bold`) | matplotlib font weight | Heading weight ('bold', 'normal') |
+| `header_color` | colour | style `table.header_color` (else `#111827`) | hex color | Heading text colour |
+| `cell_color` | colour | style `table.cell_color` (else `#1f2937`) | hex color | Cell text colour |
+| `col_gap` | number | style `table.col_gap` (else `6.0`) | pt | Gap between columns -- what separates them, since there are no vertical rules — raise if the columns read as one block |
+| `row_pad` | number | style `table.row_pad` (else `1.6`) | pt | Space above and below the text of a row — raise to open the rows up; lower to fit more on the page |
+| `header_pad` | number | style `table.header_pad` (else `2.4`) | pt | Space between the heading rule and the first row |
+| `wrap` | true / false | style `table.wrap` (else `True`) |  | Wrap cell text that is wider than its column instead of letting it run on |
+| `max_lines` | integer | style `table.max_lines` (else `3`) | lines | Lines a wrapped cell may take at most — raise for a notes column |
+| `truncation_mark` | text | style `table.truncation_mark` (else `…`) |  | Appended to the last line of a cell cut at max_lines, so a cut never passes as the whole text |
+| `title` | text | auto |  | Table title, above the top rule |
+| `title_size` | number | style `table.title_size` (else `6.5`) | pt | Title font size |
+| `title_pad` | number | style `table.title_pad` (else `3.0`) | pt | Gap between the title and the top rule |
+| `footnotes` | list | auto |  | Notes printed under the bottom rule, one per line |
+| `footnote_size` | number | style `table.footnote_size` (else `5.0`) | pt | Footnote font size |
+| `footnote_color` | colour | style `table.footnote_color` (else `#4b5563`) | hex color | Footnote text colour |
+| `footnote_pad` | number | style `table.footnote_pad` (else `2.4`) | pt | Gap between the bottom rule and the first note |
 
 ## tf_expression_scatter_grid
 

@@ -878,6 +878,46 @@ def correlation_matrix_circles():
                                                    "mark": "circle", "hide_above_p": 0.05, "show_values": False})
     return fig
 
+def _summary_table():
+    return pd.DataFrame({
+        "group": ["Vehicle", "Drug", "Drug + inhibitor"],
+        "n": [12, 12, 11],
+        "mean": [1.0423, 2.871, 1.19],
+        "ci_width": [0.212, 0.3387, None],
+        "p": [None, 0.0008, 0.41],
+        "note": ["reference arm", "highest response", "response not restored"],
+    })
+
+
+def _table_params():
+    return {"column_labels": {"group": "Group", "n": "n", "mean": "Mean", "ci_width": "95% CI (+/-)",
+                              "p": "P", "note": "Note"},
+            "column_format": {"mean": ".2f", "ci_width": ".3f", "p": ".4f"},
+            "column_groups": [{"label": "Effect", "columns": ["mean", "ci_width"]}],
+            "footnotes": ["P, two-sided Welch t-test against the vehicle arm."]}
+
+
+def table():
+    """T-02: a summary table in the publication convention (three rules, no fills)."""
+    from fig_atlas.renderers import render_table
+    fig = plt.figure(figsize=(5.2, 1.5))
+    ax = fig.add_axes([0.02, 0.05, 0.96, 0.9])
+    fig.canvas.draw()                       # the point-based geometry needs a real extent
+    render_table(ax, _summary_table(), {**_table_params(), "title": "Response by arm"})
+    return fig
+
+
+def table_screen():
+    """T-02 scope: the same table for a screen -- striped rows, no rules."""
+    from fig_atlas.renderers import render_table
+    fig = plt.figure(figsize=(5.2, 1.5))
+    ax = fig.add_axes([0.02, 0.05, 0.96, 0.9])
+    fig.canvas.draw()
+    render_table(ax, _summary_table(), {**_table_params(), "row_stripe": True,
+                                        "rule_top_width": 0, "rule_bottom_width": 0})
+    return fig
+
+
 CASES = {
     "cross_condition_dotplot": cross_condition_dotplot,
     "cross_condition_heatmap": cross_condition_heatmap,
@@ -939,6 +979,8 @@ CASES = {
     "bland_altman_percent": bland_altman_percent,
     "correlation_matrix": correlation_matrix,
     "correlation_matrix_circles": correlation_matrix_circles,
+    "table": table,
+    "table_screen": table_screen,
 }
 
 # Gallery families (fig_atlas.family) for pictures that are not a renderer

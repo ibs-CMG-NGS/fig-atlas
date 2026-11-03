@@ -1,0 +1,51 @@
+# Classic table look: the publication convention for a summary table drawn by
+# the `table` renderer -- three horizontal rules, no vertical rules, no fills.
+# Columns are separated by space, not by lines.
+#
+#   project:
+#     style: ["default", "print", "page_a4_portrait_narrow", "table_classic"]
+#
+# Pair it with a final-size preset (print + a page_*): the sizes below are the
+# printed sizes, inside the same 5-8 pt envelope as styles/print.yaml. Without
+# this preset the renderer falls back to the same values from its own schema,
+# so adding it changes nothing by itself -- it is here to be the source of
+# truth for the look, and so a project can override one key instead of
+# repeating the block in every figure's config.
+#
+# A table drawn as an image is NOT a route for submitting one: journals take
+# tables as editable text. Use this for a compendium page, a talk or a poster.
+table:
+  # [Rules] The three horizontal rules. Widths in pt; 0 hides a rule.
+  rule_color: "#111827"       # hex color; near-black, as the body text
+  rule_top_width: 1.0         # pt; rule above the headings -- the heaviest, it opens the table
+  rule_header_width: 0.6      # pt; rule between the headings and the first row -- lighter than the outer two
+  rule_bottom_width: 1.0      # pt; rule under the last row -- matches the top rule
+  rule_group_width: 0.5       # pt; rule under a spanning heading, over its own columns only (the convention's cmidrule)
+
+  # [Fills] Off in print: shading rows is a screen habit and costs ink.
+  row_stripe: false           # true shades every other row -- leave false for print
+  row_stripe_color: "#f8fafc" # hex color; only read when row_stripe is true
+
+  # [Typography] Printed sizes. The heading is one step above the cells so the
+  # header row reads as a header without a fill behind it.
+  header_size: 6.0            # pt; heading text -- lower if a heading wraps to three lines
+  cell_size: 5.5              # pt; cell text -- the print floor is 5.0 pt (print_check.min_font_pt)
+  header_weight: "bold"       # matplotlib font weight; "normal" if bold headings look heavy against thin rules
+  header_color: "#111827"     # hex color; same near-black as the rules
+  cell_color: "#1f2937"       # hex color; a shade lighter than the headings
+  title_size: 6.5             # pt; table title above the top rule
+  footnote_size: 5.0          # pt; notes under the bottom rule -- at the print floor, they are read only when needed
+  footnote_color: "#4b5563"   # hex color; grey, so notes sit behind the data
+
+  # [Spacing] What separates the columns, since there are no vertical rules.
+  col_gap: 6.0                # pt; gap between columns -- raise if the columns read as one block
+  row_pad: 1.6                # pt; space above and below a row's text -- raise to open the rows up
+  header_pad: 2.4             # pt; space between the heading rule and the first row
+  title_pad: 3.0              # pt; gap between the title and the top rule
+  footnote_pad: 2.4           # pt; gap between the bottom rule and the first note
+
+  # [Text fitting] A cell wider than its column wraps rather than running on.
+  wrap: true                  # false lets long text overrun into the next column
+  max_lines: 3                # lines; most a wrapped cell may take -- raise for a notes column
+  truncation_mark: "…"        # ends a cell cut at max_lines, so a cut never passes as the whole text
+  na_text: "--"               # what a missing value prints as (an en dash is the table convention)

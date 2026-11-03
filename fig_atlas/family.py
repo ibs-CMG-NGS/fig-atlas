@@ -43,6 +43,8 @@ FAMILIES: tuple[tuple[str, str, str], ...] = (
      "How well a score separates two classes (ROC), and method agreement."),
     ("image", "Image",
      "A microscope image, blot or gel, drawn with its scale bar."),
+    ("table", "Table",
+     "Rows and columns as text: a summary table drawn at print size."),
     ("schematic", "Schematic",
      "Diagrams and layout helpers: pipelines, treatment timelines, panel tags."),
     ("field", "Field-specific",
