@@ -434,6 +434,7 @@ def cmd_lint(args, root: Path) -> int:
 
 CLAIMS_BASELINE = Path("docs") / "baselines" / "hand_typed_numbers.csv"
 HARDCODED_BASELINE = Path("docs") / "baselines" / "hardcoded_literals.csv"
+CLAIMS_FIELDS = ["project", "figure", "kind", "number", "context"]      # the claims baseline's columns
 
 
 def _specs(root: Path, project) -> list:
@@ -469,7 +470,7 @@ def cmd_claims(args, root: Path) -> int:
             for name in placeholders(text):
                 rows.append({"project": p.name, "figure": spec.number, "number": "{" + name + "}",
                              "kind": "live", "context": ""})
-    fields = ["project", "figure", "kind", "number", "context"]
+    fields = CLAIMS_FIELDS
     if args.write:
         out = root / CLAIMS_BASELINE
         out.parent.mkdir(parents=True, exist_ok=True)
@@ -893,7 +894,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--check", action="store_true", help="exit 1 if any figure has more than the baseline")
     p.add_argument("--json", action="store_true", help="machine-readable output")
 
-    p = sub.add_parser("init", help="make a project repository here (or in PATH): folders, marker, rules, .gitignore")
+    p = sub.add_parser("init", help="make a project repository here (or in PATH): folders, marker, rules, .gitignore, CI and its baselines")
     p.add_argument("path", nargs="?", default=".", help="folder to set up (default: the working directory)")
     p.add_argument("--dry-run", action="store_true", help="show the files; write nothing")
     p.add_argument("--json", action="store_true", help="machine-readable output")

@@ -1,0 +1,43 @@
+name: fig-atlas checks
+
+# Written by `fa init`. The checks that need no data: raw_data/ and outputs/ are not in git, so
+# the figures themselves are built where the data is (`fa build --all --preflight`). Every check
+# compares with a baseline in docs/baselines/ (`fa claims --write`, `fa lint --hardcoded --write`)
+# and fails only when it gets worse.
+on:
+  push:
+  pull_request:
+
+jobs:
+  checks:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install the pinned fig-atlas (requirements.txt)
+        run: |
+          pip install -r requirements.txt
+          fa --version
+
+      - name: Projects are found and their configs read
+        run: fa list
+
+      - name: No new hand-typed numbers in figure legends (docs/baselines/hand_typed_numbers.csv)
+        run: fa claims --check
+
+      - name: No new literal style values in analysis scripts (docs/baselines/hardcoded_literals.csv)
+        run: fa lint --hardcoded --check
+
+      - name: Storylines agree with the projects (once there is one)
+        run: |
+          if ls docs/storylines/figure_plan_*.md >/dev/null 2>&1; then fa storyline check; fi
+
+      # With the data in CI (a small public bundle, or fetched in a step above), build and check
+      # every figure too; set `mode: enforce` under preflight: in each config so errors fail it:
+      # - name: Every figure builds, passes preflight and verify
+      #   run: fa build --all --preflight
