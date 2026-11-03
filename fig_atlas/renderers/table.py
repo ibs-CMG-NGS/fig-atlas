@@ -136,17 +136,28 @@ def _text_width_pt(text: str, font: FontProperties, fig) -> float:
     return w_px * 72.0 / fig.dpi
 
 
+# A column is often exactly as wide as its longest word: the width allocation
+# gives it that word's measured width, and nothing more when the column asks for
+# nothing more. Comparing those two equal numbers is a coin flip -- text extents
+# differ in the last decimal between FreeType builds, so the same table broke a
+# word on one machine and not on another, which moved every row below it. A fit
+# is therefore judged with this much slack, far below a printed hairline.
+_FIT_TOLERANCE_PT = 0.01
+
+
 def _wrap(text: str, max_w_pt: float, font: FontProperties, fig, max_lines: int, mark: str = "") -> list[str]:
     """``text`` broken to lines that fit ``max_w_pt``, at most ``max_lines``. When
     text is left over, the last line ends in ``mark`` -- a cut cell must say so."""
+    fits = max_w_pt + _FIT_TOLERANCE_PT
+
     def pieces(word: str) -> list[str]:
         """A word wider than the column, broken between characters: ugly, but it
         never runs into the next column, which a reader would misread."""
-        if _text_width_pt(word, font, fig) <= max_w_pt:
+        if _text_width_pt(word, font, fig) <= fits:
             return [word]
         out, cur = [], ""
         for ch in word:
-            if cur and _text_width_pt(cur + ch, font, fig) > max_w_pt:
+            if cur and _text_width_pt(cur + ch, font, fig) > fits:
                 out.append(cur)
                 cur = ch
             else:
@@ -159,7 +170,7 @@ def _wrap(text: str, max_w_pt: float, font: FontProperties, fig, max_lines: int,
     lines, cur = [], ""
     for word in words:
         trial = f"{cur} {word}" if cur else word
-        if cur and _text_width_pt(trial, font, fig) > max_w_pt:
+        if cur and _text_width_pt(trial, font, fig) > fits:
             lines.append(cur)
             cur = word
             if len(lines) == max_lines:

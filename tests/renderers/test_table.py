@@ -13,6 +13,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 import pandas as pd  # noqa: E402
 import pytest  # noqa: E402
+from matplotlib.font_manager import FontProperties  # noqa: E402
 
 from fig_atlas.renderers import render_table  # noqa: E402
 
@@ -160,6 +161,26 @@ def test_title_and_footnotes_are_drawn():
     fig, ax, _ = _draw(DATA, {"title": "Table 1", "footnotes": ["a, designed in silico", "b, not run"]})
     texts = _texts(ax)
     assert "Table 1" in texts and "a, designed in silico" in texts and "b, not run" in texts
+    plt.close(fig)
+
+
+def test_a_column_a_hair_narrower_than_its_longest_word_still_keeps_it_whole():
+    """A column that asks for nothing beyond its longest word is given exactly that
+    word's measured width, and the widths are then scaled if their sum overshoots the
+    table by one bit of floating point. Judged strictly, that one bit broke the word
+    between characters -- and every row below it moved, so the same table rendered
+    differently on another machine. A fit is judged with a hair of slack instead."""
+    from fig_atlas.renderers.table import _FIT_TOLERANCE_PT, _text_width_pt, _wrap
+
+    fig, ax = plt.subplots(figsize=(6, 3), dpi=100)
+    fig.canvas.draw()
+    font = FontProperties(size=5.5)
+    word = "Condition-A-long-name"
+    exact = _text_width_pt(word, font, fig)
+    for shave in (0.0, 1e-13, 1e-9, _FIT_TOLERANCE_PT / 2):
+        assert _wrap(word, exact - shave, font, fig, 20) == [word], f"broken after shaving {shave}"
+    assert _wrap(word, exact - 2 * _FIT_TOLERANCE_PT, font, fig, 20) != [word], \
+        "a column genuinely narrower than the word must still break it"
     plt.close(fig)
 
 

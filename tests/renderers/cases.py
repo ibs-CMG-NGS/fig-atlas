@@ -894,6 +894,14 @@ def _table_params():
                               "p": "P", "note": "Note"},
             "column_format": {"mean": ".2f", "ci_width": ".3f", "p": ".4f"},
             "column_groups": [{"label": "Effect", "columns": ["mean", "ci_width"]}],
+            # Widths are given rather than measured, so this case's geometry does not
+            # move with the text metrics. A rule under a spanning heading spans its own
+            # columns, so its x coordinates come straight from the column widths, and
+            # the snapshot digests those exactly -- measured, they differ between
+            # FreeType builds and the case fails on CI while saying nothing about the
+            # renderer. The width allocation itself is covered in tests/renderers/test_table.py.
+            "column_width": {"group": 0.18, "n": 0.07, "mean": 0.13, "ci_width": 0.16,
+                             "p": 0.11, "note": 0.35},
             "footnotes": ["P, two-sided Welch t-test against the vehicle arm."]}
 
 
