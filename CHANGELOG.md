@@ -9,8 +9,9 @@ All notable changes are documented here. The format follows
 ## [0.3.0] — 2026-11-04
 
 Panels kept at their printed size in layouts (`size_mm`, `layouts.mm_axes`), one-cell drawing for
-scripts that use layouts (`draw_plot`, `layouts.panel_cells`) and a layout tutorial; CI for new
-project repositories (`fa init`); a domain-neutral compendium cover; `[error]` for preflight errors.
+scripts that use layouts (`draw_plot`, `layouts.panel_cells`) and a layout tutorial; a `table`
+renderer and table pages in the compendium; CI for new project repositories (`fa init`); a
+domain-neutral compendium cover; `[error]` for preflight errors.
 
 ### Added
 
@@ -24,7 +25,6 @@ project repositories (`fa init`); a domain-neutral compendium cover; `[error]` f
   the cell's corner, so a panel whose size comes from what it shows (an image at printed size, a
   table or a set of examples laid out in mm) states its sizes once, where it is drawn; `size_mm` on
   the same cell is an error.
-
 - **`table` renderer** (`fig_atlas.render("table", ...)`, `fa new renderer --family table`): a classic
   summary table drawn at print size -- three horizontal rules, no vertical rules, no fills -- from a
   DataFrame. Per-column order, headings, format, alignment and width; spanning headings with their own
