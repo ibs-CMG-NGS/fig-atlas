@@ -11,6 +11,17 @@ unreleased commit is not recorded as built with the last release.
 
 ### Added
 
+- **`fa init` writes a CI workflow** (`.github/workflows/fig-atlas.yml`) with the checks that need no
+  data (`fa list`, `fa claims --check`, `fa lint --hardcoded --check`, `fa storyline check` once there
+  is a storyline), empty baselines in `docs/baselines/` so they pass from the first commit, and a
+  `requirements.txt` pinning the installed fig-atlas (its release tag; `@main` for a development
+  version, with a note to pin a tag). Building the figures stays where the data is.
+- **`layouts.mm_axes(cell, left, top, width, height)`**: axes set out in millimetres from a cell's
+  top-left corner. `layouts.finish` keeps a cell drawn this way at its drawn size and only moves it to
+  the cell's corner, so a panel whose size comes from what it shows (an image at printed size, a
+  table or a set of examples laid out in mm) states its sizes once, where it is drawn; `size_mm` on
+  the same cell is an error.
+
 - **`table` renderer** (`fig_atlas.render("table", ...)`, `fa new renderer --family table`): a classic
   summary table drawn at print size -- three horizontal rules, no vertical rules, no fills -- from a
   DataFrame. Per-column order, headings, format, alignment and width; spanning headings with their own
@@ -29,7 +40,6 @@ unreleased commit is not recorded as built with the last release.
   note under it gives how many of how many, in which order, and that the rest are in the CSV; a table
   too wide names the columns worth reading off paper in `render.columns` and a second note counts the
   ones left in the CSV. Numeric columns are formatted so one notation runs down each column.
-
 - **Fixed-size panels in layouts** (`figures.cells.<letter>.size_mm: [width, height]`): `layouts.finish`
   places that panel at its cell's top-left corner and keeps its printed size instead of scaling it to
   the cell -- for a diagram drawn in millimetres, a matrix of square cells, or a panel shown at printed
@@ -42,6 +52,20 @@ unreleased commit is not recorded as built with the last release.
   block into one cell (of a layout); `draw_plots` now uses it, unchanged.
 - **`layouts.panel_cells(lay)`**: every panel's cell by letter, the cells of split cells included,
   so a composed figure is drawn with one loop; `layouts.LAYOUTS` names the five layouts.
+
+### Changed
+
+- **The compendium cover is domain-neutral and says only what is true.** Its table heading, fallback
+  title and footer no longer use the first study's wording ("Biological Role", an ATAC title,
+  "Template Automation Suite"); the notes give the page and content size from the page preset and
+  point to the provenance records and the appendix, instead of fixed claims ("A4 ... 184.6 mm",
+  "verified 100%"). The footer names the fig-atlas version.
+- **`fa preflight` (and `fa build --preflight`) no longer print `[ok]` for a project with errors**:
+  it prints `[error]`, and under `preflight.mode: report` says that the errors do not fail the build
+  and how to make them (`mode: enforce`). The first-figure tutorial said errors always fail the
+  build; it now says when they do.
+- **New projects' figure title** (`fa new project`) is "Title of the figure ...": "figure 1" was
+  counted as a hand-typed number by `fa claims`.
 
 ## [0.2.1] — 2026-11-03
 

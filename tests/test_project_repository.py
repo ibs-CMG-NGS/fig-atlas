@@ -31,6 +31,23 @@ def test_init_makes_a_project_repository(tmp_path):
         plan_init(tmp_path)
 
 
+def test_init_ci_checks_pass_on_a_new_repository(tmp_path, monkeypatch):
+    """fa init writes a CI workflow, a requirements pin and empty baselines, so the
+    data-free checks the workflow runs pass from the first commit, a new project included."""
+    from fig_atlas import cli
+    plan_init(tmp_path).apply()
+    for path in (".github/workflows/fig-atlas.yml", "requirements.txt",
+                 "docs/baselines/hand_typed_numbers.csv", "docs/baselines/hardcoded_literals.csv"):
+        assert (tmp_path / path).is_file(), path
+    assert "fig-atlas @ git+https://github.com/ibs-CMG-NGS/fig-atlas@" in (tmp_path / "requirements.txt").read_text()
+    workflow = (tmp_path / ".github/workflows/fig-atlas.yml").read_text(encoding="utf-8")
+    assert "fa claims --check" in workflow and "fa lint --hardcoded --check" in workflow
+    plan_new_project(tmp_path, "demo", domain="lab", category="exploratory").apply()
+    monkeypatch.chdir(tmp_path)
+    assert cli.main(["claims", "--check"]) == 0                       # the template's title has no number
+    assert cli.main(["lint", "--hardcoded", "--check"]) == 0
+
+
 def test_styles_come_from_the_package_unless_the_project_has_its_own(tmp_path):
     plan_init(tmp_path).apply()
     plan_new_project(tmp_path, "demo").apply()

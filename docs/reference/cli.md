@@ -15,7 +15,7 @@ Every command of the `fa` tool. `fa <command> --help` shows the same. Commands t
 | [`fa export`](#fa-export) | package a published figure as an RO-Crate (files, source data, provenance) |
 | [`fa impact`](#fa-impact) | which published figures used a given file or folder |
 | [`fa ingest`](#fa-ingest) | add a data bundle to a project: check it, write its full plots block, build |
-| [`fa init`](#fa-init) | make a project repository here (or in PATH): folders, marker, rules, .gitignore |
+| [`fa init`](#fa-init) | make a project repository here (or in PATH): folders, marker, rules, .gitignore, CI and its baselines |
 | [`fa inventory`](#fa-inventory) | regenerate (or --check) docs/reference/renderer_inventory.md |
 | [`fa layouts`](#fa-layouts) | panel arrangements a script can use (fig_atlas.layouts): shape, call, config |
 | [`fa lineage`](#fa-lineage) | a published figure's upstream: outputs <- run <- config <- code <- data |
@@ -162,7 +162,7 @@ fa ingest [-h] --project PROJECT [--name NAME] [--no-build] [--dry-run] [--json]
 
 ## fa init
 
-make a project repository here (or in PATH): folders, marker, rules, .gitignore
+make a project repository here (or in PATH): folders, marker, rules, .gitignore, CI and its baselines
 
 ```
 fa init [-h] [--dry-run] [--json] [path]

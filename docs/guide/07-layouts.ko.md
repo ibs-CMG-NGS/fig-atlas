@@ -96,6 +96,7 @@ figures:
 | 나눈 칸의 값 | 같은 키 | `figures.cells.<글자>` |
 | 패널 둘레 여백 늘리기 | `panel_pad_mm` | `figures:` |
 | 한 패널을 인쇄 크기 그대로 두기 (mm로 그린 도식, 정사각 칸) | `size_mm: [가로, 세로]` (mm) | `figures.cells.<letter>` |
+| 그린 크기 그대로 두기 (인쇄 크기 이미지, mm로 배치한 축) | `layouts.mm_axes(cell, left, top, width, height)`로 그림 (칸 왼쪽 위에서 mm); `size_mm`은 쓰지 않음 | 스크립트 |
 | 패널 글자 바꾸기 | `tags.size`, `tags.show` | `figures:` |
 
 ## 알아 두면 좋은 것

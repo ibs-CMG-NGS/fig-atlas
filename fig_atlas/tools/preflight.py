@@ -223,6 +223,7 @@ def main() -> int:
     if args.worker:
         return run_worker(args.worker, Path(args.worker_out))
 
+    from fig_atlas import get_config
     projects = args.projects or compendium_projects()
     rows = []
     all_profiles: dict[tuple[str, str], dict] = {}
@@ -255,7 +256,11 @@ def main() -> int:
         checked[name] = p
         n_err = sum(1 for fs in per_fig.values() for f in fs if f["severity"] == "error")
         n_warn = sum(1 for fs in per_fig.values() for f in fs if f["severity"] == "warn")
-        print(f"[ok] {name}: {n_err} error(s), {n_warn} warning(s)")
+        # [ok] only without errors; with errors, say whether they fail the build (preflight.mode)
+        mode = str((get_config(p.config)._raw.get("preflight", {}) or {}).get("mode", "report")).lower()
+        note = ("" if not n_err or mode == "enforce" else
+                " -- reported, not failing: preflight.mode is report (`mode: enforce` under preflight: fails on errors)")
+        print(f"[{'ok' if not n_err else 'error'}] {name}: {n_err} error(s), {n_warn} warning(s){note}")
 
     rows += consistency_rows(all_profiles)
     OUT.mkdir(parents=True, exist_ok=True)
@@ -263,7 +268,6 @@ def main() -> int:
     _write_rows(report, rows)
     # Each project's own findings also go next to its manifests, where
     # `fa verify` picks them up (preflight.mode: report | enforce).
-    from fig_atlas import get_config
     for name, p in checked.items():
         _write_rows(get_config(p.config).manifests_root / "preflight.csv", [r for r in rows if r["project"] == name])
     by = {}

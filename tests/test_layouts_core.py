@@ -243,6 +243,43 @@ def test_fixed_size_keeps_the_printed_size_and_the_cell_corner():
     plt.close(fig)
 
 
+def test_mm_axes_keep_the_drawn_size_and_move_to_the_cell_corner():
+    """layouts.mm_axes: axes set out in mm inside a cell keep their sizes and their
+    arrangement; finish moves the panel to the cell's top-left corner, no size_mm needed."""
+    from matplotlib.transforms import Bbox
+    fig = plt.figure(figsize=(160 / 25.4, 70 / 25.4), dpi=100)
+    fcfg = {"panel_pad_mm": 1.0, "tags": {"size": 9.0, "pad_pt": 2.0}}
+    lay = layouts.row(fig, fcfg, "ab")
+    left = layouts.mm_axes(lay.cells["a"], 10, 12, 30, 20)
+    right = layouts.mm_axes(lay.cells["a"], 45, 12, 15, 20)
+    _draw(lay.cells["b"])
+    layouts.finish(fig, lay, fcfg)
+    fig.canvas.draw()
+    r = fig.canvas.get_renderer()
+    mm = 25.4 / fig.dpi
+    lb, rb = left.get_window_extent(r), right.get_window_extent(r)
+    assert lb.width * mm == pytest.approx(30, abs=0.05) and lb.height * mm == pytest.approx(20, abs=0.05)
+    assert rb.width * mm == pytest.approx(15, abs=0.05)
+    assert (rb.x0 - lb.x1) * mm == pytest.approx(5, abs=0.05)                  # the gap drawn stays
+    cell, outer = lay.cells["a"].bbox, Bbox.union([a.get_tightbbox(r) for a in (left, right)])
+    assert (outer.x0 - cell.x0) * mm == pytest.approx(1.0, abs=0.05)
+    assert (cell.y1 - outer.y1) * mm == pytest.approx(1.0 + 11.0 * 25.4 / 72, abs=0.05)
+    assert "a" in _tags(fig)
+    plt.close(fig)
+
+
+def test_mm_axes_and_size_mm_on_one_cell_is_an_error():
+    fig = plt.figure(figsize=(6, 3))
+    fcfg = {"cells": {"a": {"size_mm": [30, 20]}}}
+    lay = layouts.row(fig, fcfg, "ab")
+    layouts.mm_axes(lay.cells["a"], 0, 0, 30, 20)
+    with pytest.raises(ValueError, match="drawn with mm_axes"):
+        layouts.finish(fig, lay, fcfg)
+    with pytest.raises(ValueError, match="positive"):
+        layouts.mm_axes(lay.cells["b"], 0, 0, 0, 20)
+    plt.close(fig)
+
+
 @pytest.mark.parametrize("size", [[40], "40x30", [40, 0], [-1, 30]])
 def test_fixed_size_must_be_a_positive_width_and_height(size):
     fig = plt.figure(figsize=(6, 3))

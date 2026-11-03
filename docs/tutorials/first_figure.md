@@ -82,7 +82,7 @@ The figure is at `outputs/first-figure/figures/figure_01_main/figure_01.png` (an
 ```text
 ==== first-figure ====
 [provenance] 1 figure record(s) written
-  Published Figure 1: Title of figure 1 (one sentence: what it shows)
+  Published Figure 1: Title of the figure (one sentence: what it shows)
 Manifest: outputs/first-figure/manifests/clean_atlas_manifest.csv
 [ok] first-figure: 0 error(s), 1 warning(s)
 
@@ -97,8 +97,8 @@ ALL 1 PROJECT(S) PASSED
 Line by line:
 
 - `[provenance] 1 figure record(s) written`: a record of which data, code and settings made the figure.
-- `Published Figure 1: Title of figure 1 ...`: the figure is published to `figure_01_main/`. The title is still the template's sentence; you write it in step 6.
-- `[ok] first-figure: 0 error(s), 1 warning(s)`: the print check's result. An **error** (overlap, clipping, text too small, ...) makes the build fail. A **warning** recommends a fix but does not stop the build, and an **info** is for reference.
+- `Published Figure 1: Title of the figure ...`: the figure is published to `figure_01_main/`. The title is still the template's sentence; you write it in step 6.
+- `[ok] first-figure: 0 error(s), 1 warning(s)`: the print check's result. An **error** (overlap, clipping, text too small, ...) is what to fix first; it shows as `[error]` instead of `[ok]`, and with `mode: enforce` under `preflight:` in the config it makes the build fail (chapter 9 of the guide). A **warning** recommends a fix but does not stop the build, and an **info** is for reference.
 - `warn cvd_indistinct 1`: the kind and number of warnings. The details are in `outputs/first-figure/manifests/preflight.csv`.
 - `PASS: 4/5 checks passed, 1 warning(s)`: the check of what was published. Of five items — three figure files (PNG, PDF, SVG), the README and the preflight result — the preflight result has a warning, hence 4/5.
 - `ALL 1 PROJECT(S) PASSED`: the build as a whole succeeded.
@@ -142,7 +142,7 @@ Other values — text sizes, axis ranges, thresholds, the number of labels — c
 
 The figure spec (`figure_specs/figure_01_first-figure.py`) holds the figure's title, the panel notes and what the figure may claim. The build writes them into the figure folder's `README.md`. Change the title:
 
-<!-- replace: figure_specs/figure_01_first-figure.py | title="Title of figure 1 -->
+<!-- replace: figure_specs/figure_01_first-figure.py | title="Title of the figure -->
 ```python
     title="Two compounds lower viability with dose; a screen finds 51 hits",
 ```
