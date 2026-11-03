@@ -11,6 +11,11 @@ unreleased commit is not recorded as built with the last release.
 
 ### Added
 
+- **`layouts.mm_axes(cell, left, top, width, height)`**: axes set out in millimetres from a cell's
+  top-left corner. `layouts.finish` keeps a cell drawn this way at its drawn size and only moves it to
+  the cell's corner, so a panel whose size comes from what it shows (an image at printed size, a
+  table or a set of examples laid out in mm) states its sizes once, where it is drawn; `size_mm` on
+  the same cell is an error.
 - **Fixed-size panels in layouts** (`figures.cells.<letter>.size_mm: [width, height]`): `layouts.finish`
   places that panel at its cell's top-left corner and keeps its printed size instead of scaling it to
   the cell -- for a diagram drawn in millimetres, a matrix of square cells, or a panel shown at printed

@@ -26,6 +26,12 @@ plumb line. Give the cell room for it and its labels (ratios, gaps, canvas
 size); a panel larger than its cell overlaps its neighbour, which preflight
 reports.
 
+A panel whose size comes from what it shows -- an image at printed size,
+axes set out in millimetres -- is drawn with ``mm_axes(cell, left, top,
+width, height)`` (mm from the cell's top-left corner): ``finish`` keeps such
+a panel as drawn and only moves it to the cell's top-left corner, so its
+size is written once, where it is drawn, and not again under ``size_mm``.
+
 Composition: a layout can be called on a cell of another layout instead of
 the figure, to split that cell (plans/PLAN_LAYOUT_CATALOG.md section 16):
 
@@ -47,7 +53,7 @@ import math
 import string
 from dataclasses import dataclass
 
-__all__ = ["Layout", "finish", "panel_cells", "_grid", "_check_letters", "_block", "_begin", "_register"]
+__all__ = ["Layout", "finish", "mm_axes", "panel_cells", "_grid", "_check_letters", "_block", "_begin", "_register"]
 
 MAX_DEPTH = 2                        # a layout in a cell of another, no deeper (plan section 16)
 ALIGN_MM = 0.5                       # inner columns/rows of sibling cells closer than this share tag lines
@@ -193,6 +199,29 @@ def _size_mm(fcfg: dict, letter: str):
     return w, h
 
 
+def mm_axes(cell, left: float, top: float, width: float, height: float):
+    """Axes in ``cell`` at ``left``/``top`` mm from the cell's top-left corner,
+    ``width`` x ``height`` mm. ``finish`` keeps a cell drawn this way at its
+    drawn size and only moves it to the cell's corner (see "Fixed size")."""
+    if width <= 0 or height <= 0:
+        raise ValueError(f"mm_axes needs a positive width and height, not {width} x {height} mm")
+    box, k = cell.bbox, cell.dpi / 25.4                 # the cell in pixels; pixels per mm
+    ax = cell.add_axes([left * k / box.width, 1 - (top + height) * k / box.height,
+                        width * k / box.width, height * k / box.height])
+    cell._fa_drawn_mm = True
+    return ax
+
+
+def _kept_size(fcfg: dict, letter: str, cell):
+    """How ``finish`` sizes a panel: ``(w, h)`` mm from ``size_mm``, "drawn"
+    for a cell drawn with ``mm_axes``, or None (fit to the cell)."""
+    size = _size_mm(fcfg, letter)
+    if size is not None and getattr(cell, "_fa_drawn_mm", False):
+        raise ValueError(f"cell {letter!r} is drawn with mm_axes, which keeps its drawn size: "
+                         f"remove figures.cells.{letter}.size_mm")
+    return "drawn" if getattr(cell, "_fa_drawn_mm", False) else size
+
+
 def panel_cells(layout: "Layout") -> dict:
     """Every panel's cell by letter, including the cells of layouts drawn inside
     a cell (composition) -- draw each panel into ``panel_cells(lay)[letter]``.
@@ -282,7 +311,8 @@ def finish(fig, layout: Layout, fcfg: dict) -> list:
     Call it once, on the outermost layout: layouts drawn in its cells are
     spliced in, so their panels are fitted and tagged with the rest
     (``panel_pad_mm`` and ``tags`` come from this ``fcfg``). A panel with
-    ``figures.cells.<letter>.size_mm`` keeps that size (see "Fixed size").
+    ``figures.cells.<letter>.size_mm`` keeps that size, and one drawn with
+    ``mm_axes`` keeps its drawn size (see "Fixed size").
     """
     from ..bundle_figure import fit_in_cells                    # lazy: no matplotlib at import
     from ..renderers.panels import place_panel_tags
@@ -293,7 +323,7 @@ def finish(fig, layout: Layout, fcfg: dict) -> list:
     size = float(tags.get("size", 9.0))
     pad_pt = float(tags.get("pad_pt", 2.0))
     top_pt = size + pad_pt if show else 0.0
-    panels = [(cell, list(cell.axes), _size_mm(fcfg, letter))
+    panels = [(cell, list(cell.axes), _kept_size(fcfg, letter, cell))
               for letter, cell in layout.cells.items() if list(cell.axes)]
     fit_in_cells(fig, panels, pad_mm=float((fcfg or {}).get("panel_pad_mm", 1.0)),
                  top_reserve_pt=top_pt)

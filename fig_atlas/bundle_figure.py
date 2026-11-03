@@ -158,7 +158,8 @@ def fit_in_cells(fig, panels: list, pad_mm: float = 1.0, top_reserve_pt: float =
     A panel given as ``(cell, axes, (w_mm, h_mm))`` keeps that printed size
     instead: its axes (all of them together) measure ``w_mm`` x ``h_mm`` and
     its outer box starts at the cell's top-left corner, so a diagram drawn in
-    millimetres or a panel shown at printed size is moved, never rescaled.
+    millimetres or a panel shown at printed size is moved, never rescaled;
+    ``(cell, axes, "drawn")`` keeps the size its axes were drawn at.
     If it is larger than its cell it overlaps a neighbour; preflight reports
     that."""
     if not panels:
@@ -177,7 +178,7 @@ def fit_in_cells(fig, panels: list, pad_mm: float = 1.0, top_reserve_pt: float =
             outer = Bbox.union([a.get_tightbbox(renderer) for a in group])
             box = Bbox.union([a.get_window_extent(renderer) for a in group])
             if fixed and fixed[0] is not None:    # printed size kept: place it, do not scale it to the cell
-                w, h = (v / 25.4 * fig.dpi for v in fixed[0])
+                w, h = (box.width, box.height) if fixed[0] == "drawn" else (v / 25.4 * fig.dpi for v in fixed[0])
                 x0 = cell.x0 + pad + (box.x0 - outer.x0)
                 y1 = cell.y1 - pad - top - (outer.y1 - box.y1)
                 x1, y0 = x0 + w, y1 - h

@@ -557,3 +557,19 @@ larger than its cell is not shrunk: it overlaps, and preflight reports the overl
 fitted; bad values raise; `fa layouts fixed_size`, the MCP tool and the reference page describe it from
 the `_core` docstring; `examples/layouts/fixed_size/` draws it. Then the paper's Figs. 4-6 move onto
 layouts with it.
+
+## 18. Panels drawn in millimetres (card L-18, 2026-11-04)
+
+**Why.** Moving the paper's Figs. 4 and 5 onto L-17 showed its limit: their panels take their size from
+what they show -- figures shown at printed size (pixels / dpi x a scale), defect examples whose cramped
+geometry is the point. With `size_mm` that size would be computed by hand and written a second time, and
+a wrong number stretches an image without any finding.
+
+**What.** `layouts.mm_axes(cell, left, top, width, height)` adds axes in mm from the cell's top-left
+corner and marks the cell; `finish` passes such a cell to `fit_in_cells` as `"drawn"`, which keeps the
+axes' drawn size and moves the group to the cell's top-left corner like a `size_mm` panel. `size_mm` on
+the same cell raises (one source for the size).
+
+**Done when.** A test measures the kept sizes, the gap between two axes and the cell corner; mixing with
+`size_mm` raises; `fa layouts fixed_size` and the reference page describe it from the `_core` docstring;
+the paper's Figs. 4 and 5 move onto layouts with it.
