@@ -47,6 +47,7 @@ from .signed_heatmap import render_signed_heatmap
 from .stacked_bar import render_stacked_bar
 from .stacked_share_hbar import render_stacked_share_hbar
 from .survival import render_survival
+from .table import render_table
 from .threshold_scatter import render_threshold_scatter
 from .tier_hbar import render_tier_hbar
 from .treatment_schematic import render_treatment_schematic
@@ -89,6 +90,7 @@ __all__ = [
     "render_stacked_bar",
     "render_stacked_share_hbar",
     "render_survival",
+    "render_table",
     "render_threshold_scatter",
     "render_tier_hbar",
     "render_treatment_schematic",

@@ -21,6 +21,25 @@ unreleased commit is not recorded as built with the last release.
   the cell's corner, so a panel whose size comes from what it shows (an image at printed size, a
   table or a set of examples laid out in mm) states its sizes once, where it is drawn; `size_mm` on
   the same cell is an error.
+
+- **`table` renderer** (`fig_atlas.render("table", ...)`, `fa new renderer --family table`): a classic
+  summary table drawn at print size -- three horizontal rules, no vertical rules, no fills -- from a
+  DataFrame. Per-column order, headings, format, alignment and width; spanning headings with their own
+  partial rule; column widths measured from the content, with each column keeping at least its longest
+  word; cells wrapped to `max_lines` and marked when cut; a row limit with a note counting what was
+  dropped; title and footnotes. The shipped preset `styles/table_classic.yaml` holds the look as 24
+  commented keys. It returns the printed rows with `attrs["height_pt"]`, so a caller laying out pages
+  can size its axes to the content. A rendered table is for reading and for slides, not for journal
+  submission -- the CSV stays the table of record.
+
+- **Table pages in the compiled storyline compendium**: each `tables:` entry of `storyline.yaml` gets a
+  page after the figure pages, drawn with the `table` renderer. A per-table `render:` block takes the
+  renderer's params plus `sort_by` / `sort_ascending` (which rows a long table shows first),
+  `transpose` (the first column becomes the headings -- for a table of few records and many fields) and
+  `orientation`. A table too long for its page shows the rows that fit, measured by drawing them, and a
+  note under it gives how many of how many, in which order, and that the rest are in the CSV; a table
+  too wide names the columns worth reading off paper in `render.columns` and a second note counts the
+  ones left in the CSV. Numeric columns are formatted so one notation runs down each column.
 - **Fixed-size panels in layouts** (`figures.cells.<letter>.size_mm: [width, height]`): `layouts.finish`
   places that panel at its cell's top-left corner and keeps its printed size instead of scaling it to
   the cell -- for a diagram drawn in millimetres, a matrix of square cells, or a panel shown at printed

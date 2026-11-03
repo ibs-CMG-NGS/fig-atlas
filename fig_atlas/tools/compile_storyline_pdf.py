@@ -209,7 +209,8 @@ def parse_storyline_md(md_path: Path, use_yaml: bool = True) -> dict:
                     "description": f.get("description", ""), "status": f.get("status", "Active")}
                    for f in sl.get("figures", [])]
         tables = [{"role": t["slot"], "file": t["file"], "generator": t.get("generator", ""),
-                   "description": t.get("description", "")} for t in sl.get("tables", [])]
+                   "description": t.get("description", ""), "render": dict(t.get("render") or {})}
+                  for t in sl.get("tables", [])]
         retired = list(sl.get("retired") or [])
         narrative = str(sl.get("narrative") or "").rstrip("\n")
         source = "yaml"
@@ -350,11 +351,15 @@ def generate_cover_page(story_data: dict, out_cover_pdf: Path) -> None:
             clean_title = story_data["path"].stem.replace("figure_plan_", "").replace("_", " ")
             
         wrapped_title = "\n".join(textwrap.wrap(clean_title, width=56))
-        ax.text(0.08, 0.91, wrapped_title,
-                fontsize=13.5, fontweight="bold", color="#0f172a", va="top", linespacing=1.25)
-        
+        title = ax.text(0.08, 0.91, wrapped_title,
+                        fontsize=13.5, fontweight="bold", color="#0f172a", va="top", linespacing=1.25)
+        renderer = fig.canvas.get_renderer()
+        # A long title pushes the divider, banner and card down by the same amount.
+        title_bottom = ax.transAxes.inverted().transform((0, title.get_window_extent(renderer=renderer).y0))[1]
+        dy = max(0.0, 0.85 - (title_bottom - 0.012))
+
         # Divider rule
-        ax.plot([0.08, 0.92], [0.85, 0.85], color="#cbd5e1", lw=1.5)
+        ax.plot([0.08, 0.92], [0.85 - dy, 0.85 - dy], color="#cbd5e1", lw=1.5)
         
         # Metadata banner
         date_str = datetime.date.today().strftime("%Y-%m-%d")
@@ -362,7 +367,7 @@ def generate_cover_page(story_data: dict, out_cover_pdf: Path) -> None:
         commit = git.get("commit") or "no git"
         if git.get("dirty"):
             commit += "*"       # explained on the build-state line (the full note overran the page)
-        ax.text(0.08, 0.83, f"Storyline Source: {story_data['path'].name}  |  Revision: {story_data['revision']}  |  "
+        ax.text(0.08, 0.83 - dy, f"Storyline Source: {story_data['path'].name}  |  Revision: {story_data['revision']}  |  "
                             f"Compiled: {date_str}  |  Commit: {commit}",
                 fontsize=8, color="#64748b")
         health = story_data.get("health")
@@ -371,20 +376,19 @@ def generate_cover_page(story_data: dict, out_cover_pdf: Path) -> None:
             line = _snapshot_module().health_line(health)
             if git.get("dirty"):
                 line += "  |  * storyline uncommitted"
-            ax.text(0.08, 0.814, line, fontsize=7.5,
+            ax.text(0.08, 0.814 - dy, line, fontsize=7.5,
                     color="#b91c1c" if bad else "#64748b", fontweight="bold" if bad else "normal")
 
         fig_w_pt = fig.get_size_inches()[0] * 72.0
-        renderer = fig.canvas.get_renderer()
 
         def pt_width(s: str, font: FontProperties) -> float:
             w_px = renderer.get_text_width_height_descent(s, font, ismath=False)[0]
             return w_px * 72.0 / fig.dpi
 
         # Core Hypothesis Card
-        hypo_rect = plt.Rectangle((0.08, 0.690), 0.84, 0.115, facecolor="#f8fafc", edgecolor="#94a3b8", lw=1.0)
-        ax.add_patch(hypo_rect)
-        ax.text(0.10, 0.793, "CORE HYPOTHESIS & NARRATIVE",
+        # The card itself is drawn further down, once the narrative has been laid
+        # out and its height is known; a fixed height cut long narratives off.
+        ax.text(0.10, 0.793 - dy, "CORE HYPOTHESIS & NARRATIVE",
                 fontsize=8.5, fontweight="bold", color="#1e293b", va="top")
         # The storyline's own words: storyline.yaml `narrative` (line breaks kept), else its hypothesis.
         hypo_text = story_data.get("narrative") or story_data.get("hypothesis") or ""
@@ -411,10 +415,17 @@ def generate_cover_page(story_data: dict, out_cover_pdf: Path) -> None:
             return "\n".join(out_lines)
 
         wrapped_hypo = wrap_para(hypo_text, max_w_hypo, fp_hypo)
-        ax.text(0.10, 0.774, wrapped_hypo, fontproperties=fp_hypo, color="#334155", va="top", linespacing=1.20)
-        
+        hypo = ax.text(0.10, 0.774 - dy, wrapped_hypo, fontproperties=fp_hypo, color="#334155", va="top", linespacing=1.20)
+        # The card grows to hold the narrative; everything below moves down by the same amount.
+        text_bottom = ax.transAxes.inverted().transform((0, hypo.get_window_extent(renderer=renderer).y0))[1]
+        card_bottom = min(0.690 - dy, text_bottom - 0.012)
+        shift = 0.690 - card_bottom
+        hypo_rect = plt.Rectangle((0.08, card_bottom), 0.84, 0.805 - dy - card_bottom,
+                                  facecolor="#f8fafc", edgecolor="#94a3b8", lw=1.0)
+        ax.add_patch(hypo_rect)
+
         # Figure Allocation Table
-        ax.text(0.08, 0.668, "FIGURES AND TABLES, IN ORDER",
+        ax.text(0.08, 0.668 - shift, "FIGURES AND TABLES, IN ORDER",
                 fontsize=9.0, fontweight="bold", color="#0f172a")
 
         table_w_pt = 0.84 * fig_w_pt
@@ -473,9 +484,11 @@ def generate_cover_page(story_data: dict, out_cover_pdf: Path) -> None:
         
         line_unit_h = 0.0125 if n_rows >= 18 else 0.0150
         t_height = min(0.48, max(0.35, total_lines * line_unit_h))
-        
-        tab = ax.table(cellText=table_rows, loc="center", cellLoc="left", 
-                       bbox=[0.08, 0.655 - t_height, 0.84, t_height],
+        t_top = 0.655 - shift
+        t_height = min(t_height, t_top - 0.135)     # leave room for the notes above the footer
+
+        tab = ax.table(cellText=table_rows, loc="center", cellLoc="left",
+                       bbox=[0.08, t_top - t_height, 0.84, t_height],
                        colWidths=col_widths)
         tab.auto_set_font_size(False)
         tab.set_fontsize(f_size)
@@ -498,12 +511,12 @@ def generate_cover_page(story_data: dict, out_cover_pdf: Path) -> None:
                     cell.set_text_props(color="#1e293b", size=f_size)
 
         # Verification & Quality Statement below table
-        v_top = (0.655 - t_height) - 0.015
+        v_top = (t_top - t_height) - 0.015
         ax.text(0.08, v_top, "HOW THIS COMPENDIUM IS BUILT",
                 fontsize=8.0, fontweight="bold", color="#0f172a")
         mm = 25.4 / 72.0
         notes = (   # only what this compiler does or reads; the build state is on the line under the title
-            "• Each figure page carries its legend below the figure; supplementary tables ship as CSV files.\n"
+            "• Each figure page carries its legend below the figure; tables follow, one page each (the full tables are CSV).\n"
             f"• Figures are placed 1:1 at their printed size on {pg['w'] * mm:.0f} x {pg['h'] * mm:.0f} mm pages "
             f"({pg['content_w'] * mm:.1f} mm content width), as vector PDF.\n"
             "• Each figure's inputs, code and settings are in its provenance record; the last page lists the data,\n"
@@ -730,6 +743,165 @@ def generate_caption_page(fig_meta: dict, width_pt: float, inset_pt: float, out_
     return height
 
 
+# [Table pages] Summary tables follow the figures, drawn by the `table` renderer in
+# its classic look, one page per table. A table longer than a page shows the rows
+# that fit and says so under it: how many of how many, in which order, and that the
+# rest are in the CSV file. A storyline.yaml `tables:` entry may carry a `render:`
+# block of renderer params (columns, column_labels, column_format, column_align, ...)
+# plus `sort_by` / `sort_ascending` (which rows a long table shows first),
+# `orientation` (auto | portrait | landscape) and `transpose` (first column becomes
+# the headings); these keys are the defaults it falls back to.
+TABLE_PAGE = {
+    "probe_rows_max": 120,         # most rows tried when measuring what fits a page (more never fit at 5.5 pt)
+    "landscape_min_columns": 9,    # this many columns or more: drawn rotated 90 deg on the portrait page
+    "max_lines": 6,                # lines a cell may wrap to on a compendium page (cut cells end in the mark)
+    "inset_pt": 4.0,               # padding inside the table box, so glyphs at its edge are not clipped
+    "shown_note": "Showing the first {shown:,} of {total:,} rows{order}; the other {{n:,}} are in the CSV file below.",
+    # Said the same way for columns: a wide table shows the columns a reader reads
+    # off a page, and the machine-readable rest stay in the CSV (`render.columns`).
+    "shown_columns_note": "Showing {shown} of {total} columns; the other {left} are in the CSV file below.",
+}
+_TABLE_KEYS = ("orientation", "max_rows", "transpose", "sort_by", "sort_ascending")   # compendium keys, not renderer params
+
+
+def _auto_formats(df) -> dict:
+    """Column formats for a table nobody formatted: whole-number floats (a column
+    of integers with a gap reads back as float) without decimals; a column reaching
+    into the thousands with one decimal and digit grouping, so 40.3 and 32,623.4 sit
+    in one notation; other floats to four significant digits (small P values read
+    as 7.978e-27). Text and integer columns print as they are."""
+    import pandas as pd
+
+    fmts = {}
+    for c in df.columns:
+        if pd.api.types.is_integer_dtype(df[c]):
+            # A genomic coordinate or a length prints unreadably as 7301884, and the
+            # same table writes its text coordinates as chr1:24,905,310. Group the
+            # digits from five figures up; counts and small codes stay plain.
+            vals = df[c].dropna()
+            if len(vals) and vals.abs().max() >= 10000:
+                fmts[c] = ",d"
+            continue
+        if not pd.api.types.is_float_dtype(df[c]):
+            continue
+        vals = df[c].dropna()
+        if len(vals) and (vals == vals.round()).all():
+            fmts[c] = ".0f"
+        elif len(vals) and vals.abs().max() >= 1000:
+            fmts[c] = ",.1f"
+        else:
+            fmts[c] = ".4g"
+    return fmts
+
+
+def _load_table(entry: dict):
+    """(DataFrame, path) for a storyline table entry; (None, path) if the file is missing."""
+    import pandas as pd
+
+    path = PROJECT_ROOT / entry["file"]
+    if not path.is_file():
+        return None, path
+    return pd.read_csv(path), path
+
+
+def table_layout(entry: dict, df) -> str:
+    """How a table goes on its page: 'portrait', or 'landscape' (turned 90 deg)."""
+    render = entry.get("render") or {}
+    orient = render.get("orientation", "auto")
+    if orient in ("portrait", "landscape"):
+        return orient
+    n_cols = len(render.get("columns") or (df.index if render.get("transpose") else df.columns))
+    return "landscape" if n_cols >= TABLE_PAGE["landscape_min_columns"] else "portrait"
+
+
+def _table_data(entry: dict, df):
+    """The rows as drawn, in order: the CSV (sorted by `render.sort_by` if given),
+    or with `render.transpose` its first column as the headings."""
+    render = entry.get("render") or {}
+    if render.get("transpose"):
+        first = df.columns[0]
+        data = df.set_index(first).T
+        data.columns = [str(c) for c in data.columns]
+        data.insert(0, str(first), data.index.astype(str))
+        return data.reset_index(drop=True)
+    key = render.get("sort_by")
+    if key:
+        if key not in df.columns:
+            raise ValueError(f"{entry['role']}: render.sort_by {key!r} is not a column of {entry['file']}")
+        df = df.sort_values(key, ascending=bool(render.get("sort_ascending", True)), kind="stable",
+                            na_position="last").reset_index(drop=True)
+    return df
+
+
+def generate_table_page(entry: dict, df, layout: str, pg: dict, out_pdf: Path, page_no: int, total: int,
+                        shown: int | None = None) -> float:
+    """Draw one table -- its first ``shown`` rows, with a note naming what is left
+    out -- into a PDF the size of the page's content box (turned on its side for
+    'landscape'); returns the height it took, in pt."""
+    from fig_atlas.renderers import render_table
+
+    render = {k: v for k, v in (entry.get("render") or {}).items() if k not in _TABLE_KEYS}
+    data = _table_data(entry, df)
+    n_rows = len(data)
+    shown = n_rows if shown is None else min(shown, n_rows)
+    fmt = {**_auto_formats(data), **(render.get("column_format") or {})}
+    key = (entry.get("render") or {}).get("sort_by")
+    order = ""
+    if key:
+        way = "ascending" if (entry.get("render") or {}).get("sort_ascending", True) else "descending"
+        order = f", sorted by {key} ({way})"
+    rel = Path(entry["file"]).as_posix()
+    n_cols = len(render.get("columns") or data.columns)
+    col_note = ([] if n_cols >= len(data.columns) else
+                [TABLE_PAGE["shown_columns_note"].format(shown=n_cols, total=len(data.columns),
+                                                         left=len(data.columns) - n_cols)])
+    params = {
+        "font_family": CAPTION_STYLE["font_family"], "max_lines": TABLE_PAGE["max_lines"],
+        **render, "column_format": fmt,
+        "title": render.get("title") or f"{entry['role']} | {entry['description']}",
+        "max_rows": shown,
+        "truncation_note": TABLE_PAGE["shown_note"].format(shown=shown, total=n_rows, order=order),
+        "footnotes": [*(render.get("footnotes") or []), *col_note,
+                      f"{rel} ({len(df):,} rows x {len(df.columns)} columns) · compendium page {page_no} of {total}"],
+    }
+    box_w, box_h = (pg["content_w"], pg["content_h"]) if layout == "portrait" else (pg["content_h"], pg["content_w"])
+    inset = TABLE_PAGE["inset_pt"]
+    fig = plt.figure(figsize=(box_w / 72.0, box_h / 72.0))
+    ax = fig.add_axes([inset / box_w, inset / box_h, 1 - 2 * inset / box_w, 1 - 2 * inset / box_h])
+    fig.canvas.draw()
+    drawn = render_table(ax, data, params)
+    fig.savefig(out_pdf)
+    plt.close(fig)
+    return float(drawn.attrs.get("height_pt", 0.0)) + 2 * inset
+
+
+def rows_that_fit(entry: dict, df, layout: str, pg: dict, probe_pdf: Path) -> int:
+    """How many leading rows fit one page, measured by drawing them (a row's height
+    depends on how its cells wrap); a binary search over the first rows. At least one
+    row is shown even when it alone is too tall, and that is reported."""
+    room = pg["content_h"] if layout == "portrait" else pg["content_w"]
+    n = len(_table_data(entry, df))
+
+    def fits(k: int) -> bool:
+        return generate_table_page(entry, df, layout, pg, probe_pdf, 999, 999, shown=k) <= room
+
+    hi = min(n, TABLE_PAGE["probe_rows_max"])      # never draw a long table whole just to learn it does not fit
+    if hi == n and fits(n):
+        return n
+    lo = 1
+    if not fits(lo):
+        print(f"  [!] {entry['role']}: its first row alone is taller than a page and will be clipped; "
+              f"narrow it with `render.columns` in storyline.yaml")
+        return 1
+    while lo < hi:                     # largest k in [lo, hi] that fits
+        mid = (lo + hi + 1) // 2
+        if fits(mid):
+            lo = mid
+        else:
+            hi = mid - 1
+    return lo
+
+
 def _compendium_page() -> dict:
     """Paper size and margins (pt) of the compendium pages, from the same page
     preset the figures are drawn on, so a figure's content box and the page's
@@ -818,6 +990,19 @@ def compile_storyline_pdf(md_path: Path, strict: bool = False) -> Path | None:
                       "state": states[(proj, f_num)]})
         if legend_on_next:
             page_no += 1
+
+    # Tables after the figures (gate G2 of the table-rendering plan): one page per
+    # table; a table longer than a page shows the rows that fit and names the rest.
+    table_items = []
+    for entry in story_data.get("tables", []):
+        df, path = _load_table(entry)
+        if df is None:
+            print(f"  [-] Warning: table file not found for {entry['role']}: {entry['file']}")
+            continue
+        layout = table_layout(entry, df)
+        shown = rows_that_fit(entry, df, layout, pg, temp_dir / "table_probe.pdf")
+        page_no += 1
+        table_items.append({"entry": entry, "df": df, "layout": layout, "page_no": page_no, "shown": shown})
     total_pages = page_no + 1          # + the closing appendix page
 
     # Pass 2: render legends with final page numbers and assemble A4 pages.
@@ -850,6 +1035,22 @@ def compile_storyline_pdf(md_path: Path, strict: bool = False) -> Path | None:
         writer.add_page(page)
         where = f"legend on page {n + 1}" if it["legend_on_next"] else "legend below"
         print(f"  [+] {meta['role']} -> page {n}/{total_pages} ({meta['project']} Fig {meta['figure_number']}; {where})")
+
+    for ti in table_items:
+        entry, n, layout = ti["entry"], ti["page_no"], ti["layout"]
+        tab_pdf = temp_dir / f"table_p{n}_{Path(entry['file']).stem}.pdf"
+        generate_table_page(entry, ti["df"], layout, pg, tab_pdf, n, total_pages, shown=ti["shown"])
+        tab_page = PdfReader(tab_pdf).pages[0]
+        page = PageObject.create_blank_page(width=pg["w"], height=pg["h"])
+        if layout == "portrait":
+            page.merge_transformed_page(tab_page, Transformation().translate(tx=left, ty=pg["margin"]))
+        else:   # turned 90 deg: the table's top faces the page's left edge, as journals set wide tables
+            page.merge_transformed_page(tab_page, Transformation().rotate(90).translate(
+                tx=left + pg["content_w"], ty=pg["margin"]))
+        writer.add_page(page)
+        n_rows = len(_table_data(entry, ti["df"]))
+        part = "" if ti["shown"] == n_rows else f"; first {ti['shown']} of {n_rows:,} rows, the rest named under it"
+        print(f"  [+] {entry['role']} -> page {n}/{total_pages} ({layout}{part})")
 
     appendix_pdf = temp_dir / f"appendix_{md_path.stem}.pdf"
     generate_appendix_page(story_data, appendix_rows(items), appendix_pdf, total_pages, total_pages)

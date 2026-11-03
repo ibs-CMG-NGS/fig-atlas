@@ -6,7 +6,7 @@
 
 Each picture below is drawn from a small synthetic data bundle in `examples/gallery/`, exactly as `fa ingest bundle` would draw it, at single-column size (85 mm). Pick the picture closest to the figure you need, copy its folder, replace `inputs/data.csv` with your table -- same column names, or name yours in `plot_params` -- and run the commands under it. The config block `fa ingest bundle` writes lists every setting with its unit and what it changes ([config reference](config.md)). A test builds every example and checks it with preflight. Pictures are grouped by what the plot *does*, not by the field or the package it came from (`fig_atlas/family.py`).
 
-Jump to: [Column](#column) | [XY](#xy) | [Grouped](#grouped) | [Survival](#survival) | [Parts of a whole](#parts-of-a-whole) | [Multiple variables](#multiple-variables) | [Diagnostic](#diagnostic) | [Image](#image) | [Schematic](#schematic) | [Field-specific](#field-specific).
+Jump to: [Column](#column) | [XY](#xy) | [Grouped](#grouped) | [Survival](#survival) | [Parts of a whole](#parts-of-a-whole) | [Multiple variables](#multiple-variables) | [Diagnostic](#diagnostic) | [Image](#image) | [Table](#table) | [Schematic](#schematic) | [Field-specific](#field-specific).
 
 ### Column
 
@@ -1701,6 +1701,16 @@ One example per renderer (and per layout where a renderer has more than one), dr
 #### image_panel
 
 ![image_panel](gallery/image_panel.png)
+
+### Table
+
+#### table
+
+![table](gallery/table.png)
+
+#### table_screen
+
+![table_screen](gallery/table_screen.png)
 
 ### Schematic
 

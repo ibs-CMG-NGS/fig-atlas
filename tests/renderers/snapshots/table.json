@@ -1,0 +1,528 @@
+{
+ "freetype": "2.14.3",
+ "figsize_in": [
+  5.2,
+  1.5
+ ],
+ "artists": [
+  {
+   "kind": "Rectangle",
+   "fc": "#ffffffff",
+   "ec": "#ffffffff",
+   "lw": 0.0,
+   "bbox_pt": [
+    0.0,
+    0.0,
+    374.4,
+    108.0
+   ]
+  },
+  {
+   "kind": "Line2D",
+   "n": 2,
+   "data": "5a82b29680bb5304",
+   "color": "#111827ff",
+   "lw": 1.0,
+   "ls": "-",
+   "marker": "None",
+   "ms": 6.0,
+   "mec": null,
+   "mfc": null
+  },
+  {
+   "kind": "Line2D",
+   "n": 2,
+   "data": "c3e91a902ba1fa68",
+   "color": "#111827ff",
+   "lw": 0.5,
+   "ls": "-",
+   "marker": "None",
+   "ms": 6.0,
+   "mec": null,
+   "mfc": null
+  },
+  {
+   "kind": "Line2D",
+   "n": 2,
+   "data": "0eaac8ae199dbbbe",
+   "color": "#111827ff",
+   "lw": 0.6,
+   "ls": "-",
+   "marker": "None",
+   "ms": 6.0,
+   "mec": null,
+   "mfc": null
+  },
+  {
+   "kind": "Line2D",
+   "n": 2,
+   "data": "aa9f2f1469945409",
+   "color": "#111827ff",
+   "lw": 1.0,
+   "ls": "-",
+   "marker": "None",
+   "ms": 6.0,
+   "mec": null,
+   "mfc": null
+  },
+  {
+   "kind": "Text",
+   "text": "Response by arm",
+   "size": 6.5,
+   "weight": "bold",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#111827ff",
+   "ha": "left",
+   "va": "baseline",
+   "bbox_pt": [
+    7.49,
+    94.69,
+    70.59,
+    101.04
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "Effect",
+   "size": 6.0,
+   "weight": "bold",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#111827ff",
+   "ha": "center",
+   "va": "baseline",
+   "bbox_pt": [
+    142.7,
+    84.25,
+    162.52,
+    90.06
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "Group",
+   "size": 6.0,
+   "weight": "bold",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#111827ff",
+   "ha": "left",
+   "va": "baseline",
+   "bbox_pt": [
+    7.49,
+    73.55,
+    28.06,
+    79.36
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "n",
+   "size": 6.0,
+   "weight": "bold",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#111827ff",
+   "ha": "right",
+   "va": "baseline",
+   "bbox_pt": [
+    91.57,
+    73.55,
+    95.84,
+    79.36
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "Mean",
+   "size": 6.0,
+   "weight": "bold",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#111827ff",
+   "ha": "right",
+   "va": "baseline",
+   "bbox_pt": [
+    126.3,
+    73.55,
+    144.67,
+    79.36
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "95% CI (+/-)",
+   "size": 6.0,
+   "weight": "bold",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#111827ff",
+   "ha": "right",
+   "va": "baseline",
+   "bbox_pt": [
+    163.0,
+    73.55,
+    203.38,
+    79.36
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "P",
+   "size": 6.0,
+   "weight": "bold",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#111827ff",
+   "ha": "right",
+   "va": "baseline",
+   "bbox_pt": [
+    241.21,
+    73.55,
+    245.61,
+    79.36
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "Note",
+   "size": 6.0,
+   "weight": "bold",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#111827ff",
+   "ha": "left",
+   "va": "baseline",
+   "bbox_pt": [
+    251.61,
+    73.55,
+    267.69,
+    79.36
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "Vehicle",
+   "size": 5.5,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#1f2937ff",
+   "ha": "left",
+   "va": "baseline",
+   "bbox_pt": [
+    7.49,
+    62.78,
+    27.14,
+    68.11
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "12",
+   "size": 5.5,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#1f2937ff",
+   "ha": "right",
+   "va": "baseline",
+   "bbox_pt": [
+    88.85,
+    62.78,
+    95.84,
+    68.11
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "1.04",
+   "size": 5.5,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#1f2937ff",
+   "ha": "right",
+   "va": "baseline",
+   "bbox_pt": [
+    132.43,
+    62.78,
+    144.67,
+    68.11
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "0.212",
+   "size": 5.5,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#1f2937ff",
+   "ha": "right",
+   "va": "baseline",
+   "bbox_pt": [
+    187.64,
+    62.78,
+    203.38,
+    68.11
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "--",
+   "size": 5.5,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#1f2937ff",
+   "ha": "right",
+   "va": "baseline",
+   "bbox_pt": [
+    241.65,
+    62.78,
+    245.61,
+    68.11
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "reference arm",
+   "size": 5.5,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#1f2937ff",
+   "ha": "left",
+   "va": "baseline",
+   "bbox_pt": [
+    251.61,
+    62.78,
+    290.59,
+    68.11
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "Drug",
+   "size": 5.5,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#1f2937ff",
+   "ha": "left",
+   "va": "baseline",
+   "bbox_pt": [
+    7.49,
+    52.7,
+    20.97,
+    58.04
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "12",
+   "size": 5.5,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#1f2937ff",
+   "ha": "right",
+   "va": "baseline",
+   "bbox_pt": [
+    88.85,
+    52.7,
+    95.84,
+    58.04
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "2.87",
+   "size": 5.5,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#1f2937ff",
+   "ha": "right",
+   "va": "baseline",
+   "bbox_pt": [
+    132.43,
+    52.7,
+    144.67,
+    58.04
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "0.339",
+   "size": 5.5,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#1f2937ff",
+   "ha": "right",
+   "va": "baseline",
+   "bbox_pt": [
+    187.64,
+    52.7,
+    203.38,
+    58.04
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "0.0008",
+   "size": 5.5,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#1f2937ff",
+   "ha": "right",
+   "va": "baseline",
+   "bbox_pt": [
+    226.38,
+    52.7,
+    245.61,
+    58.04
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "highest response",
+   "size": 5.5,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#1f2937ff",
+   "ha": "left",
+   "va": "baseline",
+   "bbox_pt": [
+    251.61,
+    52.7,
+    298.78,
+    58.04
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "Drug + inhibitor",
+   "size": 5.5,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#1f2937ff",
+   "ha": "left",
+   "va": "baseline",
+   "bbox_pt": [
+    7.49,
+    42.63,
+    51.9,
+    47.96
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "11",
+   "size": 5.5,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#1f2937ff",
+   "ha": "right",
+   "va": "baseline",
+   "bbox_pt": [
+    88.85,
+    42.63,
+    95.84,
+    47.96
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "1.19",
+   "size": 5.5,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#1f2937ff",
+   "ha": "right",
+   "va": "baseline",
+   "bbox_pt": [
+    132.43,
+    42.63,
+    144.67,
+    47.96
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "--",
+   "size": 5.5,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#1f2937ff",
+   "ha": "right",
+   "va": "baseline",
+   "bbox_pt": [
+    199.42,
+    42.63,
+    203.38,
+    47.96
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "0.4100",
+   "size": 5.5,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#1f2937ff",
+   "ha": "right",
+   "va": "baseline",
+   "bbox_pt": [
+    226.38,
+    42.63,
+    245.61,
+    47.96
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "response not restored",
+   "size": 5.5,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#1f2937ff",
+   "ha": "left",
+   "va": "baseline",
+   "bbox_pt": [
+    251.61,
+    42.63,
+    312.13,
+    47.96
+   ]
+  },
+  {
+   "kind": "Text",
+   "text": "P, two-sided Welch t-test against the vehicle arm.",
+   "size": 5.0,
+   "weight": "normal",
+   "style": "normal",
+   "rotation": 0.0,
+   "color": "#4b5563ff",
+   "ha": "left",
+   "va": "baseline",
+   "bbox_pt": [
+    7.49,
+    30.89,
+    132.03,
+    35.72
+   ]
+  }
+ ]
+}

@@ -1,0 +1,113 @@
+# Status of the table-rendering plan (plans/PLAN_TABLE_RENDERING.md) -- the single source of task state.
+# One card per task. Change a card when you claim, hand in or finish a task.
+# status: todo | in_progress | in_review | done | dropped | blocked
+# Keep study details out of this file: this repository is public.
+plan_version: 1
+gates:                          # researcher decisions (plan section 6): pending | passed <date and note>
+  G1: "passed 2026-11-03 (author: the first render looks right; its values become table_classic)"
+  G2: "passed 2026-11-03 (author: yes -- table pages in the compendium, after the figures)"
+phase_gates:                    # a phase's cards can start only after these gates have passed
+  0: []
+  1: []
+  2: []
+  3: [G2]
+  4: []
+cards:
+  - id: T-01
+    title: "plan and status file"
+    phase: 0
+    status: in_review
+    depends_on: []
+    owner: "claude-code 2026-11-03"
+    commits: []
+    notes: "plans/PLAN_TABLE_RENDERING.md + this file; not committed yet"
+  - id: T-02
+    title: "core renderer `table`: SCHEMA, per-column formatting, auto column widths, wrapping, rules, footnotes"
+    phase: 1
+    status: in_review
+    depends_on: [T-01]
+    owner: "claude-code 2026-11-03"
+    commits: []
+    notes: >-
+      fig_atlas/renderers/table.py (34 params), tests/renderers/test_table.py (14 checks),
+      gallery cases `table` and `table_screen` with snapshots, new gallery family `table`
+      (fig_atlas/family.py), docs/reference regenerated. Full suite 1134 passed / 2 skipped,
+      hardcoded lint clean. Returns the printed rows with `attrs["height_pt"]`, the drawn
+      height, so T-05 can size a page's axes to the content. Awaiting G1 on the look.
+      Not committed yet.
+  - id: T-03
+    title: "`styles/table_classic.yaml`: booktabs defaults (three horizontal rules, no vertical rules, no fills)"
+    phase: 1
+    status: in_review
+    depends_on: [T-02]
+    owner: "claude-code 2026-11-03"
+    commits: []
+    notes: >-
+      fig_atlas/styles/table_classic.yaml: a `table:` block of 23 look keys (rules, fills,
+      typography, spacing, text fitting) with role/unit/tuning comments. The renderer's look
+      params now default to StyleRef("table.<key>", <same fallback>), so a project without the
+      preset draws exactly as before; a test holds the shipped preset equal to the fallbacks,
+      and another checks that a figure's own config beats the preset. Full suite 1136 passed /
+      2 skipped; lint clean; reference up to date. Not committed yet.
+  - id: T-04
+    title: "code-free path: `plot_type: table` contract and ingest mapping"
+    phase: 2
+    status: todo
+    depends_on: [T-02, T-03]
+    owner: ""
+    commits: []
+    notes: "swap the bundle CSV, run `fa ingest bundle`, get a table"
+  - id: T-05
+    title: "compendium table pages from the storyline `tables:` entries"
+    phase: 3
+    status: in_review
+    depends_on: [T-02, T-03]
+    owner: "claude-code 2026-11-03"
+    commits: []
+    notes: >-
+      G2 passed 2026-11-03: table pages go after the figure pages. Author decision the same
+      day: one page per table, a table longer than a page shows the rows that fit and names
+      the rest under it (replaced a first version that split tables over pages and listed long
+      ones on a CSV-only page). compile_storyline_pdf.py: TABLE_PAGE defaults;
+      rows_that_fit measures by drawing, binary search over at most probe_rows_max rows (a
+      26,330-row table is never drawn whole); the note under a cut table gives shown / total,
+      the order and that the rest are in the CSV; storyline.yaml `render.sort_by` /
+      `sort_ascending` choose which rows come first; landscape_min_columns or more columns ->
+      drawn turned 90 deg on the portrait page (pages stay A4 portrait); _auto_formats:
+      whole-number floats without decimals, columns into the thousands ",.1f", the rest ".4g".
+      Per-table `render:` block (renderer params + orientation, transpose, sort_by). Renderer fixes found on real
+      tables: column widths now give each column at least its longest word (was: long text
+      columns squeezed short ones, which overran their neighbours); a word wider than its
+      column is broken between characters; a cell cut at max_lines ends in truncation_mark
+      (was: cut silently). tests/test_compendium_tables.py (8). Full suite 1146 passed / 2
+      skipped. Checked on a real compendium (29 pages, 9 table pages): rotated pages' text all
+      inside the content box; compile about 1 min. Not committed yet.
+      Second pass after the author looked at a rotated 17-column page: at that width even the
+      longest word of every column does not fit, so widths fell to the shrink-alike branch and
+      broke words between characters -- unreadable, and no font size fixes it. The row policy
+      now also applies to columns: a study names the columns a reader reads off paper in
+      `render.columns` and the machine-readable rest stay in the CSV, with a note under the
+      table giving shown / total columns (shown_columns_note); a short, wide table instead sets
+      `render.transpose`. Two renderer defects the same page showed: the title was drawn as one
+      unwrapped line and ran off the page (footnotes too) -- both now wrap to the table width
+      and are never cut; and an integer coordinate printed as 7301884 beside the same table's
+      chr1:24,905,310, so _auto_formats groups integers from five figures up. Tests: title
+      wrapping (test_table.py), integer grouping (test_compendium_tables.py). On the real
+      compendium all nine table pages are now portrait -- none rotated -- and the shallower
+      rows fit more of the long tables. Full suite passes; reference clean.
+  - id: T-06
+    title: "docs: gallery entry and a how-to page"
+    phase: 4
+    status: todo
+    depends_on: [T-02, T-03]
+    owner: ""
+    commits: []
+    notes: "the how-to states plainly that rendered tables are not for journal submission"
+  - id: T-07
+    title: "(optional) redraw the compendium cover table with the renderer"
+    phase: 4
+    status: todo
+    depends_on: [T-02]
+    owner: ""
+    commits: []
+    notes: "the existing code works and its tests pass; no hurry, and skipping it is fine"
