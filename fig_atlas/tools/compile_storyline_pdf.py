@@ -54,6 +54,14 @@ def _snapshot_module():
     spec.loader.exec_module(mod)
     return mod
 
+
+def _fig_atlas_version() -> str:
+    from importlib.metadata import PackageNotFoundError, version
+    try:
+        return version("fig-atlas")
+    except PackageNotFoundError:
+        return "(not installed)"
+
 # Every compendium page uses this page preset (styles/<name>.yaml): the same
 # paper the figures are drawn for, so each figure places 1:1 in its content box.
 COMPENDIUM_PAGE_PRESET = "page_a4_portrait_narrow"
@@ -339,7 +347,7 @@ def generate_cover_page(story_data: dict, out_cover_pdf: Path) -> None:
         for prefix in ["#", "통합 논문 스토리라인 및 피겨 구성안", "Manuscript Figure Plan:", "Manuscript Storyline:"]:
             clean_title = clean_title.replace(prefix, "").strip(" :()-")
         if not clean_title:
-            clean_title = "Human ATAC Anchor Discovery & Target Prioritization"
+            clean_title = story_data["path"].stem.replace("figure_plan_", "").replace("_", " ")
             
         wrapped_title = "\n".join(textwrap.wrap(clean_title, width=56))
         ax.text(0.08, 0.91, wrapped_title,
@@ -376,7 +384,7 @@ def generate_cover_page(story_data: dict, out_cover_pdf: Path) -> None:
         # Core Hypothesis Card
         hypo_rect = plt.Rectangle((0.08, 0.690), 0.84, 0.115, facecolor="#f8fafc", edgecolor="#94a3b8", lw=1.0)
         ax.add_patch(hypo_rect)
-        ax.text(0.10, 0.793, "CORE HYPOTHESIS & DEDUCTIVE NARRATIVE ARC", 
+        ax.text(0.10, 0.793, "CORE HYPOTHESIS & NARRATIVE",
                 fontsize=8.5, fontweight="bold", color="#1e293b", va="top")
         # The storyline's own words: storyline.yaml `narrative` (line breaks kept), else its hypothesis.
         hypo_text = story_data.get("narrative") or story_data.get("hypothesis") or ""
@@ -406,7 +414,7 @@ def generate_cover_page(story_data: dict, out_cover_pdf: Path) -> None:
         ax.text(0.10, 0.774, wrapped_hypo, fontproperties=fp_hypo, color="#334155", va="top", linespacing=1.20)
         
         # Figure Allocation Table
-        ax.text(0.08, 0.668, "MANUSCRIPT FIGURE ALLOCATION & SEQUENTIAL ARCHITECTURE", 
+        ax.text(0.08, 0.668, "FIGURES AND TABLES, IN ORDER",
                 fontsize=9.0, fontweight="bold", color="#0f172a")
 
         table_w_pt = 0.84 * fig_w_pt
@@ -447,7 +455,7 @@ def generate_cover_page(story_data: dict, out_cover_pdf: Path) -> None:
             lines.append(cur)
             return "\n".join(lines)
 
-        table_rows = [["Figure / Table", "Project / File", "Biological Role & Deductive Takeaway"]]
+        table_rows = [["Figure / Table", "Project / File", "What it shows"]]
         for f in story_data["figures"]:
             p_wrap = wrap_mono(f["project"], col1_max_pt)
             d_wrap = wrap_desc(f["description"], col2_max_pt)
@@ -491,19 +499,21 @@ def generate_cover_page(story_data: dict, out_cover_pdf: Path) -> None:
 
         # Verification & Quality Statement below table
         v_top = (0.655 - t_height) - 0.015
-        ax.text(0.08, v_top, "PUBLICATION INTEGRITY & REPEATABILITY STANDARDS", 
+        ax.text(0.08, v_top, "HOW THIS COMPENDIUM IS BUILT",
                 fontsize=8.0, fontweight="bold", color="#0f172a")
-        notes = (
-            "• Each figure page carries its journal-style legend below the figure; supplementary tables ship as CSV files.\n"
-            "• All figure panels are rendered in lossless vector PDF format (300+ DPI, Matplotlib Agg).\n"
-            "• Figures drawn 1:1 at final print size (A4 portrait, 184.6 mm content width; 5-8 pt type, config-driven).\n"
-            "• Raw datasets remain strictly read-only and immutable; verified 100% against clean atlas manifests."
+        mm = 25.4 / 72.0
+        notes = (   # only what this compiler does or reads; the build state is on the line under the title
+            "• Each figure page carries its legend below the figure; supplementary tables ship as CSV files.\n"
+            f"• Figures are placed 1:1 at their printed size on {pg['w'] * mm:.0f} x {pg['h'] * mm:.0f} mm pages "
+            f"({pg['content_w'] * mm:.1f} mm content width), as vector PDF.\n"
+            "• Each figure's inputs, code and settings are in its provenance record; the last page lists the data,\n"
+            "  the live numbers in the legends, the source data and the data requests behind them."
         )
         ax.text(0.08, v_top - 0.046, notes, fontsize=6.8, color="#475569", linespacing=1.2)
         
         # Footer
         ax.plot([0.08, 0.92], [0.045, 0.045], color="#e2e8f0", lw=1.0)
-        ax.text(0.08, 0.025, "Fig-Atlas Template Automation Suite | Unified Manuscript Compendium",
+        ax.text(0.08, 0.025, f"fig-atlas {_fig_atlas_version()} | storyline compendium",
                 fontsize=7.0, color="#94a3b8")
         ax.text(0.92, 0.025, "Page 1 of Compendium",
                 fontsize=7.0, color="#94a3b8", ha="right")
@@ -584,7 +594,7 @@ def generate_appendix_page(story_data: dict, rows: list[dict], out_pdf: Path, pa
              "• Data requests: requests whose delivered or derived files the figure read (`fa storyline evidence`).")
     ax.text(0.08, 0.89 - t_h - 0.03, notes, fontsize=6.8, color="#475569", va="top", linespacing=1.35)
     ax.plot([0.08, 0.92], [0.045, 0.045], color="#e2e8f0", lw=1.0)
-    ax.text(0.08, 0.025, "Fig-Atlas Template Automation Suite | Unified Manuscript Compendium", fontsize=7.0, color="#94a3b8")
+    ax.text(0.08, 0.025, f"fig-atlas {_fig_atlas_version()} | storyline compendium", fontsize=7.0, color="#94a3b8")
     ax.text(0.92, 0.025, f"Page {page_no} of {total}", fontsize=7.0, color="#94a3b8", ha="right")
     with PdfPages(out_pdf) as pdf:
         pdf.savefig(fig)

@@ -82,7 +82,7 @@ fa build first-figure --preflight
 ```text
 ==== first-figure ====
 [provenance] 1 figure record(s) written
-  Published Figure 1: Title of figure 1 (one sentence: what it shows)
+  Published Figure 1: Title of the figure (one sentence: what it shows)
 Manifest: outputs/first-figure/manifests/clean_atlas_manifest.csv
 [ok] first-figure: 0 error(s), 1 warning(s)
 
@@ -97,8 +97,8 @@ ALL 1 PROJECT(S) PASSED
 한 줄씩 읽으면 이렇습니다.
 
 - `[provenance] 1 figure record(s) written`: 이 그림이 어떤 데이터·코드·설정으로 만들어졌는지 기록했습니다.
-- `Published Figure 1: Title of figure 1 ...`: 그림을 `figure_01_main/`에 게시했습니다. 제목은 아직 틀에 있던 문장이고, 6단계에서 씁니다.
-- `[ok] first-figure: 0 error(s), 1 warning(s)`: 인쇄 전 검사 결과입니다. **error**(겹침, 잘림, 너무 작은 글자 등)가 있으면 빌드가 실패합니다. **warning**은 고칠 것을 권하지만 빌드를 막지 않고, **info**는 참고 사항입니다.
+- `Published Figure 1: Title of the figure ...`: 그림을 `figure_01_main/`에 게시했습니다. 제목은 아직 틀에 있던 문장이고, 6단계에서 씁니다.
+- `[ok] first-figure: 0 error(s), 1 warning(s)`: 인쇄 전 검사 결과입니다. **error**(겹침, 잘림, 너무 작은 글자 등)는 먼저 고칠 것입니다. 있으면 `[ok]` 대신 `[error]`로 표시되고, 설정의 `preflight:` 아래에 `mode: enforce`를 두면 빌드가 실패합니다(가이드 9장). **warning**은 고칠 것을 권하지만 빌드를 막지 않고, **info**는 참고 사항입니다.
 - `warn cvd_indistinct 1`: 경고의 종류와 개수입니다. 자세한 내용은 `outputs/first-figure/manifests/preflight.csv`에 있습니다.
 - `PASS: 4/5 checks passed, 1 warning(s)`: 게시된 결과 점검입니다. 그림 파일 세 개(PNG·PDF·SVG), README, preflight 결과 다섯 항목 가운데 preflight 결과에 경고가 있어 4/5입니다.
 - `ALL 1 PROJECT(S) PASSED`: 빌드 전체가 성공했습니다.
@@ -142,7 +142,7 @@ fa build first-figure --preflight
 
 figure spec(`figure_specs/figure_01_first-figure.py`)에는 그림 제목, 패널 설명, 이 그림이 주장할 수 있는 범위가 들어갑니다. 빌드가 이 내용을 그림 폴더의 `README.md`로 내보냅니다. 제목을 바꿔 봅니다.
 
-<!-- replace: figure_specs/figure_01_first-figure.py | title="Title of figure 1 -->
+<!-- replace: figure_specs/figure_01_first-figure.py | title="Title of the figure -->
 ```python
     title="Two compounds lower viability with dose; a screen finds 51 hits",
 ```

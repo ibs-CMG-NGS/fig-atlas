@@ -63,6 +63,8 @@ Rules for people and AI agents: [AGENTS.md](AGENTS.md).
 | `raw_data/` | input bundles (read-only; not in git) |
 | `styles/` | this repository's own style presets (optional; fig-atlas ships the defaults) |
 | `outputs/` | built figures, records and checks (`fa build`; not in git) |
+| `docs/baselines/` | what the checks compare with: hand-typed numbers, literal style values |
+| `.github/workflows/fig-atlas.yml` | CI: the checks that need no data, with the fig-atlas `requirements.txt` pins |
 
 Start: `fa new project <name> --domain <domain> --category exploratory`, then
 `fa ingest bundle raw_data/<...>/<bundle> --project <name>` and `fa build <name> --preflight`.
@@ -88,8 +90,29 @@ def plan_init(target: Path) -> ChangeSet:
     cs.create(Path("CLAUDE.md"), "# Claude Code\n\nThe project rules live in `AGENTS.md`.\n\n@AGENTS.md\n")
     cs.create(Path(".gemini") / "settings.json",
               json.dumps({"context": {"fileName": ["AGENTS.md", "GEMINI.md"]}}, indent=2) + "\n")
+    # CI: the checks that need no data, against empty baselines, with the installed fig-atlas pinned
+    from .cli import CLAIMS_BASELINE, CLAIMS_FIELDS, HARDCODED_BASELINE
+    cs.create(CLAIMS_BASELINE, ",".join(CLAIMS_FIELDS) + "\n")
+    cs.create(HARDCODED_BASELINE, "file,count\n")
+    cs.create(Path(".github") / "workflows" / "fig-atlas.yml", _template("init_ci.yml.tmpl"))
+    pin, release = _pin()
+    cs.create(Path("requirements.txt"), f"# The fig-atlas this repository's figures are built with (CI installs it)\n{pin}\n")
+    if not release:
+        cs.notes.append("requirements.txt pins fig-atlas main: replace `@main` with a release tag (`@vX.Y.Z`)")
     cs.notes.append("next: `fa new project <name> --domain <domain> --category exploratory` (run inside the folder)")
     return cs
+
+
+def _pin() -> tuple[str, bool]:
+    """The requirements line for the installed fig-atlas: its release tag, or main for a
+    development version (True when it is a release)."""
+    from importlib.metadata import PackageNotFoundError, version
+    try:
+        v = version("fig-atlas")
+    except PackageNotFoundError:
+        v = ""
+    release = bool(re.fullmatch(r"\d+\.\d+\.\d+", v))
+    return f"fig-atlas @ git+https://github.com/ibs-CMG-NGS/fig-atlas@{'v' + v if release else 'main'}", release
 
 
 def plan_new_project(root: Path, name: str, domain: str | None = None, category: str | None = None,
