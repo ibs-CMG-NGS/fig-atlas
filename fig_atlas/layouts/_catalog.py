@@ -77,7 +77,7 @@ def catalog() -> dict:
         },
         "fixed_size": {
             "summary": _md(fixed),
-            "values": "figures.cells.<letter>.size_mm",
+            "values": "figures.cells.<letter>.size_mm, or layouts.mm_axes(cell, left, top, width, height)",
             "page": f"{PAGE}#fixed-size",
         },
         "finish": "layouts.finish(fig, layout, fcfg) -- once, on the outermost layout, after drawing",

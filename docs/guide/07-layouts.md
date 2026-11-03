@@ -96,6 +96,7 @@ figures:
 | Change a split cell | the same keys | `figures.cells.<letter>` |
 | Leave more air around each panel | `panel_pad_mm` | `figures:` |
 | Keep one panel at its printed size (a diagram in mm, square cells) | `size_mm: [width, height]` (mm) | `figures.cells.<letter>` |
+| Keep a panel at the size it is drawn (images at printed size, axes set out in mm) | draw it with `layouts.mm_axes(cell, left, top, width, height)` (mm from the cell's top-left); no `size_mm` | the script |
 | Change the letters | `tags.size`, `tags.show` | `figures:` |
 
 ## Good to know
