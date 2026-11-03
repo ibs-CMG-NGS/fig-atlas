@@ -215,3 +215,40 @@ def test_draw_plot_draws_one_block_into_a_layout_cell():
     with pytest.raises(ValueError, match="names no renderer"):
         bundle_figure.draw_plot(lay.cells["a"], "x", {}, Path("."))
     plt.close(fig)
+
+
+def test_fixed_size_keeps_the_printed_size_and_the_cell_corner():
+    """figures.cells.<letter>.size_mm: the panel's axes keep that size (mm) and its
+    outer box starts at the cell's top-left corner; the other panels are fitted."""
+    from matplotlib.transforms import Bbox
+    fig = plt.figure(figsize=(160 / 25.4, 70 / 25.4), dpi=100)
+    fcfg = {"wspace": 0.1, "panel_pad_mm": 1.0, "cells": {"b": {"size_mm": [40, 30]}},
+            "tags": {"size": 9.0, "pad_pt": 2.0}}
+    lay = layouts.row(fig, fcfg, "abc")
+    for letter in "abc":
+        _draw(lay.cells[letter], title=letter)
+    layouts.finish(fig, lay, fcfg)
+    fig.canvas.draw()
+    r = fig.canvas.get_renderer()
+    mm = 25.4 / fig.dpi
+    (b,) = lay.cells["b"].axes
+    box = b.get_window_extent(r)
+    assert box.width * mm == pytest.approx(40, abs=0.05) and box.height * mm == pytest.approx(30, abs=0.05)
+    cell, outer = lay.cells["b"].bbox, Bbox.union([b.get_tightbbox(r)])
+    assert (outer.x0 - cell.x0) * mm == pytest.approx(1.0, abs=0.05)
+    assert (cell.y1 - outer.y1) * mm == pytest.approx(1.0 + 11.0 * 25.4 / 72, abs=0.05)   # pad + tag reserve
+    (a,) = lay.cells["a"].axes
+    assert (lay.cells["a"].bbox.x1 - a.get_tightbbox(r).x1) * mm == pytest.approx(1.0, abs=0.05)   # a still fitted
+    assert "b" in _tags(fig)
+    plt.close(fig)
+
+
+@pytest.mark.parametrize("size", [[40], "40x30", [40, 0], [-1, 30]])
+def test_fixed_size_must_be_a_positive_width_and_height(size):
+    fig = plt.figure(figsize=(6, 3))
+    fcfg = {"cells": {"a": {"size_mm": size}}}
+    lay = layouts.row(fig, fcfg, "ab")
+    _draw(lay.cells["a"])
+    with pytest.raises(ValueError, match=r"figures\.cells\.a\.size_mm"):
+        layouts.finish(fig, lay, fcfg)
+    plt.close(fig)

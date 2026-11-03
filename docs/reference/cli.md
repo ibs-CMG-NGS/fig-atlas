@@ -190,7 +190,7 @@ fa layouts [-h] [--json] [name]
 
 | Argument | Meaning |
 |---|---|
-| `name` | one layout in full (shape, call, config keys), or 'composition' for layouts in cells |
+| `name` | one layout in full (shape, call, config keys), 'composition' for layouts in cells, or 'fixed_size' for a panel kept at its printed size |
 | `--json` | machine-readable output |
 
 ## fa lineage

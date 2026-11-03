@@ -51,7 +51,7 @@ def catalog() -> dict:
     ``layouts``: one entry per layout -- name, call signature, summary, ASCII
     shape, usage, config keys (``figures:``), the example folder and the
     reference page. ``composition``: the rules for a layout inside a cell of
-    another.
+    another. ``fixed_size``: a panel kept at its printed size.
     """
     from .. import layouts
     from . import _core
@@ -64,6 +64,7 @@ def catalog() -> dict:
                         "example": f"{EXAMPLES}/{name}/", "page": f"{PAGE}#{name}"})
     rules = _core.__doc__.split("Composition:", 1)[1].strip().split("\n\n")
     lead = " ".join(rules[0].split()).rstrip(":")              # the sentence that introduces the example
+    fixed = " ".join(_core.__doc__.split("Fixed size:", 1)[1].split("Composition:", 1)[0].split())
     return {
         "layouts": entries,
         "composition": {
@@ -73,6 +74,11 @@ def catalog() -> dict:
             "max_depth": _core.MAX_DEPTH,
             "values": "figures.cells.<letter>",
             "page": f"{PAGE}#composition",
+        },
+        "fixed_size": {
+            "summary": _md(fixed),
+            "values": "figures.cells.<letter>.size_mm",
+            "page": f"{PAGE}#fixed-size",
         },
         "finish": "layouts.finish(fig, layout, fcfg) -- once, on the outermost layout, after drawing",
     }

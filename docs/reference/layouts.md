@@ -244,3 +244,11 @@ panels are fitted like the others and their letters join the outer plumb
 lines and rows. Its values come from `figures.cells.<letter>` over the
 rest of `figures:` (e.g. `figures.cells.b.row.width_ratios`), so two
 cells split the same way keep their own numbers. Two levels at most.
+
+## Fixed size
+
+`finish` scales each panel to fill its cell. A panel that must keep its printed size -- a diagram drawn in millimetres, a matrix of square cells, an image or a panel shown at the size it is printed -- names that size under its letter, `figures.cells.<letter>.size_mm: [width, height]` (mm, the data area of all the panel's axes together): `finish` places it at the cell's top-left corner and does not rescale it, so its tag keeps the column's plumb line. Give the cell room for it and its labels (ratios, gaps, canvas size); a panel larger than its cell overlaps its neighbour, which preflight reports.
+
+![fixed_size](gallery/layouts/fixed_size.png)
+
+The example (`examples/layouts/fixed_size/`, script 20 lines of code) is a `wide_bottom` whose panel b is kept at `figures.cells.b.size_mm`; a and c are fitted to their cells as usual.

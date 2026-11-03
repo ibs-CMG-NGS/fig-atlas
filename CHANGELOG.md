@@ -8,6 +8,11 @@ All notable changes are documented here. The format follows
 
 ### Added
 
+- **Fixed-size panels in layouts** (`figures.cells.<letter>.size_mm: [width, height]`): `layouts.finish`
+  places that panel at its cell's top-left corner and keeps its printed size instead of scaling it to
+  the cell -- for a diagram drawn in millimetres, a matrix of square cells, or a panel shown at printed
+  size. `fa layouts fixed_size` (and the `fa_layouts` MCP tool) describes it; example in
+  `examples/layouts/fixed_size/`; `fit_in_cells` takes `(cell, axes, (w_mm, h_mm))` for it.
 - **Tutorial: arrange the panels with a layout** (`docs/tutorials/layouts.md`, English and Korean;
   run by CI as written): a three-panel project moved from the even grid to `wide_bottom`, then to a
   `stack` whose second row is split by a `row`; the checks go from 1 error to none.
