@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "fig-atlas"
-version = "0.3.0"
+version = "0.4.0.dev0"
 description = "Config-driven, verifiable and provenance-tracked publication figures"
 readme = "README.md"
 license = "MIT"
