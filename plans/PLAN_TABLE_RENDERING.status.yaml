@@ -16,39 +16,39 @@ cards:
   - id: T-01
     title: "plan and status file"
     phase: 0
-    status: in_review
+    status: done
     depends_on: []
     owner: "claude-code 2026-11-03"
-    commits: []
-    notes: "plans/PLAN_TABLE_RENDERING.md + this file; not committed yet"
+    commits: ["4558c35", "221b4df"]   # merged to main in PR #43
+    notes: "plans/PLAN_TABLE_RENDERING.md + this file; merged to main in PR #43 on 2026-11-03"
   - id: T-02
     title: "core renderer `table`: SCHEMA, per-column formatting, auto column widths, wrapping, rules, footnotes"
     phase: 1
-    status: in_review
+    status: done
     depends_on: [T-01]
     owner: "claude-code 2026-11-03"
-    commits: []
+    commits: ["4558c35", "221b4df"]   # merged to main in PR #43
     notes: >-
       fig_atlas/renderers/table.py (34 params), tests/renderers/test_table.py (14 checks),
       gallery cases `table` and `table_screen` with snapshots, new gallery family `table`
       (fig_atlas/family.py), docs/reference regenerated. Full suite 1134 passed / 2 skipped,
       hardcoded lint clean. Returns the printed rows with `attrs["height_pt"]`, the drawn
       height, so T-05 can size a page's axes to the content. Awaiting G1 on the look.
-      Not committed yet.
+      Merged to main in PR #43 on 2026-11-03.
   - id: T-03
     title: "`styles/table_classic.yaml`: booktabs defaults (three horizontal rules, no vertical rules, no fills)"
     phase: 1
-    status: in_review
+    status: done
     depends_on: [T-02]
     owner: "claude-code 2026-11-03"
-    commits: []
+    commits: ["4558c35", "221b4df"]   # merged to main in PR #43
     notes: >-
       fig_atlas/styles/table_classic.yaml: a `table:` block of 23 look keys (rules, fills,
       typography, spacing, text fitting) with role/unit/tuning comments. The renderer's look
       params now default to StyleRef("table.<key>", <same fallback>), so a project without the
       preset draws exactly as before; a test holds the shipped preset equal to the fallbacks,
       and another checks that a figure's own config beats the preset. Full suite 1136 passed /
-      2 skipped; lint clean; reference up to date. Not committed yet.
+      2 skipped; lint clean; reference up to date. Merged to main in PR #43 on 2026-11-03.
   - id: T-04
     title: "code-free path: `plot_type: table` contract and ingest mapping"
     phase: 2
@@ -60,10 +60,10 @@ cards:
   - id: T-05
     title: "compendium table pages from the storyline `tables:` entries"
     phase: 3
-    status: in_review
+    status: done
     depends_on: [T-02, T-03]
     owner: "claude-code 2026-11-03"
-    commits: []
+    commits: ["aac9ad5", "221b4df"]   # merged to main in PR #43
     notes: >-
       G2 passed 2026-11-03: table pages go after the figure pages. Author decision the same
       day: one page per table, a table longer than a page shows the rows that fit and names
@@ -81,7 +81,7 @@ cards:
       column is broken between characters; a cell cut at max_lines ends in truncation_mark
       (was: cut silently). tests/test_compendium_tables.py (8). Full suite 1146 passed / 2
       skipped. Checked on a real compendium (29 pages, 9 table pages): rotated pages' text all
-      inside the content box; compile about 1 min. Not committed yet.
+      inside the content box; compile about 1 min. Merged to main in PR #43 on 2026-11-03.
       Second pass after the author looked at a rotated 17-column page: at that width even the
       longest word of every column does not fit, so widths fell to the shrink-alike branch and
       broke words between characters -- unreadable, and no font size fixes it. The row policy
