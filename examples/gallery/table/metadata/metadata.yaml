@@ -1,0 +1,30 @@
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per treatment group -- group, n, mean_latency_s, sd_latency_s,
+# p_vs_vehicle (empty on the reference group). The numbers are computed in the analysis, never
+# typed here; the renderer prints the table as it is handed.
+#
+# This draws a table; it is not a way to submit one. Journals take tables as editable text, where
+# a picture cannot be copyedited or read aloud -- use this for a compendium page, a talk or a
+# poster, and submit inputs/data.csv itself.
+plot_type: table
+plot_params:
+  columns: ["group", "n", "mean_latency_s", "sd_latency_s", "p_vs_vehicle"]
+  column_labels:
+    group: "Group"
+    n: "n"
+    mean_latency_s: "Latency (s), mean"
+    sd_latency_s: "SD"
+    p_vs_vehicle: "P vs vehicle"
+  column_format:              # a format per numeric column, or floats print their full repr
+    mean_latency_s: ".1f"
+    sd_latency_s: ".1f"
+    p_vs_vehicle: ".3g"        # .3f would print 1e-07 as 0.000
+  column_width:               # [0-1] fraction of the table width; the rest are measured
+    group: 0.34
+  na_text: "--"               # the reference group has no P value
+  title: "Latency to fall, by treatment group"
+  footnotes:
+    - "Welch's t test against vehicle, each dose separately; synthetic data."
+  header_size: 6              # pt
+  cell_size: 5.5              # pt; the print floor is 5.0 pt
+  title_size: 6.5             # pt

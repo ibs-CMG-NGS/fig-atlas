@@ -1,0 +1,8 @@
+group,n,mean_latency_s,sd_latency_s,p_vs_vehicle
+vehicle,12,18.79,2.71,
+"drug A, 1 mg/kg",12,17.52,3.78,0.358
+"drug A, 3 mg/kg",11,13.75,2.76,0.000255
+"drug A, 10 mg/kg",12,11.02,2.02,1.13e-07
+"drug B, 1 mg/kg",12,18.95,3.35,0.901
+"drug B, 3 mg/kg",12,19.34,3.84,0.691
+"drug B, 10 mg/kg",11,13.55,3.09,0.000349

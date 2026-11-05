@@ -236,10 +236,47 @@ plot_params:
   mark: square        # or circle
 ```
 
+## `plot_type: table` — a summary table printed as text
+
+Draws the table as text in the publication convention: three horizontal rules, no vertical rules, no fills (`render_table`). Unlike the shapes above it names no roles — any table can be printed — so what `plot_params` carries is which columns to print and how each one is set.
+
+**This draws a table; it is not a route for submitting one.** Journals take tables as editable text (Word, Excel), where a rendered image cannot be copyedited, typeset or read by a screen reader. Use it for a compendium page, a talk or a poster, and submit `inputs/data.csv` itself.
+
+| Key | Shape | Required | Content |
+|---|---|---|---|
+| `columns` | list of column names | No | The columns printed, in that order (default: every column, in the data's order). A name not in `data.csv` is an error |
+| `column_labels` | dict, keyed by column | No | The heading each column prints (default: the column name itself) |
+| `column_format` | dict, keyed by column | No | A Python format spec per column (`".1f"`, `",.0f"`, `".3g"`). Set it on every numeric column, or one prints `0.4871234` beside `41` |
+| `column_align` | dict, keyed by column | No | `left`, `right` or `center` (default: numeric right, the rest left) |
+| `column_width` | dict, keyed by column | No | `[0-1]` fraction of the table width (default: measured from the widest cell) |
+| `max_rows` | number | No | Rows printed at most (default 40); the rest are dropped and counted in `truncation_note`. A long table is not this shape -- keep it as CSV |
+
+A key of one of the four dicts that names no column is a warning, not an error: nothing breaks, the setting simply does nothing, and a typo in `column_format` is otherwise invisible except as an unformatted number.
+
+The numbers in the table are computed in the analysis script, never typed into it ([analysis recipes](../howto/analysis_recipes.md)) -- the same rule as a figure's legend.
+
+```yaml
+plot_type: table
+plot_params:
+  columns: ["group", "n", "mean_latency_s", "sd_latency_s", "p_vs_vehicle"]
+  column_labels:
+    mean_latency_s: "Latency (s), mean"
+    p_vs_vehicle: "P vs vehicle"
+  column_format:
+    mean_latency_s: ".1f"
+    p_vs_vehicle: ".3g"       # .3f would print 1e-07 as 0.000
+  na_text: "--"               # the reference group has no P value
+  title: "Latency to fall, by treatment group"
+  footnotes:
+    - "Welch's t test against vehicle, each dose separately."
+```
+
 ## Checks
 
 `fa bundle check <bundle>` reports as errors:
 - a required role whose column name is not in `plot_params` and has no default name
-- a named (or default) column that is not in `data.csv`
+- a named (or default) column that is not in `data.csv`, including a name listed in `columns`
+
+and as a warning a per-column key (`column_labels`, `column_format`, `column_align`, `column_width`) naming no column.
 
 The example bundles are in `examples/` ([first figure tutorial](../tutorials/first_figure.md)).

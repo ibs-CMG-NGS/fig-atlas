@@ -47,7 +47,8 @@ def test_every_contract_names_an_existing_document_and_a_renderer():
     ingest = C.ingest_map()
     for c in C.all_contracts():
         assert (ROOT / c.doc).is_file(), f"{c.name}: {c.doc} missing"
-        assert c.required or c.role_columns or c.min_numeric or (c.input_glob and c.required_meta), \
+        assert c.required or c.role_columns or c.role_column_lists or c.min_numeric \
+            or (c.input_glob and c.required_meta), \
             f"{c.name}: no required or numeric columns (table bundle) or required metadata (file bundle)"
         for t in c.plot_types:
             assert t in ingest, f"{c.name}: no renderer for plot_type {t}"
@@ -187,6 +188,21 @@ def test_column_roles_follow_plot_params(tmp_path):
     unnamed = C.check_bundle(_table_bundle(tmp_path / "u", "threshold_scatter", "  x_col: e\n  y_col: p\n",
                                            "e,p\n1,0.1\n"))
     assert unnamed.errors == 1 and "effect_col, sig_col" in unnamed.findings[0].message
+
+
+def test_a_table_bundle_names_its_columns_in_a_list(tmp_path):
+    """core.table takes the printed columns as a list (``columns``) and the
+    per-column settings as dicts keyed by column name: a name that is not in
+    the data is an error, a stray dict key only means the setting does nothing."""
+    csv = "group,n,mean\nvehicle,12,18.4\n"
+    ok = C.check_bundle(_table_bundle(tmp_path, "table", '  columns: ["group", "n", "mean"]\n', csv))
+    assert ok.contract == "core.table" and ok.findings == []
+    every = C.check_bundle(_table_bundle(tmp_path / "e", "table", "  title: Summary\n", csv))
+    assert every.findings == []                             # no columns: every column, in the data's order
+    gone = C.check_bundle(_table_bundle(tmp_path / "g", "table", '  columns: ["group", "sd"]\n', csv))
+    assert gone.errors == 1 and "sd (columns)" in gone.findings[0].message
+    stray = C.check_bundle(_table_bundle(tmp_path / "s", "table", '  column_format: {mena: ".1f"}\n', csv))
+    assert stray.errors == 0 and stray.warnings == 1 and "mena (column_format)" in stray.findings[0].message
 
 
 def test_role_defaults_match_the_renderer_schema():

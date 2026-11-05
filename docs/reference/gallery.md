@@ -1480,6 +1480,71 @@ fa ingest bundle raw_data/<project>/image_panel --project <project>
 fa build <project> --preflight
 ```
 
+### Table
+
+Rows and columns as text: a summary table drawn at print size.
+
+#### table
+
+Any table printed as text: columns picks which columns and in what order (default: all of them), the per-column dicts set heading, alignment, format and width
+
+![table](gallery/examples/table.png)
+
+`inputs/data.csv`, first 5 of 7 rows (5 columns):
+
+```text
+group,n,mean_latency_s,sd_latency_s,p_vs_vehicle
+vehicle,12,18.79,2.71,
+"drug A, 1 mg/kg",12,17.52,3.78,0.358
+"drug A, 3 mg/kg",11,13.75,2.76,0.000255
+"drug A, 10 mg/kg",12,11.02,2.02,1.13e-07
+"drug B, 1 mg/kg",12,18.95,3.35,0.901
+```
+
+Inputs: `data.csv`. `metadata/metadata.yaml`:
+
+```yaml
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per treatment group -- group, n, mean_latency_s, sd_latency_s,
+# p_vs_vehicle (empty on the reference group). The numbers are computed in the analysis, never
+# typed here; the renderer prints the table as it is handed.
+#
+# This draws a table; it is not a way to submit one. Journals take tables as editable text, where
+# a picture cannot be copyedited or read aloud -- use this for a compendium page, a talk or a
+# poster, and submit inputs/data.csv itself.
+plot_type: table
+plot_params:
+  columns: ["group", "n", "mean_latency_s", "sd_latency_s", "p_vs_vehicle"]
+  column_labels:
+    group: "Group"
+    n: "n"
+    mean_latency_s: "Latency (s), mean"
+    sd_latency_s: "SD"
+    p_vs_vehicle: "P vs vehicle"
+  column_format:              # a format per numeric column, or floats print their full repr
+    mean_latency_s: ".1f"
+    sd_latency_s: ".1f"
+    p_vs_vehicle: ".3g"        # .3f would print 1e-07 as 0.000
+  column_width:               # [0-1] fraction of the table width; the rest are measured
+    group: 0.34
+  na_text: "--"               # the reference group has no P value
+  title: "Latency to fall, by treatment group"
+  footnotes:
+    - "Welch's t test against vehicle, each dose separately; synthetic data."
+  header_size: 6              # pt
+  cell_size: 5.5              # pt; the print floor is 5.0 pt
+  title_size: 6.5             # pt
+```
+
+Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
+
+```bash
+cp -r <fig-atlas>/examples/gallery/table raw_data/<project>/
+fa bundle check raw_data/<project>/table
+fa ingest bundle raw_data/<project>/table --project <project>
+fa build <project> --preflight
+```
+
 ## Every renderer
 
 One example per renderer (and per layout where a renderer has more than one), drawn from small synthetic data by the renderer snapshot tests (`tests/renderers/cases.py`). Every renderer the package registers has a picture here or in the examples above (`tests/test_gallery_coverage.py` checks it). Parameters for each are in the [config reference](config.md).

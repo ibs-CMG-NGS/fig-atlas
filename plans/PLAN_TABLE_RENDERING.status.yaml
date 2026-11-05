@@ -52,11 +52,24 @@ cards:
   - id: T-04
     title: "code-free path: `plot_type: table` contract and ingest mapping"
     phase: 2
-    status: todo
+    status: done
     depends_on: [T-02, T-03]
-    owner: ""
+    owner: "claude-code 2026-11-05"
     commits: []
-    notes: "swap the bundle CSV, run `fa ingest bundle`, get a table"
+    notes: >-
+      `plot_type: table` -> `fig_atlas.renderers:render_table` (CORE_INGEST) and contract
+      `core.table`. A table names no roles -- any table can be printed -- so the contract
+      needed a shape the others did not have: two new Contract fields, `role_column_lists`
+      (a parameter holding a list of column names: `columns`; a name not in the data is an
+      error) and `role_column_keys` (parameters keyed by column name: column_labels,
+      column_align, column_format, column_width; a key naming no column is a warning, since
+      nothing breaks -- the setting just does nothing, and a typo in column_format is
+      otherwise invisible as an unformatted number). `fa bundle contracts` prints both.
+      Example bundle examples/gallery/table (a group summary whose n, mean, SD and Welch P
+      are computed in the maker, never typed), appended last in make_gallery so no earlier
+      bundle's numbers moved. Docs: the `plot_type: table` section of the table bundle
+      contract, in both languages. Tests: contract list/key checks (test_plugins.py);
+      the example builds clean through test_gallery_examples.py.
   - id: T-05
     title: "compendium table pages from the storyline `tables:` entries"
     phase: 3
@@ -98,11 +111,23 @@ cards:
   - id: T-06
     title: "docs: gallery entry and a how-to page"
     phase: 4
-    status: todo
+    status: done
     depends_on: [T-02, T-03]
-    owner: ""
+    owner: "claude-code 2026-11-05"
     commits: []
-    notes: "the how-to states plainly that rendered tables are not for journal submission"
+    notes: >-
+      Gallery entry: the `table` family's "Start from an example" picture, from the T-04
+      example bundle (`fa reference`). How-to docs/howto/tables.md (+ .ko.md), in the site
+      nav and on both index pages. Its second heading, before any instruction, is "this is
+      not how you submit a table": a journal takes a table as editable text, a picture of
+      one cannot be copyedited, typeset or read aloud, and submitting one usually means it
+      comes back -- so the page says to use the renderer for a compendium page, a talk, a
+      poster or a fit check, and to submit the CSV itself. The same warning sits in the
+      bundle contract and in the example's metadata, so a reader who never opens the how-to
+      still meets it. The rest: the code-free path, the per-column treatment (the thing that
+      separates a drawn table from a pasted screenshot), the table_classic preset,
+      compendium table pages and what they do with a table too long or too wide for a page,
+      drawing one inside an analysis script, the computed-not-typed rule, and the limits.
   - id: T-07
     title: "(optional) redraw the compendium cover table with the renderer"
     phase: 4

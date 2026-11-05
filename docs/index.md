@@ -15,6 +15,7 @@ A tool that **draws paper figures from a config, checks them before print, recor
 | try it for the first time | [Tutorial: first figure (15 min)](tutorials/first_figure.md) |
 | make a figure from my data | [Data bundle contracts](contracts/README.md) → `fa ingest bundle` |
 | make a figure of microscope or blot images | [Tutorial: a microscopy figure](tutorials/imaging_figure.md) |
+| draw a summary table beside the figures | [Draw a summary table](howto/tables.md) |
 | use it with an AI agent | [Connect AI agents](howto/ai_agents.md) |
 | use it in another field | [Write a domain pack](howto/new_domain_pack.md) |
 | assemble paper figures | [A figure's life](guide/12-lifecycle.md) |
