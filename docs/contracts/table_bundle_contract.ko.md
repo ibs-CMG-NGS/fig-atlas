@@ -236,10 +236,47 @@ plot_params:
   mark: square        # 또는 circle
 ```
 
+## `plot_type: table` — 요약 표를 글자로 인쇄
+
+표를 출판 관례대로 글자로 그립니다 — 가로선 세 개, 세로선 없음, 칸 채움 없음(`render_table`). 위의 형태들과 달리 **역할을 정하지 않습니다** — 어떤 표든 인쇄할 수 있으므로, `plot_params`에 담기는 것은 "어떤 열을 어떤 순서로, 각 열을 어떻게"입니다.
+
+**이것은 표를 그리는 기능이고, 표를 투고하는 경로가 아닙니다.** 저널은 표를 편집 가능한 텍스트(Word, Excel)로 받습니다. 그림으로 만든 표는 교정도, 조판도, 화면 낭독기 읽기도 되지 않습니다. 컴펜디움 쪽, 발표, 포스터에 쓰고, 투고에는 `inputs/data.csv` 자체를 내십시오.
+
+| 키 | 형태 | 필수 | 내용 |
+|---|---|---|---|
+| `columns` | 열 이름의 리스트 | 아니오 | 인쇄할 열과 그 순서(기본값: 데이터가 가진 순서의 모든 열). `data.csv`에 없는 이름은 오류 |
+| `column_labels` | 열 이름을 키로 하는 사전 | 아니오 | 열마다 인쇄할 머리글(기본값: 열 이름 그대로) |
+| `column_format` | 열 이름을 키로 하는 사전 | 아니오 | 열마다의 파이썬 format spec(`".1f"`, `",.0f"`, `".3g"`). 숫자 열마다 지정하십시오. 안 하면 `41` 옆에 `0.4871234`가 찍힙니다 |
+| `column_align` | 열 이름을 키로 하는 사전 | 아니오 | `left`, `right`, `center`(기본값: 숫자는 오른쪽, 나머지는 왼쪽) |
+| `column_width` | 열 이름을 키로 하는 사전 | 아니오 | 표 너비의 `[0-1]` 비율(기본값: 가장 넓은 칸에서 측정) |
+| `max_rows` | 숫자 | 아니오 | 인쇄할 최대 행 수(기본 40). 넘는 행은 버리고 `truncation_note`에 몇 행인지 적습니다. 긴 표는 이 형태가 아닙니다 -- CSV로 두십시오 |
+
+네 사전 중 하나의 키가 어떤 열도 가리키지 않으면 **오류가 아니라 경고**입니다. 깨지는 것은 없고 그 설정만 아무 일도 하지 않지만, `column_format`의 오타는 그러지 않으면 "서식이 안 먹은 숫자"로만 드러나 눈에 띄지 않습니다.
+
+표 안의 숫자는 분석 스크립트가 계산합니다. 생성 코드에 손으로 적지 않습니다([분석 레시피](../howto/analysis_recipes.md)) — 그림 범례와 같은 규칙입니다.
+
+```yaml
+plot_type: table
+plot_params:
+  columns: ["group", "n", "mean_latency_s", "sd_latency_s", "p_vs_vehicle"]
+  column_labels:
+    mean_latency_s: "Latency (s), mean"
+    p_vs_vehicle: "P vs vehicle"
+  column_format:
+    mean_latency_s: ".1f"
+    p_vs_vehicle: ".3g"       # .3f로는 1e-07이 0.000으로 찍힙니다
+  na_text: "--"               # 기준군에는 P 값이 없습니다
+  title: "Latency to fall, by treatment group"
+  footnotes:
+    - "Welch's t test against vehicle, each dose separately."
+```
+
 ## 검사
 
 `fa bundle check <번들>`이 오류로 보고하는 것:
 - 필수 역할의 열 이름이 `plot_params`에 없고 기본 이름도 없을 때
-- 지정된(또는 기본) 이름의 열이 `data.csv`에 없을 때
+- 지정된(또는 기본) 이름의 열이 `data.csv`에 없을 때. `columns`에 적은 이름도 포함합니다
+
+그리고 경고로 보고하는 것: 열마다의 사전(`column_labels`, `column_format`, `column_align`, `column_width`)의 키가 어떤 열도 가리키지 않을 때.
 
 예제 번들은 `examples/`에 있습니다([첫 그림 튜토리얼](../tutorials/first_figure.md)).

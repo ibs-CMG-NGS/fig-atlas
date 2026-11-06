@@ -469,6 +469,28 @@ def correlation_matrix(rng):
             rows.append({"var1": a, "var2": b, "r": round(float(r), 4), "p_value": float(f"{p:.3g}")})
     return pd.DataFrame(rows)
 
+def table(rng):
+    """A summary table of four treatment groups. Every number is computed from
+    simulated replicates -- the n, the mean, the SD and Dunnett's P against
+    vehicle -- as an analysis script would (docs/howto/analysis_recipes.md,
+    section 3); the renderer only prints the table it is handed."""
+    from scipy import stats
+    groups = (("vehicle", 18.4, 3.1, 12),
+              ("drug A, 1 mg/kg", 17.2, 3.4, 12), ("drug A, 3 mg/kg", 14.1, 3.0, 11),
+              ("drug A, 10 mg/kg", 10.8, 2.6, 12), ("drug B, 1 mg/kg", 18.0, 3.2, 12),
+              ("drug B, 3 mg/kg", 16.4, 3.3, 12), ("drug B, 10 mg/kg", 14.8, 2.9, 11))
+    values = {name: rng.normal(mu, sd, n) for name, mu, sd, n in groups}
+    control = values["vehicle"]
+    rows = []
+    for name, _, _, _ in groups:
+        v = values[name]
+        p = None if name == "vehicle" else float(stats.ttest_ind(v, control, equal_var=False).pvalue)
+        rows.append({"group": name, "n": len(v), "mean_latency_s": round(float(v.mean()), 2),
+                     "sd_latency_s": round(float(v.std(ddof=1)), 2),
+                     "p_vs_vehicle": None if p is None else float(f"{p:.3g}")})
+    return pd.DataFrame(rows)
+
+
 HEAD = "# Gallery example (examples/make_gallery.py): synthetic data, not measurements.\n"
 META = {
     "line_band": HEAD + """# inputs/data.csv: one row per replicate measurement -- strain (line), hour (x), od600 (y).
@@ -899,6 +921,36 @@ plot_params:
   triangle: lower
   mark: square                  # or circle
 """,
+    "table": HEAD + """# inputs/data.csv: one row per treatment group -- group, n, mean_latency_s, sd_latency_s,
+# p_vs_vehicle (empty on the reference group). The numbers are computed in the analysis, never
+# typed here; the renderer prints the table as it is handed.
+#
+# This draws a table; it is not a way to submit one. Journals take tables as editable text, where
+# a picture cannot be copyedited or read aloud -- use this for a compendium page, a talk or a
+# poster, and submit inputs/data.csv itself.
+plot_type: table
+plot_params:
+  columns: ["group", "n", "mean_latency_s", "sd_latency_s", "p_vs_vehicle"]
+  column_labels:
+    group: "Group"
+    n: "n"
+    mean_latency_s: "Latency (s), mean"
+    sd_latency_s: "SD"
+    p_vs_vehicle: "P vs vehicle"
+  column_format:              # a format per numeric column, or floats print their full repr
+    mean_latency_s: ".1f"
+    sd_latency_s: ".1f"
+    p_vs_vehicle: ".3g"        # .3f would print 1e-07 as 0.000
+  column_width:               # [0-1] fraction of the table width; the rest are measured
+    group: 0.34
+  na_text: "--"               # the reference group has no P value
+  title: "Latency to fall, by treatment group"
+  footnotes:
+    - "Welch's t test against vehicle, each dose separately; synthetic data."
+  header_size: 6              # pt
+  cell_size: 5.5              # pt; the print floor is 5.0 pt
+  title_size: 6.5             # pt
+""",
 }
 
 
@@ -918,7 +970,10 @@ def main() -> None:
               "paired_plot": paired_plot, "grouped_bar": grouped_bar,
               "correlation_scatter": correlation_scatter, "raincloud": raincloud,
               "column_scatter": column_scatter, "roc_curve": roc_curve,
-              "bland_altman": bland_altman, "correlation_matrix": correlation_matrix}
+              "bland_altman": bland_altman, "correlation_matrix": correlation_matrix,
+              # table rendering (plans/PLAN_TABLE_RENDERING.md), last so the earlier
+              # bundles draw the same numbers as before
+              "table": table}
     for name, make in makers.items():
         _write(name, make(rng), META[name])
     # The images get their own random stream, so adding a table example never changes their pixels.

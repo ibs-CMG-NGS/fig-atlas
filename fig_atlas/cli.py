@@ -525,6 +525,7 @@ def cmd_bundle(args, root: Path) -> int:
         rows = [{"name": c.name, "plot_types": list(c.plot_types), "required": list(c.required),
                  "expected": list(c.expected), "renderer": {t: ingest.get(t) for t in c.plot_types},
                  "role_columns": {p: d for p, d in c.role_columns}, "role_optional": list(c.role_optional),
+                 "role_column_lists": list(c.role_column_lists), "role_column_keys": list(c.role_column_keys),
                  "doc": c.doc} for c in contracts]
         uncovered = sorted(set(ingest) - {t for c in contracts for t in c.plot_types})
         if args.json:
@@ -536,6 +537,10 @@ def cmd_bundle(args, root: Path) -> int:
                 roles = ", ".join(f"{p} (default {d})" if d else p for p, d in r["role_columns"].items())
                 print(f"    columns named in plot_params: {roles}"
                       + (f"; optional: {', '.join(r['role_optional'])}" if r["role_optional"] else ""))
+            elif r["role_column_lists"]:
+                print(f"    columns listed in plot_params: {', '.join(r['role_column_lists'])}"
+                      + (f"; per-column settings: {', '.join(r['role_column_keys'])}"
+                         if r["role_column_keys"] else ""))
             else:
                 print(f"    required: {', '.join(r['required']) or '-'}")
             if r["expected"]:

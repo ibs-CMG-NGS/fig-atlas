@@ -15,6 +15,7 @@
 | 처음 써 본다 | [튜토리얼: 첫 그림 (15분)](tutorials/first_figure.md) |
 | 내 데이터를 그림으로 | [데이터 번들 계약서](contracts/README.md) → `fa ingest bundle` |
 | 현미경·블롯 이미지 그림 | [튜토리얼: 현미경 이미지 그림](tutorials/imaging_figure.md) |
+| 그림 옆에 둘 요약 표 그리기 | [요약 표 그리기](howto/tables.md) |
 | AI 에이전트와 함께 쓴다 | [AI 에이전트 연결](howto/ai_agents.md) |
 | 다른 분야에 쓴다 | [새 분야 팩 만들기](howto/new_domain_pack.md) |
 | 논문 그림을 조립한다 | [그림의 생애주기](guide/12-lifecycle.md) |

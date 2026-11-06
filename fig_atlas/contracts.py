@@ -36,6 +36,12 @@ class Contract:
     # when set, must name a column that exists.
     role_columns: tuple[tuple[str, str | None], ...] = ()
     role_optional: tuple[str, ...] = ()
+    # A shape that takes *several* columns in one parameter names them in a
+    # list (table: columns) or as the keys of a per-column dict (table:
+    # column_format). A name in the list must exist (error); a stray dict key
+    # only means the setting does nothing, so it is a warning.
+    role_column_lists: tuple[str, ...] = ()
+    role_column_keys: tuple[str, ...] = ()
 
 
 @dataclass
@@ -157,6 +163,12 @@ CORE_CONTRACTS = [
              role_columns=(("row_col", "var1"), ("col_col", "var2"), ("r_col", "r")),
              role_optional=("p_col",), doc="docs/contracts/table_bundle_contract.md",
              title="Correlation matrix: one row per pair of variables with r and optional P from the analysis"),
+    Contract("core.table", ("table",),
+             role_column_lists=("columns",),
+             role_column_keys=("column_labels", "column_align", "column_format", "column_width"),
+             doc="docs/contracts/table_bundle_contract.md",
+             title="Any table printed as text: columns picks which columns and in what order "
+                   "(default: all of them), the per-column dicts set heading, alignment, format and width"),
 ]
 CORE_INGEST = {
     "venn": "fig_atlas.renderers:render_venn",
@@ -183,6 +195,7 @@ CORE_INGEST = {
     "roc_curve": "fig_atlas.renderers:render_roc_curve",
     "bland_altman": "fig_atlas.renderers:render_bland_altman",
     "correlation_matrix": "fig_atlas.renderers:render_correlation_matrix",
+    "table": "fig_atlas.renderers:render_table",
 }
 
 
@@ -302,10 +315,20 @@ def check_bundle(path: Path, contracts: list[Contract] | None = None,
                                             f"{', '.join(unnamed)}"))
             roles = [(p, pp.get(p) or d) for p, d in c.role_columns if pp.get(p) or d]
             roles += [(p, pp[p]) for p in c.role_optional if pp.get(p)]
+            for p in c.role_column_lists:
+                listed = pp.get(p)
+                if isinstance(listed, (list, tuple)):
+                    roles += [(p, str(col)) for col in listed]
             gone = [f"{col} ({p})" for p, col in roles if col not in cols]
             if gone:
                 rep.findings.append(Finding("error", "contract", f"missing column(s) named by plot_params: "
                                             f"{', '.join(gone)}"))
+            stray = [f"{k} ({p})" for p in c.role_column_keys if isinstance(pp.get(p), dict)
+                     for k in pp[p] if str(k) not in cols]
+            if stray:
+                rep.findings.append(Finding("warn", "contract",
+                                            "plot_params key(s) naming no column, so the setting does nothing: "
+                                            f"{', '.join(stray)}"))
             if c.min_numeric:
                 named = set(c.required) | set(c.expected) | set(c.optional)
                 numeric = [x for x in df.columns if x not in named and pd.api.types.is_numeric_dtype(df[x])]

@@ -120,6 +120,34 @@ def test_new_project_plus_ingested_bundle_draws(repo):
     assert (repo / "outputs" / "demo-run" / "figures" / "figure1_main.png").is_file()
 
 
+def test_a_table_bundle_ingests_and_draws_with_no_code(repo):
+    """The code-free path for a table (plans/PLAN_TABLE_RENDERING.md, T-04): swap in
+    the CSV, `fa ingest bundle`, and the skeleton draws the table. A table names no
+    column roles -- `columns` lists the columns it prints, and the per-column
+    settings are dicts keyed by column name -- so the whole shape has to survive
+    the trip from metadata.yaml into the config."""
+    from fig_atlas.repo_commands import plan_ingest_bundle
+    import yaml
+    plan_new_project(repo, "demo-table").apply()
+    b = repo / "raw_data" / "demo" / "summary_table_bundle"
+    (b / "inputs").mkdir(parents=True)
+    (b / "metadata").mkdir()
+    (b / "inputs" / "data.csv").write_text("group,n,mean_latency_s\nvehicle,12,18.79\ndrug A,11,13.75\n")
+    (b / "metadata" / "metadata.yaml").write_text(
+        'plot_type: table\nplot_params:\n  columns: ["group", "n", "mean_latency_s"]\n'
+        '  column_labels: {mean_latency_s: "Latency (s)"}\n  column_format: {mean_latency_s: ".1f"}\n'
+        '  title: "Latency by group"\n')
+    plan_ingest_bundle(repo, b, "demo-table").apply()
+    cfg_text = (repo / "configs/config_demo-table.yaml").read_text(encoding="utf-8")   # truncation_mark is a glyph
+    block = yaml.safe_load(cfg_text)["plots"]["summary_table"]
+    assert block["renderer"] == "fig_atlas.renderers:render_table"
+    assert block["columns"] == ["group", "n", "mean_latency_s"]
+    assert block["column_format"] == {"mean_latency_s": ".1f"} and block["title"] == "Latency by group"
+    res = _run_script(repo, "demo-table")
+    assert res.returncode == 0, res.stderr[-1500:]
+    assert (repo / "outputs" / "demo-table" / "figures" / "figure1_main.png").is_file()
+
+
 def test_new_project_plus_bundle_passes_the_full_build(repo, monkeypatch):
     """Analysis -> publish -> verify, as `fa build` runs it: the skeleton's
     figure spec must not trip verify (its guide text once held a {placeholder})."""

@@ -145,6 +145,7 @@ nav:
       - Write a domain pack: howto/new_domain_pack.md
       - Switch to a journal's format: howto/journal_presets.md
       - Compute the numbers a figure prints: howto/analysis_recipes.md
+      - Draw a summary table: howto/tables.md
   - Reference:
       - Data bundle contracts: contracts/README.md
       - Table bundles (lines, scatter): contracts/table_bundle_contract.md
