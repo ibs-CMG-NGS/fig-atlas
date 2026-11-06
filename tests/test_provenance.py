@@ -28,6 +28,8 @@ root = Path.cwd()
 df = pd.read_csv(root / "raw_data/study/proj/bundle/inputs/data.csv")
 cfg = yaml.safe_load(open(root / "configs/lab/paper/config_proj.yaml"))
 notes = (root / "outputs/other/table.txt").read_text()
+snapshot = (root / "case_study/other_repo/table.csv").read_text()   # any folder: an input
+ignored = (root / ".cache/note.txt").read_text() + (root / "notes.txt").read_text()   # hidden, top level: not
 if "--fail" in open(root / "raw_data/study/proj/flag.txt").read():
     sys.exit(4)
 out = root / "outputs/lab/paper/proj/figures"
@@ -63,6 +65,11 @@ def repo(tmp_path: Path) -> Path:
                    '  output_root: "outputs"\nfigures:\n  formats: ["png", "pdf"]\n')
     (tmp_path / "outputs/other").mkdir(parents=True)
     (tmp_path / "outputs/other/table.txt").write_text("from another project")
+    (tmp_path / "case_study/other_repo").mkdir(parents=True)
+    (tmp_path / "case_study/other_repo/table.csv").write_text("a\n1\n")
+    (tmp_path / ".cache").mkdir()
+    (tmp_path / ".cache/note.txt").write_text("cache")
+    (tmp_path / "notes.txt").write_text("top-level file")
     script = tmp_path / "analysis/lab/paper/proj_analysis.py"
     script.parent.mkdir(parents=True)
     script.write_text(SCRIPT)
@@ -84,9 +91,12 @@ def test_inputs_are_exactly_the_files_read(repo):
     rec = _record(repo)
     got = {i["path"] for i in rec["inputs"]}
     # Observed, not declared: the script reads the config with yaml itself, so
-    # the style preset it names is never opened and is not an input.
+    # the style preset it names is never opened and is not an input. A file in
+    # any repository folder counts (case_study/); hidden folders and files at
+    # the top of the repository do not.
     assert got == {"raw_data/study/proj/bundle/inputs/data.csv", "configs/lab/paper/config_proj.yaml",
-                   "outputs/other/table.txt", "raw_data/study/proj/flag.txt"}
+                   "outputs/other/table.txt", "raw_data/study/proj/flag.txt",
+                   "case_study/other_repo/table.csv"}
     data = next(i for i in rec["inputs"] if i["path"].endswith("data.csv"))
     assert data["sha256"] == _sha(repo / "raw_data/study/proj/bundle/inputs/data.csv")
     assert data["bundle"]["app_version"] == "upstream-exporter-2"

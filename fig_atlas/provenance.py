@@ -11,7 +11,10 @@ config to declare:
 - inputs     every repository file the run actually opened for reading
              (Python audit hook on ``open``: pandas, numpy, yaml, PIL, open()
              alike), with sha256, size, and the bundle's upstream metadata
-             (``app_version``, ``plot_type``) when the file sits in a data bundle
+             (``app_version``, ``plot_type``) when the file sits in a data bundle.
+             Any folder counts -- raw_data/, a snapshot of another repository,
+             whatever a project calls its data -- except code (``.py``), hidden
+             folders, files at the top of the repository and ``SKIP_PARTS``.
 - code       every repository module the run imported, plus the script, with
              sha256 and whether it differs from the git HEAD commit
 - config     the project config path, its sha256 and the effective (merged)
@@ -38,9 +41,12 @@ import sys
 from pathlib import Path
 
 SCHEMA = "fig-atlas/provenance@1"
-# Repository folders whose files count as data inputs when read.
-INPUT_ROOTS = ("raw_data", "outputs", "configs", "styles", "docs", "manifests", "supplementary_tables")
-SKIP_PARTS = {".git", "__pycache__", ".fa_cache", "fig-atlas", "fig-atlas-prev", "fig-atlas-next"}
+# Folders whose files are never data inputs: caches, environments (a conda prefix
+# kept in the repository as ./fig-atlas), built documentation. Hidden folders
+# (.git, .venv, .vscode, ...) and files at the top of the repository are left out too.
+SKIP_PARTS = {"__pycache__", ".fa_cache", "fig-atlas", "fig-atlas-prev", "fig-atlas-next",
+              "venv", "env", "node_modules", "site"}
+CODE_SUFFIXES = (".py", ".pyc")
 # fig_atlas modules that run the pipeline but never shape a figure's content:
 # left out of the code a figure depends on, so editing them doesn't mark every
 # figure stale. Renderers, domain helpers, config loading and page geometry stay.
@@ -147,11 +153,10 @@ class Recorder:
         self.stat_tables: dict[Path, list[dict]] = {}  # stem -> test tables (fig_atlas.stats)
         self.images: dict[Path, list[dict]] = {}       # stem -> image adjustments (fig_atlas.images)
         self._busy = False
-        # A string test on the unresolved path first: resolve() costs a system
+        # String tests on the unresolved path first: resolve() costs a system
         # call, and a run opens over a thousand files (every module it imports),
-        # nearly all outside the input folders (paper evidence E11).
+        # nearly all outside the repository or code (paper evidence E11).
         self._prefixes = {os.path.normcase(os.path.abspath(r)) + os.sep for r in (str(self.root), str(root))}
-        self._input_roots = {os.path.normcase(r) for r in INPUT_ROOTS}
         self._skip_roots = {os.path.normcase(r) for r in SKIP_PARTS}
 
     def _top(self, path: str) -> str | None:
@@ -171,14 +176,17 @@ class Recorder:
         if isinstance(path, int) or path is None:
             return
         try:
-            if self._top(os.fsdecode(path)) not in self._input_roots:
+            name = os.fsdecode(path)
+            top = self._top(name)
+            if top is None or top.startswith(".") or top in self._skip_roots or name.endswith(CODE_SUFFIXES):
                 return
-            p = Path(os.fsdecode(path))
+            p = Path(name)
             p = (p if p.is_absolute() else Path.cwd() / p).resolve()
             rel = p.relative_to(self.root)
         except (ValueError, OSError, TypeError):
             return
-        if not rel.parts or rel.parts[0] not in INPUT_ROOTS or SKIP_PARTS & set(rel.parts) or p.suffix == ".py":
+        if (len(rel.parts) < 2 or rel.parts[0].startswith(".") or SKIP_PARTS & set(rel.parts)
+                or p.suffix in CODE_SUFFIXES):
             return
         mode, flags = (args[1] if len(args) > 1 else None), (args[2] if len(args) > 2 else 0)
         writing = (any(c in mode for c in "wax+") if isinstance(mode, str)
@@ -312,7 +320,8 @@ class Recorder:
             rel = p.relative_to(self.root)
         except ValueError:
             return False
-        return p.suffix == ".py" and not (SKIP_PARTS & set(rel.parts)) and rel.as_posix() not in TOOLING
+        return (p.suffix == ".py" and not (SKIP_PARTS & set(rel.parts))
+                and not any(part.startswith(".") for part in rel.parts) and rel.as_posix() not in TOOLING)
 
     def _config(self, cache: HashCache) -> dict | None:
         cfg_path = os.environ.get("CONFIG_PATH")
