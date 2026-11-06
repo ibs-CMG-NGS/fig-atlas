@@ -6,6 +6,11 @@ All notable changes are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.3.1] — 2026-11-07
+
+A fix of provenance records; nothing else changes from 0.3.0. Released from the
+maintenance branch `release/0.3.x`; the fix is on `main` too.
+
 ### Fixed
 
 - **Provenance records every data file a build reads, in any repository folder.** The recorder
