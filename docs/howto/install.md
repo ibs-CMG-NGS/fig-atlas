@@ -20,14 +20,14 @@ straight from GitHub instead, which pins the version just as well.
 ## Install a release
 
 Pick the newest release from the [releases page](https://github.com/ibs-CMG-NGS/fig-atlas/releases);
-the commands below use `v0.3.0`.
+the commands below use `v0.3.1`.
 
 With conda:
 
 ```bash
 conda create -n figures python=3.12
 conda activate figures
-pip install "git+https://github.com/ibs-CMG-NGS/fig-atlas@v0.3.0"
+pip install "git+https://github.com/ibs-CMG-NGS/fig-atlas@v0.3.1"
 ```
 
 With `venv`:
@@ -36,20 +36,20 @@ With `venv`:
 python -m venv .venv
 .venv\Scripts\activate                 # Windows (PowerShell or cmd)
 source .venv/bin/activate              # macOS, Linux
-pip install "git+https://github.com/ibs-CMG-NGS/fig-atlas@v0.3.0"
+pip install "git+https://github.com/ibs-CMG-NGS/fig-atlas@v0.3.1"
 ```
 
 Without Git, install the release archive instead (same package):
 
 ```bash
-pip install "https://github.com/ibs-CMG-NGS/fig-atlas/archive/refs/tags/v0.3.0.zip"
+pip install "https://github.com/ibs-CMG-NGS/fig-atlas/archive/refs/tags/v0.3.1.zip"
 ```
 
 Optional parts are named in brackets: `workflow` (Snakemake), `docs` (to build this documentation
 site), `test` (pytest).
 
 ```bash
-pip install "fig-atlas[workflow] @ git+https://github.com/ibs-CMG-NGS/fig-atlas@v0.3.0"
+pip install "fig-atlas[workflow] @ git+https://github.com/ibs-CMG-NGS/fig-atlas@v0.3.1"
 ```
 
 ## Check the installation
@@ -60,7 +60,7 @@ fa --help
 ```
 
 `fa --version` prints the version and the folder the package is imported from, for example
-`fa 0.3.0 (.../site-packages)`. `fa renderers` and `fa layouts` show what it can draw and arrange, even before you make a project repository. Then make a project repository and a first figure:
+`fa 0.3.1 (.../site-packages)`. `fa renderers` and `fa layouts` show what it can draw and arrange, even before you make a project repository. Then make a project repository and a first figure:
 [Tutorial: first figure](../tutorials/first_figure.md).
 
 ## Pin the version in your project repository
@@ -69,7 +69,7 @@ Write the release into a `requirements.txt` at the top of your project repositor
 (a co-author, a reviewer, you in two years) installs the same fig-atlas:
 
 ```text
-fig-atlas @ git+https://github.com/ibs-CMG-NGS/fig-atlas@v0.3.0
+fig-atlas @ git+https://github.com/ibs-CMG-NGS/fig-atlas@v0.3.1
 ```
 
 ```bash
@@ -113,7 +113,7 @@ installed editable. Run the tests with `python -m pytest`.
 | Problem | Cause and fix |
 |---|---|
 | `fa: command not found` (`'fa' is not recognized` on Windows) | The environment is not active: `conda activate figures` (or activate the `venv`). `python -m fig_atlas` works the same as `fa`. |
-| `git: command not found` during the install | Use the archive form above (`.../archive/refs/tags/v0.3.0.zip`), or install Git. |
+| `git: command not found` during the install | Use the archive form above (`.../archive/refs/tags/v0.3.1.zip`), or install Git. |
 | `fa --version` shows a folder you did not expect | Python found another copy of fig-atlas, often because you ran it inside a fig-atlas source folder. Run `fa` from your project repository. |
 | On Windows, a DLL error when you run the environment's `python.exe` directly | Activate the environment first; it puts the libraries (`Library\bin`) on the path. |
 | The checks report a substituted font | Install Arial (Linux), or use a preset with a font you have. |
