@@ -6,6 +6,20 @@ All notable changes are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.3.1] — 2026-11-07
+
+A fix of provenance records; nothing else changes from 0.3.0.
+
+### Fixed
+
+- **Provenance records every data file a build reads, in any repository folder.** The recorder
+  counted a read as an input only under a fixed list of folders (`raw_data`, `outputs`, `configs`,
+  `styles`, `docs`, ...), so a file elsewhere -- a snapshot of another repository, a project's own
+  `data/` -- was read but not recorded, and `fa status` and `fa impact` could not see it. Now any file
+  under the repository counts, except code (`.py`), hidden folders, files at the top of the
+  repository, and caches and environments (`__pycache__`, `.fa_cache`, `venv`, `env`,
+  `node_modules`, `site`, a `fig-atlas` conda prefix).
+
 ## [0.3.0] — 2026-11-04
 
 Panels kept at their printed size in layouts (`size_mm`, `layouts.mm_axes`), one-cell drawing for
