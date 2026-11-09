@@ -78,8 +78,9 @@ Compendium projects: none.
 | 4 | `render_treatment_schematic` | `fig_atlas/renderers/treatment_schematic.py` | 0 | — | — |
 | 4 | `render_ts_profile` | `fig_atlas/renderers/ts_profile.py` | 0 | — | — |
 | 4 | `render_two_set_euler` | `fig_atlas/renderers/two_set_euler.py` | 0 | — | — |
+| 4 | `render_upset` | `fig_atlas/renderers/upset.py` | 0 | — | — |
 | 4 | `render_venn` | `fig_atlas/renderers/venn.py` | 0 | — | — |
 | 4 | `render_violin` | `fig_atlas/renderers/violin.py` | 0 | — | — |
 | 4 | `render_volcano` | `fig_atlas_omics/renderers/volcano.py` | 0 | — | — |
 
-Summary: tier 2 active — 4, tier 4 unused — 64.
+Summary: tier 2 active — 4, tier 4 unused — 65.
