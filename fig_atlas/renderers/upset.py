@@ -34,6 +34,7 @@ SCHEMA = Schema("upset", params=[
     Param("count_size", float, 5.0, unit="pt", range=(0, None), role="Size of those counts"),
     # [Membership grid]
     Param("dot_size", float, 12.0, unit="pt^2 (marker area)", range=(0, None), role="Dot area where a set is in the intersection"),
+    Param("dot_edge_width", float, 0.0, unit="pt", range=(0, None), role="Outline width of the dots"),
     Param("dot_color", "color", "#111827", unit="hex color", role="Colour of those dots"),
     Param("inactive_size", float, 4.0, unit="pt^2 (marker area)", range=(0, None), role="Dot area where a set is not in the intersection"),
     Param("inactive_color", "color", "#d1d5db", unit="hex color", role="Colour of those dots"),
@@ -112,7 +113,7 @@ def render_upset(ax, df, params):
             on = s in r["sets"]
             mx_ax.scatter([x], [y_index[s]], s=dot_size if on else idle_size,
                           color=dot_color if on else params.get("inactive_color", "#d1d5db"),
-                          linewidths=0, zorder=3)
+                          linewidths=float(params.get("dot_edge_width", 0.0)), zorder=3)
     mx_ax.set_xticks([])
     mx_ax.set_yticks([])
     for side in ("top", "right", "left", "bottom"):

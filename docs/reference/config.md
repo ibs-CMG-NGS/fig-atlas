@@ -66,7 +66,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | [`treatment_schematic`](#treatment_schematic) | core | 25 |
 | [`ts_profile`](#ts_profile) | core | 18 |
 | [`two_set_euler`](#two_set_euler) | core | 27 |
-| [`upset`](#upset) | core | 22 |
+| [`upset`](#upset) | core | 23 |
 | [`venn`](#venn) | core | 5 |
 | [`violin`](#violin) | core | 44 |
 | [`volcano`](#volcano) | fig_atlas_omics.renderers | 28 |
@@ -2587,6 +2587,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `show_counts` | true / false | `True` |  | Write the intersection size above its bar |
 | `count_size` | number | `5.0` | pt | Size of those counts |
 | `dot_size` | number | `12.0` | pt^2 (marker area) | Dot area where a set is in the intersection |
+| `dot_edge_width` | number | `0.0` | pt | Outline width of the dots |
 | `dot_color` | colour | `#111827` | hex color | Colour of those dots |
 | `inactive_size` | number | `4.0` | pt^2 (marker area) | Dot area where a set is not in the intersection |
 | `inactive_color` | colour | `#d1d5db` | hex color | Colour of those dots |
