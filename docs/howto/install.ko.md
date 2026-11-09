@@ -57,7 +57,7 @@ fa --version
 fa --help
 ```
 
-`fa --version`은 버전과 패키지를 불러오는 폴더를 보여 줍니다. 예: `fa 0.3.0 (.../site-packages)`. `fa renderers`와 `fa layouts`는 프로젝트 저장소를 만들기 전에도 그릴 수 있는 그림과 배치를 보여 줍니다.
+`fa --version`은 버전과 패키지를 불러오는 폴더를 보여 줍니다. 예: `fa 0.3.1 (.../site-packages)`. `fa renderers`와 `fa layouts`는 프로젝트 저장소를 만들기 전에도 그릴 수 있는 그림과 배치를 보여 줍니다.
 다음은 프로젝트 저장소와 첫 그림 만들기입니다: [튜토리얼: 첫 그림](../tutorials/first_figure.md).
 
 ## 프로젝트 저장소에 버전 고정

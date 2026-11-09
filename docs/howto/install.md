@@ -60,7 +60,7 @@ fa --help
 ```
 
 `fa --version` prints the version and the folder the package is imported from, for example
-`fa 0.3.0 (.../site-packages)`. `fa renderers` and `fa layouts` show what it can draw and arrange, even before you make a project repository. Then make a project repository and a first figure:
+`fa 0.3.1 (.../site-packages)`. `fa renderers` and `fa layouts` show what it can draw and arrange, even before you make a project repository. Then make a project repository and a first figure:
 [Tutorial: first figure](../tutorials/first_figure.md).
 
 ## Pin the version in your project repository
