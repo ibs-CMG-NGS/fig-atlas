@@ -19,6 +19,8 @@
 | `log2fc` | `value_col` | float | 필수 | log2 fold enrichment (색), 유의하지 않으면 빈칸 |
 | `neg_log10_p` | `p_col` | float | 필수 | -log10(P) (점 크기), 유의하지 않으면 빈칸 |
 
+`value_col`(색)은 무엇을 보여 줄지에 따라 달라집니다. 기본은 log2 fold enrichment이지만, 색으로 유의성을 보여 주는 번들은 `-log10(p)`를 넣고 `colorbar_label`을 그에 맞게 지정합니다(예: `-log10(p)`). 점 크기는 계속 `p_col`이 정하므로, 두 열이 같은 유의성을 다른 척도로 담아도 됩니다. 이때 `fc_min`/`fc_max`는 색 범위이므로 데이터 범위에 맞춰 지정합니다.
+
 ## 2) 게놈 위치 인리치먼트 번들 — `plot_type: peak_feature_enrichment`
 
 (피크 집합, 게놈 위치) 한 쌍에 한 줄. 예: Fisher 정확검정으로 DA 피크와 배경 피크의 위치 분포를 비교한 결과. 피크 집합마다 패널 하나, 위치마다 막대 하나(log2 odds ratio)를 그리고, `fdr_max` 아래인 막대를 강조합니다.
