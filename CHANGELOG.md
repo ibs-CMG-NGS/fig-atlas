@@ -6,6 +6,13 @@ All notable changes are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.4.0] — 2026-11-09
+
+Four shapes for upstream bundles — a numeric dot colour, scatter cut-offs, colour and size roles on
+a threshold scatter, and an UpSet plot — and two renderer options for the manuscript case study (a
+second factor on a violin, the y = x line on a threshold scatter); `go_dot` and `dot_matrix` take
+bundles; the CLI no longer fails on a console that cannot encode a report's characters.
+
 ### Added
 
 - **`go_dot` and `dot_matrix` take data bundles**: contracts `de_go.go_dot` (term, Gene Ratio,

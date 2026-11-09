@@ -1,4 +1,4 @@
-# fig-atlas 설치
+﻿# fig-atlas 설치
 
 fig-atlas는 명령어 도구 `fa`가 들어 있는 파이썬 패키지입니다. 대부분은 그림 작업에 쓰는 환경에 **릴리스**를
 설치하고, 그림은 따로 만든 *프로젝트 저장소*(`fa init`으로 생성)에 둡니다. fig-atlas 자체를 고치는 사람만
@@ -19,14 +19,14 @@ fig-atlas는 명령어 도구 `fa`가 들어 있는 파이썬 패키지입니다
 ## 릴리스 설치
 
 [릴리스 페이지](https://github.com/ibs-CMG-NGS/fig-atlas/releases)에서 가장 최근 릴리스를 고릅니다.
-아래 명령은 `v0.3.0` 기준입니다.
+아래 명령은 `v0.4.0` 기준입니다.
 
 conda를 쓸 때:
 
 ```bash
 conda create -n figures python=3.12
 conda activate figures
-pip install "git+https://github.com/ibs-CMG-NGS/fig-atlas@v0.3.0"
+pip install "git+https://github.com/ibs-CMG-NGS/fig-atlas@v0.4.0"
 ```
 
 `venv`를 쓸 때:
@@ -35,19 +35,19 @@ pip install "git+https://github.com/ibs-CMG-NGS/fig-atlas@v0.3.0"
 python -m venv .venv
 .venv\Scripts\activate                 # Windows (PowerShell 또는 cmd)
 source .venv/bin/activate              # macOS, Linux
-pip install "git+https://github.com/ibs-CMG-NGS/fig-atlas@v0.3.0"
+pip install "git+https://github.com/ibs-CMG-NGS/fig-atlas@v0.4.0"
 ```
 
 Git이 없으면 릴리스 압축 파일로 설치합니다(같은 패키지).
 
 ```bash
-pip install "https://github.com/ibs-CMG-NGS/fig-atlas/archive/refs/tags/v0.3.0.zip"
+pip install "https://github.com/ibs-CMG-NGS/fig-atlas/archive/refs/tags/v0.4.0.zip"
 ```
 
 선택 기능은 대괄호 안에 이름을 씁니다. `workflow`(Snakemake), `docs`(이 문서 사이트 빌드), `test`(pytest)입니다.
 
 ```bash
-pip install "fig-atlas[workflow] @ git+https://github.com/ibs-CMG-NGS/fig-atlas@v0.3.0"
+pip install "fig-atlas[workflow] @ git+https://github.com/ibs-CMG-NGS/fig-atlas@v0.4.0"
 ```
 
 ## 설치 확인
@@ -66,7 +66,7 @@ fa --help
 fig-atlas를 설치합니다.
 
 ```text
-fig-atlas @ git+https://github.com/ibs-CMG-NGS/fig-atlas@v0.3.0
+fig-atlas @ git+https://github.com/ibs-CMG-NGS/fig-atlas@v0.4.0
 ```
 
 ```bash
@@ -108,7 +108,7 @@ pip install -e ".[docs,test]"
 | 증상 | 원인과 해결 |
 |---|---|
 | `fa: command not found` (Windows에서는 `'fa'은(는) ... 인식되지 않습니다`) | 환경이 활성화되지 않았습니다. `conda activate figures`(또는 `venv` 활성화). `python -m fig_atlas`도 `fa`와 똑같이 동작합니다. |
-| 설치 중 `git: command not found` | 위의 압축 파일 방법(`.../archive/refs/tags/v0.3.0.zip`)을 쓰거나 Git을 설치하세요. |
+| 설치 중 `git: command not found` | 위의 압축 파일 방법(`.../archive/refs/tags/v0.4.0.zip`)을 쓰거나 Git을 설치하세요. |
 | `fa --version`이 예상과 다른 폴더를 보여 줌 | 파이썬이 다른 fig-atlas 사본을 찾았습니다. fig-atlas 소스 폴더 안에서 실행하면 흔히 생깁니다. 프로젝트 저장소에서 `fa`를 실행하세요. |
 | Windows에서 환경의 `python.exe`를 직접 실행할 때 DLL 오류 | 먼저 환경을 활성화하세요. 활성화해야 라이브러리 폴더(`Library\bin`)가 경로에 들어갑니다. |
 | 검사가 대체된 글꼴을 보고함 | Arial을 설치하거나(Linux), 가진 글꼴을 쓰는 프리셋을 쓰세요. |
