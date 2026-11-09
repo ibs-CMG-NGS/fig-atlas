@@ -236,6 +236,27 @@ plot_params:
   mark: square        # 또는 circle
 ```
 
+## `plot_type: dot_matrix` — 행 × 열 희소 격자
+
+(행, 열) 칸마다 점을 하나 그리고, 점 넓이는 개수 열, 점 색은 범주 열로 정합니다(`render_dot_matrix`). 행이 없는 칸은 비워 두며, 행과 열 순서는 데이터 순서나 `row_order`, `col_order`를 따릅니다. 유전자 × 세포유형 발현 격자, 경로 × 조건 근거 격자 같은 그림에 씁니다.
+
+| 역할 (plot_params 키) | 기본 열 이름 | 필수 | 내용 |
+|---|---|---|---|
+| `row_col` | `row` | 예 | 칸의 행(특징) |
+| `col_col` | `column` | 예 | 칸의 열(표본, 조건) |
+| `size_col` | — | 아니오 | 점 넓이를 정하는 개수 (없으면 모두 같은 크기) |
+| `color_col` | — | 아니오 | 점 색을 정하는 범주 (없으면 한 색) |
+| `row_group_col` | — | 아니오 | 행을 묶어 사이에 선을 긋는 열 |
+
+```yaml
+plot_type: dot_matrix
+plot_params:
+  row_col: gene
+  col_col: cell_type
+  size_col: pct_expressing
+  color_col: response_class
+```
+
 ## `plot_type: table` — 요약 표를 글자로 인쇄
 
 표를 출판 관례대로 글자로 그립니다 — 가로선 세 개, 세로선 없음, 칸 채움 없음(`render_table`). 위의 형태들과 달리 **역할을 정하지 않습니다** — 어떤 표든 인쇄할 수 있으므로, `plot_params`에 담기는 것은 "어떤 열을 어떤 순서로, 각 열을 어떻게"입니다.

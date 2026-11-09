@@ -8,6 +8,11 @@ All notable changes are documented here. The format follows
 
 ### Added
 
+- **`go_dot` and `dot_matrix` take data bundles**: contracts `de_go.go_dot` (term, Gene Ratio,
+  Fold Enrichment, Gene Count, FDR) and `core.dot_matrix` (row, column, optional size, colour and
+  row group), with the ingest entries for both, so `fa bundle check` and `fa ingest bundle` accept
+  the two plot types. The renderers already existed; the contract document gained a section for each
+  (`de_go_bundle_contract.md`, `table_bundle_contract.md` and its Korean page).
 - **`violin`: a second factor (`hue_col`)** draws one violin per category and hue value, side by
   side inside the category (e.g. a gene's expression per cell type, split by condition), with
   `hue_order`, `hue_colors` and `hue_labels` and a hue legend. Without `hue_col` the renderer draws
@@ -15,6 +20,12 @@ All notable changes are documented here. The format follows
 - **`threshold_scatter`: `show_identity_line`** draws y = x under the points, for scatters of one
   condition against another (TF footprint activity, condition 1 vs condition 2); colour, style,
   width and opacity from `identity_line_*`.
+
+### Fixed
+
+- **CLI text output on a console that cannot encode a character** (a Unicode minus on a cp949
+  Windows console, for one) no longer ends the command with `UnicodeEncodeError`: the text report
+  falls back to ASCII for such characters (`-`, `>=`, `x`, ...), and `--json` stays UTF-8.
 
 ## [0.3.0] — 2026-11-04
 

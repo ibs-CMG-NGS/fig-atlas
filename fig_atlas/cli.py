@@ -38,9 +38,38 @@ from .projects import ProjectError, build_env, build_project, build_steps, find_
 
 EXIT_OK, EXIT_FAILED, EXIT_USAGE = 0, 1, 2
 
+# Characters that a non-UTF-8 console (e.g. cp949 on Windows) cannot print,
+# written as the ASCII a reader can still follow.
+_ASCII_FALLBACK = {"\u2212": "-", "\u2013": "-", "\u2014": "-", "\u00d7": "x",
+                   "\u2265": ">=", "\u2264": "<=", "\u00b5": "u", "\u2192": "->", "\u2022": "*"}
+
+
+def _console_text(text: str) -> str:
+    """``text`` as the console's encoding can print it.
+
+    A report may carry a Unicode minus, a multiplication sign or an arrow. On a
+    console that cannot encode it (cp949 on Windows, for one) the command used
+    to end with UnicodeEncodeError; each such character now falls back to ASCII
+    (the Unicode minus to ``-``), and one without a fallback becomes ``?``.
+    ``--json`` output is left alone: JSON is machine-read and written as UTF-8."""
+    enc = getattr(sys.stdout, "encoding", None) or "utf-8"
+    try:
+        text.encode(enc)
+        return text
+    except UnicodeEncodeError:
+        pass
+    out = []
+    for ch in text:
+        try:
+            ch.encode(enc)
+            out.append(ch)
+        except UnicodeEncodeError:
+            out.append(_ASCII_FALLBACK.get(ch, "?"))
+    return "".join(out)
+
 
 def _emit(args, payload, text: str) -> None:
-    print(json.dumps(payload, indent=1, ensure_ascii=False) if args.json else text)
+    print(json.dumps(payload, indent=1, ensure_ascii=False) if args.json else _console_text(text))
 
 
 # ------------------------------------------------------------------ commands --
@@ -975,6 +1004,14 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main(argv: list[str] | None = None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
+    # Never end a command with UnicodeEncodeError on a console that cannot print
+    # a character the report carries; _console_text turns the common ones into
+    # ASCII in the text report.
+    for stream in (sys.stdout, sys.stderr):
+        try:
+            stream.reconfigure(errors="replace")
+        except (AttributeError, ValueError, OSError):
+            pass
     ap = build_parser()
     # Pass-through commands forward every remaining argument (including -h) to
     # their script, so they're dispatched before argparse sees those options.

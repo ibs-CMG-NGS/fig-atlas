@@ -236,6 +236,27 @@ plot_params:
   mark: square        # or circle
 ```
 
+## `plot_type: dot_matrix` — sparse rows × columns grid
+
+Draws one dot per (row, column) cell, with the dot area from a count and the dot colour from a category (`render_dot_matrix`). A cell that has no row is left empty; rows and columns keep the order of the data or the order given in `row_order` and `col_order`. Typical uses are a gene × cell-type expression grid and a pathway × condition evidence grid.
+
+| Role (plot_params key) | Default column name | Required | Content |
+|---|---|---|---|
+| `row_col` | `row` | Yes | The row (feature) of the cell |
+| `col_col` | `column` | Yes | The column (sample, condition) of the cell |
+| `size_col` | — | No | The count that sets dot area (absent: one size) |
+| `color_col` | — | No | The category that sets dot colour (absent: one colour) |
+| `row_group_col` | — | No | Groups rows into blocks with a line between them |
+
+```yaml
+plot_type: dot_matrix
+plot_params:
+  row_col: gene
+  col_col: cell_type
+  size_col: pct_expressing
+  color_col: response_class
+```
+
 ## `plot_type: table` — a summary table printed as text
 
 Draws the table as text in the publication convention: three horizontal rules, no vertical rules, no fills (`render_table`). Unlike the shapes above it names no roles — any table can be printed — so what `plot_params` carries is which columns to print and how each one is set.

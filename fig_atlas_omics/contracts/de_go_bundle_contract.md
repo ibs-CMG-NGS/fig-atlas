@@ -166,7 +166,33 @@ go_bp_up_rrvgo_treemap/
 
 ---
 
-## 5단계 조건별 폴더 존재 규칙
+## 5) GO dot plot 번들 — `go_dot_bundle/`
+
+GO/KEGG term 하나에 한 줄. 점의 x 위치는 `plot_params`의 `x_axis`(Gene Ratio 또는 Fold Enrichment), 점 크기는 `size_mode`(Gene Count / Gene Ratio / Fold Enrichment), 점 색은 `fdr`로 정합니다(`render_go_dot`). `gene_ratio`는 `"8/827"` 같은 분자/분모 문자열도, 0~1 비율도 됩니다.
+
+### `inputs/data.csv` 컬럼
+
+| 컬럼명 | 타입 | 필수 | 설명 |
+|---|---|---|---|
+| `description` | string | 필수 | term 이름 (렌더러가 유일하게 강제 요구하는 컬럼) |
+| `gene_ratio` | string 또는 float | 권장 | `"8/827"` 형태 또는 0~1 비율. x축 Gene Ratio의 기본값 |
+| `fold_enrichment` | float | 권장 | `x_axis: Fold Enrichment`일 때 x축 값 |
+| `gene_count` | int | 권장 | `size_mode: Gene Count`일 때 점 크기 |
+| `fdr` | float | 권장 | 점 색 (adjusted P) |
+
+`metadata/metadata.yaml`의 `plot_params` 예:
+
+```yaml
+plot_type: go_dot
+plot_params:
+  x_axis: Gene Ratio
+  size_mode: Gene Count
+  top_n: 20
+```
+
+---
+
+## 6단계 조건별 폴더 존재 규칙
 
 | 폴더 | 있어야 하는 경우 |
 |---|---|

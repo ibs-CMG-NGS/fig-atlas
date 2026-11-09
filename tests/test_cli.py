@@ -12,7 +12,7 @@ from pathlib import Path
 
 import pytest
 
-from fig_atlas.cli import EXIT_FAILED, EXIT_OK, EXIT_USAGE, main
+from fig_atlas.cli import EXIT_FAILED, EXIT_OK, EXIT_USAGE, _console_text, main
 from fig_atlas.projects import ProjectError, find_project, find_root, list_projects
 
 STUB = """import os, sys
@@ -130,3 +130,15 @@ def test_usage_errors_exit_2(repo, capsys):
     assert main(["--root", str(repo), "build"]) == EXIT_USAGE
     assert main(["--root", str(repo), "build", "missing"]) == EXIT_USAGE
     assert main(["--root", str(repo), "build", "good", "--all"]) == EXIT_USAGE
+
+
+def test_console_text_falls_back_to_ascii_when_the_console_cannot_encode(monkeypatch):
+    """A report with a Unicode minus prints on a cp949 console instead of raising."""
+
+    class Console:
+        encoding = "cp949"
+
+    monkeypatch.setattr("sys.stdout", Console())
+    assert _console_text("P = 1.2 \u2212 3") == "P = 1.2 - 3"
+    assert _console_text("plain ascii") == "plain ascii"
+    assert _console_text("a \u2603 b") == "a ? b"          # no fallback: a question mark
