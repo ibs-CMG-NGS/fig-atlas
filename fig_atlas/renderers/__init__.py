@@ -53,6 +53,7 @@ from .tier_hbar import render_tier_hbar
 from .treatment_schematic import render_treatment_schematic
 from .ts_profile import render_ts_profile
 from .two_set_euler import render_two_set_euler
+from .upset import render_upset
 from .venn import render_venn
 from .violin import render_violin
 
@@ -96,6 +97,7 @@ __all__ = [
     "render_treatment_schematic",
     "render_ts_profile",
     "render_two_set_euler",
+    "render_upset",
     "render_venn",
     "render_violin",
 ]

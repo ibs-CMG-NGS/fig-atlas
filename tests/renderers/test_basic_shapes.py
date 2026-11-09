@@ -112,3 +112,18 @@ def test_stacked_bar_keeps_an_empty_bar_from_x_order():
     assert long.loc[long["category"] == "empty", "value"].tolist() == [0, 0]
     assert long.loc[long["category"] == "empty", "share"].isna().all()
     plt.close(fig)
+
+
+def test_threshold_scatter_colours_by_a_category_and_sizes_by_a_number():
+    df = pd.DataFrame({"x": [1.0, 2.0, 3.0], "y": [1.0, 2.0, 3.0],
+                       "effect": [0.5, 2.0, -2.0], "sig": [0.5, 0.01, 0.01],
+                       "cls": ["a", "b", "a"], "n": [1, 10, 5]})
+    fig, ax = plt.subplots()
+    render_threshold_scatter(ax, df, {"x_col": "x", "y_col": "y", "effect_col": "effect",
+                                      "sig_col": "sig", "color_col": "cls", "size_col": "n",
+                                      "show_cutoff_lines": False, "show_legend": True})
+    labels = [t.get_text() for t in ax.get_legend().get_texts()]
+    assert set(labels) == {"a", "b"}
+    sizes = sorted({round(float(s), 3) for c in ax.collections for s in c.get_sizes()})
+    assert len(sizes) == 3                          # one area per distinct size_col value
+    plt.close(fig)

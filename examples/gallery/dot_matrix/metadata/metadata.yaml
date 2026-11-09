@@ -1,0 +1,13 @@
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per (gene, cell type) cell -- gene (row), cell_type (column),
+# pct_expressing (dot area), mean_expression (dot colour, a number so a colourbar is drawn).
+plot_type: dot_matrix
+plot_params:
+  row_col: gene
+  col_col: cell_type
+  size_col: pct_expressing
+  color_col: mean_expression
+  colorbar_label: "mean expression"
+  row_label_style: italic
+  tick_label_size: 5.5          # pt
+  legend_fontsize: 5            # pt

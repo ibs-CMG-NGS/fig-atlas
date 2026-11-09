@@ -13,6 +13,17 @@ All notable changes are documented here. The format follows
   row group), with the ingest entries for both, so `fa bundle check` and `fa ingest bundle` accept
   the two plot types. The renderers already existed; the contract document gained a section for each
   (`de_go_bundle_contract.md`, `table_bundle_contract.md` and its Korean page).
+- **`dot_matrix`: a numeric `color_col`** draws a continuous colour scale with a colourbar
+  (`color_cmap`, `color_min`, `color_max`, `colorbar_label`); a text column keeps the category
+  legend, and `color_mode` forces either reading.
+- **`group_scatter`: `x_cutoffs` / `y_cutoffs`** draw config-driven cut-off lines (colour, style,
+  width and opacity from `cutoff_line_*`), for quadrant-style scatters.
+- **`threshold_scatter`: `color_col` and `size_col`** colour the points by a category (e.g.
+  concordance classes) instead of up / down / ns, and scale the point area by a number (e.g. peak
+  count) between `size_min` and `size_max`.
+- **`upset`**: a new renderer and the `core.upset` contract (`dataset`, `item`). It counts the
+  intersections of a long membership table, draws the largest as bars over a dot matrix, and works
+  for more sets than a Venn diagram can show.
 - **`violin`: a second factor (`hue_col`)** draws one violin per category and hue value, side by
   side inside the category (e.g. a gene's expression per cell type, split by condition), with
   `hue_order`, `hue_colors` and `hue_labels` and a hue legend. Without `hue_col` the renderer draws

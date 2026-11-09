@@ -20,7 +20,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | [`cross_condition_dotplot`](#cross_condition_dotplot) | fig_atlas_omics.renderers | 62 |
 | [`cross_condition_heatmap`](#cross_condition_heatmap) | fig_atlas_omics.renderers | 42 |
 | [`dose_response`](#dose_response) | core | 38 |
-| [`dot_matrix`](#dot_matrix) | core | 46 |
+| [`dot_matrix`](#dot_matrix) | core | 52 |
 | [`effect_dots`](#effect_dots) | core | 38 |
 | [`flow_diagram`](#flow_diagram) | core | 44 |
 | [`funnel`](#funnel) | core | 16 |
@@ -29,7 +29,7 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | [`go_cluster_dot`](#go_cluster_dot) | fig_atlas_omics.renderers | 37 |
 | [`go_dot`](#go_dot) | fig_atlas_omics.renderers | 11 |
 | [`go_rrvgo_treemap`](#go_rrvgo_treemap) | fig_atlas_omics.renderers | 14 |
-| [`group_scatter`](#group_scatter) | core | 39 |
+| [`group_scatter`](#group_scatter) | core | 45 |
 | [`grouped_bar`](#grouped_bar) | core | 54 |
 | [`grouped_hbar`](#grouped_hbar) | core | 21 |
 | [`heatmap`](#heatmap) | core | 23 |
@@ -61,11 +61,12 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | [`survival`](#survival) | core | 33 |
 | [`table`](#table) | core | 35 |
 | [`tf_expression_scatter_grid`](#tf_expression_scatter_grid) | fig_atlas_omics.renderers | 36 |
-| [`threshold_scatter`](#threshold_scatter) | core | 66 |
+| [`threshold_scatter`](#threshold_scatter) | core | 73 |
 | [`tier_hbar`](#tier_hbar) | core | 16 |
 | [`treatment_schematic`](#treatment_schematic) | core | 25 |
 | [`ts_profile`](#ts_profile) | core | 18 |
 | [`two_set_euler`](#two_set_euler) | core | 27 |
+| [`upset`](#upset) | core | 22 |
 | [`venn`](#venn) | core | 5 |
 | [`violin`](#violin) | core | 44 |
 | [`volcano`](#volcano) | fig_atlas_omics.renderers | 28 |
@@ -730,6 +731,12 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `col_col` | text | `column` |  | Column with the column names |
 | `size_col` | text | auto |  | Column with the count that sets dot area (absent: one size) |
 | `color_col` | text | auto |  | Column with the category that sets dot colour (absent: one colour) |
+| `color_mode` | one of `auto`, `categorical`, `numeric` | `auto` |  | How color_col is read: a category (legend), a number (continuous colour and colourbar), or auto (numeric columns are numbers) |
+| `color_cmap` | colormap | `viridis` |  | Colormap of a numeric color_col |
+| `color_min` | number | auto | value of the colour column | Lower end of the numeric colour scale (default: the data) |
+| `color_max` | number | auto | value of the colour column | Upper end of the numeric colour scale (default: the data) |
+| `colorbar_label` | text | auto |  | Colourbar title (numeric color_col) |
+| `show_colorbar` | true / false | `True` |  | Show the colourbar of a numeric color_col |
 | `row_group_col` | text | auto |  | Column grouping rows into blocks with a line between them |
 | `row_order` | list | auto |  | Row order, top to bottom (default: order in the data) |
 | `col_order` | list | auto |  | Column order, left to right (default: order in the data) |
@@ -1073,6 +1080,12 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `zero_line` | true / false | `True` |  | Draw the y = 0 line |
 | `zero_line_color` | colour | `#9ca3af` | hex color | Zero line colour |
 | `zero_line_width` | number | `0.4` | pt | Zero line width |
+| `x_cutoffs` | list | auto | data coords | Vertical cut-off lines at these x values (empty: none), e.g. a quadrant split |
+| `y_cutoffs` | list | auto | data coords | Horizontal cut-off lines at these y values (empty: none) |
+| `cutoff_line_color` | colour | `#9ca3af` | hex color | Cut-off line colour |
+| `cutoff_line_style` | text | `--` |  | Cut-off line style (matplotlib) |
+| `cutoff_line_width` | number | `0.6` | pt | Cut-off line width |
+| `cutoff_line_alpha` | number | `0.6` | [0-1] opacity | Cut-off line opacity |
 | `spine_width` | number | `0.6` | pt | Axis spine width |
 | `legend` | true / false | auto |  | Show the group legend |
 | `legend_loc` | text | `lower right` |  | Legend location (matplotlib loc string) |
@@ -2384,6 +2397,13 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `down_color` | colour | `#0000ff` | hex color | Colour of down points |
 | `ns_color` | colour | `#808080` | hex color | Colour of non-significant points |
 | `dot_size` | number | `20` | pt^2 (marker area) | Point size — lower for dense plots |
+| `color_col` | text | auto |  | Column with a category that colours the points instead of up / down / ns (e.g. concordance classes) |
+| `color_order` | list | auto |  | Category order in drawing and legend (default: order in the data) |
+| `color_colors` | mapping | `{}` | hex color | Colour per category (default: matplotlib colour cycle) |
+| `color_labels` | mapping | `{}` |  | Legend label per category (default: the category) |
+| `size_col` | text | auto |  | Column with a number that scales the point area (default: dot_size for every point) |
+| `size_min` | number | `6.0` | pt^2 (marker area) | Smallest point area when size_col is given — raise so small points stay visible |
+| `size_max` | number | `120.0` | pt^2 (marker area) | Largest point area when size_col is given — lower if large points touch |
 | `ns_alpha` | number | `0.6` | [0-1] opacity | Opacity of non-significant points |
 | `sig_alpha` | number | `0.6` | [0-1] opacity | Opacity of up / down points |
 | `ns_zorder` | number | auto | matplotlib zorder | Drawing order of the ns points (default: matplotlib's) |
@@ -2549,6 +2569,35 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `labels_title` | text | auto |  | Panel title (none = no title) |
 | `title_size` | number | `8.0` | pt | Panel title font size |
 | `title_pad` | number | `4` | pt | Gap between title and diagram |
+
+## upset
+
+`fig_atlas.renderers:render_upset`
+
+| Key | Type | Default | Unit | What it does |
+|---|---|---|---|---|
+| `dataset_col` | text | `dataset` |  | Column with the set name |
+| `item_col` | text | `item` |  | Column with the item (member) name |
+| `set_order` | list | auto |  | Set order, top to bottom in the membership grid (default: order in the data) |
+| `min_size` | integer | `1` | items | Intersections smaller than this are left out |
+| `max_columns` | integer | `40` | intersections | Largest number of intersections shown |
+| `sort_by` | one of `size`, `degree` | `size` |  | Intersection order: by size, or by the number of sets (then size) |
+| `bar_color` | colour | `#4b5563` | hex color | Intersection bar colour |
+| `bar_width` | number | `0.7` | column units | Bar width |
+| `show_counts` | true / false | `True` |  | Write the intersection size above its bar |
+| `count_size` | number | `5.0` | pt | Size of those counts |
+| `dot_size` | number | `12.0` | pt^2 (marker area) | Dot area where a set is in the intersection |
+| `dot_color` | colour | `#111827` | hex color | Colour of those dots |
+| `inactive_size` | number | `4.0` | pt^2 (marker area) | Dot area where a set is not in the intersection |
+| `inactive_color` | colour | `#d1d5db` | hex color | Colour of those dots |
+| `connector_width` | number | `0.8` | pt | Line joining the dots of one intersection |
+| `grid_line_width` | number | `0.4` | pt | Faint line through each set row |
+| `grid_line_color` | colour | `#e5e7eb` | hex color | Colour of that line |
+| `set_label_size` | number | auto | pt | Set name size (default tick_label_size) |
+| `left_margin` | number | `0.2` | fraction of the axes width | Room left of the grid for the set names — raise if long set names are clipped |
+| `labels_title` | text | auto |  | Panel title |
+| `title_size` | number | `8.0` | pt | Panel title size |
+| `tick_label_size` | number | auto | pt | Set name size (default: rcParams) |
 
 ## venn
 

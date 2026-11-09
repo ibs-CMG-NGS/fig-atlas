@@ -42,3 +42,23 @@ def test_split_cells_show_one_dot_per_category():
     assert list(a["kind"]) == ["x", "y"] and list(a["n"]) == [2, 1]
     assert abs((a["x"].iloc[1] - a["x"].iloc[0]) - 0.3) < 1e-9
     plt.close(fig)
+
+
+def test_a_numeric_colour_column_draws_a_colourbar():
+    df = pd.DataFrame({"gene": ["A", "A", "B"], "feature": ["L1", "L2", "L1"],
+                       "n": [1, 2, 3], "expr": [0.5, 2.5, 1.5]})
+    fig, ax = plt.subplots()
+    cells = render_dot_matrix(ax, df, {"row_col": "gene", "col_col": "feature", "size_col": "n",
+                                       "color_col": "expr", "colorbar_label": "mean expression"})
+    assert "value" in cells.columns and list(cells["value"]) == [0.5, 2.5, 1.5]
+    assert len(fig.axes) >= 2                       # the colourbar is its own axes
+    plt.close(fig)
+
+
+def test_color_mode_categorical_keeps_a_numeric_column_a_category():
+    fig, ax = plt.subplots()
+    df = DATA.assign(batch=[1, 1, 2, 2])
+    cells = render_dot_matrix(ax, df, {"row_col": "gene", "col_col": "feature", "color_col": "batch",
+                                       "color_mode": "categorical", "show_legend": True})
+    assert "kind" in cells.columns and set(cells["kind"]) == {1, 2}
+    plt.close(fig)

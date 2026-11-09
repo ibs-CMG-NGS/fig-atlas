@@ -41,6 +41,8 @@ plot_params:
 | `y_col` | — | 예 | y에 그릴 열 |
 | `effect_col` | — | 예 | 부호 있는 효과 열 (up / down 판정) |
 | `sig_col` | — | 예 | 유의성 열 (예: 보정 P) |
+| `color_col` | — | 아니오 | up / down / ns 대신 점을 색으로 나누는 범주 (예: concordance 분류) |
+| `size_col` | — | 아니오 | 점 넓이를 정하는 숫자 열 (예: peak count); `size_min`/`size_max`가 범위를 정합니다 |
 
 열 이름 기본값이 없으므로 네 역할 모두 `plot_params`에 적어야 합니다. 변환은 `x_transform` / `y_transform`(`none`, `log10`, `neg_log10`)으로 줍니다.
 
@@ -238,14 +240,14 @@ plot_params:
 
 ## `plot_type: dot_matrix` — 행 × 열 희소 격자
 
-(행, 열) 칸마다 점을 하나 그리고, 점 넓이는 개수 열, 점 색은 범주 열로 정합니다(`render_dot_matrix`). 행이 없는 칸은 비워 두며, 행과 열 순서는 데이터 순서나 `row_order`, `col_order`를 따릅니다. 유전자 × 세포유형 발현 격자, 경로 × 조건 근거 격자 같은 그림에 씁니다.
+(행, 열) 칸마다 점을 하나 그리고, 점 넓이는 개수 열, 점 색은 범주 열로 정합니다(`render_dot_matrix`). 색 열이 숫자이면 연속 색과 컬러바로 그립니다(`color_cmap`, `color_min`, `color_max`, `colorbar_label`). `color_mode`로 어느 쪽으로 읽을지 정할 수 있습니다. 행이 없는 칸은 비워 두며, 행과 열 순서는 데이터 순서나 `row_order`, `col_order`를 따릅니다. 유전자 × 세포유형 발현 격자, 경로 × 조건 근거 격자 같은 그림에 씁니다.
 
 | 역할 (plot_params 키) | 기본 열 이름 | 필수 | 내용 |
 |---|---|---|---|
 | `row_col` | `row` | 예 | 칸의 행(특징) |
 | `col_col` | `column` | 예 | 칸의 열(표본, 조건) |
 | `size_col` | — | 아니오 | 점 넓이를 정하는 개수 (없으면 모두 같은 크기) |
-| `color_col` | — | 아니오 | 점 색을 정하는 범주 (없으면 한 색) |
+| `color_col` | — | 아니오 | 점 색을 정하는 범주(범례) 또는 숫자(연속 색과 컬러바) (없으면 한 색) |
 | `row_group_col` | — | 아니오 | 행을 묶어 사이에 선을 긋는 열 |
 
 ```yaml

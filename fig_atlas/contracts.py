@@ -79,6 +79,10 @@ CORE_CONTRACTS = [
     Contract("core.venn", ("venn",), required=("dataset", "item"),
              doc="docs/contracts/new_plot_type_contract.md",
              title="Set membership: one row per (set, item); 2-3 sets"),
+    Contract("core.upset", ("upset",),
+             role_columns=(("dataset_col", "dataset"), ("item_col", "item")),
+             doc="docs/contracts/new_plot_type_contract.md",
+             title="Set membership for an UpSet plot: one row per (set, item); intersections are counted by the renderer"),
     Contract("core.image", ("image_panel",), input_glob="*.*", required_meta=("pixel_size", "channels"),
              meta_files="channels",
              doc="docs/contracts/image_bundle_contract.md",
@@ -177,6 +181,7 @@ CORE_CONTRACTS = [
 ]
 CORE_INGEST = {
     "venn": "fig_atlas.renderers:render_venn",
+    "upset": "fig_atlas.renderers:render_upset",
     "image_panel": "fig_atlas.renderers:render_image_panel",
     "multi_group_heatmap": "fig_atlas.renderers:render_multi_group_heatmap",
     "line_band": "fig_atlas.renderers:render_line_band",

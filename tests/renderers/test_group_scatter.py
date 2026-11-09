@@ -66,3 +66,12 @@ def test_annotate_r_off_draws_no_text():
     render_group_scatter(ax, df, {"r_col": "r", "p_col": "p_value", "annotate_r": False})
     assert not _texts(ax)
     plt.close(fig)
+
+
+def test_cutoff_lines_are_drawn_from_the_config():
+    """Quadrant-style cut-offs are a drawing option, not part of the contract."""
+    fig, ax = plt.subplots()
+    render_group_scatter(ax, _points(), {"fit": False, "zero_line": False, "annotate_r": False,
+                                         "x_cutoffs": [2.5], "y_cutoffs": [0.0, 3.0]})
+    assert len(ax.lines) == 3                       # one vertical and two horizontal lines
+    plt.close(fig)
