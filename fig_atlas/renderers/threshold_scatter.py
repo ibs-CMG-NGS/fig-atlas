@@ -55,6 +55,13 @@ SCHEMA = Schema("threshold_scatter", params=[
     Param("cutoff_line_style", str, "--", role="Cut-off line style (matplotlib)"),
     Param("cutoff_line_width", float, 1, unit="pt", range=(0, None), role="Cut-off line width"),
     Param("cutoff_line_alpha", float, 0.5, unit="[0-1] opacity", range=(0, 1), role="Cut-off line opacity"),
+    # [Identity line]
+    Param("show_identity_line", bool, False,
+          role="Draw the line y = x, so points on it have equal x and y (e.g. condition 1 vs condition 2)"),
+    Param("identity_line_color", "color", "gray", unit="color", role="Identity line colour"),
+    Param("identity_line_style", str, "--", role="Identity line style (matplotlib)"),
+    Param("identity_line_width", float, 0.8, unit="pt", range=(0, None), role="Identity line width"),
+    Param("identity_line_alpha", float, 0.6, unit="[0-1] opacity", range=(0, 1), role="Identity line opacity"),
     # [Point labels]
     Param("label_mode", ("none", "top_n", "custom"), "none",
           role="Label points: none, the top_n strongest (|effect| x -log10 significance), or label_custom"),
@@ -325,6 +332,19 @@ def render_threshold_scatter(ax, df, params):
     ymin, ymax = params.get("y_min"), params.get("y_max")
     if ymin is not None and ymax is not None:
         ax.set_ylim(float(ymin), float(ymax))
+
+    if params.get("show_identity_line", False):
+        # The visible part of y = x: the overlap of the two axis ranges, in the
+        # plotted (transformed) coordinates. Drawn under the points.
+        xlo, xhi = ax.get_xlim()
+        ylo, yhi = ax.get_ylim()
+        lo, hi = max(xlo, ylo), min(xhi, yhi)
+        if hi > lo:
+            ax.plot([lo, hi], [lo, hi], color=params.get("identity_line_color", "gray"),
+                    linestyle=params.get("identity_line_style", "--"),
+                    linewidth=float(params.get("identity_line_width", 0.8)),
+                    alpha=float(params.get("identity_line_alpha", 0.6)), zorder=0)
+
     if params.get("grid", False):
         ax.grid(True, alpha=float(params.get("grid_alpha", 0.3)))
 

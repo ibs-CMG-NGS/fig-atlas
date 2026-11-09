@@ -61,13 +61,13 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | [`survival`](#survival) | core | 33 |
 | [`table`](#table) | core | 35 |
 | [`tf_expression_scatter_grid`](#tf_expression_scatter_grid) | fig_atlas_omics.renderers | 36 |
-| [`threshold_scatter`](#threshold_scatter) | core | 61 |
+| [`threshold_scatter`](#threshold_scatter) | core | 66 |
 | [`tier_hbar`](#tier_hbar) | core | 16 |
 | [`treatment_schematic`](#treatment_schematic) | core | 25 |
 | [`ts_profile`](#ts_profile) | core | 18 |
 | [`two_set_euler`](#two_set_euler) | core | 27 |
 | [`venn`](#venn) | core | 5 |
-| [`violin`](#violin) | core | 40 |
+| [`violin`](#violin) | core | 44 |
 | [`volcano`](#volcano) | fig_atlas_omics.renderers | 28 |
 
 ## bar_scatter
@@ -2394,6 +2394,11 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `cutoff_line_style` | text | `--` |  | Cut-off line style (matplotlib) |
 | `cutoff_line_width` | number | `1` | pt | Cut-off line width |
 | `cutoff_line_alpha` | number | `0.5` | [0-1] opacity | Cut-off line opacity |
+| `show_identity_line` | true / false | `False` |  | Draw the line y = x, so points on it have equal x and y (e.g. condition 1 vs condition 2) |
+| `identity_line_color` | colour | `gray` | color | Identity line colour |
+| `identity_line_style` | text | `--` |  | Identity line style (matplotlib) |
+| `identity_line_width` | number | `0.8` | pt | Identity line width |
+| `identity_line_alpha` | number | `0.6` | [0-1] opacity | Identity line opacity |
 | `label_mode` | one of `none`, `top_n`, `custom` | `none` |  | Label points: none, the top_n strongest (\|effect\| x -log10 significance), or label_custom |
 | `label_cols` | list | `['nearest_gene', 'gene_name', 'symbol', 'gene_id']` |  | Candidate label columns; the first present is used |
 | `label_top_n` | integer | `10` | points | Points labelled in top_n mode |
@@ -2585,6 +2590,10 @@ The keys a `plots.<panel>` block of a project config can hold, per renderer, fro
 | `y_col` | text | `value` |  | Column with the values |
 | `x_order` | list | auto |  | Category order on x (default: order in the data) |
 | `x_labels` | mapping | `{}` |  | Shown name per category (default: the category) |
+| `hue_col` | text | auto |  | Second factor: draw one violin per category and hue value, side by side (default: not used) |
+| `hue_order` | list | auto |  | Hue order inside each category (default: order in the data) |
+| `hue_colors` | mapping | `{}` | hex color | Fill colour per hue value (default: matplotlib colour cycle) |
+| `hue_labels` | mapping | `{}` |  | Legend label per hue value (default: the hue value) |
 | `group_colors` | mapping | `{}` | hex color | Fill colour per category (default: matplotlib colour cycle) |
 | `violin_width` | number | `0.8` | x units (categories are 1 apart) | Width of each violin — lower for more space between categories |
 | `violin_alpha` | number | `0.6` | [0-1] opacity | Violin fill opacity |

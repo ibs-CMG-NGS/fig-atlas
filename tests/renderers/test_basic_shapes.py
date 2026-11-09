@@ -14,6 +14,7 @@ from fig_atlas.renderers import (  # noqa: E402
     render_histogram,
     render_stacked_bar,
     render_survival,
+    render_threshold_scatter,
     render_violin,
 )
 from fig_atlas.renderers.survival import kaplan_meier  # noqa: E402
@@ -68,6 +69,37 @@ def test_violin_summary_and_order():
     s = render_violin(ax, df, {"x_order": ["a", "b"], "show_points": True})
     assert list(s["category"]) == ["a", "b"] and list(s["n"]) == [20, 20]
     assert [x.get_text() for x in ax.get_xticklabels()] == ["a", "b"]
+    plt.close(fig)
+
+
+def test_violin_with_a_second_factor_sits_side_by_side():
+    """hue_col draws one violin per category and hue value, with a hue legend."""
+    rng = np.random.default_rng(0)
+    df = pd.DataFrame({
+        "group": ["a"] * 40 + ["b"] * 40,
+        "condition": (["ctrl"] * 20 + ["trt"] * 20) * 2,
+        "value": np.r_[rng.normal(0, 1, 20), rng.normal(1, 1, 20),
+                       rng.normal(2, 1, 20), rng.normal(3, 1, 20)],
+    })
+    fig, ax = plt.subplots()
+    s = render_violin(ax, df, {"hue_col": "condition", "hue_order": ["ctrl", "trt"]})
+    assert list(s["category"]) == ["a", "a", "b", "b"]
+    assert list(s["group"]) == ["ctrl", "trt", "ctrl", "trt"]
+    assert [t.get_text() for t in ax.get_xticklabels()] == ["a", "b"]
+    assert ax.get_legend() is not None
+    assert [t.get_text() for t in ax.get_legend().get_texts()] == ["ctrl", "trt"]
+    plt.close(fig)
+
+
+def test_threshold_scatter_identity_line():
+    """show_identity_line draws y = x under the points (condition 1 vs condition 2)."""
+    df = pd.DataFrame({"x": [1.0, 2.0, 3.0], "y": [1.0, 3.0, 2.0],
+                       "effect": [0.0, 2.0, -2.0], "sig": [1.0, 0.01, 0.01]})
+    fig, ax = plt.subplots()
+    render_threshold_scatter(ax, df, {"x_col": "x", "y_col": "y", "effect_col": "effect",
+                                      "sig_col": "sig", "show_identity_line": True,
+                                      "show_cutoff_lines": False, "show_legend": False})
+    assert any(list(ln.get_xdata()) == list(ln.get_ydata()) for ln in ax.lines), "the identity line y = x is drawn"
     plt.close(fig)
 
 

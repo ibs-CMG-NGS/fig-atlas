@@ -6,6 +6,16 @@ All notable changes are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- **`violin`: a second factor (`hue_col`)** draws one violin per category and hue value, side by
+  side inside the category (e.g. a gene's expression per cell type, split by condition), with
+  `hue_order`, `hue_colors` and `hue_labels` and a hue legend. Without `hue_col` the renderer draws
+  exactly as before.
+- **`threshold_scatter`: `show_identity_line`** draws y = x under the points, for scatters of one
+  condition against another (TF footprint activity, condition 1 vs condition 2); colour, style,
+  width and opacity from `identity_line_*`.
+
 ## [0.3.0] — 2026-11-04
 
 Panels kept at their printed size in layouts (`size_mm`, `layouts.mm_axes`), one-cell drawing for
