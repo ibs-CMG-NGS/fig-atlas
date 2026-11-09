@@ -915,6 +915,47 @@ fa ingest bundle raw_data/<project>/stacked_bar --project <project>
 fa build <project> --preflight
 ```
 
+#### upset
+
+Set membership for an UpSet plot: one row per (set, item); intersections are counted by the renderer
+
+![upset](gallery/examples/upset.png)
+
+`inputs/data.csv`, first 5 of 111 rows (2 columns):
+
+```text
+dataset,item
+Acute D1,G002
+Acute D3,G002
+Chronic 24h,G002
+Acute D3,G004
+Chronic 24h,G004
+```
+
+Inputs: `data.csv`. `metadata/metadata.yaml`:
+
+```yaml
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per (set, member) -- dataset (the set), item (the member);
+# the renderer counts the intersections, so no combination column is needed.
+plot_type: upset
+plot_params:
+  min_size: 2
+  sort_by: degree
+  set_label_size: 6             # pt
+  count_size: 5                 # pt
+  title_size: 8                 # pt
+```
+
+Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
+
+```bash
+cp -r <fig-atlas>/examples/gallery/upset raw_data/<project>/
+fa bundle check raw_data/<project>/upset
+fa ingest bundle raw_data/<project>/upset --project <project>
+fa build <project> --preflight
+```
+
 #### venn
 
 Set membership: one row per (set, item); 2-3 sets
@@ -1081,6 +1122,50 @@ fa ingest bundle raw_data/<project>/cross_condition_heatmap --project <project>
 fa build <project> --preflight
 ```
 
+#### dot_matrix
+
+Sparse rows x columns grid: one row per cell (row, column), optional size and colour columns
+
+![dot_matrix](gallery/examples/dot_matrix.png)
+
+`inputs/data.csv`, first 5 of 17 rows (4 columns):
+
+```text
+gene,cell_type,pct_expressing,mean_expression
+Agrp,Astro,19,5.36
+Agrp,Microglia,26,0.74
+Agrp,Oligo,69,3.81
+Pomc,Astro,58,0.9
+Pomc,Neuron,67,3.96
+```
+
+Inputs: `data.csv`. `metadata/metadata.yaml`:
+
+```yaml
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per (gene, cell type) cell -- gene (row), cell_type (column),
+# pct_expressing (dot area), mean_expression (dot colour, a number so a colourbar is drawn).
+plot_type: dot_matrix
+plot_params:
+  row_col: gene
+  col_col: cell_type
+  size_col: pct_expressing
+  color_col: mean_expression
+  colorbar_label: "mean expression"
+  row_label_style: italic
+  tick_label_size: 5.5          # pt
+  legend_fontsize: 5            # pt
+```
+
+Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
+
+```bash
+cp -r <fig-atlas>/examples/gallery/dot_matrix raw_data/<project>/
+fa bundle check raw_data/<project>/dot_matrix
+fa ingest bundle raw_data/<project>/dot_matrix --project <project>
+fa build <project> --preflight
+```
+
 #### go_cluster_dot
 
 One row per GO cluster representative, with cluster size and median fold enrichment
@@ -1122,6 +1207,48 @@ Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
 cp -r <fig-atlas>/examples/gallery/go_cluster_dot raw_data/<project>/
 fa bundle check raw_data/<project>/go_cluster_dot
 fa ingest bundle raw_data/<project>/go_cluster_dot --project <project>
+fa build <project> --preflight
+```
+
+#### go_dot
+
+One row per enriched term: Gene Ratio or Fold Enrichment on x, FDR as colour
+
+![go_dot](gallery/examples/go_dot.png)
+
+`inputs/data.csv`, first 5 of 12 rows (5 columns):
+
+```text
+description,gene_ratio,gene_count,fdr,fold_enrichment
+term A,14/350,14,0.0275,4.18
+term B,16/350,16,0.000332,3.09
+term C,17/350,17,0.000184,4.4
+term D,13/350,13,1.7e-05,1.94
+term E,13/350,13,9.97e-08,4.31
+```
+
+Inputs: `data.csv`. `metadata/metadata.yaml`:
+
+```yaml
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per enriched term -- description, gene_ratio, gene_count, fold_enrichment, fdr
+# (omics pack contract de_go.go_dot).
+plot_type: go_dot
+plot_params:
+  x_axis: Gene Ratio
+  size_mode: Gene Count
+  top_n: 6
+  title_size: 8                 # pt
+  axes_label_size: 7            # pt
+  tick_label_size: 6            # pt
+```
+
+Use it (in your project repository; `<fig-atlas>` is where fig-atlas is cloned):
+
+```bash
+cp -r <fig-atlas>/examples/gallery/go_dot raw_data/<project>/
+fa bundle check raw_data/<project>/go_dot
+fa ingest bundle raw_data/<project>/go_dot --project <project>
 fa build <project> --preflight
 ```
 

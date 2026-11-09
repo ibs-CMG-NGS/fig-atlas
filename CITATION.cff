@@ -13,6 +13,8 @@ authors:
     given-names: Yong Gyu
 repository-code: "https://github.com/ibs-cmg-ngs/fig-atlas"
 license: MIT
+version: 0.4.0
+date-released: "2026-11-09"
 url: "https://ibs-cmg-ngs.github.io/fig-atlas/"
 keywords:
   - scientific figures

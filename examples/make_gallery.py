@@ -491,6 +491,36 @@ def table(rng):
     return pd.DataFrame(rows)
 
 
+def dot_matrix(rng):
+    rows = []
+    for gene in ("Agrp", "Pomc", "Gfap", "Il6", "Tnf"):
+        for cell in ("Astro", "Neuron", "Microglia", "Oligo"):
+            if rng.random() < 0.8:
+                rows.append({"gene": gene, "cell_type": cell,
+                             "pct_expressing": int(rng.integers(5, 95)),
+                             "mean_expression": round(float(rng.gamma(2.0, 0.8)), 2)})
+    return pd.DataFrame(rows)
+
+
+def go_dot(rng):
+    n = 12
+    counts = rng.integers(4, 30, n)
+    return pd.DataFrame({"description": [f"term {chr(65 + i)}" for i in range(n)],
+                         "gene_ratio": [f"{c}/350" for c in counts],
+                         "gene_count": counts,
+                         "fdr": [float(f"{x:.3g}") for x in 10 ** -rng.uniform(1.5, 9, n)],
+                         "fold_enrichment": rng.uniform(1.5, 5, n).round(2)})
+
+
+def upset(rng):
+    rows = []
+    for gene in (f"G{i:03d}" for i in range(1, 81)):
+        for s in ("Acute D1", "Acute D3", "Chronic 24h"):
+            if rng.random() < 0.45:
+                rows.append({"dataset": s, "item": gene})
+    return pd.DataFrame(rows)
+
+
 HEAD = "# Gallery example (examples/make_gallery.py): synthetic data, not measurements.\n"
 META = {
     "line_band": HEAD + """# inputs/data.csv: one row per replicate measurement -- strain (line), hour (x), od600 (y).
@@ -951,6 +981,40 @@ plot_params:
   cell_size: 5.5              # pt; the print floor is 5.0 pt
   title_size: 6.5             # pt
 """,
+    "dot_matrix": HEAD + """# inputs/data.csv: one row per (gene, cell type) cell -- gene (row), cell_type (column),
+# pct_expressing (dot area), mean_expression (dot colour, a number so a colourbar is drawn).
+plot_type: dot_matrix
+plot_params:
+  row_col: gene
+  col_col: cell_type
+  size_col: pct_expressing
+  color_col: mean_expression
+  colorbar_label: "mean expression"
+  row_label_style: italic
+  tick_label_size: 5.5          # pt
+  legend_fontsize: 5            # pt
+""",
+    "go_dot": HEAD + """# inputs/data.csv: one row per enriched term -- description, gene_ratio, gene_count, fold_enrichment, fdr
+# (omics pack contract de_go.go_dot).
+plot_type: go_dot
+plot_params:
+  x_axis: Gene Ratio
+  size_mode: Gene Count
+  top_n: 6
+  title_size: 8                 # pt
+  axes_label_size: 7            # pt
+  tick_label_size: 6            # pt
+""",
+    "upset": HEAD + """# inputs/data.csv: one row per (set, member) -- dataset (the set), item (the member);
+# the renderer counts the intersections, so no combination column is needed.
+plot_type: upset
+plot_params:
+  min_size: 2
+  sort_by: degree
+  set_label_size: 6             # pt
+  count_size: 5                 # pt
+  title_size: 8                 # pt
+""",
 }
 
 
@@ -973,7 +1037,7 @@ def main() -> None:
               "bland_altman": bland_altman, "correlation_matrix": correlation_matrix,
               # table rendering (plans/PLAN_TABLE_RENDERING.md), last so the earlier
               # bundles draw the same numbers as before
-              "table": table}
+              "table": table, "dot_matrix": dot_matrix, "go_dot": go_dot, "upset": upset}
     for name, make in makers.items():
         _write(name, make(rng), META[name])
     # The images get their own random stream, so adding a table example never changes their pixels.

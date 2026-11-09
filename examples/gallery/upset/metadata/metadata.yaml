@@ -1,0 +1,10 @@
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per (set, member) -- dataset (the set), item (the member);
+# the renderer counts the intersections, so no combination column is needed.
+plot_type: upset
+plot_params:
+  min_size: 2
+  sort_by: degree
+  set_label_size: 6             # pt
+  count_size: 5                 # pt
+  title_size: 8                 # pt

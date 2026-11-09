@@ -79,6 +79,10 @@ CORE_CONTRACTS = [
     Contract("core.venn", ("venn",), required=("dataset", "item"),
              doc="docs/contracts/new_plot_type_contract.md",
              title="Set membership: one row per (set, item); 2-3 sets"),
+    Contract("core.upset", ("upset",),
+             role_columns=(("dataset_col", "dataset"), ("item_col", "item")),
+             doc="docs/contracts/new_plot_type_contract.md",
+             title="Set membership for an UpSet plot: one row per (set, item); intersections are counted by the renderer"),
     Contract("core.image", ("image_panel",), input_glob="*.*", required_meta=("pixel_size", "channels"),
              meta_files="channels",
              doc="docs/contracts/image_bundle_contract.md",
@@ -163,6 +167,11 @@ CORE_CONTRACTS = [
              role_columns=(("row_col", "var1"), ("col_col", "var2"), ("r_col", "r")),
              role_optional=("p_col",), doc="docs/contracts/table_bundle_contract.md",
              title="Correlation matrix: one row per pair of variables with r and optional P from the analysis"),
+    Contract("core.dot_matrix", ("dot_matrix",),
+             role_columns=(("row_col", "row"), ("col_col", "column")),
+             role_optional=("size_col", "color_col", "row_group_col"),
+             doc="docs/contracts/table_bundle_contract.md",
+             title="Sparse rows x columns grid: one row per cell (row, column), optional size and colour columns"),
     Contract("core.table", ("table",),
              role_column_lists=("columns",),
              role_column_keys=("column_labels", "column_align", "column_format", "column_width"),
@@ -172,6 +181,7 @@ CORE_CONTRACTS = [
 ]
 CORE_INGEST = {
     "venn": "fig_atlas.renderers:render_venn",
+    "upset": "fig_atlas.renderers:render_upset",
     "image_panel": "fig_atlas.renderers:render_image_panel",
     "multi_group_heatmap": "fig_atlas.renderers:render_multi_group_heatmap",
     "line_band": "fig_atlas.renderers:render_line_band",
@@ -195,6 +205,7 @@ CORE_INGEST = {
     "roc_curve": "fig_atlas.renderers:render_roc_curve",
     "bland_altman": "fig_atlas.renderers:render_bland_altman",
     "correlation_matrix": "fig_atlas.renderers:render_correlation_matrix",
+    "dot_matrix": "fig_atlas.renderers:render_dot_matrix",
     "table": "fig_atlas.renderers:render_table",
 }
 

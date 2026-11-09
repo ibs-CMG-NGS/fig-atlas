@@ -1,14 +1,15 @@
 """dot_matrix: a grid of rows x columns with one dot per filled cell -- dot
-area from a count, colour from a category (e.g. genes x features, coloured by
-where the variants come from). Empty cells stay blank, so the grid reads as a
-sparse table.
+area from a count, colour from a category or from a number (e.g. genes x
+features, coloured by where the variants come from, or a gene x cell-type grid
+coloured by expression). Empty cells stay blank, so the grid reads as a sparse
+table.
 
 Data: one row per (row, column) cell with the columns named by row_col and
-col_col; size_col (a count; absent: every dot one size) and color_col
-(a category; absent: one colour). Rows that repeat a cell are added
-together. A cell with more than one category takes the first in
-``color_order``, or, with ``multi: split``, shows one dot per category side by
-side. A ``row_group_col`` draws a thin line between row groups
+col_col; size_col (a count; absent: every dot one size) and color_col (a
+category, or a number for a continuous colour scale; absent: one colour). Rows
+that repeat a cell are added together. A cell with more than one category takes
+the first in ``color_order``, or, with ``multi: split``, shows one dot per
+category side by side. A ``row_group_col`` draws a thin line between row groups
 (e.g. one block of genes per sample). Returns the cells drawn, ready for
 fig_atlas.source_data.add.
 """
@@ -28,6 +29,14 @@ SCHEMA = Schema("dot_matrix", params=[
     Param("col_col", str, "column", role="Column with the column names"),
     Param("size_col", str, None, role="Column with the count that sets dot area (absent: one size)"),
     Param("color_col", str, None, role="Column with the category that sets dot colour (absent: one colour)"),
+    Param("color_mode", ("auto", "categorical", "numeric"), "auto",
+          role="How color_col is read: a category (legend), a number (continuous colour and colourbar), "
+               "or auto (numeric columns are numbers)"),
+    Param("color_cmap", "cmap", "viridis", role="Colormap of a numeric color_col"),
+    Param("color_min", float, None, unit="value of the colour column", role="Lower end of the numeric colour scale (default: the data)"),
+    Param("color_max", float, None, unit="value of the colour column", role="Upper end of the numeric colour scale (default: the data)"),
+    Param("colorbar_label", str, None, role="Colourbar title (numeric color_col)"),
+    Param("show_colorbar", bool, True, role="Show the colourbar of a numeric color_col"),
     Param("row_group_col", str, None, role="Column grouping rows into blocks with a line between them"),
     Param("row_order", list, None, role="Row order, top to bottom (default: order in the data)"),
     Param("col_order", list, None, role="Column order, left to right (default: order in the data)"),
@@ -85,14 +94,25 @@ def render_dot_matrix(ax, df, params):
     s_col, k_col, g_col = params.get("size_col"), params.get("color_col"), params.get("row_group_col")
     data = df.copy()
     data["_n"] = pd.to_numeric(data[s_col], errors="coerce").fillna(0) if s_col else 1.0
-    kinds = params.get("color_order") or (list(dict.fromkeys(data[k_col].dropna())) if k_col else [])
+    mode = params.get("color_mode", "auto")
+    numeric = bool(k_col) and (mode == "numeric" or
+                               (mode == "auto" and pd.api.types.is_numeric_dtype(data[k_col])))
+    if numeric:
+        data["_val"] = pd.to_numeric(data[k_col], errors="coerce")
+        data = data.dropna(subset=["_val"])
+        kinds = []
+    else:
+        kinds = params.get("color_order") or (list(dict.fromkeys(data[k_col].dropna())) if k_col else [])
     rank = {k: i for i, k in enumerate(kinds)}
     keys = [r_col, c_col] + ([g_col] if g_col and g_col != r_col else [])
-    split = bool(k_col) and params.get("multi", "first") == "split"
-    data = data.assign(_rank=data[k_col].map(rank) if k_col else 0).sort_values("_rank", kind="stable")
+    split = bool(k_col) and not numeric and params.get("multi", "first") == "split"
+    data = data.assign(_rank=data[k_col].map(rank) if k_col and not numeric else 0).sort_values("_rank", kind="stable")
     if split:
         cells = (data.groupby(keys + [k_col], sort=False).agg(n=("_n", "sum")).reset_index()
                  .rename(columns={k_col: "kind"}))
+    elif numeric:
+        cells = (data.groupby(keys, sort=False)
+                 .agg(n=("_n", "sum"), value=("_val", "first")).reset_index())
     else:
         cells = (data.groupby(keys, sort=False)
                  .agg(n=("_n", "sum"), **({"kind": (k_col, "first")} if k_col else {})).reset_index())
@@ -123,11 +143,22 @@ def render_dot_matrix(ax, df, params):
     per, lo, hi = (float(params.get(k, d)) for k, d in (("size_per_unit", 12.0), ("size_min", 10.0), ("size_max", 120.0)))
     area = lambda n: min(max(n * per, lo), hi)                                    # noqa: E731
     cmap = params.get("color_map", {})
-    colors = [cmap.get(k, params.get("default_color", "#4b5563")) for k in cells["kind"]] if k_col else \
-        params.get("default_color", "#4b5563")
-    ax.scatter(cells["x"], cells[r_col].map(y), s=[area(n) for n in cells["n"]], c=colors,
-               edgecolors=params.get("edge_color", "#ffffff"), linewidths=float(params.get("edge_width", 0.4)),
-               zorder=3)
+    if numeric:
+        vmin, vmax = params.get("color_min"), params.get("color_max")
+        sc = ax.scatter(cells["x"], cells[r_col].map(y), s=[area(n) for n in cells["n"]],
+                        c=cells["value"], cmap=params.get("color_cmap", "viridis"),
+                        vmin=None if vmin is None else float(vmin), vmax=None if vmax is None else float(vmax),
+                        edgecolors=params.get("edge_color", "#ffffff"),
+                        linewidths=float(params.get("edge_width", 0.4)), zorder=3)
+        if params.get("show_colorbar", True):
+            fig = getattr(ax.figure, "figure", ax.figure)
+            fig.colorbar(sc, ax=ax, label=text_param(params, "colorbar_label", None))
+    else:
+        colors = [cmap.get(k, params.get("default_color", "#4b5563")) for k in cells["kind"]] if k_col else \
+            params.get("default_color", "#4b5563")
+        ax.scatter(cells["x"], cells[r_col].map(y), s=[area(n) for n in cells["n"]], c=colors,
+                   edgecolors=params.get("edge_color", "#ffffff"), linewidths=float(params.get("edge_width", 0.4)),
+                   zorder=3)
     tick_sz = params.get("tick_label_size")
     if params.get("show_counts", False):
         for _, c in cells.iterrows():

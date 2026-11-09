@@ -48,6 +48,14 @@ SCHEMA = Schema("group_scatter", params=[
     Param("zero_line", bool, True, role="Draw the y = 0 line"),
     Param("zero_line_color", "color", "#9ca3af", unit="hex color", role="Zero line colour"),
     Param("zero_line_width", float, 0.4, unit="pt", range=(0, None), role="Zero line width"),
+    Param("x_cutoffs", list, None, unit="data coords",
+          role="Vertical cut-off lines at these x values (empty: none), e.g. a quadrant split"),
+    Param("y_cutoffs", list, None, unit="data coords",
+          role="Horizontal cut-off lines at these y values (empty: none)"),
+    Param("cutoff_line_color", "color", "#9ca3af", unit="hex color", role="Cut-off line colour"),
+    Param("cutoff_line_style", str, "--", role="Cut-off line style (matplotlib)"),
+    Param("cutoff_line_width", float, 0.6, unit="pt", range=(0, None), role="Cut-off line width"),
+    Param("cutoff_line_alpha", float, 0.6, unit="[0-1] opacity", range=(0, 1), role="Cut-off line opacity"),
     Param("spine_width", float, 0.6, unit="pt", range=(0, None), role="Axis spine width"),
     # [Legend]
     Param("legend", bool, None, role="Show the group legend"),
@@ -90,6 +98,14 @@ def render_group_scatter(ax, df: pd.DataFrame, params: dict):
     colors, labels = params.get("group_colors", {}), params.get("group_labels", {})
     if params.get("zero_line", True):
         ax.axhline(0, color=params.get("zero_line_color", "#9ca3af"), lw=float(params.get("zero_line_width", 0.4)), zorder=1)
+    cut_kw = {"color": params.get("cutoff_line_color", "#9ca3af"),
+              "ls": params.get("cutoff_line_style", "--"),
+              "lw": float(params.get("cutoff_line_width", 0.6)),
+              "alpha": float(params.get("cutoff_line_alpha", 0.6)), "zorder": 1}
+    for x in params.get("x_cutoffs") or []:
+        ax.axvline(float(x), **cut_kw)
+    for y in params.get("y_cutoffs") or []:
+        ax.axhline(float(y), **cut_kw)
     if params.get("fit", True) and len(df) > 2:
         b, a = np.polyfit(df["x"], df["y"], 1)
         xs = np.linspace(df["x"].min(), df["x"].max(), 50)

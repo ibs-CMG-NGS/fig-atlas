@@ -1,0 +1,130 @@
+# Status of the manuscript-drafting plan (plans/PLAN_MANUSCRIPT_DRAFTING.md) -- the single source of task state.
+# One card per task. Change a card when you claim, hand in or finish a task.
+# status: todo | in_progress | in_review | done | dropped | blocked
+# Pilot cards (P-*) run in the private study repository: record commits there as "pilot <sha>",
+# and keep study details out of this file (plan G6).
+plan_version: 1
+gates:                          # researcher decisions (plan section 5): pending | passed <date and note>
+  M1: "passed 2026-11-01 (folder docs/manuscripts/<topic>/ in the pilot repository; outline template as in the plan, section 2; journal decided by the author: Nature Communications)"   # pilot conventions
+  M2: pending                   # which tools Phase 3 builds (from the friction log and the baseline)
+  M3: pending                   # what moves into fig-atlas; public-content scan passed
+  M4: pending                   # method paper: result or future work
+phase_gates:                    # a phase's cards can start only after these gates have passed
+  1: [M1]
+  2: [M1]
+  3: [M2]
+  4: [M3]
+  5: [M3]
+cards:
+  - id: D-01
+    title: "plan, status file, guardrails and metrics"
+    phase: 0
+    status: in_review
+    depends_on: []
+    owner: "claude-code 2026-11-01"
+    commits: []
+    notes: "plans/PLAN_MANUSCRIPT_DRAFTING.md + this file; not committed yet"
+  - id: P-01
+    title: "pilot conventions: manuscript folder, outline template (claim / evidence panel / reference role / boundary), writing order"
+    phase: 1
+    status: in_review
+    depends_on: [D-01]
+    owner: "claude-code 2026-11-01"
+    commits: []
+    notes: "README (conventions), CHANGELOG, empty references.bib in the pilot manuscript folder; not committed yet"
+  - id: P-02
+    title: "skill draft manuscript_draft in the pilot repository"
+    phase: 1
+    status: in_review
+    depends_on: [P-01]
+    owner: "claude-code 2026-11-01"
+    commits: []
+    notes: "what to check and in which order; no prose generation (plan section 3). Drafted 2026-11-01 in the pilot repository (.agents/skills/manuscript_draft/SKILL.md); not committed yet"
+  - id: P-03
+    title: "pilot Results outline from storyline.yaml and FigureSpecs"
+    phase: 1
+    status: in_review
+    depends_on: [P-02]
+    owner: "claude-code 2026-11-01"
+    commits: []
+    notes: "one heading sentence per figure; per paragraph: claim, panels, reference slots, boundary. First draft 2026-11-01 (8 Results sections, 29 paragraphs, 5 open issues); awaiting author review"
+  - id: P-04
+    title: "friction log (kept while writing)"
+    phase: 1
+    status: in_progress
+    depends_on: [P-01]
+    owner: "claude-code 2026-11-01"
+    commits: []
+    notes: "each repeated manual step with date and count; input to gate M2. Started 2026-11-01 (4 entries)"
+  - id: E-01
+    title: "baseline measurement on the first draft (plan section 6)"
+    phase: 2
+    status: todo
+    depends_on: [P-03]
+    owner: null
+    commits: []
+    notes: "before any Phase 3 tool touches the draft"
+  - id: T-01
+    title: "outline scaffold from storyline.yaml + FigureSpecs"
+    phase: 3
+    status: todo
+    depends_on: [E-01]
+    owner: null
+    commits: []
+    notes: "candidate; built only if M2 selects it"
+  - id: T-02
+    title: "live numbers in the manuscript text + hand-typed result count"
+    phase: 3
+    status: todo
+    depends_on: [E-01]
+    owner: null
+    commits: []
+    notes: "candidate; extends AGENTS.md 4.5 and fa claims from legends to the text"
+  - id: T-03
+    title: "figure and panel citation coverage check"
+    phase: 3
+    status: todo
+    depends_on: [E-01]
+    owner: null
+    commits: []
+    notes: "candidate"
+  - id: T-04
+    title: "reference check: cited keys in .bib, DOI/PMID resolve"
+    phase: 3
+    status: todo
+    depends_on: [E-01]
+    owner: null
+    commits: []
+    notes: "candidate; a network lookup is a new external dependency -- decide offline behaviour at M2"
+  - id: T-05
+    title: "trace a sentence to its figure, data and request records"
+    phase: 3
+    status: todo
+    depends_on: [E-01]
+    owner: null
+    commits: []
+    notes: "candidate; extends fa storyline evidence from figures to sentences"
+  - id: X-01
+    title: "move skill, templates and commands into fig-atlas; how-to in en and ko"
+    phase: 4
+    status: todo
+    depends_on: [P-02]
+    owner: null
+    commits: []
+    notes: "after gate M3; docs/ pages need both languages (tests/test_docs_i18n.py)"
+  - id: X-02
+    title: "synthetic example manuscript for tests and docs"
+    phase: 4
+    status: todo
+    depends_on: [X-01]
+    owner: null
+    commits: []
+    notes: "no study content (plan G6)"
+  - id: E-02
+    title: "re-measure on the pilot; gate M4 decision"
+    phase: 5
+    status: todo
+    depends_on: [X-01, E-01]
+    owner: null
+    commits: []
+    notes: ""

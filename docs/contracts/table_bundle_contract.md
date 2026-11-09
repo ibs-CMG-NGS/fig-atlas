@@ -41,6 +41,8 @@ Draws a table with an effect size (whose sign is the direction) and a significan
 | `y_col` | — | Yes | The column drawn on y |
 | `effect_col` | — | Yes | The signed effect column (decides up / down) |
 | `sig_col` | — | Yes | The significance column (e.g. adjusted P) |
+| `color_col` | — | No | A category that colours the points instead of up / down / ns (e.g. concordance classes) |
+| `size_col` | — | No | A number that scales the point area (e.g. peak count); `size_min`/`size_max` set the range |
 
 There are no default column names, so all four roles must be given in `plot_params`. Transforms are given with `x_transform` / `y_transform` (`none`, `log10`, `neg_log10`).
 
@@ -234,6 +236,27 @@ plot_params:
   p_col: p_value
   triangle: lower
   mark: square        # or circle
+```
+
+## `plot_type: dot_matrix` — sparse rows × columns grid
+
+Draws one dot per (row, column) cell, with the dot area from a count and the dot colour from a category (`render_dot_matrix`). A numeric colour column is drawn as a continuous colour scale with a colourbar (`color_cmap`, `color_min`, `color_max`, `colorbar_label`); `color_mode` forces one reading when a column could be either. A cell that has no row is left empty; rows and columns keep the order of the data or the order given in `row_order` and `col_order`. Typical uses are a gene × cell-type expression grid and a pathway × condition evidence grid.
+
+| Role (plot_params key) | Default column name | Required | Content |
+|---|---|---|---|
+| `row_col` | `row` | Yes | The row (feature) of the cell |
+| `col_col` | `column` | Yes | The column (sample, condition) of the cell |
+| `size_col` | — | No | The count that sets dot area (absent: one size) |
+| `color_col` | — | No | A category (legend) or a number (continuous colour and colourbar) that sets dot colour (absent: one colour) |
+| `row_group_col` | — | No | Groups rows into blocks with a line between them |
+
+```yaml
+plot_type: dot_matrix
+plot_params:
+  row_col: gene
+  col_col: cell_type
+  size_col: pct_expressing
+  color_col: response_class
 ```
 
 ## `plot_type: table` — a summary table printed as text

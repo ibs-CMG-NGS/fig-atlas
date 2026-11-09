@@ -1,0 +1,11 @@
+# Gallery example (examples/make_gallery.py): synthetic data, not measurements.
+# inputs/data.csv: one row per enriched term -- description, gene_ratio, gene_count, fold_enrichment, fdr
+# (omics pack contract de_go.go_dot).
+plot_type: go_dot
+plot_params:
+  x_axis: Gene Ratio
+  size_mode: Gene Count
+  top_n: 6
+  title_size: 8                 # pt
+  axes_label_size: 7            # pt
+  tick_label_size: 6            # pt

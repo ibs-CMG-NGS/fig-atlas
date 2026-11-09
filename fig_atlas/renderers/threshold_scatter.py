@@ -17,6 +17,7 @@ FAMILY = "xy"    # gallery family (fig_atlas/family.py): the shape this module d
 
 import numpy as np
 import pandas as pd
+import matplotlib
 
 from ..params import text_param
 from ..schema import CODE_DEFAULT, Param, Schema, typography, uses_schema
@@ -42,6 +43,18 @@ SCHEMA = Schema("threshold_scatter", params=[
     Param("down_color", "color", "#0000ff", unit="hex color", role="Colour of down points"),
     Param("ns_color", "color", "#808080", unit="hex color", role="Colour of non-significant points"),
     Param("dot_size", float, 20, unit="pt^2 (marker area)", range=(0, None), role="Point size", tune="lower for dense plots"),
+    Param("color_col", str, None,
+          role="Column with a category that colours the points instead of up / down / ns (e.g. concordance classes)"),
+    Param("color_order", list, None, role="Category order in drawing and legend (default: order in the data)"),
+    Param("color_colors", dict, {}, open_keys=True, unit="hex color",
+          role="Colour per category (default: matplotlib colour cycle)"),
+    Param("color_labels", dict, {}, open_keys=True, role="Legend label per category (default: the category)"),
+    Param("size_col", str, None,
+          role="Column with a number that scales the point area (default: dot_size for every point)"),
+    Param("size_min", float, 6.0, unit="pt^2 (marker area)", range=(0, None),
+          role="Smallest point area when size_col is given", tune="raise so small points stay visible"),
+    Param("size_max", float, 120.0, unit="pt^2 (marker area)", range=(0, None),
+          role="Largest point area when size_col is given", tune="lower if large points touch"),
     Param("ns_alpha", float, 0.6, unit="[0-1] opacity", range=(0, 1), role="Opacity of non-significant points"),
     Param("sig_alpha", float, 0.6, unit="[0-1] opacity", range=(0, 1), role="Opacity of up / down points"),
     Param("ns_zorder", float, None, unit="matplotlib zorder", role="Drawing order of the ns points (default: matplotlib's)"),
@@ -55,6 +68,13 @@ SCHEMA = Schema("threshold_scatter", params=[
     Param("cutoff_line_style", str, "--", role="Cut-off line style (matplotlib)"),
     Param("cutoff_line_width", float, 1, unit="pt", range=(0, None), role="Cut-off line width"),
     Param("cutoff_line_alpha", float, 0.5, unit="[0-1] opacity", range=(0, 1), role="Cut-off line opacity"),
+    # [Identity line]
+    Param("show_identity_line", bool, False,
+          role="Draw the line y = x, so points on it have equal x and y (e.g. condition 1 vs condition 2)"),
+    Param("identity_line_color", "color", "gray", unit="color", role="Identity line colour"),
+    Param("identity_line_style", str, "--", role="Identity line style (matplotlib)"),
+    Param("identity_line_width", float, 0.8, unit="pt", range=(0, None), role="Identity line width"),
+    Param("identity_line_alpha", float, 0.6, unit="[0-1] opacity", range=(0, 1), role="Identity line opacity"),
     # [Point labels]
     Param("label_mode", ("none", "top_n", "custom"), "none",
           role="Label points: none, the top_n strongest (|effect| x -log10 significance), or label_custom"),
@@ -297,15 +317,40 @@ def render_threshold_scatter(ax, df, params):
 
     colors = {"up": params.get("up_color", "#ff0000"), "down": params.get("down_color", "#0000ff"),
               "ns": params.get("ns_color", "#808080")}
-    for cat in _CLASSES:
-        mask = regulation == cat
-        kw = {}
-        z = params.get("ns_zorder") if cat == "ns" else params.get("sig_zorder")
-        if z is not None:
-            kw["zorder"] = float(z)
-        alpha = params.get("ns_alpha", 0.6) if cat == "ns" else params.get("sig_alpha", 0.6)
-        ax.scatter(xs[mask], ys[mask], c=colors[cat], s=float(params.get("dot_size", 20)), alpha=float(alpha),
-                   label=f"{cat.upper()} ({int(mask.sum())})", edgecolors="none", **kw)
+    size_col = params.get("size_col")
+    if size_col and size_col in df.columns:
+        v = pd.to_numeric(df[size_col], errors="coerce")
+        lo, hi = float(params.get("size_min", 6.0)), float(params.get("size_max", 120.0))
+        vmin, vmax = float(v.min()), float(v.max())
+        span = (vmax - vmin) or 1.0
+        areas = (lo + (v - vmin) / span * (hi - lo)).fillna(lo)
+    else:
+        areas = pd.Series(float(params.get("dot_size", 20)), index=df.index)
+
+    color_by = params.get("color_col")
+    if color_by and color_by in df.columns:
+        order = params.get("color_order") or list(dict.fromkeys(df[color_by].dropna()))
+        color_map, color_names = params.get("color_colors", {}), params.get("color_labels", {})
+        cycle = matplotlib.rcParams["axes.prop_cycle"].by_key().get("color", [None])
+        z = params.get("sig_zorder")
+        for i, cat in enumerate(order):
+            mask = df[color_by] == cat
+            if not mask.any():
+                continue
+            kw = {} if z is None else {"zorder": float(z)}
+            ax.scatter(xs[mask], ys[mask], s=areas[mask], c=color_map.get(cat) or cycle[i % len(cycle)],
+                       alpha=float(params.get("sig_alpha", 0.6)), edgecolors="none",
+                       label=str(color_names.get(cat, cat)), **kw)
+    else:
+        for cat in _CLASSES:
+            mask = regulation == cat
+            kw = {}
+            z = params.get("ns_zorder") if cat == "ns" else params.get("sig_zorder")
+            if z is not None:
+                kw["zorder"] = float(z)
+            alpha = params.get("ns_alpha", 0.6) if cat == "ns" else params.get("sig_alpha", 0.6)
+            ax.scatter(xs[mask], ys[mask], c=colors[cat], s=areas[mask], alpha=float(alpha),
+                       label=f"{cat.upper()} ({int(mask.sum())})", edgecolors="none", **kw)
 
     if params.get("show_cutoff_lines", True):
         width = float(params.get("cutoff_line_width", 1))
@@ -325,6 +370,19 @@ def render_threshold_scatter(ax, df, params):
     ymin, ymax = params.get("y_min"), params.get("y_max")
     if ymin is not None and ymax is not None:
         ax.set_ylim(float(ymin), float(ymax))
+
+    if params.get("show_identity_line", False):
+        # The visible part of y = x: the overlap of the two axis ranges, in the
+        # plotted (transformed) coordinates. Drawn under the points.
+        xlo, xhi = ax.get_xlim()
+        ylo, yhi = ax.get_ylim()
+        lo, hi = max(xlo, ylo), min(xhi, yhi)
+        if hi > lo:
+            ax.plot([lo, hi], [lo, hi], color=params.get("identity_line_color", "gray"),
+                    linestyle=params.get("identity_line_style", "--"),
+                    linewidth=float(params.get("identity_line_width", 0.8)),
+                    alpha=float(params.get("identity_line_alpha", 0.6)), zorder=0)
+
     if params.get("grid", False):
         ax.grid(True, alpha=float(params.get("grid_alpha", 0.3)))
 

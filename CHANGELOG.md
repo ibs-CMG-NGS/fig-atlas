@@ -6,6 +6,45 @@ All notable changes are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.4.0] — 2026-11-09
+
+Four shapes for upstream bundles — a numeric dot colour, scatter cut-offs, colour and size roles on
+a threshold scatter, and an UpSet plot — and two renderer options for the manuscript case study (a
+second factor on a violin, the y = x line on a threshold scatter); `go_dot` and `dot_matrix` take
+bundles; the CLI no longer fails on a console that cannot encode a report's characters.
+
+### Added
+
+- **`go_dot` and `dot_matrix` take data bundles**: contracts `de_go.go_dot` (term, Gene Ratio,
+  Fold Enrichment, Gene Count, FDR) and `core.dot_matrix` (row, column, optional size, colour and
+  row group), with the ingest entries for both, so `fa bundle check` and `fa ingest bundle` accept
+  the two plot types. The renderers already existed; the contract document gained a section for each
+  (`de_go_bundle_contract.md`, `table_bundle_contract.md` and its Korean page).
+- **`dot_matrix`: a numeric `color_col`** draws a continuous colour scale with a colourbar
+  (`color_cmap`, `color_min`, `color_max`, `colorbar_label`); a text column keeps the category
+  legend, and `color_mode` forces either reading.
+- **`group_scatter`: `x_cutoffs` / `y_cutoffs`** draw config-driven cut-off lines (colour, style,
+  width and opacity from `cutoff_line_*`), for quadrant-style scatters.
+- **`threshold_scatter`: `color_col` and `size_col`** colour the points by a category (e.g.
+  concordance classes) instead of up / down / ns, and scale the point area by a number (e.g. peak
+  count) between `size_min` and `size_max`.
+- **`upset`**: a new renderer and the `core.upset` contract (`dataset`, `item`). It counts the
+  intersections of a long membership table, draws the largest as bars over a dot matrix, and works
+  for more sets than a Venn diagram can show.
+- **`violin`: a second factor (`hue_col`)** draws one violin per category and hue value, side by
+  side inside the category (e.g. a gene's expression per cell type, split by condition), with
+  `hue_order`, `hue_colors` and `hue_labels` and a hue legend. Without `hue_col` the renderer draws
+  exactly as before.
+- **`threshold_scatter`: `show_identity_line`** draws y = x under the points, for scatters of one
+  condition against another (TF footprint activity, condition 1 vs condition 2); colour, style,
+  width and opacity from `identity_line_*`.
+
+### Fixed
+
+- **CLI text output on a console that cannot encode a character** (a Unicode minus on a cp949
+  Windows console, for one) no longer ends the command with `UnicodeEncodeError`: the text report
+  falls back to ASCII for such characters (`-`, `>=`, `x`, ...), and `--json` stays UTF-8.
+
 ## [0.3.1] — 2026-11-07
 
 A fix of provenance records; nothing else changes from 0.3.0. Released from the
