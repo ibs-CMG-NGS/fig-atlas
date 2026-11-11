@@ -167,3 +167,4 @@ nav:
           - 0005 One source for the rules: decisions/0005-agents-md-single-source.md
           - 0006 Documentation in two languages: decisions/0006-documentation-in-two-languages.md
           - 0007 Renderers draw results, they do not compute them: decisions/0007-renderers-draw-results-they-do-not-compute.md
+          - 0008 Inputs are checked to be kept: decisions/0008-inputs-are-checked-to-be-kept.md
