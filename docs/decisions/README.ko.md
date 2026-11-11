@@ -11,7 +11,7 @@
 | [0005](0005-agents-md-single-source.md) | 규칙의 단일 정본은 루트 `AGENTS.md` | 채택 (2026-10-08) |
 | [0006](0006-documentation-in-two-languages.md) | 문서는 영어가 정본이고, 한국어판을 함께 둔다 | 채택 (2026-10-14) |
 | [0007](0007-renderers-draw-results-they-do-not-compute.md) | 렌더러는 그림이 인쇄하는 결과를 그리고, 계산은 분석 스크립트가 한다 | 채택 (2026-10-27) |
-| [0008](0008-inputs-are-checked-to-be-kept.md) | 게시한 그림의 입력이 두 곳 이상에 보관되어 있는지 확인한다. fig-atlas가 보관하지는 않는다 | 제안 (2026-11-11) |
+| [0008](0008-bundles-state-where-they-came-from.md) | 번들은 자신이 어디서 왔는지 적을 수 있다(`upstream`, 선택). fig-atlas는 싣고 보여 줄 뿐 확인하지 않는다 | 제안 (2026-11-11) |
 
 ## 새 결정 쓰기
 
