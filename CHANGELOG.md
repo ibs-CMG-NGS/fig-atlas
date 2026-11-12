@@ -6,6 +6,13 @@ All notable changes are documented here. The format follows
 
 ## [Unreleased]
 
+### Fixed
+
+- **Preflight no longer crashes on a line broken by NaN**: the `legend_covers_data` check sampled
+  every segment of a line and failed with `ValueError: cannot convert float NaN to integer` when a
+  NaN row made the line stop and start again. Segments with a non-finite end are now skipped, as
+  missing scatter points already were, so the gap counts as no data under the legend.
+
 ## [0.4.0] — 2026-11-09
 
 Four shapes for upstream bundles — a numeric dot colour, scatter cut-offs, colour and size roles on
