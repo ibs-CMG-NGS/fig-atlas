@@ -372,6 +372,47 @@ def test_retire_moves_to_archive(repo):
     assert plan_retire(repo, name).empty                                                 # idempotent
 
 
+def _fallback_and_baselines(repo, name, ns):
+    """Give a project a CONFIG_PATH fallback and rows in both quality baselines."""
+    script = repo / f"analysis/{ns}/{name}_analysis.py"
+    script.write_text(f'import os\nos.environ.setdefault("CONFIG_PATH", "configs/{ns}/config_{name}.yaml")\n'
+                      + script.read_text(encoding="utf-8"), encoding="utf-8")
+    base = repo / "docs" / "baselines"
+    base.mkdir(parents=True, exist_ok=True)
+    (base / "hand_typed_numbers.csv").write_bytes(
+        (f"project,figure,kind,number,context\r\n{name},1,claim,42,n = 42\r\nlab-keep,1,claim,7,seven\r\n").encode())
+    (base / "hardcoded_literals.csv").write_text(
+        f"file,count\nanalysis/{ns}/{name}_analysis.py,3\nanalysis/lab/exploratory/lab-keep_analysis.py,1\n", encoding="utf-8")
+
+
+def test_promote_moves_the_config_fallback_folder_and_the_baselines(repo):
+    """The script's CONFIG_PATH fallback names the config's new folder, not only its new file name, and
+    the two quality baselines follow the renamed project and its moved files (CRLF kept)."""
+    from fig_atlas.repo_commands import plan_promote
+    old = _exploratory(repo)
+    _fallback_and_baselines(repo, old, "lab/exploratory")
+    plan_promote(repo, old, 4, "atlas").apply()
+    new = "lab-paper-main-fig4-atlas"
+    script = (repo / f"analysis/lab/paper/{new}_analysis.py").read_text(encoding="utf-8")
+    assert f'"configs/lab/paper/config_{new}.yaml"' in script and "exploratory" not in script.splitlines()[1]
+    claims = (repo / "docs/baselines/hand_typed_numbers.csv").read_bytes().decode()
+    assert f"\r\n{new},1,claim,42," in claims and f"{old}," not in claims and "\r\nlab-keep,1," in claims
+    hard = (repo / "docs/baselines/hardcoded_literals.csv").read_text(encoding="utf-8")
+    assert f"analysis/lab/paper/{new}_analysis.py,3" in hard and "lab-trial_analysis.py" not in hard
+    assert "analysis/lab/exploratory/lab-keep_analysis.py,1" in hard
+
+
+def test_retire_moves_the_config_fallback_folder_and_the_file_baseline(repo):
+    from fig_atlas.repo_commands import plan_retire
+    name = _exploratory(repo)
+    _fallback_and_baselines(repo, name, "lab/exploratory")
+    plan_retire(repo, name).apply()
+    script = (repo / f"analysis/lab/archive/{name}_analysis.py").read_text(encoding="utf-8")
+    assert f'"configs/lab/archive/config_{name}.yaml"' in script
+    assert f"\r\n{name},1,claim,42," in (repo / "docs/baselines/hand_typed_numbers.csv").read_bytes().decode()  # same name
+    assert f"analysis/lab/archive/{name}_analysis.py,3" in (repo / "docs/baselines/hardcoded_literals.csv").read_text()
+
+
 def test_promote_refuses_non_exploratory_and_sandbox(repo):
     from fig_atlas.repo_commands import plan_promote, plan_retire
     plan_new_project(repo, "sandbox-y").apply()
