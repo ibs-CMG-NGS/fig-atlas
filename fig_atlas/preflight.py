@@ -489,6 +489,8 @@ def _legend_on_data(fig, own, lb, la, renderer, p) -> Finding | None:
                 continue                         # a reference line across the axes (axhline, axvline)
             xy = line.get_transform().transform(line.get_xydata()) * k
             for (ax_, ay), (bx, by) in zip(xy[:-1], xy[1:]):
+                if not (math.isfinite(ax_) and math.isfinite(ay) and math.isfinite(bx) and math.isfinite(by)):
+                    continue                     # a NaN row breaks the line there: nothing is drawn, nothing is covered
                 n = max(1, int(math.hypot(bx - ax_, by - ay)))          # about one sample per mm
                 hits += sum(inside(ax_ + (bx - ax_) * i / n, ay + (by - ay) * i / n) for i in range(n + 1))
     if covered / la < p["legend_data_frac"] and hits < p["legend_data_points"]:

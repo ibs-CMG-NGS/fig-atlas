@@ -292,6 +292,24 @@ def test_legend_check_tolerates_missing_points():
     preflight(fig, saved_bbox_in="tight")
 
 
+def test_legend_check_tolerates_a_line_broken_by_nan():
+    """A NaN row is how a line is made to stop and start again; it crashed the
+    check, and the gap it leaves must not count as data under the legend."""
+    def make(ys):
+        fig, ax = plt.subplots(figsize=(3.0, 2.2))
+        ax.plot(range(5), ys, color="k", label="share")
+        ax.set_ylim(0, 2)
+        ax.legend(loc="center")
+        return fig
+
+    whole = [f for f in preflight(make([1, 1, 1, 1, 1]), saved_bbox_in="tight") if f.check == "legend_covers_data"]
+    assert whole                                   # the unbroken line runs under the legend
+    gap = [f for f in preflight(make([1, np.nan, np.nan, np.nan, 1]), saved_bbox_in="tight")
+           if f.check == "legend_covers_data"]
+    assert not gap                                 # nothing is drawn where the legend sits
+    plt.close("all")
+
+
 def test_colorbar_divider_lines_that_draw_nothing_are_not_measured():
     """A colorbar keeps an empty divider LineCollection half as wide as the
     axes lines; it prints nothing, so it must not fail a line minimum."""
