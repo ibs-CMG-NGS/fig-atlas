@@ -12,6 +12,13 @@ All notable changes are documented here. The format follows
   every segment of a line and failed with `ValueError: cannot convert float NaN to integer` when a
   NaN row made the line stop and start again. Segments with a non-finite end are now skipped, as
   missing scatter points already were, so the gap counts as no data under the legend.
+- **`fa promote` and `fa retire` keep a moved project's config path and baselines in step**: the
+  analysis script's `CONFIG_PATH` fallback now follows the config into its new folder (promote renamed
+  only the file, so the fallback named `configs/<domain>/exploratory/config_<new>.yaml`, which does not
+  exist; retire left the fallback untouched). Both commands also carry the project's rows in
+  `docs/baselines/`: the hand-typed-number baseline follows a renamed project, and the hard-coded-literal
+  baseline follows its moved files, so `fa claims --check` and `fa lint --hardcoded --check` no longer
+  fail after a move that changed no number.
 
 ## [0.4.0] — 2026-11-09
 

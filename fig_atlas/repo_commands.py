@@ -214,6 +214,35 @@ def _moved_spec_text(text: str, old_ns: str, old_name: str, new_ns: str, new_nam
     return text.replace(f"{old_ns}/{old_name}/", f"{new_ns}/{new_name}/")
 
 
+def _moved_script_text(text: str, old_ns: str, old_name: str, new_ns: str, new_name: str) -> str:
+    """The analysis script's own config path (its CONFIG_PATH fallback, docstrings) after a move: the
+    namespace folder follows as well as the file name, so the fallback still names a file that exists."""
+    text = text.replace(f"configs/{old_ns}/config_{old_name}.yaml", f"configs/{new_ns}/config_{new_name}.yaml")
+    return text.replace(f"config_{old_name}.yaml", f"config_{new_name}.yaml")
+
+
+def _baselines_follow(cs: ChangeSet, root: Path, old_name: str, new_name: str, moved: dict[str, str]) -> None:
+    """Keep the two quality baselines on the moved project: the hand-typed-number baseline is keyed by
+    project name, the hard-coded-literal baseline by file path. Left alone, the renamed project's rows
+    no longer match and its existing numbers count as new (`fa claims --check` / `fa lint --hardcoded
+    --check` fail on a move that changed nothing)."""
+    from .cli import CLAIMS_BASELINE, HARDCODED_BASELINE
+
+    def first_field(path: Path, rename: dict[str, str]) -> None:
+        target = root / path
+        if not rename or not target.is_file():
+            return
+        lines = target.read_bytes().decode("utf-8").split("\n")
+        for i, line in enumerate(lines[1:], 1):                     # the header stays
+            key, sep, rest = line.partition(",")
+            if sep and key in rename:
+                lines[i] = rename[key] + sep + rest
+        cs.edit(path, "\n".join(lines))
+
+    first_field(CLAIMS_BASELINE, {old_name: new_name} if old_name != new_name else {})
+    first_field(HARDCODED_BASELINE, moved)
+
+
 # ------------------------------------------------------------------- retire --
 def plan_retire(root: Path, name: str) -> ChangeSet:
     """Move a project to <domain>/archive/ (AGENTS.md 5.3): config, analysis
@@ -228,11 +257,16 @@ def plan_retire(root: Path, name: str) -> ChangeSet:
     if new_script:
         cfg_text = _set_project_field(cfg_text, "analysis_script", new_script)
     cs.move(p.config, root / "configs" / new_ns / p.config.name, cfg_text)
+    moved: dict[str, str] = {}
     if script and script.is_file():
-        cs.move(script, root / new_script)
+        stext = _moved_script_text(script.read_bytes().decode("utf-8"), old_ns, name, new_ns, name)
+        cs.move(script, root / new_script, stext)
+        moved[cs._rel(script)] = new_script
     for s in specs:
         txt = _moved_spec_text(s.read_bytes().decode("utf-8"), old_ns, name, new_ns, name, new_script or "")
         cs.move(s, root / "figure_specs" / new_ns / s.name, txt)
+        moved[cs._rel(s)] = f"figure_specs/{new_ns}/{s.name}"
+    _baselines_follow(cs, root, name, name, moved)
     tasks = root / TASKS
     if tasks.is_file():
         cs.edit(TASKS, tasks_with(tasks.read_bytes().decode("utf-8"), remove=(name,)))
@@ -285,12 +319,16 @@ def plan_promote(root: Path, name: str, figure: int, slug: str, supp: bool = Fal
     cfg_text = _set_project_field(cfg_text, "spec_pattern", f"figure_*_{new}.py")
     cfg_text = _set_project_field(cfg_text, "analysis_script", new_script)
     cs.move(p.config, root / "configs" / new_ns / f"config_{new}.yaml", cfg_text)
+    moved: dict[str, str] = {}
     if script and script.is_file():
-        stext = script.read_bytes().decode("utf-8").replace(f"config_{name}.yaml", f"config_{new}.yaml")
+        stext = _moved_script_text(script.read_bytes().decode("utf-8"), old_ns, name, new_ns, new)
         cs.move(script, root / new_script, stext)
+        moved[cs._rel(script)] = new_script
     for s in specs:
         txt = _moved_spec_text(s.read_bytes().decode("utf-8"), old_ns, name, new_ns, new, new_script)
         cs.move(s, root / "figure_specs" / new_ns / s.name.replace(name, new), txt)
+        moved[cs._rel(s)] = f"figure_specs/{new_ns}/{s.name.replace(name, new)}"
+    _baselines_follow(cs, root, name, new, moved)
     tasks = root / TASKS
     if tasks.is_file():
         cs.edit(TASKS, tasks_with(tasks.read_bytes().decode("utf-8"), add=(new,), remove=(name,)))
