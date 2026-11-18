@@ -12,6 +12,7 @@ This folder records fig-atlas's main design decisions and their reasons. The rul
 | [0006](0006-documentation-in-two-languages.md) | The documentation is English, the source of truth, with a Korean version beside it | Accepted (2026-10-14) |
 | [0007](0007-renderers-draw-results-they-do-not-compute.md) | Renderers draw the results a figure prints; the analysis script computes them | Accepted (2026-10-27) |
 | [0008](0008-bundles-state-where-they-came-from.md) | A bundle may state where it came from (`upstream`, optional); fig-atlas carries it and does not check it | Proposed (2026-11-11) |
+| [0009](0009-project-renderers-stay-in-the-project.md) | A project's own renderers stay in the project; what they rely on is a public contract | Proposed (2026-11-18) |
 
 ## Writing a new decision
 

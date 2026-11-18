@@ -15,6 +15,18 @@ All notable changes are documented here. The format follows
   asks each bundle to state its `upstream` files. Linked from the bundle contracts, the guide (chapter
   12) and `AGENTS.md`. Design decision 0008 (proposed) records why a bundle states where it came from
   and why fig-atlas does not check it.
+- **A project's own renderers stay in the project; what they rely on is a contract**
+  ([decision 0009](docs/decisions/0009-project-renderers-stay-in-the-project.md), proposed). A renderer
+  that `fa new renderer` writes into a project repository's `renderers/` is no longer pointed at the
+  core. `fig_atlas/renderer_api.py` lists what such a renderer may rely on (the calling convention,
+  `fig_atlas.schema`'s `Schema`/`Param`/`CODE_DEFAULT`/`StyleRef`/`typography`/`uses_schema`,
+  `text_param`, `stars`, `fig_atlas.render` and the public `render_*` functions); a release changes
+  one only after a release that warns. `fa new renderer --from` lists the copy's imports outside the
+  contract (often `fig_atlas.renderers._basic`), and `tests/test_renderer_api.py` guards the list.
+- **`fa init` tells people and agents where a new plot shape goes, and checks it**: its `AGENTS.md`
+  gains a rule (look in `fa renderers`, start from `fa new renderer --from`, keep the shape in
+  `renderers/` with its test, never drawing code in an analysis script or an edit to the installed
+  package), and its CI workflow runs `tests/renderers` when the repository has renderers.
 
 ### Fixed
 

@@ -23,6 +23,14 @@ reasons are in the fig-atlas documentation.
 7. **Paper figures**: `<domain>-paper-main-fig<N>-<slug>` matches Main Figure N of the storyline
    (`docs/storylines/`); promote with `fa promote`, retire with `fa retire` (never delete), and log
    every storyline change as a numbered revision.
+8. **A new plot shape is a renderer in this repository's `renderers/`**, never drawing code in an
+   analysis script and never an edit to the installed fig-atlas. First look for one that fits
+   (`fa renderers`); if one is close, start from a copy (`fa new renderer <name> --from <renderer>`),
+   otherwise `fa new renderer <name> [--plot-type <type>]`. Every visual value is a `Param` in its
+   `SCHEMA`; keep its test in `tests/renderers/` passing (`python -m pytest tests/renderers`). The
+   renderer stays here and every project in this repository can use it; it relies only on the
+   renderer contract fig-atlas keeps across releases, so after upgrading fig-atlas run its tests
+   and rebuild.
 
 ## Commands
 
@@ -33,4 +41,5 @@ after the user has seen the dry-run diff.
 - New project: `fa new project <name> --domain <d> --category exploratory`
 - Add a data bundle: `fa bundle check <bundle>`, then `fa ingest bundle <bundle> --project <name>`
 - Build and check: `fa build <name> --preflight`
+- A new plot shape: `fa renderers`, then `fa new renderer <name> [--from <renderer>] [--plot-type <type>]`
 - Paper lifecycle: `fa promote`, `fa retire`, `fa storyline ...`
