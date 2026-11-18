@@ -39,6 +39,13 @@ source .venv/bin/activate              # macOS, Linux
 pip install "git+https://github.com/ibs-CMG-NGS/fig-atlas@v0.4.0"
 ```
 
+Run these in the folder you work in, usually your project repository. `python -m venv .venv`
+makes a folder `.venv` that holds a Python of its own, and pip installs fig-atlas inside it, under
+`.venv\Lib\site-packages\fig_atlas` (`.venv/lib/python3.12/site-packages/fig_atlas` on macOS and
+Linux). That is expected: it is the installed package, not a copy to edit. Leave the folder alone
+and keep it out of git (the `.gitignore` that `fa init` writes does); to start over, delete it and
+run the commands again. Activate it in every new terminal before you run `fa`.
+
 Without Git, install the release archive instead (same package):
 
 ```bash
@@ -60,7 +67,7 @@ fa --help
 ```
 
 `fa --version` prints the version and the folder the package is imported from, for example
-`fa 0.3.1 (.../site-packages)`. `fa renderers` and `fa layouts` show what it can draw and arrange, even before you make a project repository. Then make a project repository and a first figure:
+`fa 0.4.0 (.../site-packages)`. `fa renderers` and `fa layouts` show what it can draw and arrange, even before you make a project repository. Then make a project repository and a first figure:
 [Tutorial: first figure](../tutorials/first_figure.md).
 
 ## Pin the version in your project repository
@@ -92,6 +99,16 @@ fa build --all --preflight
 
 Rebuild and look at the figures before you send them on: a new release can change defaults, and
 the checks report what moved.
+
+## Working with an AI agent
+
+Install a release as above; the agent does not need the fig-atlas source. It works in your project
+repository, where `fa init` writes the rules it reads (`AGENTS.md`, and `CLAUDE.md` for Claude
+Code), and runs the installed `fa` commands, in a shell or as MCP tools
+([Connect AI agents](ai_agents.md)). `fa <command> --help` and these pages answer what the rules
+leave open. Clone fig-atlas only when you, or the agent, are to change fig-atlas itself, and keep
+the clone in a folder of its own beside the project repository, not inside it, so `fa` in the
+project still runs the release (see the last table).
 
 ## Develop fig-atlas itself
 

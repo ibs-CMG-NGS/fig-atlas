@@ -38,6 +38,12 @@ source .venv/bin/activate              # macOS, Linux
 pip install "git+https://github.com/ibs-CMG-NGS/fig-atlas@v0.4.0"
 ```
 
+이 명령은 작업하는 폴더, 보통 프로젝트 저장소에서 실행합니다. `python -m venv .venv`는 자체 파이썬을 담은
+`.venv` 폴더를 만들고, pip는 fig-atlas를 그 안의 `.venv\Lib\site-packages\fig_atlas`(macOS, Linux에서는
+`.venv/lib/python3.12/site-packages/fig_atlas`)에 설치합니다. 이것이 정상입니다. 설치된 패키지이지 고쳐 쓸
+사본이 아닙니다. 폴더는 건드리지 말고 git에서 빼 둡니다(`fa init`이 쓰는 `.gitignore`가 빼 줍니다). 처음부터
+다시 하려면 폴더를 지우고 명령을 다시 실행합니다. 새 터미널을 열 때마다 `fa`를 쓰기 전에 활성화합니다.
+
 Git이 없으면 릴리스 압축 파일로 설치합니다(같은 패키지).
 
 ```bash
@@ -57,7 +63,7 @@ fa --version
 fa --help
 ```
 
-`fa --version`은 버전과 패키지를 불러오는 폴더를 보여 줍니다. 예: `fa 0.3.1 (.../site-packages)`. `fa renderers`와 `fa layouts`는 프로젝트 저장소를 만들기 전에도 그릴 수 있는 그림과 배치를 보여 줍니다.
+`fa --version`은 버전과 패키지를 불러오는 폴더를 보여 줍니다. 예: `fa 0.4.0 (.../site-packages)`. `fa renderers`와 `fa layouts`는 프로젝트 저장소를 만들기 전에도 그릴 수 있는 그림과 배치를 보여 줍니다.
 다음은 프로젝트 저장소와 첫 그림 만들기입니다: [튜토리얼: 첫 그림](../tutorials/first_figure.md).
 
 ## 프로젝트 저장소에 버전 고정
@@ -88,6 +94,15 @@ fa build --all --preflight
 
 그림을 보내기 전에 다시 빌드해서 확인하세요. 새 릴리스는 기본값을 바꿀 수 있고, 무엇이 달라졌는지 검사가
 알려 줍니다.
+
+## AI 에이전트와 함께 쓸 때
+
+위와 같이 릴리스를 설치합니다. 에이전트에게 fig-atlas 소스는 필요 없습니다. 에이전트는 프로젝트 저장소에서
+일하고, 그곳에는 `fa init`이 쓴 규칙 파일(`AGENTS.md`, Claude Code용 `CLAUDE.md`)이 있으며, 설치된 `fa` 명령을
+셸에서 또는 MCP 도구로 실행합니다([AI 에이전트 연결](ai_agents.md)). 규칙이 다루지 않는 것은
+`fa <command> --help`와 이 문서들이 답합니다. fig-atlas를 클론하는 것은 사람이든 에이전트든 fig-atlas 자체를
+고칠 때뿐이며, 그때도 클론은 프로젝트 저장소 안이 아니라 옆의 별도 폴더에 둡니다. 그래야 프로젝트에서 실행하는
+`fa`가 계속 릴리스를 씁니다(마지막 표 참고).
 
 ## fig-atlas 자체를 고칠 때
 
