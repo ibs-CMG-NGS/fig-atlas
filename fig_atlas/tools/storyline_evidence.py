@@ -141,6 +141,16 @@ def front_matter_text(fm: dict, nl: str) -> str:
     return nl.join(lines)
 
 
+def _specific(pattern: str) -> bool:
+    """True when a mentioned path or name has a part that is not a wildcard or an
+    extension: `raw_data/`, `raw_data/<study>/<project>/` or `<name>.csv` (a
+    template placeholder left unfilled) would otherwise match every input."""
+    parts = [s for s in pattern.split("/") if s]
+    if parts and parts[0] == "raw_data":
+        parts = parts[1:]
+    return any(re.sub(r"[*?]|\.[A-Za-z0-9]+$", "", s) for s in parts)
+
+
 def load_requests(req_dir: Path) -> list[dict]:
     out = []
     for p in sorted(req_dir.glob("*_request.md")):
@@ -148,8 +158,9 @@ def load_requests(req_dir: Path) -> list[dict]:
         fm, body = split_front_matter(text)
         out.append({"path": p, "name": p.name, "front_matter": fm, "body": body,
                     "mentions": sorted({q for t in TOKEN.findall(body) for q in _expand(t)
-                                        if t.startswith("raw_data/") or
-                                        (t.endswith(FILE_EXT) and "/" not in t and t not in GENERIC)})})
+                                        if (t.startswith("raw_data/") or
+                                            (t.endswith(FILE_EXT) and "/" not in t and t not in GENERIC))
+                                        and _specific(q)})})
     return out
 
 

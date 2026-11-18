@@ -6,7 +6,23 @@ All notable changes are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- **One data request template** (`docs/contracts/data_request_template.md`): every request for a
+  bundle -- new, corrected, a missing column, a rerun -- starts from the same form, written by a person
+  or an agent. It carries the front matter `fa storyline requests` reads, the sections a producer needs
+  (why, check first, what to deliver, validation, not asked for, questions, delivery, revisions), and
+  asks each bundle to state its `upstream` files. Linked from the bundle contracts, the guide (chapter
+  12) and `AGENTS.md`. Design decision 0008 (proposed) records why a bundle states where it came from
+  and why fig-atlas does not check it.
+
 ### Fixed
+
+- **A request no longer "mentions" every input**: `fa storyline evidence` and `fa storyline requests`
+  link a request to an input it names in backticks. A bare `` `raw_data/` ``, or a template placeholder
+  left unfilled (`` `raw_data/<study>/<project>/` ``, `` `<name>.csv` ``), matched every input, so such a
+  request was listed behind every figure. A mention now needs one part that is not a wildcard or an
+  extension.
 
 - **Preflight no longer crashes on a line broken by NaN**: the `legend_covers_data` check sampled
   every segment of a line and failed with `ValueError: cannot convert float NaN to integer` when a

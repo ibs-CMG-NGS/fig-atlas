@@ -101,3 +101,30 @@ def test_links_declared_mentioned_and_generic_names(ev, tmp_path):
     assert row["integrated"] == ["outputs/p/figures/figure_01_x"]
     assert row["mentioned_by"] == ["outputs/q/figures/figure_01_y"]
     assert row["missing"] == ["raw_data/s/anchor/gsea_v2/", "raw_data/s/anchor/ora_v2/"]   # not on disk here
+
+
+def test_placeholders_and_bare_roots_are_not_mentions(ev, tmp_path):
+    """A request made from the template may keep `raw_data/` or an unfilled
+    `raw_data/<study>/<project>/`; neither may link it to every input."""
+    (tmp_path / "t_request.md").write_text(
+        "Under `raw_data/`, deliver to `raw_data/<study>/<project>/` as `<name>.csv`;\n"
+        "notes in `raw_data/<study>/DELIVERY_NOTES_<name>.md`, data in `raw_data/s/q_bundle/`.\n",
+        encoding="utf-8")
+    (req,) = ev.load_requests(tmp_path)
+    assert req["mentions"] == ["raw_data/*/DELIVERY_NOTES_*.md", "raw_data/s/q_bundle/"]
+    assert ev.link(req, "raw_data/x/y/b/inputs/data.csv") is None
+    assert ev.link(req, "raw_data/x/table.csv") is None
+    assert ev.link(req, "raw_data/s/q_bundle/inputs/data.csv") == "mentioned"
+
+
+def test_the_request_template_parses_and_links_nothing(ev, tmp_path):
+    """The block of docs/contracts/data_request_template.md, copied as is, is a
+    request with complete front matter that links no input."""
+    text = (Path(__file__).resolve().parents[1] / "docs" / "contracts" / "data_request_template.md").read_text(encoding="utf-8")
+    start = text.index("````markdown\n") + len("````markdown\n")
+    (tmp_path / "demo_request.md").write_text(text[start:text.index("\n````\n", start)], encoding="utf-8")
+    (req,) = ev.load_requests(tmp_path)
+    assert set(req["front_matter"]) >= {"request", "status", "date", "delivered", "derived", "superseded_by"}
+    assert req["front_matter"]["status"] == "open"
+    assert ev.sync(tmp_path) == []
+    assert ev.link(req, "raw_data/x/y/b/inputs/data.csv") is None

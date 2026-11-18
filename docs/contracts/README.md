@@ -19,6 +19,8 @@ The top three rows of the table below are the column specifications of omics plo
 > - `fa bundle contracts`: shows the registered contracts and the `plot_type` → renderer mapping.
 > - A new contract is added as code and document together. `tests/test_plugins.py` fails if a contract points to a missing document or a `plot_type` has no renderer.
 
+**Asking for data.** Every request for a bundle -- new, corrected, a missing column, a rerun -- starts from one form, the [data request template](data_request_template.md): copy it to `docs/data_contracts/<name>_request.md`, fill it in, and send it with these contracts. It also asks each bundle to state its `upstream` files ([decision 0008](../decisions/0008-bundles-state-where-they-came-from.md)).
+
 ## Common principles (for every contract)
 
 1. **Folder structure**: a project (one final figure) has several **bundle** subfolders under `raw_data/<study>/<project_name>/`. One panel = one bundle.
