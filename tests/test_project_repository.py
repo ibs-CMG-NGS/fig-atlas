@@ -26,6 +26,7 @@ def test_init_makes_a_project_repository(tmp_path):
     assert plan_init(tmp_path).empty                                   # a second run changes nothing
     gitignore = (tmp_path / ".gitignore").read_text(encoding="utf-8").splitlines()
     assert "raw_data/" in gitignore and "outputs/" in gitignore      # whole-line patterns
+    assert ".venv/" in gitignore                                      # the venv of the install guide
     (tmp_path / "AGENTS.md").write_text("our own rules\n", encoding="utf-8")
     with pytest.raises(ChangeConflict):                               # never overwrites
         plan_init(tmp_path)

@@ -30,17 +30,18 @@ pack (`fig_atlas_omics`: volcano, MA, GO enrichment, motifs, ...) is included.
 ## Install
 
 Python 3.10+ on Linux, macOS or Windows (CI tests all three, on Python 3.12). There is no PyPI
-package yet: install a release from GitHub into the environment you use for your figures.
+package yet: install a release from GitHub into the environment you use for your figures. The
+commands use `v0.4.0`; the newest is on the [releases page](https://github.com/ibs-CMG-NGS/fig-atlas/releases).
 
 ```bash
 conda create -n figures python=3.12 && conda activate figures      # or a venv
-pip install "git+https://github.com/ibs-CMG-NGS/fig-atlas@v0.3.1"
+pip install "git+https://github.com/ibs-CMG-NGS/fig-atlas@v0.4.0"
 fa --version
 ```
 
-Without Git: `pip install "https://github.com/ibs-CMG-NGS/fig-atlas/archive/refs/tags/v0.3.1.zip"`.
+Without Git: `pip install "https://github.com/ibs-CMG-NGS/fig-atlas/archive/refs/tags/v0.4.0.zip"`.
 Pin the release in your project repository's `requirements.txt`
-(`fig-atlas @ git+https://github.com/ibs-CMG-NGS/fig-atlas@v0.3.1`) so co-authors and reviewers
+(`fig-atlas @ git+https://github.com/ibs-CMG-NGS/fig-atlas@v0.4.0`) so co-authors and reviewers
 install the same version. The journal presets use Arial: macOS and Windows have it; on Linux
 install it (for example `ttf-mscorefonts-installer`), or preflight reports the substituted font.
 Rebuilds are byte-identical on one platform with one set of fonts, not across platforms.
@@ -48,6 +49,12 @@ Rebuilds are byte-identical on one platform with one set of fonts, not across pl
 **The full guide** -- venv, optional parts, upgrading, troubleshooting, in English and Korean:
 [docs/howto/install.md](docs/howto/install.md), online at
 https://ibs-cmg-ngs.github.io/fig-atlas/howto/install/.
+
+**With an AI agent** (Claude Code, Codex, Gemini CLI, ...), install a release the same way: the
+agent works in your project repository, where `fa init` writes the rules it reads (`AGENTS.md`),
+and calls the installed `fa` commands, directly or as MCP tools
+([docs/howto/ai_agents.md](docs/howto/ai_agents.md)). A clone of this repository is for changing
+fig-atlas itself.
 
 To change fig-atlas itself, install a copy of the source *editable*:
 

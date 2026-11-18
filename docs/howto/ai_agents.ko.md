@@ -31,7 +31,7 @@ fa mcp                     # 또는: python -m fig_atlas mcp [--root <저장소>
 
 ## 3. 에이전트별 설정
 
-아래 예시의 `<python>`은 fig-atlas가 설치된 Python입니다. conda 환경이면 `conda env list`가 보여 주는 `fig-atlas` 환경 폴더의 python (예: Windows `C:\Users\<사용자>\miniconda3\envs\fig-atlas\python.exe`; 환경을 켠 셸에서 `python -c "import sys; print(sys.executable)"`로도 확인)입니다. `fa`가 PATH에 있으면 `<python> -m fig_atlas` 대신 `fa`를 써도 됩니다. Windows conda 환경의 DLL 경로(`Library/bin`)는 서버가 자식 프로세스에 넣어 주므로 따로 설정하지 않아도 됩니다. 에이전트를 저장소 밖에서 시작한다면 `--root <저장소 경로>`를 `mcp` 앞에 넣습니다.
+아래 예시의 `<python>`은 fig-atlas를 설치한 환경의 Python입니다. 에이전트에게는 [설치](install.md)대로 설치한 릴리스면 충분합니다. conda 환경이면 `conda env list`가 보여 주는 그 환경 폴더의 python (예: Windows `C:\Users\<사용자>\miniconda3\envs\figures\python.exe`, `environment.yml`로 만든 개발 환경이면 `envs\fig-atlas`; venv이면 `.venv\Scripts\python.exe`; 환경을 켠 셸에서 `python -c "import sys; print(sys.executable)"`로도 확인)입니다. `fa`가 PATH에 있으면 `<python> -m fig_atlas` 대신 `fa`를 써도 됩니다. Windows conda 환경의 DLL 경로(`Library/bin`)는 서버가 자식 프로세스에 넣어 주므로 따로 설정하지 않아도 됩니다. 에이전트를 저장소 밖에서 시작한다면 `--root <저장소 경로>`를 `mcp` 앞에 넣습니다.
 
 **opencode** (검증함, 2026-10-08) — 저장소의 `opencode.json` 또는 `OPENCODE_CONFIG`가 가리키는 파일:
 

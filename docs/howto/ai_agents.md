@@ -31,7 +31,7 @@ The tools' names, arguments and descriptions are generated from the `fa` command
 
 ## 3. Settings per agent
 
-In the examples below, `<python>` is the Python with fig-atlas installed. For a conda environment it is the python in the `fig-atlas` environment folder that `conda env list` shows (e.g. on Windows `C:\Users\<user>\miniconda3\envs\fig-atlas\python.exe`; in a shell with the environment on, `python -c "import sys; print(sys.executable)"` prints it too). If `fa` is on the PATH, `fa` can replace `<python> -m fig_atlas`. The server puts the DLL folder of a Windows conda environment (`Library/bin`) into its child processes, so that needs no setting. If you start the agent outside the repository, add `--root <repository path>` before `mcp`.
+In the examples below, `<python>` is the Python of the environment you installed fig-atlas into: a release, as in [Install](install.md), is all an agent needs. For a conda environment it is the python in that environment's folder that `conda env list` shows (e.g. on Windows `C:\Users\<user>\miniconda3\envs\figures\python.exe`, or `envs\fig-atlas` for the development environment of `environment.yml`; for a venv, `.venv\Scripts\python.exe`; in a shell with the environment on, `python -c "import sys; print(sys.executable)"` prints it too). If `fa` is on the PATH, `fa` can replace `<python> -m fig_atlas`. The server puts the DLL folder of a Windows conda environment (`Library/bin`) into its child processes, so that needs no setting. If you start the agent outside the repository, add `--root <repository path>` before `mcp`.
 
 **opencode** (tested, 2026-10-08) — the repository's `opencode.json`, or the file `OPENCODE_CONFIG` points to:
 

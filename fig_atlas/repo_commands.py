@@ -45,6 +45,9 @@ INIT_GITIGNORE = """# fig-atlas project repository
 raw_data/
 # Built figures: rebuilt from configs + data (`fa build`).
 outputs/
+# A Python environment made in this folder (`python -m venv .venv`).
+.venv/
+venv/
 __pycache__/
 *.pyc
 site/

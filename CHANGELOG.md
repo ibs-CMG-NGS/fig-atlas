@@ -19,6 +19,14 @@ All notable changes are documented here. The format follows
   `docs/baselines/`: the hand-typed-number baseline follows a renamed project, and the hard-coded-literal
   baseline follows its moved files, so `fa claims --check` and `fa lint --hardcoded --check` no longer
   fail after a move that changed no number.
+- **The README installs the current release**: at 0.4.0 it still pinned v0.3.1 while the install
+  guide said v0.4.0, and the guide's `fa --version` example showed 0.3.1. A test now fails when the
+  README and the install guide name a release other than the package's own.
+- **`fa init` keeps a `.venv/` (or `venv/`) out of git**: the install guide makes the environment in
+  the project folder, and the `.gitignore` did not list it. The guide now says what that folder holds
+  (fig-atlas is installed under its `site-packages`, which is expected), and that an AI agent needs a
+  release installed this way, not a clone of the source; the MCP setup page's `<python>` example names
+  the release environment instead of the development one.
 
 ## [0.4.0] — 2026-11-09
 
