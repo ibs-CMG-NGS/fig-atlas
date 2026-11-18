@@ -67,7 +67,7 @@ Three months later you can still find in the records "what Figure 3 was then, an
 
 ## Data requests and tracing evidence
 
-When you ask an analysis pipeline for new data, write a request document under `docs/data_contracts/`. Note at its top the status (requested / delivered), the date and where the files landed, and 💬 "Show the evidence for Main Figure 3" gives one chain: **figure → project → input files → data request → related revision records**.
+When you ask an analysis pipeline for new data, write a request document under `docs/data_contracts/`, starting from the [data request template](../contracts/data_request_template.md). Note at its top the status (requested / delivered), the date and where the files landed, and 💬 "Show the evidence for Main Figure 3" gives one chain: **figure → project → input files → data request → related revision records**.
 
 ## The compendium PDF
 

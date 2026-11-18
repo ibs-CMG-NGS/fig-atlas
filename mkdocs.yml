@@ -151,6 +151,7 @@ nav:
       - Table bundles (lines, scatter): contracts/table_bundle_contract.md
       - Image bundles: contracts/image_bundle_contract.md
       - Requesting a new plot type: contracts/new_plot_type_contract.md
+      - Data request template: contracts/data_request_template.md
       - Commands (generated): reference/cli.md
       - Python functions (generated): reference/api.md
       - Config keys (generated): reference/config.md

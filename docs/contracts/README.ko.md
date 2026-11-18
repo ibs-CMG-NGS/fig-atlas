@@ -19,6 +19,8 @@
 > - `fa bundle contracts`: 등록된 계약과 `plot_type` → 렌더러 매핑을 보여 줍니다.
 > - 새 계약은 코드와 문서를 함께 추가합니다. 계약이 가리키는 문서가 없거나 렌더러가 없는 `plot_type`이면 `tests/test_plugins.py`가 실패합니다.
 
+**데이터를 요청할 때.** 번들을 요청하는 모든 경우(새 번들, 고친 번들, 빠진 열, 재실행)는 양식 하나, [데이터 요청서 양식](data_request_template.md)에서 시작한다. `docs/data_contracts/<이름>_request.md`로 복사해 채우고, 이 계약서들과 함께 보낸다. 양식은 번들마다 `upstream` 원본 파일을 적어 달라고도 요청한다([설계 결정 0008](../decisions/0008-bundles-state-where-they-came-from.md)).
+
 ## 공통 원칙 (3개 계약서 모두에 적용)
 
 1. **폴더 구조**: 한 프로젝트(하나의 최종 figure)는 `raw_data/<study>/<project_name>/` 아래에 여러 개의 **번들(bundle)** 서브폴더를 가집니다. 서브패널 하나 = 번들 하나입니다.
