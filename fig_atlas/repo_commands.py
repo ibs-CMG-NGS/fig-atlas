@@ -621,8 +621,10 @@ def plan_new_renderer(root: Path, name: str, package: str = "fig_atlas.renderers
     values = dict(name=name, package=package, date=today or _dt.date.today().isoformat(), family=family,
                   doc=doc or "describe what this plot shows and which data it takes.")
     cs = ChangeSet(root)
+    copied = ""
     if start_from:
-        cs.create(pkg_dir / f"{name}.py", _from_existing(start_from, name, values["date"], family))
+        copied = _from_existing(start_from, name, values["date"], family)
+        cs.create(pkg_dir / f"{name}.py", copied)
         cs.create(Path("tests") / "renderers" / f"test_{name}.py",
                   _template("renderer_from_test.py.tmpl", **values, source=start_from.removeprefix("render_")))
     else:
@@ -666,9 +668,15 @@ def plan_new_renderer(root: Path, name: str, package: str = "fig_atlas.renderers
         cs.edit(mfile, _with_ingest(mfile.read_bytes().decode("utf-8"), attr, plot_type, f"{package}:render_{name}"))
         cs.notes.append(f"bundles with plot_type: {plot_type} now go to render_{name}; describe their columns in a "
                         "contract (docs/contracts/) so `fa bundle check` can check them")
+    if copied:
+        from .renderer_api import outside
+        beyond = outside(copied)
+        if beyond:
+            cs.notes.append("the copy imports names outside the renderer contract, which a later fig-atlas may "
+                            f"change (docs/decisions/0009): {', '.join(beyond)}; keep them or copy what they do")
     if project:
-        cs.notes.append("a project renderer lives in this repository only; a shape other projects could use "
-                        "(a bar, line, scatter, heatmap) is worth offering to the fig-atlas core later")
+        cs.notes.append("a project renderer belongs to this repository and every project in it can use it; "
+                        "it relies only on the renderer contract (fig_atlas/renderer_api.py, docs/decisions/0009)")
     elif package != CORE:
         cs.notes.append("a pack renderer is for a shape that means nothing outside its field (AGENTS.md section 3); "
                         "a bar, line, scatter or heatmap belongs in the core")

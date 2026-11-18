@@ -315,7 +315,10 @@ def test_new_renderer_from_an_existing_one(tmp_path):
     import pandas as pd
     from fig_atlas.repo_commands import plan_new_renderer
     (tmp_path / ".fig-atlas").write_text("# marker", encoding="utf-8")
-    plan_new_renderer(tmp_path, "my_violin", start_from="violin", today="2026-10-13").apply()
+    cs = plan_new_renderer(tmp_path, "my_violin", start_from="violin", today="2026-10-13")
+    beyond = [n for n in cs.notes if "outside the renderer contract" in n]   # decision 0009
+    assert len(beyond) == 1 and "fig_atlas.renderers._basic." in beyond[0]
+    cs.apply()
     src = (tmp_path / "renderers" / "my_violin.py").read_text(encoding="utf-8")
     assert src.startswith('"""my_violin: started from render_violin')
     assert "from fig_atlas.renderers._basic import" in src and "from .." not in src

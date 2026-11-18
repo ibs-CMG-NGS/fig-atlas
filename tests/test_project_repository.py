@@ -43,6 +43,9 @@ def test_init_ci_checks_pass_on_a_new_repository(tmp_path, monkeypatch):
     assert "fig-atlas @ git+https://github.com/ibs-CMG-NGS/fig-atlas@" in (tmp_path / "requirements.txt").read_text()
     workflow = (tmp_path / ".github/workflows/fig-atlas.yml").read_text(encoding="utf-8")
     assert "fa claims --check" in workflow and "fa lint --hardcoded --check" in workflow
+    assert "python -m pytest -q tests/renderers" in workflow           # its own renderers (decision 0009)
+    rules = (tmp_path / "AGENTS.md").read_text(encoding="utf-8")
+    assert "`renderers/`" in rules and "fa new renderer" in rules
     plan_new_project(tmp_path, "demo", domain="lab", category="exploratory").apply()
     monkeypatch.chdir(tmp_path)
     assert cli.main(["claims", "--check"]) == 0                       # the template's title has no number

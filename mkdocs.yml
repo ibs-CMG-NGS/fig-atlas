@@ -169,3 +169,4 @@ nav:
           - 0006 Documentation in two languages: decisions/0006-documentation-in-two-languages.md
           - 0007 Renderers draw results, they do not compute them: decisions/0007-renderers-draw-results-they-do-not-compute.md
           - 0008 A bundle may state where it came from: decisions/0008-bundles-state-where-they-came-from.md
+          - 0009 Project renderers stay in the project: decisions/0009-project-renderers-stay-in-the-project.md

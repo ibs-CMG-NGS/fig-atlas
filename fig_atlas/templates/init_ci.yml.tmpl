@@ -37,6 +37,13 @@ jobs:
         run: |
           if ls docs/storylines/figure_plan_*.md >/dev/null 2>&1; then fa storyline check; fi
 
+      - name: This repository's own renderers pass their tests (once there are some)
+        run: |
+          if [ -f renderers/__init__.py ] && [ -d tests/renderers ]; then
+            pip install pytest
+            python -m pytest -q tests/renderers
+          fi
+
       # With the data in CI (a small public bundle, or fetched in a step above), build and check
       # every figure too; set `mode: enforce` under preflight: in each config so errors fail it:
       # - name: Every figure builds, passes preflight and verify
