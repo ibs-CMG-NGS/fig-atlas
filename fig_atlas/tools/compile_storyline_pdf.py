@@ -917,6 +917,55 @@ def _compendium_page() -> dict:
             "content_w": paper_w - 2 * margin, "content_h": paper_h - 2 * margin}
 
 
+OUTLINE_TITLE_CHARS = 90   # a bookmark longer than this is cut at a word and ends in an ellipsis
+
+
+def _outline_group(role: str, fallback: str) -> str:
+    """The heading a slot is listed under: its role without the number, made plural
+    ("Main Figure 1" -> "Main Figures", "Supplementary Table S3" -> "Supplementary Tables")."""
+    head = re.sub(r"\s+\S*\d\S*$", "", role.strip())
+    return f"{head}s" if head and head != role.strip() else fallback
+
+
+def _outline_title(role: str, title: str) -> str:
+    title = " ".join(_clean_caption_text(title or "").split()).rstrip(".")
+    text = f"{role} — {title}" if title else role
+    if len(text) <= OUTLINE_TITLE_CHARS:
+        return text
+    return text[:OUTLINE_TITLE_CHARS].rsplit(" ", 1)[0].rstrip(",;:—- ") + "…"
+
+
+def outline_entries(items: list[dict], table_items: list[dict], total_pages: int) -> list[tuple[str | None, str, int]]:
+    """The compendium's bookmarks as (group, title, 0-based page): the cover, each figure
+    (at the page it starts on) under its slot kind, each table, and the appendix.
+    A group of None is a top-level bookmark."""
+    out: list[tuple[str | None, str, int]] = [(None, "Cover", 0)]
+    for it in items:
+        m = it["meta"]
+        out.append((_outline_group(m["role"], "Figures"), _outline_title(m["role"], m["title"]),
+                    it["figure_page_no"] - 1))
+    for ti in table_items:
+        e = ti["entry"]
+        out.append((_outline_group(e["role"], "Tables"), _outline_title(e["role"], e.get("description", "")),
+                    ti["page_no"] - 1))
+    out.append((None, "Appendix — data, live numbers, source data, data requests", total_pages - 1))
+    return out
+
+
+def add_outline(writer: PdfWriter, entries: list[tuple[str | None, str, int]]) -> None:
+    """Write the bookmarks; a group opens at its first entry's page and starts expanded.
+    The viewer is asked to show the bookmark panel when the file opens."""
+    parents: dict[str, object] = {}
+    for group, title, page in entries:
+        parent = None
+        if group is not None:
+            if group not in parents:
+                parents[group] = writer.add_outline_item(group, page, is_open=True)
+            parent = parents[group]
+        writer.add_outline_item(title, page, parent=parent)
+    writer.page_mode = "/UseOutlines"
+
+
 def compile_storyline_pdf(md_path: Path, strict: bool = False) -> Path | None:
     """Compile a storyline markdown into a multi-page A4 PDF compendium.
 
@@ -1056,6 +1105,7 @@ def compile_storyline_pdf(md_path: Path, strict: bool = False) -> Path | None:
     generate_appendix_page(story_data, appendix_rows(items), appendix_pdf, total_pages, total_pages)
     writer.add_page(PdfReader(appendix_pdf).pages[0])
     print(f"  [+] Appendix -> page {total_pages}/{total_pages} (data, live numbers, source data, data requests)")
+    add_outline(writer, outline_entries(items, table_items, total_pages))
 
     out_pdf = md_path.with_suffix(".pdf")
     with open(out_pdf, "wb") as f:

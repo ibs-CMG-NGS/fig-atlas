@@ -72,6 +72,7 @@ When you ask an analysis pipeline for new data, write a request document under `
 ## The compendium PDF
 
 All the storyline's Figures in order in one PDF, for sharing with co-authors or looking at in meetings.
+Its bookmarks (the outline panel of a PDF viewer) list the cover, each Figure and Table under its kind, and the appendix; a click goes to that page.
 
 ⌨ **Command:** `fa storyline compile`
 

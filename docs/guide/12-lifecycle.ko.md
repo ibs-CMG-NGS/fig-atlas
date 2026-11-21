@@ -72,6 +72,7 @@ flowchart LR
 ## 컴펜디움 PDF
 
 스토리라인의 모든 Figure를 순서대로 한 PDF에 모은 것입니다. 공동저자와 공유하거나 회의에서 볼 때 씁니다.
+PDF 뷰어의 책갈피(개요) 패널에 표지, 종류별로 묶인 각 Figure와 Table, 부록이 나오며, 누르면 그 쪽으로 이동합니다.
 
 ⌨ **명령:** `fa storyline compile`
 
